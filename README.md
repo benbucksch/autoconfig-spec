@@ -1,6 +1,6 @@
-# TODO - Your title
+# Autoconfig
 
-This is the working area for the individual Internet-Draft, "TODO - Your title".
+This is the working area for the individual Internet-Draft, "Mail Autoconfig".
 
 * [Editor's Copy](https://benbucksch.github.io/autoconfig-spec/#go.draft-autoconfig-1.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-autoconfig-1)
@@ -27,4 +27,3 @@ $ make
 
 Command line usage requires that you have the necessary software installed.  See
 [the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
-

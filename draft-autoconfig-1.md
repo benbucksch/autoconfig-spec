@@ -1,6 +1,6 @@
 ---
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "Mail Autoconfig"
+abbrev: "autoconfig"
 category: info
 
 docname: draft-autoconfig-1-latest
@@ -26,7 +26,7 @@ venue:
 author:
  -
     fullname: "Ben Bucksch"
-    organization: Your Organization Here
+    organization: Beonex
     email: "ben.bucksch@beonex.com"
 
 normative:
@@ -36,25 +36,417 @@ informative:
 
 --- abstract
 
-TODO Abstract
-
+Set up a mail account with only email address and password.
 
 --- middle
 
 # Introduction
 
-TODO Introduction
+We would like to allow users to set up their existing email account in a new mail client application,
+by only entering their name, email address, and password.
+The mail application, by means of mail autoconfig specified here, will determine all the other
+parameters that are required, including IMAP or POP3 hostname, TLS configuration,
+form of username, authentication method, and other settings, and likewise for SMTP.
+Contact sync and calendar, file sharing and other services can also be set up automatically.
 
+The protocol works by first determining the domain from the email address, and the querying
+well-known URLs at the email provider, which return the configuration parameters in computer-readable form. Failing that, various fallback sources can be applied, like a common database of
+configurations for large email providers who do not directly support this protocol,
+or other mechanisms to determine the configuration.
+
+This protocol is already in production use since 15 years by major email clients, and the
+central database covers over 50% of all email accounts.
+
+# Data format
+
+Whether the ISP or a common central database returns the configuration, the resulting
+document has the following data format.
+
+The MIME type is `text/xml` or `text/xml+autoconfig`.
+
+## Sample config file
+
+```
+<?xml version="1.0"?>
+<clientConfig version="1.1">
+    <emailProvider id="example.com">
+      <domain>example.com</domain>
+      <domain>example.net</domain>
+
+      <displayName>Google Mail</displayName>
+      <displayShortName>GMail</displayShortName>
+
+      <!-- type=
+           "imap": IMAP
+           "pop3": POP3
+           -->
+      <incomingServer type="pop3">
+         <hostname>pop.example.com</hostname>
+         <port>995</port>
+           <!-- "plain": no encryption
+                "SSL": SSL 3 or TLS 1 on SSL-specific port
+                "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
+                -->
+         <socketType>SSL</socketType>
+         <username>%EMAILLOCALPART%</username>
+            <!-- Authentication methods:
+                 "password-cleartext",
+                          Send password in the clear
+                          (dangerous, if SSL isn't used either).
+                          AUTH PLAIN, LOGIN or protocol-native login.
+                 "password-encrypted",
+                           A secure encrypted password mechanism.
+                           Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
+                 "NTLM":
+                           Use NTLM (or NTLMv2 or successors),
+                           the Windows login mechanism.
+                 "GSSAPI":
+                           Use Kerberos / GSSAPI,
+                           a single-signon mechanism used for big sites.
+                 "client-IP-address":
+                           The server recognizes this user based on the IP address.
+                           No authentication needed, the server will require no username nor password.
+                 "TLS-client-cert":
+                           On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available. (Not yet supported by Thunderbird)
+                 "OAuth2":
+                           OAuth2. Works only on specific hardcoded servers, please see below. Should be added only as second alternative.
+                 "none":
+                           No authentication
+                 -->
+         <authentication>password-cleartext</authentication>
+         <pop3>
+            <!-- remove the following and leave to client/user? -->
+            <leaveMessagesOnServer>true</leaveMessagesOnServer>
+            <downloadOnBiff>true</downloadOnBiff>
+            <daysToLeaveMessagesOnServer>14</daysToLeaveMessagesOnServer>
+            <!-- only for servers which don't allow checks more often -->
+            <checkInterval minutes="15"/><!-- not yet supported -->
+         </pop3>
+         <password>optional: the user's password</password>
+      </incomingServer>
+
+      <outgoingServer type="smtp">
+         <hostname>smtp.googlemail.com</hostname>
+         <port>587</port>
+         <socketType>STARTTLS</socketType> <!-- see <incomingServer> -->
+         <username>%EMAILLOCALPART%</username> <!-- if smtp-auth -->
+            <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
+                 For values, see incoming.
+                 Additional options here:
+                 "SMTP-after-POP":
+                     authenticate to incoming mail server first
+                     before contacting the smtp server.
+                  Compatibility note: Thunderbird 3.0 accepts only "plain",
+                  "secure", "none", and "smtp-after-pop".
+                  It will ignore the whole XML file, if other values are given.
+            -->
+         <authentication>password-cleartext</authentication>
+            <!-- If the server makes some additional requirements beyond
+                 <authentication>.
+                 "client-IP-address": The server is only reachable or works,
+                     if the user is in a certain IP network, e.g.
+                     the dialed into the ISP's network (DSL, cable, modem) or
+                     connected to a company network.
+                     Note: <authentication>client-IP-address</>
+                     means that you may use the server without any auth.
+                     <authentication>password-cleartext</> *and*
+                     <restriction>client-IP-address</> means that you need to
+                     be in the correct IP network *and* (should) authenticate.
+                     Servers which do that are highly discouraged and
+                     should be avoided, see {{bug|556267}}.
+                Not yet implemented. Spec (element name?) up to change.
+            -->
+         <restriction>client-IP-address</restriction>
+         <!-- remove the following and leave to client/user? -->
+         <addThisServer>true</addThisServer>
+         <useGlobalPreferredServer>true</useGlobalPreferredServer>
+         <password>optional: the user's password</password>
+      </outgoingServer>
+
+      <!-- A page where the ISP describes the configuration.
+           This is purely informational and currently mainly for
+           maintenance of the files and not used by the client at all.
+           Note that we do not necessarily use exactly the config suggested
+           by the ISP, e.g. when they don't recommend SSL, but it's available,
+           we will configure SSL.
+           The text content should contains a description in the native
+           language of the ISP (customers), and a short English description,
+           mostly for us.
+      -->
+      <documentation url="http://www.example.com/help/mail/thunderbird">
+         <descr lang="en">Configure Thunderbird 2.0 for IMAP</descr>
+         <descr lang="de">Thunderbird 2.0 mit IMAP konfigurieren</descr>
+      </documentation>
+
+    </emailProvider>
+
+    <!-- Syncronize the user's address book / contacts. Not yet implemented. -->
+    <addressBook type="carddav">
+      <username>%EMAILADDRESS%</username>
+         <!-- Authentication methods. See also <incomingServer>.
+              "http-basic":
+                        Authenticate to the HTTP server using
+                        WWW-Authenticate: Basic
+              "http-digest":
+                        Authenticate to the HTTP server using
+                        WWW-Authenticate: Digest
+              "OAuth2":
+                        OAuth2. Uses the same token as for email.
+              -->
+      <authentication>http-basic</authentication>
+      <serverURL>https://contacts.example.com/remote.php/dav<serverURL>
+    </addressBook>
+
+    <!-- Syncronize the user's calendar. Not yet implemented. -->
+    <calendar type="caldav">
+      <username>%EMAILADDRESS%</username>
+      <authentication>http-basic</authentication> <!-- see <addressBook> -->
+      <serverURL>https://calendar.example.com/remote.php/dav<serverURL>
+    </calendar>
+
+    <!-- Upload files, allowing the user to share them. Not yet implemented.
+         This can be used for Thunderbird's FileLink feature,
+         or to set up a file sync folder on the user's desktop. -->
+    <fileShare type="webdav">
+      <username>%EMAILADDRESS%</username>
+      <authentication>http-basic</authentication> <!-- see <addressBook> -->
+      <serverURL>https://share.example.com/remote.php/dav<serverURL>
+    </fileShare>
+
+    <!-- This allows to access the webmail service of the provider.
+         The URLs are loaded into a standard webbrowser for the user.
+         Specifying this is optional. -->
+    <webMail>
+      <!-- Webpage where the user has to log in manually by entering username
+           and password himself.
+           HTTPS required. -->
+      <loginPage url="https://mail.example.com/login/" />
+
+      <!-- Same as loginAutomaticDOM, but the website makes checks that
+           the user comes from the login page. So, open the login page
+           in the browser, get the page's DOM, fill out name and password
+           fields for the user, and trigger the login button.
+           The login button might not be an HTML button, just a div, so
+           to trigger it, send a click event to it.
+           HTTPS is required for the URL. -->
+      <loginPageInfo url="https://mail.example.com/login/">
+        <!-- What to fill into the usernameField.
+             Format is the same as for <username> within <incomingServer>,
+             including placeholders. See below for valid placeholders. -->
+        <username>%EMAILADDRESS%</username>
+        <!-- Allows to find the textfield on the page, to fill it out.
+             The id attribute give the DOM ID,
+             The name attribute give the DOM name attribute.
+             One or both of id and name attributes must exist.
+             Try the ID first (e.g. using getElementById()), if existing.
+             Otherwise, try finding the element by name.
+             Don't treat the IDs given in this XML file as trusted,
+             but before using them, verify the format
+             (e.g. only characters and digits for IDs).
+             If you use powerful functions like jQuery, and the XML returns
+             you code in the username ID, and you feed it unchecked to jQuery,
+             it may be executed. -->
+        <usernameField id="email_field" name="email" />
+        <passwordField name="password" />
+        <!-- The submit button to trigger the server submit
+             after filling in the fields.
+             id and name attributes: See <usernameField> -->
+        <loginButton id="submit_button" name="login"/>
+      </loginPageInfo>
+    </webMail>
+
+    <!-- see description. Not yet supported, see bug 564043. -->
+    <inputField key="USERNAME" label="Screen name"></inputField>
+    <inputField key="GRANDMA" label="Grandma">Elise Bauer</inputField>
+
+    <!-- Add this only when users (who already have an account) have to
+         do something manually before the account can work with IMAP/POP or SSL.
+         Note: Per XML, & (ampersand) needs to be escaped to & a m p ;
+         (without spaces).
+         Not yet implemented, see bug 586364. -->
+    <enable
+       visiturl="https://mail.google.com/mail/?ui=2&shva=1#settings/fwdandpop">
+       <instruction>Check 'Enable IMAP and POP' in Google settings page</instruction>
+       <instruction lang="de">Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an</instruction>
+    </enable>
+
+    <clientConfigUpdate url="https://www.example.com/config/mozilla.xml" />
+
+</clientConfig>
+```
+
+## Formal definition
+
+TODO Schema for XML
+
+# Config retrieval
+
+The mail client application, when it needs the configuration for a given email address,
+will perform several steps to retrieve the configuration from various sources.
+
+The steps are ordered by priority. They may all be requested at the same time, but a higher priorty
+result that is available MUST be preferred over a lower priority one, even if the lower priority one is available earlier. Lower priority requests MAY be cancelled, if a valid higher priority result has been successfully received. The priority is expressed below with the number before the URL or location, with lower numbers meaning higher priority, e.g. 1.2 has higher priority than 4.1.
+
+In the URLs below,`%EMAILADDRESS` shall be replaced with the email address that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".
+
+For full support of this specification, all "Required" and "Recommended" mechanisms MUST be implemented and working. For partial support of this specification, all "Required" mechanisms MUST be implemented. You may only state that you implement or support autoconfig and/or this spec, if you implement full support. Otherwise, you need to make explicit that implemented only "Partial support" of this specification. "Optional" mechanisms may be left unimplemented.
+
+## Mail provider
+
+First step is to directly ask the mail provider and allow it to return the configuration. This step ensures that the protocol is decentralized and the mail provider is in control of the configuration issued to mail clients.
+
+Mail providers MUST return a working configuration, with state-of-the-art security. Configuration fields MUST NOT contain invalid or non-working data.
+
+To allow the mail provider to return a configuration adjusted for that mailbox, the client sends the email address as query parameter. This allows the mail provider to e.g. separate mailboxes on geographically local mail servers, e.g. a mail server located in the same office building where an employee works. However, while the protocol allows for such heterogenous configurations, mail providers are discouraged from doing so, and are instead encouraged to provide one single configuration for all their users. For example, DNS resolution based on location, mail proxy servers, or other techniques as necessary, can be used to route the traffic and host the mail efficiently.
+
+* 1.1. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Required)
+* 1.2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Recommended)
+* 1.3. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Optional)
+
+For example:
+
+* 1.1. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
+* 1.2. https://example.com/.well-known/autoconfig/mail/config-v1.1.xml
+* 1.3. http://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
+
+## Central database
+
+Using a central database (ISPDB) of mail configurations for the large mail providers will increase the success rate of finding a valid configuration drastically, up to 10-fold, because very few mail providers support the previous step, at this point, whereas the database contains the configurations for most mail providers with a market share larger than 0.1%, and contains configurations for half of the email accounts in the world.
+
+You may choose a mail config database provider. A public mail config database is available at base URL `https://autoconfig.thunderbird.net/v1.1/`. (TODO change ISPDB URL)
+
+`%ISPDB%` below is the base URL of that database.
+
+* 2.1. `%ISPDB%%EMAILDOMAIN%` (Recommended)
+
+For example:
+
+* 2.1. https://autoconfig.thunderbird.net/v1.1/geologist.com
+
+## MX
+
+Many companies do not maintain their own mail server, but let their email be hosted by a hosting company, which is then responsible for the email of dozens or thousands of domains. For these hosters, it may be difficult to set up the configuration server (Step 1.1.) with valid TLS certificate for each of their customers. Additionally, the ISPDB can only contain the hosting company and cannot know all their customers. To handle such domains, the protocol must first find the server hosting the email.
+
+If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain. Only the highest priority MX server hostname is considered. From that MX hostname, 2 values are extracted:
+
+* Remove the first component from the MX hostname, i.e. everything up to and including the first `.`, and use that as value for `%MXFULLDOMAIN%`.
+* Extract only the second-level domain from the MX hostname, and use that as value for `%MXFULLDOMAIN%`. To determine the second-level domain, use the [Public Suffic List](https://publicsuffix.org) or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".
+
+ For example:
+
+ * For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXTOPDOMAIN is "example.com".
+ * For "mx.example.com", the MXFULLDOMAIN and MXTOPDOMAIN are both "example.com".
+ * For "mx.example.co.uk", the MXFULLDOMAIN and MXTOPDOMAIN are both "example.co.uk".
+
+Then, attempt to retrieve the config for these MX domains, using the previous methods:
+
+* 3.1. `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
+* 3.2. `https://autoconfig.%MXTOPDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
+* 3.3. `%ISPDB%%MXFULLDOMAIN%` (Recommended)
+* 3.4. `%ISPDB%%MXTOPDOMAIN%` (Recommended)
+
+For example:
+
+* 3.1. https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
+* 3.2. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
+* 3.3. https://autoconfig.thunderbird.net/v1.1/premium.europe.example.com
+* 3.4. https://autoconfig.thunderbird.net/v1.1/example.com
+
+
+## Local disk
+
+For testing purposes, you may want to define a location on the disk, relative to the application installation directory, or relative to the user configuration directory, which may contain a configuration file for a specific domain, and which your application will use, if the above methods fail.
+
+* 4.1. `%USER_CONFIGURATION_DIR%/isp/%EMAILDOMAIN%.xml` (Optional)
+* 4.2. `%APP_INSTALL_DIR%/isp/%EMAILDOMAIN%.xml` (Optional)
+
+For example:
+
+* 4.1. /home/fred/.config/yourapp/isp/example.com.xml
+* 4.2. /opt/yourapp/isp/example.com.xml
+
+## Other mechanisms
+
+You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods must be considered only with lower priority (as defined above) than the more secure mechanisms defined here.
+
+## Manual configuration
+
+If the above mechanisms fail to provide a working configuration, or if the user explicitly chooses so, you SHOULD give the end user the ability to manually enter a configuration, and use that configuration to configure the account.
+
+# Config validation
+
+## User approval
+
+Independent of the mechanisms used to find the configuration, you MUST display that configuration to the end user and let him confirm it, before using that configuration. While doing so:
+* At least the second-level domain name(s) of the hostnames involved must be shown clearly and with high prominence.
+* The client MUST NOT cut off parts of long second-level domains, to avoid spoofing. At least 63 characters MUST be displayed.
+* Care SHOULD be taken with international characters that look like ASCII characters, but have a different code.
+
+## Login testing
+
+After the user confirmed the configuration, you SHOULD test the configuration, by attempting a login to each server configured. Only if the login succeeded, and the server is working, should the configuration be saved and retrieving and sending mail be started.
+
+# OAuth2 windows
+
+If the configuration contains OAuth2 authentication, or any other authentication that uses a web browser with URL redirects, you MUST show the URL of the current page to the end user, at all times, including after page changes, URL changes or redirects. This allows the end user to verify that he is logging in at the expected page, e.g. the login server of their company.
+
+(Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
+# Alternatives considered
+
+## DNSSEC
+
+DNSSEC is not a solution to make DNS secure, because DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.
+
+Due to their top-level domain, some domains do not have DNSSEC available, even if they would like to deploy it. Therefore, DNSSEC cannot be relied on, and plain DNS must be considered insecure.
+
+## DNS SRV
+
+DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2 reasons:
+1. DNS SRV relies on insecure DNS and the config can therefore be trivially spoofed by an attacker. See also DNSSEC above.
+2. DNS SRV does not provide all the necessary configuration parameters. For example, we need all of :
+* the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even a username with no relation to the email address)
+* authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)
+* authentication method parameters (e.g. OAuth parameters)
+and other parameters. If any of these parameters are not configured right, the configuration won't work. While these parameters could theoretically be added to DNS SRV, that would mean a new specification and render the idea void that this is a protocol that already exists, standarized and deployed. It is unlikely that all DNS SRV records would be updated with the new values. Therefore, it does not solve the problem.
+
+This specification was created as an answer to these deficiencies and provides an alternative to DNS SRV.
+
+## CAPABILITIES
+
+Experience teaches that protocol-specific commands to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3 `CAPA`, are not reliable. Many email servers advertize authentication methods that do not work. For example, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method not only fails, but runs into a long 2 minute timeout in some cases, which end users consider to be a broken app.
+
+Additionally, such capabilities commands are protocol specific and have to be implemented in multiple different ways.
+
+Finally, some protocols do not support capabilties commands that include authentication methods.
 
 # Security Considerations
 
-TODO Security
+## Risk
 
+If an attacker can provide a forged configuration, the provided mail hostname and authentication server can be controlled by the attacker, and the attacker can get access to the plain text password of the user. The attack can be implemented as man-in-the-middle, so the end user might receive mail as expected and never notice the attack.
+
+Receiving the plain text password is a very high threat for the organization, not only because mail itself can contain highly sensitive information or can be used to issue orders within the organization that have extremely negative impact, but given single-signon solutions, the same username and password may give access to other resources at the organization, including other computers or, in the case of admin users, even adminstrative access to the entire organization.
+
+Multi-factor authentication might not defend against such attacks, if mail access is normally protected by multi-factor authentication, and the user believes to be logging into his email and therefore comply with any multi-factor authentication steps required.
+
+## DNS
+
+Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure.
+
+Such insecure configs may only be used, if the end user confirms the config, particularly the resulting second-level domains. See section "User approval".
+
+## Config updates
+
+Part of the security properties of this protocol assume that the timeframe of possible attack is limited to the moment when the user manually sets up a new mail client. This moment is triggered by the end user, and a rare action - e.g. maybe once per year or even less, for typical setups -, so an attacker has limited chances to run an attack. While not a complete protection on its own, this reduces the risk significantly.
+
+However, if the mail client does regular config updates using this protocol, this security property is no longer given. For regular updates, the mail client MUST use only mechanisms that are secure and cannot be tampered with by an active attacker. Furthermore, the user MUST still approve config changes.
+
+But even with all these protections implemented, the mail client vendor should make a security assessment for the risks of making such regular updates. The mail client vendor should consider that servers can be hacked, and most users simply approve changes proposed by the app, so these give only a limited protection.
 
 # IANA Considerations
 
