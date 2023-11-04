@@ -551,7 +551,7 @@ Table of Contents
    methods SHOULD be considered only with lower priority (as defined
    above) than the more secure mechanisms defined here.  For evaluating
    other mechanisms, use similar criteria as outlined in section
-   Security considerations.
+   "Security considerations".
 
 4.6.  Manual configuration
 
@@ -694,7 +694,9 @@ Table of Contents
    Any protocol that relies on DNS without further validation, e.g.
    http, should be considered insecure.  Even if an http URL redirects
    to a https URL, and the domain of the https URL cannot be validated
-   against the email domain, that is still insecure.
+   against the email domain, that is still insecure.  This also applies
+   to the DNS MX lookup and the https calls that base on its results, as
+   described in section "MX".
 
    Such insecure configs may only be used, if the end user confirms the
    config, particularly the resulting second-level domains.  See section

@@ -1670,7 +1670,7 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
         <h3 id="name-other-mechanisms">
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-other-mechanisms" class="section-name selfRef">Other mechanisms</a>
         </h3>
-<p id="section-4.5-1">You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods <span class="bcp14">SHOULD</span> be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section Security considerations.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-1">You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods <span class="bcp14">SHOULD</span> be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section "Security considerations".<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="manual-configuration">
@@ -1812,7 +1812,7 @@ appear in all capitals, as shown here.<a href="#section-7-1" class="pilcrow">¶<
         <h3 id="name-dns">
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-dns" class="section-name selfRef">DNS</a>
         </h3>
-<p id="section-9.2-1">Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-1">Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure. This also applies to the DNS MX lookup and the https calls that base on its results, as described in section "MX".<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 <p id="section-9.2-2">Such insecure configs may only be used, if the end user confirms the config, particularly the resulting second-level domains. See section "User approval".<a href="#section-9.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
