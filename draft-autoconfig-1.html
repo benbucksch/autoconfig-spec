@@ -1576,7 +1576,7 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
 <p id="section-4.2-6">For example:<a href="#section-4.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.2-7.1">
-            <p id="section-4.2-7.1.1">2.1. https://autoconfig.thunderbird.net/v1.1/geologist.com<a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.2-7.1.1">2.1. <a href="https://autoconfig.thunderbird.net/v1.1/geologist.com">https://autoconfig.thunderbird.net/v1.1/geologist.com</a><a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1670,7 +1670,7 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
         <h3 id="name-other-mechanisms">
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-other-mechanisms" class="section-name selfRef">Other mechanisms</a>
         </h3>
-<p id="section-4.5-1">You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods must be considered only with lower priority (as defined above) than the more secure mechanisms defined here.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-1">You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods must be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section Security considerations.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="manual-configuration">
@@ -1693,10 +1693,18 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
         <h3 id="name-user-approval">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-user-approval" class="section-name selfRef">User approval</a>
         </h3>
-<p id="section-5.1-1">Independent of the mechanisms used to find the configuration, you <span class="bcp14">MUST</span> display that configuration to the end user and let him confirm it, before using that configuration. While doing so:
-* At least the second-level domain name(s) of the hostnames involved must be shown clearly and with high prominence.
-* The client <span class="bcp14">MUST NOT</span> cut off parts of long second-level domains, to avoid spoofing. At least 63 characters <span class="bcp14">MUST</span> be displayed.
-* Care <span class="bcp14">SHOULD</span> be taken with international characters that look like ASCII characters, but have a different code.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">Independent of the mechanisms used to find the configuration, you <span class="bcp14">MUST</span> display that configuration to the end user and let him confirm it, before using that configuration. While doing so:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-2.1">
+            <p id="section-5.1-2.1.1">At least the second-level domain name(s) of the hostnames involved must be shown clearly and with high prominence.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.2">
+            <p id="section-5.1-2.2.1">The client <span class="bcp14">MUST NOT</span> cut off parts of long second-level domains, to avoid spoofing. At least 63 characters <span class="bcp14">MUST</span> be displayed.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.3">
+            <p id="section-5.1-2.3.1">Care <span class="bcp14">SHOULD</span> be taken with international characters that look like ASCII characters, but have a different code.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 <div id="login-testing">
@@ -1739,8 +1747,8 @@ appear in all capitals, as shown here.<a href="#section-7-1" class="pilcrow">¶<
         <h3 id="name-dnssec">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-dnssec" class="section-name selfRef">DNSSEC</a>
         </h3>
-<p id="section-8.1-1">DNSSEC is not a solution to make DNS secure, because DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">Due to their top-level domain, some domains do not have DNSSEC available, even if they would like to deploy it. Therefore, DNSSEC cannot be relied on, and plain DNS must be considered insecure.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">For the purposes of this specification, DNSSEC is not a solution for the problem of insecure DNS, because DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">Due to their top-level domain, some domains do not have DNSSEC available to them, even if they would like to deploy it. Therefore, DNSSEC cannot be relied on in this specification, and plain DNS must be considered insecure.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="dns-srv">
