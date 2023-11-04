@@ -329,9 +329,11 @@ For example:
 
 ## Central database
 
-Using a central database (ISPDB) of mail configurations for the large mail providers will increase the success rate of finding a valid configuration drastically, up to 10-fold, because very few mail providers support the previous step, at this point, whereas the database contains the configurations for most mail providers with a market share larger than 0.1%, and contains configurations for half of the email accounts in the world.
+The ISPDB contains the configurations for most mail providers with a market share larger than 0.1%, and contains configurations for half of the email accounts in the world.
 
-You may choose a mail config database provider. A public mail config database is available at base URL `https://autoconfig.thunderbird.net/v1.1/`. (TODO change ISPDB URL)
+This is a useful fallback for mail providers which do not host a config server described in the previous step. Using a central database (ISPDB) of mail configurations for the large mail providers will increase the success rate of finding a valid configuration drastically, up to 10-fold.
+
+The mail client application may choose the mail config database provider. A public mail config database is available at base URL `https://autoconfig.thunderbird.net/v1.1/`. (TODO change ISPDB URL)
 
 `%ISPDB%` below is the base URL of that database.
 
@@ -465,6 +467,16 @@ Part of the security properties of this protocol assume that the timeframe of po
 However, if the mail client does regular config updates using this protocol, this security property is no longer given. For regular updates, the mail client MUST use only mechanisms that are secure and cannot be tampered with by an active attacker. Furthermore, the user MUST still approve config changes.
 
 But even with all these protections implemented, the mail client vendor should make a security assessment for the risks of making such regular updates. The mail client vendor should consider that servers can be hacked, and most users simply approve changes proposed by the app, so these give only a limited protection.
+
+## Server security
+
+Given that mail clients will trust the configuration, the server delivering it needs to be secure. Even though we call it "database", static configuration files that are generated before deployment in combination with a static web server offer better security and significantly better performance than dynamic queries from a database and responses generated on-the-fly on request. If a custom server is used, it MUST be updated regularly and hosted on a dedicated secure server with all unnecessary services and server features turned off.
+
+Additions and modifications to the configurations are applicable to all respective users and must be made with care. The authenticity of the configuration MUST be verified from authorative sources. Server hostnames MUST be compared with the email domain names they are serving, and if they differ, the ownership of the server hostnames MUST be validated.
+
+For these reasons, mail clients SHOULD use the public mail config database mentioned above.
+
+The risk is mitigated to some degree by section "User approval".
 
 # IANA Considerations
 
