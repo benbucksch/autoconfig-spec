@@ -389,7 +389,7 @@ For example:
 
 ## Other mechanisms
 
-You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods SHOULD be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section Security considerations.
+You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods SHOULD be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section "Security considerations".
 
 
 ## Manual configuration
@@ -467,7 +467,7 @@ Multi-factor authentication might not defend against such attacks, because the u
 
 ## DNS
 
-Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure.
+Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure. This also applies to the DNS MX lookup and the https calls that base on its results, as described in section "MX".
 
 Such insecure configs may only be used, if the end user confirms the config, particularly the resulting second-level domains. See section "User approval".
 
