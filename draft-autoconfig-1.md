@@ -54,8 +54,26 @@ well-known URLs at the email provider, which return the configuration parameters
 configurations for large email providers who do not directly support this protocol,
 or other mechanisms to determine the configuration.
 
-This protocol is already in production use since 15 years by major email clients, and the
-central database covers over 50% of all email accounts.
+# Implementations
+
+This protocol is in production use since 15 years by major email clients, and the
+config database (used as fallback) contains configurations for over 50% of all email accounts.
+
+Currently, this protocol or parts of it has been implemented by:
+
+* [Thunderbird](https://thunderbird.net)
+* [Evolution](https://projects.gnome.org/evolution/)
+* [KMail](https://userbase.kde.org/KMail)
+* [Kontact](https://www.kontact.org)
+* [K9 Mail](https://k9mail.app)
+* [FairEmail](https://email.faircode.eu)
+* [NextCloud email](https://apps.nextcloud.com/apps/mail)
+
+and likely other mail clients.
+
+The purpose of this paper is to document and specify what is deployed in the wild. A later version 2 of the protocol might be based on JSON.
+
+Additionally, there are known problems with OAuth2 in combination with mail clients, which would need to be solved by another specification.
 
 # Data format
 
