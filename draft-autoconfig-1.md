@@ -339,7 +339,7 @@ The mail client application may choose the mail config database provider. A publ
 
 For example:
 
-* 2.1. https://autoconfig.thunderbird.net/v1.1/geologist.com
+* 2.1. [https://autoconfig.thunderbird.net/v1.1/geologist.com](https://autoconfig.thunderbird.net/v1.1/geologist.com)
 
 ## MX
 
@@ -385,7 +385,7 @@ For example:
 
 ## Other mechanisms
 
-You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods must be considered only with lower priority (as defined above) than the more secure mechanisms defined here.
+You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods must be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section Security considerations.
 
 ## Manual configuration
 
@@ -396,6 +396,7 @@ If the above mechanisms fail to provide a working configuration, or if the user 
 ## User approval
 
 Independent of the mechanisms used to find the configuration, you MUST display that configuration to the end user and let him confirm it, before using that configuration. While doing so:
+
 * At least the second-level domain name(s) of the hostnames involved must be shown clearly and with high prominence.
 * The client MUST NOT cut off parts of long second-level domains, to avoid spoofing. At least 63 characters MUST be displayed.
 * Care SHOULD be taken with international characters that look like ASCII characters, but have a different code.
@@ -418,9 +419,9 @@ If the configuration contains OAuth2 authentication, or any other authentication
 
 ## DNSSEC
 
-DNSSEC is not a solution to make DNS secure, because DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.
+For the purposes of this specification, DNSSEC is not a solution for the problem of insecure DNS, because DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.
 
-Due to their top-level domain, some domains do not have DNSSEC available, even if they would like to deploy it. Therefore, DNSSEC cannot be relied on, and plain DNS must be considered insecure.
+Due to their top-level domain, some domains do not have DNSSEC available to them, even if they would like to deploy it. Therefore, DNSSEC cannot be relied on in this specification, and plain DNS must be considered insecure.
 
 ## DNS SRV
 
