@@ -42,8 +42,8 @@ Set up a mail account with only email address and password.
 
 # Introduction
 
-We would like to allow users to set up their existing email account in a new mail client application,
-by only entering their name, email address, and password.
+This protocol allows users to set up their existing email account in a new mail client application,
+by entering only their name, email address, and password.
 The mail application, by means of mail autoconfig specified here, will determine all the other
 parameters that are required, including IMAP or POP3 hostname, TLS configuration,
 form of username, authentication method, and other settings, and likewise for SMTP.
@@ -432,15 +432,16 @@ DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2 reasons:
 * the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even a username with no relation to the email address)
 * authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)
 * authentication method parameters (e.g. OAuth parameters)
-and other parameters. If any of these parameters are not configured right, the configuration won't work. While these parameters could theoretically be added to DNS SRV, that would mean a new specification and render the idea void that this is a protocol that already exists, standarized and deployed. It is unlikely that all DNS SRV records would be updated with the new values. Therefore, it does not solve the problem.
+
+and other parameters. If any of these parameters are not configured right, the configuration won't work. While these parameters could theoretically be added to DNS SRV, that would mean a new specification and render the idea void that this is a protocol that already exists, is standardized and deployed. It is unlikely that all DNS SRV records would be updated with the new values. Therefore, it does not solve the problem.
 
 This specification was created as an answer to these deficiencies and provides an alternative to DNS SRV.
 
 ## CAPABILITIES
 
-Experience teaches that protocol-specific commands to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3 `CAPA`, are not reliable. Many email servers advertize authentication methods that do not work. For example, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method not only fails, but runs into a long 2 minute timeout in some cases, which end users consider to be a broken app.
+In the wild deployments from actual ISPs show that protocol-specific commands to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3 `CAPA`, are not reliable. Many email servers advertize authentication methods that do not work. For example, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method fails, and also runs into a long 2 minute timeout in some cases. End users consider that to be a broken app.
 
-Additionally, such capabilities commands are protocol specific and have to be implemented in multiple different ways.
+Additionally, such commands are protocol specific and have to be implemented in multiple different ways.
 
 Finally, some protocols do not support capabilties commands that include authentication methods.
 
@@ -450,9 +451,9 @@ Finally, some protocols do not support capabilties commands that include authent
 
 If an attacker can provide a forged configuration, the provided mail hostname and authentication server can be controlled by the attacker, and the attacker can get access to the plain text password of the user. The attack can be implemented as man-in-the-middle, so the end user might receive mail as expected and never notice the attack.
 
-Receiving the plain text password is a very high threat for the organization, not only because mail itself can contain highly sensitive information or can be used to issue orders within the organization that have extremely negative impact, but given single-signon solutions, the same username and password may give access to other resources at the organization, including other computers or, in the case of admin users, even adminstrative access to the entire organization.
+An attacker gaining the plain text password of a real user is a very significant threat for the organization, not only because mail itself can contain sensitive information and can be used to issue orders within the organization that have wide-ranging impact, but given single-sign-on solutions, the same username and password may give access to other resources at the organization, including other computers or, in the case of admin users, even adminstrative access to the core of the entire organization.
 
-Multi-factor authentication might not defend against such attacks, if mail access is normally protected by multi-factor authentication, and the user believes to be logging into his email and therefore comply with any multi-factor authentication steps required.
+Multi-factor authentication might not defend against such attacks, because the user may believe to be logging into his email and therefore comply with any multi-factor authentication steps required.
 
 ## DNS
 
