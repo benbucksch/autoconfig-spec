@@ -1586,14 +1586,14 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
         <h3 id="name-mx">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-mx" class="section-name selfRef">MX</a>
         </h3>
-<p id="section-4.3-1">Many companies do not maintain their own mail server, but let their email be hosted by a hosting company, which is then responsible for the email of dozens or thousands of domains. For these hosters, it may be difficult to set up the configuration server (Step 1.1.) with valid TLS certificate for each of their customers. Additionally, the ISPDB can only contain the hosting company and cannot know all their customers. To handle such domains, the protocol must first find the server hosting the email.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain. Only the highest priority MX server hostname is considered. From that MX hostname, 2 values are extracted:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-1">Many companies do not maintain their own mail server, but let their email be hosted by a hosting company, which is then responsible for the email of dozens or thousands of domains. For these hosters, it may be difficult to set up the configuration server (step 1.1.) with valid TLS certificate for each of their customers, and to convince their customers to modify their root DNS specifically for autoconfig. On the other side, the ISPDB can only contain the hosting company and cannot know all their customers. To handle such domains, the protocol must first find the server hosting the email.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain. Only the highest priority MX hostname is considered. From that MX hostname, 2 values are extracted:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-3.1">
             <p id="section-4.3-3.1.1">Remove the first component from the MX hostname, i.e. everything up to and including the first <code>.</code>, and use that as value for <code>%MXFULLDOMAIN%</code>.<a href="#section-4.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-3.2">
-            <p id="section-4.3-3.2.1">Extract only the second-level domain from the MX hostname, and use that as value for <code>%MXFULLDOMAIN%</code>. To determine the second-level domain, use the <a href="https://publicsuffix.org">Public Suffic List</a> or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-3.2.1">Extract only the second-level domain from the MX hostname, and use that as value for <code>%MXTOPDOMAIN%</code>. To determine the second-level domain, use the <a href="https://publicsuffix.org">Public Suffic List</a> or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.3-4">For example:<a href="#section-4.3-4" class="pilcrow">¶</a></p>
