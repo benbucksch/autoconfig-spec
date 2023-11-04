@@ -305,13 +305,14 @@ result that is available MUST be preferred over a lower priority one, even if th
 
 In the URLs below,`%EMAILADDRESS` shall be replaced with the email address that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".
 
-For full support of this specification, all "Required" and "Recommended" mechanisms MUST be implemented and working. For partial support of this specification, all "Required" mechanisms MUST be implemented. You may only state that you implement or support autoconfig and/or this spec, if you implement full support. Otherwise, you need to make explicit that implemented only "Partial support" of this specification. "Optional" mechanisms may be left unimplemented.
+For full support of this specification, all "Required" and "Recommended" mechanisms MUST be implemented and working. For partial support of this specification, all "Required" mechanisms MUST be implemented and working, and in this case, you shall make explicit when advertizing or referring to auto config that there is only partial support of this specification.
+
 
 ## Mail provider
 
 First step is to directly ask the mail provider and allow it to return the configuration. This step ensures that the protocol is decentralized and the mail provider is in control of the configuration issued to mail clients.
 
-Mail providers MUST return a working configuration, with state-of-the-art security. Configuration fields MUST NOT contain invalid or non-working data.
+Mail providers MUST return a working configuration, with state-of-the-art security. Configuration fields MUST NOT contain invalid or non-working configuration data.
 
 To allow the mail provider to return a configuration adjusted for that mailbox, the client sends the email address as query parameter. This allows the mail provider to e.g. separate mailboxes on geographically local mail servers, e.g. a mail server located in the same office building where an employee works. However, while the protocol allows for such heterogenous configurations, mail providers are discouraged from doing so, and are instead encouraged to provide one single configuration for all their users. For example, DNS resolution based on location, mail proxy servers, or other techniques as necessary, can be used to route the traffic and host the mail efficiently.
 
@@ -324,6 +325,7 @@ For example:
 * 1.1. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
 * 1.2. https://example.com/.well-known/autoconfig/mail/config-v1.1.xml
 * 1.3. http://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
+
 
 ## Central database
 
@@ -341,9 +343,10 @@ For example:
 
 * 2.1. [https://autoconfig.thunderbird.net/v1.1/geologist.com](https://autoconfig.thunderbird.net/v1.1/geologist.com)
 
+
 ## MX
 
-Many companies do not maintain their own mail server, but let their email be hosted by a hosting company, which is then responsible for the email of dozens or thousands of domains. For these hosters, it may be difficult to set up the configuration server (step 1.1.) with valid TLS certificate for each of their customers, and to convince their customers to modify their root DNS specifically for autoconfig. On the other side, the ISPDB can only contain the hosting company and cannot know all their customers. To handle such domains, the protocol must first find the server hosting the email.
+Many companies do not maintain their own mail server, but let their email be hosted by a hosting company, which is then responsible for the email of dozens or thousands of domains. For these hosters, it may be difficult to set up the configuration server (step 1.1.) with valid TLS certificate for each of their customers, and to convince their customers to modify their root DNS specifically for autoconfig. On the other side, the ISPDB can only contain the hosting company and cannot know all their customers. To handle such domains, the protocol first needs to find the server hosting the email.
 
 If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain. Only the highest priority MX hostname is considered. From that MX hostname, 2 values are extracted:
 
@@ -352,9 +355,9 @@ If the previous mechanisms yield no result, the client may perform a DNS MX look
 
  For example:
 
- * For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXTOPDOMAIN is "example.com".
  * For "mx.example.com", the MXFULLDOMAIN and MXTOPDOMAIN are both "example.com".
  * For "mx.example.co.uk", the MXFULLDOMAIN and MXTOPDOMAIN are both "example.co.uk".
+ * For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXTOPDOMAIN is "example.com".
 
 Then, attempt to retrieve the config for these MX domains, using the previous methods:
 
@@ -383,21 +386,24 @@ For example:
 * 4.1. /home/fred/.config/yourapp/isp/example.com.xml
 * 4.2. /opt/yourapp/isp/example.com.xml
 
+
 ## Other mechanisms
 
-You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods must be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section Security considerations.
+You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods SHOULD be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section Security considerations.
+
 
 ## Manual configuration
 
-If the above mechanisms fail to provide a working configuration, or if the user explicitly chooses so, you SHOULD give the end user the ability to manually enter a configuration, and use that configuration to configure the account.
+If the above mechanisms fail to provide a working configuration, or if the user explicitly chooses so, you should give the end user the ability to manually enter a configuration, and use that configuration to configure the account.
+
 
 # Config validation
 
 ## User approval
 
-Independent of the mechanisms used to find the configuration, you MUST display that configuration to the end user and let him confirm it, before using that configuration. While doing so:
+Independent of the mechanisms used to find the configuration, before using that configuration, you SHOULD display that configuration to the end user and let him confirm it. While doing so:
 
-* At least the second-level domain name(s) of the hostnames involved must be shown clearly and with high prominence.
+* At least the second-level domain name(s) of the hostnames involved MUST be shown clearly and with high prominence.
 * The client MUST NOT cut off parts of long second-level domains, to avoid spoofing. At least 63 characters MUST be displayed.
 * Care SHOULD be taken with international characters that look like ASCII characters, but have a different code.
 
@@ -407,13 +413,15 @@ After the user confirmed the configuration, you SHOULD test the configuration, b
 
 # OAuth2 windows
 
-If the configuration contains OAuth2 authentication, or any other authentication that uses a web browser with URL redirects, you MUST show the URL of the current page to the end user, at all times, including after page changes, URL changes or redirects. This allows the end user to verify that he is logging in at the expected page, e.g. the login server of their company.
+If the configuration contains OAuth2 authentication, or any other authentication that uses a web browser with URL redirects, you MUST show the full URL or the second-level domain of the current page to the end user, at all times, including after page changes, URL changes or redirects. This allows the end user to verify that he is logging in at the expected page, e.g. the login server of their company.
 
 (Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)
+
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
+
 
 # Alternatives considered
 
@@ -444,6 +452,7 @@ Additionally, such commands are protocol specific and have to be implemented in 
 
 Finally, some protocols do not support capabilties commands that include authentication methods.
 
+
 # Security Considerations
 
 ## Risk
@@ -464,19 +473,20 @@ Such insecure configs may only be used, if the end user confirms the config, par
 
 Part of the security properties of this protocol assume that the timeframe of possible attack is limited to the moment when the user manually sets up a new mail client. This moment is triggered by the end user, and a rare action - e.g. maybe once per year or even less, for typical setups -, so an attacker has limited chances to run an attack. While not a complete protection on its own, this reduces the risk significantly.
 
-However, if the mail client does regular config updates using this protocol, this security property is no longer given. For regular updates, the mail client MUST use only mechanisms that are secure and cannot be tampered with by an active attacker. Furthermore, the user MUST still approve config changes.
+However, if the mail client does regular configuration updates using this protocol, this security property is no longer given. For regular configuration updates, the mail client MUST use only mechanisms that are secure and cannot be tampered with by an active attacker. Furthermore, the user SHOULD still approve config changes.
 
 But even with all these protections implemented, the mail client vendor should make a security assessment for the risks of making such regular updates. The mail client vendor should consider that servers can be hacked, and most users simply approve changes proposed by the app, so these give only a limited protection.
 
 ## Server security
 
-Given that mail clients will trust the configuration, the server delivering it needs to be secure. Even though we call it "database", static configuration files that are generated before deployment in combination with a static web server offer better security and significantly better performance than dynamic queries from a database and responses generated on-the-fly on request. If a custom server is used, it MUST be updated regularly and hosted on a dedicated secure server with all unnecessary services and server features turned off.
+Given that mail clients will trust the configuration, the server delivering it needs to be secure. Even though we call it "database", static configuration files that are generated before deployment in combination with a static web server offer better security and significantly better performance than dynamic queries from a database and responses generated on-the-fly on request. If a custom server is used, it SHOULD be updated regularly and hosted on a dedicated secure server with all unnecessary services and server features turned off.
 
 Additions and modifications to the configurations are applicable to all respective users and must be made with care. The authenticity of the configuration MUST be verified from authorative sources. Server hostnames MUST be compared with the email domain names they are serving, and if they differ, the ownership of the server hostnames MUST be validated.
 
-For these reasons, mail clients SHOULD use the public mail config database mentioned above.
+For these reasons, mail clients may use the public mail config database mentioned above.
 
 The risk is mitigated to some degree by section "User approval".
+
 
 # IANA Considerations
 
