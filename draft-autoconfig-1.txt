@@ -387,11 +387,9 @@ Table of Contents
    For full support of this specification, all "Required" and
    "Recommended" mechanisms MUST be implemented and working.  For
    partial support of this specification, all "Required" mechanisms MUST
-   be implemented.  You may only state that you implement or support
-   autoconfig and/or this spec, if you implement full support.
-   Otherwise, you need to make explicit that implemented only "Partial
-   support" of this specification.  "Optional" mechanisms may be left
-   unimplemented.
+   be implemented and working, and in this case, you shall make explicit
+   when advertizing or referring to auto config that there is only
+   partial support of this specification.
 
 4.1.  Mail provider
 
@@ -402,7 +400,7 @@ Table of Contents
 
    Mail providers MUST return a working configuration, with state-of-
    the-art security.  Configuration fields MUST NOT contain invalid or
-   non-working data.
+   non-working configuration data.
 
    To allow the mail provider to return a configuration adjusted for
    that mailbox, the client sends the email address as query parameter.
@@ -471,7 +469,7 @@ Table of Contents
    their customers to modify their root DNS specifically for autoconfig.
    On the other side, the ISPDB can only contain the hosting company and
    cannot know all their customers.  To handle such domains, the
-   protocol must first find the server hosting the email.
+   protocol first needs to find the server hosting the email.
 
    If the previous mechanisms yield no result, the client may perform a
    DNS MX lookup on the email domain, and retrieve the MX server
@@ -491,14 +489,14 @@ Table of Contents
 
    For example:
 
-   *  For "mx.premium.europe.example.com", the MXFULLDOMAIN is
-      "premium.europe.example.com" and the MXTOPDOMAIN is "example.com".
-
    *  For "mx.example.com", the MXFULLDOMAIN and MXTOPDOMAIN are both
       "example.com".
 
    *  For "mx.example.co.uk", the MXFULLDOMAIN and MXTOPDOMAIN are both
       "example.co.uk".
+
+   *  For "mx.premium.europe.example.com", the MXFULLDOMAIN is
+      "premium.europe.example.com" and the MXTOPDOMAIN is "example.com".
 
    Then, attempt to retrieve the config for these MX domains, using the
    previous methods:
@@ -550,7 +548,7 @@ Table of Contents
    for example Exchange AutoDiscover, DNS SRV, or heuristic guessing.
    If you implement such alternative methods, and if they are less
    secure than some of the mechanisms provided here, the alternative
-   methods must be considered only with lower priority (as defined
+   methods SHOULD be considered only with lower priority (as defined
    above) than the more secure mechanisms defined here.  For evaluating
    other mechanisms, use similar criteria as outlined in section
    Security considerations.
@@ -558,7 +556,7 @@ Table of Contents
 4.6.  Manual configuration
 
    If the above mechanisms fail to provide a working configuration, or
-   if the user explicitly chooses so, you SHOULD give the end user the
+   if the user explicitly chooses so, you should give the end user the
    ability to manually enter a configuration, and use that configuration
    to configure the account.
 
@@ -566,12 +564,12 @@ Table of Contents
 
 5.1.  User approval
 
-   Independent of the mechanisms used to find the configuration, you
-   MUST display that configuration to the end user and let him confirm
-   it, before using that configuration.  While doing so:
+   Independent of the mechanisms used to find the configuration, before
+   using that configuration, you SHOULD display that configuration to
+   the end user and let him confirm it.  While doing so:
 
    *  At least the second-level domain name(s) of the hostnames involved
-      must be shown clearly and with high prominence.
+      MUST be shown clearly and with high prominence.
 
    *  The client MUST NOT cut off parts of long second-level domains, to
       avoid spoofing.  At least 63 characters MUST be displayed.
@@ -590,10 +588,10 @@ Table of Contents
 
    If the configuration contains OAuth2 authentication, or any other
    authentication that uses a web browser with URL redirects, you MUST
-   show the URL of the current page to the end user, at all times,
-   including after page changes, URL changes or redirects.  This allows
-   the end user to verify that he is logging in at the expected page,
-   e.g. the login server of their company.
+   show the full URL or the second-level domain of the current page to
+   the end user, at all times, including after page changes, URL changes
+   or redirects.  This allows the end user to verify that he is logging
+   in at the expected page, e.g. the login server of their company.
 
    (Editor's note: Not really part of autoconfig, but autoconfig can
    enable OAuth2, and it's important that this is implemented correctly
@@ -704,11 +702,11 @@ Table of Contents
    attack.  While not a complete protection on its own, this reduces the
    risk significantly.
 
-   However, if the mail client does regular config updates using this
-   protocol, this security property is no longer given.  For regular
-   updates, the mail client MUST use only mechanisms that are secure and
-   cannot be tampered with by an active attacker.  Furthermore, the user
-   MUST still approve config changes.
+   However, if the mail client does regular configuration updates using
+   this protocol, this security property is no longer given.  For
+   regular configuration updates, the mail client MUST use only
+   mechanisms that are secure and cannot be tampered with by an active
+   attacker.  Furthermore, the user SHOULD still approve config changes.
 
    But even with all these protections implemented, the mail client
    vendor should make a security assessment for the risks of making such
@@ -724,7 +722,7 @@ Table of Contents
    combination with a static web server offer better security and
    significantly better performance than dynamic queries from a database
    and responses generated on-the-fly on request.  If a custom server is
-   used, it MUST be updated regularly and hosted on a dedicated secure
+   used, it SHOULD be updated regularly and hosted on a dedicated secure
    server with all unnecessary services and server features turned off.
 
    Additions and modifications to the configurations are applicable to
@@ -734,7 +732,7 @@ Table of Contents
    serving, and if they differ, the ownership of the server hostnames
    MUST be validated.
 
-   For these reasons, mail clients SHOULD use the public mail config
+   For these reasons, mail clients may use the public mail config
    database mentioned above.
 
    The risk is mitigated to some degree by section "User approval".
