@@ -351,20 +351,20 @@ Many companies do not maintain their own mail server, but let their email be hos
 If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain. Only the highest priority MX hostname is considered. From that MX hostname, 2 values are extracted:
 
 * Remove the first component from the MX hostname, i.e. everything up to and including the first `.`, and use that as value for `%MXFULLDOMAIN%`.
-* Extract only the second-level domain from the MX hostname, and use that as value for `%MXTOPDOMAIN%`. To determine the second-level domain, use the [Public Suffic List](https://publicsuffix.org) or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".
+* Extract only the second-level domain from the MX hostname, and use that as value for `%MXMAINDOMAIN%`. To determine the second-level domain, use the [Public Suffic List](https://publicsuffix.org) or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".
 
  For example:
 
- * For "mx.example.com", the MXFULLDOMAIN and MXTOPDOMAIN are both "example.com".
- * For "mx.example.co.uk", the MXFULLDOMAIN and MXTOPDOMAIN are both "example.co.uk".
- * For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXTOPDOMAIN is "example.com".
+ * For "mx.example.com", the MXFULLDOMAIN and MXMAINDOMAIN are both "example.com".
+ * For "mx.example.co.uk", the MXFULLDOMAIN and MXMAINDOMAIN are both "example.co.uk".
+ * For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXMAINDOMAIN is "example.com".
 
 Then, attempt to retrieve the config for these MX domains, using the previous methods:
 
 * 3.1. `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
-* 3.2. `https://autoconfig.%MXTOPDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
+* 3.2. `https://autoconfig.%MXMAINDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
 * 3.3. `%ISPDB%%MXFULLDOMAIN%` (Recommended)
-* 3.4. `%ISPDB%%MXTOPDOMAIN%` (Recommended)
+* 3.4. `%ISPDB%%MXMAINDOMAIN%` (Recommended)
 
 For example:
 
