@@ -324,7 +324,7 @@ For example:
 
 * 1.1. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
 * 1.2. https://example.com/.well-known/autoconfig/mail/config-v1.1.xml
-* 1.3. http://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
+* 1.3. http://autoconfig.example.com/mail/config-v1.1.xml
 
 
 ## Central database
@@ -394,7 +394,7 @@ You may want to implement other mechanisms to find a configuration, for example 
 
 ## Manual configuration
 
-If the above mechanisms fail to provide a working configuration, or if the user explicitly chooses so, you should give the end user the ability to manually enter a configuration, and use that configuration to configure the account.
+If the above mechanisms fail to provide a working configuration, or if the user explicitly chooses so, you SHOULD give the end user the ability to manually enter a configuration, and use that configuration to configure the account.
 
 
 # Config validation
@@ -434,8 +434,10 @@ Due to their top-level domain, some domains do not have DNSSEC available to them
 ## DNS SRV
 
 DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2 reasons:
+
 1. DNS SRV relies on insecure DNS and the config can therefore be trivially spoofed by an attacker. See also DNSSEC above.
-2. DNS SRV does not provide all the necessary configuration parameters. For example, we need all of :
+2. DNS SRV does not provide all the necessary configuration parameters. For example, we need all of:
+
 * the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even a username with no relation to the email address)
 * authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)
 * authentication method parameters (e.g. OAuth parameters)
