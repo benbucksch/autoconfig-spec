@@ -1031,7 +1031,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bucksch</td>
-<td class="center">Expires 7 May 2024</td>
+<td class="center">Expires 9 May 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1044,12 +1044,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-autoconfig-1-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-04" class="published">4 November 2023</time>
+<time datetime="2023-11-06" class="published">6 November 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-05-07">7 May 2024</time></dd>
+<dd class="expires"><time datetime="2024-05-09">9 May 2024</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1094,7 +1094,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 7 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1747,8 +1747,9 @@ appear in all capitals, as shown here.<a href="#section-7-1" class="pilcrow">¶<
         <h3 id="name-dnssec">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-dnssec" class="section-name selfRef">DNSSEC</a>
         </h3>
-<p id="section-8.1-1">For the purposes of this specification, DNSSEC is not a solution for the problem of insecure DNS, because DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">Due to their top-level domain, some domains do not have DNSSEC available to them, even if they would like to deploy it. Therefore, DNSSEC cannot be relied on in this specification, and plain DNS must be considered insecure.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">Due to their top-level domain, some domains do not have DNSSEC available to them, even if they would like to deploy it.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">Even where the top-level domain supports it, DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Therefore, DNSSEC cannot be relied on in this specification, and DNS must be considered insecure for the purposes of this specification.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="dns-srv">
@@ -1785,9 +1786,11 @@ appear in all capitals, as shown here.<a href="#section-7-1" class="pilcrow">¶<
         <h3 id="name-capabilities">
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-capabilities" class="section-name selfRef">CAPABILITIES</a>
         </h3>
-<p id="section-8.3-1">In the wild deployments from actual ISPs show that protocol-specific commands to find available authentication methods, e.g. IMAP <code>CAPABILITIES</code> or POP3 <code>CAPA</code>, are not reliable. Many email servers advertize authentication methods that do not work. For example, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method fails, and also runs into a long 2 minute timeout in some cases. End users consider that to be a broken app.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
-<p id="section-8.3-2">Additionally, such commands are protocol specific and have to be implemented in multiple different ways.<a href="#section-8.3-2" class="pilcrow">¶</a></p>
-<p id="section-8.3-3">Finally, some protocols do not support capabilties commands that include authentication methods.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
+<p id="section-8.3-1">In the wild deployments from actual ISPs show that protocol-specific commands to find available authentication methods, e.g. IMAP <code>CAPABILITIES</code> or POP3 <code>CAPA</code>, are not reliable. Many email servers advertize authentication methods that do not work.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.3-2">Some IMAP servers are default configured to list all SASL authentication methods that have corresponding libraries installed on the system, independent on whether they are actually configured to work. The client receives a long list of authentication methods, and many of them do not work. Additionally, the server response may be only "authentication failed" and may not indicate whether the method failed due to lack of configuration, or because the password was wrong. Because some authentication servers lock the account after 3 failed login attempts, and it may also fail due to unrelated reasons (e.g. username form, wrong password, etc.), the client cannot blindly issue countless login attempts. Locking the account must be avoided. So, simply attempting all methods and seeing which one works is not an option for the email client.<a href="#section-8.3-2" class="pilcrow">¶</a></p>
+<p id="section-8.3-3">Additionally, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method fails, and also runs into a long 2 minute timeout in some cases. End users consider that to be a broken app.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
+<p id="section-8.3-4">Additionally, such commands are protocol specific and have to be implemented in multiple different ways.<a href="#section-8.3-4" class="pilcrow">¶</a></p>
+<p id="section-8.3-5">Finally, some non-mail protocols may not support capabilties commands that include authentication methods.<a href="#section-8.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
