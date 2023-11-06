@@ -427,9 +427,11 @@ If the configuration contains OAuth2 authentication, or any other authentication
 
 ## DNSSEC
 
-For the purposes of this specification, DNSSEC is not a solution for the problem of insecure DNS, because DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.
+Due to their top-level domain, some domains do not have DNSSEC available to them, even if they would like to deploy it.
 
-Due to their top-level domain, some domains do not have DNSSEC available to them, even if they would like to deploy it. Therefore, DNSSEC cannot be relied on in this specification, and plain DNS must be considered insecure.
+Even where the top-level domain supports it, DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.
+
+Therefore, DNSSEC cannot be relied on in this specification, and DNS must be considered insecure for the purposes of this specification.
 
 ## DNS SRV
 
@@ -448,11 +450,15 @@ This specification was created as an answer to these deficiencies and provides a
 
 ## CAPABILITIES
 
-In the wild deployments from actual ISPs show that protocol-specific commands to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3 `CAPA`, are not reliable. Many email servers advertize authentication methods that do not work. For example, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method fails, and also runs into a long 2 minute timeout in some cases. End users consider that to be a broken app.
+In the wild deployments from actual ISPs show that protocol-specific commands to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3 `CAPA`, are not reliable. Many email servers advertize authentication methods that do not work.
+
+Some IMAP servers are default configured to list all SASL authentication methods that have corresponding libraries installed on the system, independent on whether they are actually configured to work. The client receives a long list of authentication methods, and many of them do not work. Additionally, the server response may be only "authentication failed" and may not indicate whether the method failed due to lack of configuration, or because the password was wrong. Because some authentication servers lock the account after 3 failed login attempts, and it may also fail due to unrelated reasons (e.g. username form, wrong password, etc.), the client cannot blindly issue countless login attempts. Locking the account must be avoided. So, simply attempting all methods and seeing which one works is not an option for the email client.
+
+Additionally, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method fails, and also runs into a long 2 minute timeout in some cases. End users consider that to be a broken app.
 
 Additionally, such commands are protocol specific and have to be implemented in multiple different ways.
 
-Finally, some protocols do not support capabilties commands that include authentication methods.
+Finally, some non-mail protocols may not support capabilties commands that include authentication methods.
 
 
 # Security Considerations
