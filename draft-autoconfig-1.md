@@ -68,6 +68,7 @@ Currently, this protocol or parts of it has been implemented by:
 * [K9 Mail](https://k9mail.app)
 * [FairEmail](https://email.faircode.eu)
 * [NextCloud email](https://apps.nextcloud.com/apps/mail)
+* [Delta Chat](https://delta.chat/)
 
 and likely other mail clients.
 
