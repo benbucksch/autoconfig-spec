@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-07T00:59:35.003186+00:00",
+  "timestamp": "2024-01-09T00:55:35.508015+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -96,7 +96,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-01-07T00:39:46Z",
-      "updatedAt": "2024-01-07T00:39:46Z",
+      "updatedAt": "2024-01-07T22:57:37Z",
       "baseRepository": "benbucksch/autoconfig-spec",
       "baseRefName": "main",
       "baseRefOid": "973115706ad553784148728468bc73072e8a1649",
@@ -107,7 +107,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "link2xt",
+          "authorAssociation": "NONE",
+          "body": "Our implementation is here: https://github.com/deltachat/deltachat-core-rust/blob/main/src/configure/auto_mozilla.rs\r\n\r\nURLs tried are here:\r\nhttps://github.com/deltachat/deltachat-core-rust/blob/b9a58bf6258d6d5b60d16cd44318f16b61c6318b/src/configure.rs#L506-L532",
+          "createdAt": "2024-01-07T22:57:35Z",
+          "updatedAt": "2024-01-07T22:57:35Z"
+        }
+      ],
       "reviews": []
     }
   ]
