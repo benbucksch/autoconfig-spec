@@ -96,6 +96,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           <!-- type=
               "imap": IMAP
               "pop3": POP3
+              "jmap": JMAP
               -->
           <incomingServer type="pop3">
             <hostname>pop.example.com</hostname>
@@ -105,7 +106,52 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                     "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
                     -->
             <socketType>SSL</socketType>
-            <username>%EMAILLOCALPART%</username>
+            <username>%EMAILADDRESS%</username>
+                <!-- Authentication methods:
+                    "password-cleartext",
+                              Send password in the clear
+                              (dangerous, if SSL isn't used either).
+                              AUTH PLAIN, LOGIN or protocol-native login.
+                    "password-encrypted",
+                              A secure encrypted password mechanism.
+                              Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
+                    "NTLM":
+                              Use NTLM (or NTLMv2 or successors),
+                              the Windows login mechanism.
+                    "GSSAPI":
+                              Use Kerberos / GSSAPI,
+                              a single-signon mechanism used for big sites.
+                    "client-IP-address":
+                              The server recognizes this user based on the IP address.
+                              No authentication needed, the server will require no username nor password.
+                    "TLS-client-cert":
+                              On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available. (Not yet supported by Thunderbird)
+                    "OAuth2":
+                              OAuth2. Works only on specific hardcoded servers, please see below. Should be added only as second alternative.
+                    "none":
+                              No authentication
+                    -->
+            <authentication>password-cleartext</authentication>
+            <pop3>
+                <!-- remove the following and leave to client/user? -->
+                <leaveMessagesOnServer>true</leaveMessagesOnServer>
+                <downloadOnBiff>true</downloadOnBiff>
+                <daysToLeaveMessagesOnServer>14</daysToLeaveMessagesOnServer>
+                <!-- only for servers which don't allow checks more often -->
+                <checkInterval minutes="15"/><!-- not yet supported -->
+            </pop3>
+            <password>optional: the user's password</password>
+          </incomingServer>
+
+          <!-- You can have multiple incoming servers,
+            and even multiple IMAP server configs.
+            The first config is the preferred one, but the user or
+            or client can choose the alternative configs. -->
+          <incomingServer type="jmap">
+            <hostname>jmap.example.com</hostname>
+            <port>443</port>
+            <socketType>SSL</socketType>
+            <username>%EMAILADDRESS%</username>
                 <!-- Authentication methods:
                     "password-cleartext",
                               Send password in the clear
@@ -146,7 +192,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <hostname>smtp.googlemail.com</hostname>
             <port>587</port>
             <socketType>STARTTLS</socketType> <!-- see <incomingServer> -->
-            <username>%EMAILLOCALPART%</username> <!-- if smtp-auth -->
+            <username>%EMAILADDRESS%</username> <!-- if smtp-auth -->
                 <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
                     For values, see incoming.
                     Additional options here:
@@ -158,8 +204,8 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                       It will ignore the whole XML file, if other values are given.
                 -->
             <authentication>password-cleartext</authentication>
-                <!-- If the server makes some additional requirements beyond
-                    <authentication>.
+            <password>optional: the user's password</password>
+                <!-- If the server makes some additional requirements beyond <authentication>:
                     "client-IP-address": The server is only reachable or works,
                         if the user is in a certain IP network, e.g.
                         the dialed into the ISP's network (DSL, cable, modem) or
@@ -177,7 +223,6 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <!-- remove the following and leave to client/user? -->
             <addThisServer>true</addThisServer>
             <useGlobalPreferredServer>true</useGlobalPreferredServer>
-            <password>optional: the user's password</password>
           </outgoingServer>
 
           <!-- A page where the ISP describes the configuration.
@@ -197,7 +242,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
 
         </emailProvider>
 
-        <!-- Syncronize the user's address book / contacts. Not yet implemented. -->
+        <!-- Syncronize the user's address book / contacts. -->
         <addressBook type="carddav">
           <username>%EMAILADDRESS%</username>
             <!-- Authentication methods. See also <incomingServer>.
@@ -208,20 +253,33 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                             Authenticate to the HTTP server using
                             WWW-Authenticate: Digest
                   "OAuth2":
-                            OAuth2. Uses the same token as for email.
+                            OAuth2. Uses the same token as for email. <scope> needs to include
+                             addressbook/calendar.
                   -->
           <authentication>http-basic</authentication>
-          <serverURL>https://contacts.example.com/remote.php/dav<serverURL>
+          <serverURL>https://jmap.example.com/remote.php/dav<serverURL>
         </addressBook>
 
-        <!-- Syncronize the user's calendar. Not yet implemented. -->
+        <addressBook type="jmap">
+          <username>%EMAILADDRESS%</username>
+          <authentication>http-basic</authentication>
+          <serverURL>https://jmap.example.com<serverURL>
+        </addressBook>
+
+        <!-- Syncronize the user's calendar. -->
         <calendar type="caldav">
           <username>%EMAILADDRESS%</username>
           <authentication>http-basic</authentication> <!-- see <addressBook> -->
           <serverURL>https://calendar.example.com/remote.php/dav<serverURL>
         </calendar>
 
-        <!-- Upload files, allowing the user to share them. Not yet implemented.
+        <calendar type="jmap">
+          <username>%EMAILADDRESS%</username>
+          <authentication>http-basic</authentication> <!-- see <addressBook> -->
+          <serverURL>https://calendar.example.com<serverURL>
+        </calendar>
+
+        <!-- Upload files, allowing the user to share them.
             This can be used for Thunderbird's FileLink feature,
             or to set up a file sync folder on the user's desktop. -->
         <fileShare type="webdav">
@@ -230,9 +288,9 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           <serverURL>https://share.example.com/remote.php/dav<serverURL>
         </fileShare>
 
-        <!-- This allows to access the webmail service of the provider.
+        <!-- This allows to login in to the webmail service of the provider.
             The URLs are loaded into a standard webbrowser for the user.
-            Specifying this is optional. -->
+            This is optional. -->
         <webMail>
           <!-- Webpage where the user has to log in manually by entering username
               and password himself.
@@ -272,22 +330,25 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           </loginPageInfo>
         </webMail>
 
-        <!-- see description. Not yet supported, see bug 564043. -->
+        <!-- Ask user for custom input,
+           and use them as placeholders in the values.
+           Optional. -->
         <inputField key="USERNAME" label="Screen name"></inputField>
         <inputField key="GRANDMA" label="Grandma">Elise Bauer</inputField>
 
         <!-- Add this only when users (who already have an account) have to
             do something manually before the account can work with IMAP/POP or SSL.
-            Note: Per XML, & (ampersand) needs to be escaped to & a m p ;
-            (without spaces).
-            Not yet implemented, see bug 586364. -->
+            Note: Per XML, & (ampersand) needs to be escaped to
+            & a m p ; (without spaces).
+            Mandatory only if the ISP requires such settings
+            before the configs above work. -->
         <enable
           visiturl="https://mail.google.com/mail/?ui=2&shva=1#settings/fwdandpop">
           <instruction>Check 'Enable IMAP and POP' in Google settings page</instruction>
           <instruction lang="de">Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an</instruction>
         </enable>
 
-        <clientConfigUpdate url="https://www.example.com/config/mozilla.xml" />
+        <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
 
     </clientConfig>
 
