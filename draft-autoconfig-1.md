@@ -424,7 +424,7 @@ If the previous mechanisms yield no result, the client may perform a DNS MX look
 * Remove the first component from the MX hostname, i.e. everything up to and including the first `.`, and use that as value for `%MXFULLDOMAIN%`.
 * Extract only the second-level domain from the MX hostname, and use that as value for `%MXBASEDOMAIN%`. To determine the second-level domain, use the [Public Suffic List](https://publicsuffix.org) or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".
 
- For example:
+For example:
 
  * For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both "example.com".
  * For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both "example.co.uk".
@@ -514,6 +514,30 @@ the location from step 3.1. above should be used, i.e.
 E.g. if the MX server for customer domain example.net is "mx.premium.europe.example.com", then the config file should be at
 https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
 For backwards compatibility, step 3.2. should also be implemented.
+
+## No authentication for config
+
+Any of the above URLs for retrieving the config file MUST NOT
+require authentication, but MUST be public.
+
+This is because the config contains the authentication method.
+Without knowing the config, the client does not know which
+authentication method is required and which username form
+(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE")
+to use. Given that the config is required for authentication,
+the config itself cannot require authentication.
+
+## Return config for non-existing email addresses
+
+Servers SHOULD return a valid config, even if the email address
+sent as URL parameter does not exist. Otherwise, spammers
+or attackers would be able to test the validity of email addresses.
+This is true even if the config server needs the email address
+to determine which of multiple configurations is correct.
+In such a configuration, if the client sends a non-existing
+email address, the config server SHOULD return one of the
+valid configuations, so that valid and invalid email addresses
+are indistiguishable.
 
 ## oAuth2 requirements
 
