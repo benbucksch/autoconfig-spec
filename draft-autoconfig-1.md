@@ -397,6 +397,8 @@ For example:
 * 1.2. https://example.com/.well-known/autoconfig/mail/config-v1.1.xml
 * 1.3. http://autoconfig.example.com/mail/config-v1.1.xml
 
+Step 1.3. is mainly for legacy servers. Many current deployments
+use this HTTP URL.
 
 ## Central database
 
