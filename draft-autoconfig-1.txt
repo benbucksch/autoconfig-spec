@@ -4,8 +4,8 @@
 
 Network Working Group                                         B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                           6 November 2023
-Expires: 9 May 2024
+Intended status: Informational                           31 January 2024
+Expires: 3 August 2024
 
 
                             Mail Autoconfig
@@ -42,11 +42,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 May 2024.
+   This Internet-Draft will expire on 3 August 2024.
 
 Copyright Notice
 
-   Copyright (c) 2023 IETF Trust and the persons identified as the
+   Copyright (c) 2024 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -65,7 +65,7 @@ Table of Contents
    3.  Data format
      3.1.  Sample config file
      3.2.  Formal definition
-   4.  Config retrieval
+   4.  Config retrieval for mail clients
      4.1.  Mail provider
      4.2.  Central database
      4.3.  MX
@@ -75,7 +75,13 @@ Table of Contents
    5.  Config validation
      5.1.  User approval
      5.2.  Login testing
-   6.  OAuth2 windows
+     5.3.  OAuth2 windows
+   6.  Config publishing for mail providers
+     6.1.  Config location for single domain
+     6.2.  Config location based on MX server
+     6.3.  No authentication for config
+     6.4.  Return config for non-existing email addresses
+     6.5.  oAuth2 requirements
    7.  Conventions and Definitions
    8.  Alternatives considered
      8.1.  DNSSEC
@@ -163,6 +169,7 @@ Table of Contents
       <!-- type=
           "imap": IMAP
           "pop3": POP3
+          "jmap": JMAP
           -->
       <incomingServer type="pop3">
         <hostname>pop.example.com</hostname>
@@ -172,7 +179,52 @@ Table of Contents
                 "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
                 -->
         <socketType>SSL</socketType>
-        <username>%EMAILLOCALPART%</username>
+        <username>%EMAILADDRESS%</username>
+            <!-- Authentication methods:
+                "password-cleartext",
+                          Send password in the clear
+                          (dangerous, if SSL isn't used either).
+                          AUTH PLAIN, LOGIN or protocol-native login.
+                "password-encrypted",
+                          A secure encrypted password mechanism.
+                          Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
+                "NTLM":
+                          Use NTLM (or NTLMv2 or successors),
+                          the Windows login mechanism.
+                "GSSAPI":
+                          Use Kerberos / GSSAPI,
+                          a single-signon mechanism used for big sites.
+                "client-IP-address":
+                          The server recognizes this user based on the IP address.
+                          No authentication needed, the server will require no username nor password.
+                "TLS-client-cert":
+                          On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available. (Not yet supported by Thunderbird)
+                "OAuth2":
+                          OAuth2. Works only on specific hardcoded servers, please see below. Should be added only as second alternative.
+                "none":
+                          No authentication
+                -->
+        <authentication>password-cleartext</authentication>
+        <pop3>
+            <!-- remove the following and leave to client/user? -->
+            <leaveMessagesOnServer>true</leaveMessagesOnServer>
+            <downloadOnBiff>true</downloadOnBiff>
+            <daysToLeaveMessagesOnServer>14</daysToLeaveMessagesOnServer>
+            <!-- only for servers which don't allow checks more often -->
+            <checkInterval minutes="15"/><!-- not yet supported -->
+        </pop3>
+        <password>optional: the user's password</password>
+      </incomingServer>
+
+      <!-- You can have multiple incoming servers,
+        and even multiple IMAP server configs.
+        The first config is the preferred one, but the user or
+        or client can choose the alternative configs. -->
+      <incomingServer type="jmap">
+        <hostname>jmap.example.com</hostname>
+        <port>443</port>
+        <socketType>SSL</socketType>
+        <username>%EMAILADDRESS%</username>
             <!-- Authentication methods:
                 "password-cleartext",
                           Send password in the clear
@@ -213,7 +265,7 @@ Table of Contents
         <hostname>smtp.googlemail.com</hostname>
         <port>587</port>
         <socketType>STARTTLS</socketType> <!-- see <incomingServer> -->
-        <username>%EMAILLOCALPART%</username> <!-- if smtp-auth -->
+        <username>%EMAILADDRESS%</username> <!-- if smtp-auth -->
             <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
                 For values, see incoming.
                 Additional options here:
@@ -225,8 +277,8 @@ Table of Contents
                   It will ignore the whole XML file, if other values are given.
             -->
         <authentication>password-cleartext</authentication>
-            <!-- If the server makes some additional requirements beyond
-                <authentication>.
+        <password>optional: the user's password</password>
+            <!-- If the server makes some additional requirements beyond <authentication>:
                 "client-IP-address": The server is only reachable or works,
                     if the user is in a certain IP network, e.g.
                     the dialed into the ISP's network (DSL, cable, modem) or
@@ -244,7 +296,6 @@ Table of Contents
         <!-- remove the following and leave to client/user? -->
         <addThisServer>true</addThisServer>
         <useGlobalPreferredServer>true</useGlobalPreferredServer>
-        <password>optional: the user's password</password>
       </outgoingServer>
 
       <!-- A page where the ISP describes the configuration.
@@ -264,7 +315,7 @@ Table of Contents
 
     </emailProvider>
 
-    <!-- Syncronize the user's address book / contacts. Not yet implemented. -->
+    <!-- Syncronize the user's address book / contacts. -->
     <addressBook type="carddav">
       <username>%EMAILADDRESS%</username>
         <!-- Authentication methods. See also <incomingServer>.
@@ -275,20 +326,33 @@ Table of Contents
                         Authenticate to the HTTP server using
                         WWW-Authenticate: Digest
               "OAuth2":
-                        OAuth2. Uses the same token as for email.
+                        OAuth2. Uses the same token as for email. <scope> needs to include
+                         addressbook/calendar.
               -->
       <authentication>http-basic</authentication>
-      <serverURL>https://contacts.example.com/remote.php/dav<serverURL>
+      <serverURL>https://jmap.example.com/remote.php/dav<serverURL>
     </addressBook>
 
-    <!-- Syncronize the user's calendar. Not yet implemented. -->
+    <addressBook type="jmap">
+      <username>%EMAILADDRESS%</username>
+      <authentication>http-basic</authentication>
+      <serverURL>https://jmap.example.com<serverURL>
+    </addressBook>
+
+    <!-- Syncronize the user's calendar. -->
     <calendar type="caldav">
       <username>%EMAILADDRESS%</username>
       <authentication>http-basic</authentication> <!-- see <addressBook> -->
       <serverURL>https://calendar.example.com/remote.php/dav<serverURL>
     </calendar>
 
-    <!-- Upload files, allowing the user to share them. Not yet implemented.
+    <calendar type="jmap">
+      <username>%EMAILADDRESS%</username>
+      <authentication>http-basic</authentication> <!-- see <addressBook> -->
+      <serverURL>https://calendar.example.com<serverURL>
+    </calendar>
+
+    <!-- Upload files, allowing the user to share them.
         This can be used for Thunderbird's FileLink feature,
         or to set up a file sync folder on the user's desktop. -->
     <fileShare type="webdav">
@@ -297,9 +361,9 @@ Table of Contents
       <serverURL>https://share.example.com/remote.php/dav<serverURL>
     </fileShare>
 
-    <!-- This allows to access the webmail service of the provider.
+    <!-- This allows to login in to the webmail service of the provider.
         The URLs are loaded into a standard webbrowser for the user.
-        Specifying this is optional. -->
+        This is optional. -->
     <webMail>
       <!-- Webpage where the user has to log in manually by entering username
           and password himself.
@@ -339,22 +403,35 @@ Table of Contents
       </loginPageInfo>
     </webMail>
 
-    <!-- see description. Not yet supported, see bug 564043. -->
+    <!-- Ask user for custom input,
+       and use them as placeholders in the values.
+       Optional. -->
     <inputField key="USERNAME" label="Screen name"></inputField>
     <inputField key="GRANDMA" label="Grandma">Elise Bauer</inputField>
 
+    <!-- oAuth2 specced for mail apps,
+        e.g. clientID, expiry, and login page -->
+    <mAuth>
+      <authURL>https://login.example.com/common/oauth2/v2.0/authorize</authURL>
+      <tokenURL>https://login.example.com/common/oauth2/v2.0/token</tokenURL>
+      <issuer>login.example.com</issuer>
+      <scope>imap pop3 smtp webdav caldav carddav offline_access</scope>
+      <clientID>autoconfig</clientID>
+    </mAuth>
+
     <!-- Add this only when users (who already have an account) have to
         do something manually before the account can work with IMAP/POP or SSL.
-        Note: Per XML, & (ampersand) needs to be escaped to & a m p ;
-        (without spaces).
-        Not yet implemented, see bug 586364. -->
+        Note: Per XML, & (ampersand) needs to be escaped to
+        & a m p ; (without spaces).
+        Mandatory only if the ISP requires such settings
+        before the configs above work. -->
     <enable
       visiturl="https://mail.google.com/mail/?ui=2&shva=1#settings/fwdandpop">
       <instruction>Check 'Enable IMAP and POP' in Google settings page</instruction>
       <instruction lang="de">Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an</instruction>
     </enable>
 
-    <clientConfigUpdate url="https://www.example.com/config/mozilla.xml" />
+    <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
 
 </clientConfig>
 
@@ -362,7 +439,7 @@ Table of Contents
 
    TODO Schema for XML
 
-4.  Config retrieval
+4.  Config retrieval for mail clients
 
    The mail client application, when it needs the configuration for a
    given email address, will perform several steps to retrieve the
@@ -414,24 +491,27 @@ Table of Contents
    as necessary, can be used to route the traffic and host the mail
    efficiently.
 
-   *  1.1. https://autoconfig.%EMAILDOMAIN%/mail/config-
-      v1.1.xml?emailaddress=%EMAILADDRESS% (Required)
+   *  1.1. https://autoconfig.%EMAILDOMAIN%/.well-known/mail-
+      v1.xml?emailaddress=%EMAILADDRESS% (Required)
 
    *  1.2. https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-
-      v1.1.xml (Recommended)
+      v1.1.xml (Optional)
 
    *  1.3. http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml
       (Optional)
 
    For example:
 
-   *  1.1. https://autoconfig.example.com/mail/config-
-      v1.1.xml?emailaddress=fred@example.com
+   *  1.1. https://autoconfig.example.com/.well-known/mail-
+      v1.xml?emailaddress=fred@example.com
 
    *  1.2. https://example.com/.well-known/autoconfig/mail/config-
       v1.1.xml
 
    *  1.3. http://autoconfig.example.com/mail/config-v1.1.xml
+
+   Step 1.3. is mainly for legacy servers.  Many current deployments use
+   this HTTP URL.
 
 4.2.  Central database
 
@@ -455,8 +535,8 @@ Table of Contents
 
    For example:
 
-   *  2.1. https://autoconfig.thunderbird.net/v1.1/geologist.com
-      (https://autoconfig.thunderbird.net/v1.1/geologist.com)
+   *  2.1. https://autoconfig.ispdb.net/v1.1/geologist.com
+      (https://autoconfig.ispdb.net/v1.1/geologist.com)
 
 4.3.  MX
 
@@ -481,43 +561,43 @@ Table of Contents
       %MXFULLDOMAIN%.
 
    *  Extract only the second-level domain from the MX hostname, and use
-      that as value for %MXMAINDOMAIN%. To determine the second-level
+      that as value for %MXBASEDOMAIN%. To determine the second-level
       domain, use the Public Suffic List (https://publicsuffix.org) or a
       similarly suited method, to correctly handle domains like ".co.uk"
       and ".com.au".
 
    For example:
 
-   *  For "mx.example.com", the MXFULLDOMAIN and MXMAINDOMAIN are both
+   *  For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both
       "example.com".
 
-   *  For "mx.example.co.uk", the MXFULLDOMAIN and MXMAINDOMAIN are both
+   *  For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both
       "example.co.uk".
 
    *  For "mx.premium.europe.example.com", the MXFULLDOMAIN is
-      "premium.europe.example.com" and the MXMAINDOMAIN is
+      "premium.europe.example.com" and the MXBASEDOMAIN is
       "example.com".
 
    Then, attempt to retrieve the config for these MX domains, using the
    previous methods:
 
-   *  3.1. https://autoconfig.%MXFULLDOMAIN%/mail/config-
-      v1.1.xml?emailaddress=%EMAILADDRESS% (Recommended)
+   *  3.1. https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-
+      v1.xml?emailaddress=%EMAILADDRESS% (Required)
 
-   *  3.2. https://autoconfig.%MXMAINDOMAIN%/mail/config-
-      v1.1.xml?emailaddress=%EMAILADDRESS% (Recommended)
+   *  3.2. https://autoconfig.%MXBASEDOMAIN%/.well-known/mail-
+      v1.xml?emailaddress=%EMAILADDRESS% (Recommended)
 
    *  3.3. %ISPDB%%MXFULLDOMAIN% (Recommended)
 
-   *  3.4. %ISPDB%%MXMAINDOMAIN% (Recommended)
+   *  3.4. %ISPDB%%MXBASEDOMAIN% (Recommended)
 
    For example:
 
-   *  3.1. https://autoconfig.premium.europe.example.com/mail/config-
-      v1.1.xml?emailaddress=fred@example.com
+   *  3.1. https://autoconfig.premium.europe.example.com/.well-known/
+      mail-v1.xml?emailaddress=fred@example.com
 
-   *  3.2. https://autoconfig.example.com/mail/config-
-      v1.1.xml?emailaddress=fred@example.com
+   *  3.2. https://autoconfig.example.com/.well-known/mail-
+      v1.xml?emailaddress=fred@example.com
 
    *  3.3. https://autoconfig.thunderbird.net/v1.1/
       premium.europe.example.com
@@ -584,7 +664,7 @@ Table of Contents
    if the login succeeded, and the server is working, should the
    configuration be saved and retrieving and sending mail be started.
 
-6.  OAuth2 windows
+5.3.  OAuth2 windows
 
    If the configuration contains OAuth2 authentication, or any other
    authentication that uses a web browser with URL redirects, you MUST
@@ -596,6 +676,68 @@ Table of Contents
    (Editor's note: Not really part of autoconfig, but autoconfig can
    enable OAuth2, and it's important that this is implemented correctly
    by mail applications.)
+
+6.  Config publishing for mail providers
+
+   Mail service providers who want to support this specification and
+   publish the mail configuration for their own mail service, so that
+   mail client apps can be automatically configured, SHOULD follow this
+   section as guideline and MUST respect the definitions in this
+   specification.
+
+6.1.  Config location for single domain
+
+   The preferred location to publish the configuration file is step 1.1.
+   above, i.e. https://autoconfig.%EMAILDOMAIN%/.well-known/mail-
+   v1.xml?emailaddress=%EMAILADDRESS% e.g. for fred@example.com:
+   https://autoconfig.example.com/.well-known/mail-
+   v1.xml?emailaddress=fred@example.com For backwards compatibility,
+   step 1.2. should also be implemented.
+
+6.2.  Config location based on MX server
+
+   For mail providers which host entire domains for their customers, the
+   same URL is still preferred.  Alternatively and less preferred, the
+   location from step 3.1. above should be used, i.e.
+   https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-
+   v1.xml?emailaddress=%EMAILADDRESS% E.g. if the MX server for customer
+   domain example.net is "mx.premium.europe.example.com", then the
+   config file should be at
+   https://autoconfig.premium.europe.example.com/.well-known/mail-
+   v1.xml?emailaddress=fred@example.net For backwards compatibility,
+   step 3.2. should also be implemented.
+
+6.3.  No authentication for config
+
+   Any of the above URLs for retrieving the config file MUST NOT require
+   authentication, but MUST be public.
+
+   This is because the config contains the authentication method.
+   Without knowing the config, the client does not know which
+   authentication method is required and which username form (e.g.
+   username "fred" or "fred@example.com" or "fred\EXAMPLE") to use.
+   Given that the config is required for authentication, the config
+   itself cannot require authentication.
+
+6.4.  Return config for non-existing email addresses
+
+   Servers SHOULD return a valid config, even if the email address sent
+   as URL parameter does not exist.  Otherwise, spammers or attackers
+   would be able to test the validity of email addresses.  This is true
+   even if the config server needs the email address to determine which
+   of multiple configurations is correct.  In such a configuration, if
+   the client sends a non-existing email address, the config server
+   SHOULD return one of the valid configuations, so that valid and
+   invalid email addresses are indistiguishable.
+
+6.5.  oAuth2 requirements
+
+   If oAuth2 is used, the oAuth2 server MUST adhere to the mAuth
+   specification.  The oAuth2 server MUST either accept the public
+   client ID as given in the config file, without secret, or MUST allow
+   any string as client ID, without client registration.  There are also
+   specific requirements for expiry times and the login page, which are
+   needed for mail client applications to work.
 
 7.  Conventions and Definitions
 
@@ -713,6 +855,12 @@ Table of Contents
    against the email domain, that is still insecure.  This also applies
    to the DNS MX lookup and the https calls that base on its results, as
    described in section "MX".
+
+   One possible mitigation is to use multiple different DNS servers and
+   verify that the results match, e.g. to use the native DNS resolver of
+   the operating system, and additionally also query a hardcoded DoH
+   (DNS over HTTPS) server.  Nonetheless, the result should be used with
+   care.
 
    Such insecure configs may only be used, if the end user confirms the
    config, particularly the resulting second-level domains.  See section

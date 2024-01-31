@@ -9,26 +9,26 @@
 <meta content="
        Set up a mail account with only email address and password. 
     " name="description">
-<meta content="xml2rfc 3.18.2" name="generator">
+<meta content="xml2rfc 3.19.1" name="generator">
 <meta content="next generation" name="keyword">
 <meta content="unicorn" name="keyword">
 <meta content="sparkling distributed ledger" name="keyword">
 <meta content="draft-autoconfig-1-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.18.2
+  xml2rfc 3.19.1
     Python 3.11.6
-    ConfigArgParse 1.5.3
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 3.11.0
+    platformdirs 4.1.0
     pycountry 22.3.5
-    PyYAML 6.0
+    PyYAML 6.0.1
     requests 2.31.0
-    setuptools 67.7.2
+    setuptools 68.2.2
     six 1.16.0
-    wcwidth 0.2.9
+    wcwidth 0.2.13
 -->
 <link href="draft-autoconfig-1.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1027,11 +1027,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">autoconfig</td>
-<td class="right">November 2023</td>
+<td class="right">January 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bucksch</td>
-<td class="center">Expires 9 May 2024</td>
+<td class="center">Expires 3 August 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1044,12 +1044,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-autoconfig-1-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-06" class="published">6 November 2023</time>
+<time datetime="2024-01-31" class="published">31 January 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-05-09">9 May 2024</time></dd>
+<dd class="expires"><time datetime="2024-08-03">3 August 2024</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1094,7 +1094,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1103,7 +1103,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2023 IETF Trust and the persons identified as the
+            Copyright (c) 2024 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1141,7 +1141,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-config-retrieval" class="internal xref">Config retrieval</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-config-retrieval-for-mail-c" class="internal xref">Config retrieval for mail clients</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-mail-provider" class="internal xref">Mail provider</a></p>
@@ -1172,10 +1172,30 @@ svg :is([fill="white"], [fill^="#fff"]) {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-login-testing" class="internal xref">Login testing</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-oauth2-windows" class="internal xref">OAuth2 windows</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-oauth2-windows" class="internal xref">OAuth2 windows</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-config-publishing-for-mail-" class="internal xref">Config publishing for mail providers</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-config-location-for-single-" class="internal xref">Config location for single domain</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-config-location-based-on-mx" class="internal xref">Config location based on MX server</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-no-authentication-for-confi" class="internal xref">No authentication for config</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-return-config-for-non-exist" class="internal xref">Return config for non-existing email addresses</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
+                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-oauth2-requirements" class="internal xref">oAuth2 requirements</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
@@ -1307,6 +1327,7 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
       &lt;!-- type=
           "imap": IMAP
           "pop3": POP3
+          "jmap": JMAP
           --&gt;
       &lt;incomingServer type="pop3"&gt;
         &lt;hostname&gt;pop.example.com&lt;/hostname&gt;
@@ -1316,7 +1337,52 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
                 "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
                 --&gt;
         &lt;socketType&gt;SSL&lt;/socketType&gt;
-        &lt;username&gt;%EMAILLOCALPART%&lt;/username&gt;
+        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+            &lt;!-- Authentication methods:
+                "password-cleartext",
+                          Send password in the clear
+                          (dangerous, if SSL isn't used either).
+                          AUTH PLAIN, LOGIN or protocol-native login.
+                "password-encrypted",
+                          A secure encrypted password mechanism.
+                          Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
+                "NTLM":
+                          Use NTLM (or NTLMv2 or successors),
+                          the Windows login mechanism.
+                "GSSAPI":
+                          Use Kerberos / GSSAPI,
+                          a single-signon mechanism used for big sites.
+                "client-IP-address":
+                          The server recognizes this user based on the IP address.
+                          No authentication needed, the server will require no username nor password.
+                "TLS-client-cert":
+                          On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available. (Not yet supported by Thunderbird)
+                "OAuth2":
+                          OAuth2. Works only on specific hardcoded servers, please see below. Should be added only as second alternative.
+                "none":
+                          No authentication
+                --&gt;
+        &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
+        &lt;pop3&gt;
+            &lt;!-- remove the following and leave to client/user? --&gt;
+            &lt;leaveMessagesOnServer&gt;true&lt;/leaveMessagesOnServer&gt;
+            &lt;downloadOnBiff&gt;true&lt;/downloadOnBiff&gt;
+            &lt;daysToLeaveMessagesOnServer&gt;14&lt;/daysToLeaveMessagesOnServer&gt;
+            &lt;!-- only for servers which don't allow checks more often --&gt;
+            &lt;checkInterval minutes="15"/&gt;&lt;!-- not yet supported --&gt;
+        &lt;/pop3&gt;
+        &lt;password&gt;optional: the user's password&lt;/password&gt;
+      &lt;/incomingServer&gt;
+
+      &lt;!-- You can have multiple incoming servers,
+        and even multiple IMAP server configs.
+        The first config is the preferred one, but the user or
+        or client can choose the alternative configs. --&gt;
+      &lt;incomingServer type="jmap"&gt;
+        &lt;hostname&gt;jmap.example.com&lt;/hostname&gt;
+        &lt;port&gt;443&lt;/port&gt;
+        &lt;socketType&gt;SSL&lt;/socketType&gt;
+        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
             &lt;!-- Authentication methods:
                 "password-cleartext",
                           Send password in the clear
@@ -1357,7 +1423,7 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
         &lt;hostname&gt;smtp.googlemail.com&lt;/hostname&gt;
         &lt;port&gt;587&lt;/port&gt;
         &lt;socketType&gt;STARTTLS&lt;/socketType&gt; &lt;!-- see &lt;incomingServer&gt; --&gt;
-        &lt;username&gt;%EMAILLOCALPART%&lt;/username&gt; &lt;!-- if smtp-auth --&gt;
+        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt; &lt;!-- if smtp-auth --&gt;
             &lt;!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
                 For values, see incoming.
                 Additional options here:
@@ -1369,8 +1435,8 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
                   It will ignore the whole XML file, if other values are given.
             --&gt;
         &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
-            &lt;!-- If the server makes some additional requirements beyond
-                &lt;authentication&gt;.
+        &lt;password&gt;optional: the user's password&lt;/password&gt;
+            &lt;!-- If the server makes some additional requirements beyond &lt;authentication&gt;:
                 "client-IP-address": The server is only reachable or works,
                     if the user is in a certain IP network, e.g.
                     the dialed into the ISP's network (DSL, cable, modem) or
@@ -1388,7 +1454,6 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
         &lt;!-- remove the following and leave to client/user? --&gt;
         &lt;addThisServer&gt;true&lt;/addThisServer&gt;
         &lt;useGlobalPreferredServer&gt;true&lt;/useGlobalPreferredServer&gt;
-        &lt;password&gt;optional: the user's password&lt;/password&gt;
       &lt;/outgoingServer&gt;
 
       &lt;!-- A page where the ISP describes the configuration.
@@ -1408,7 +1473,7 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
 
     &lt;/emailProvider&gt;
 
-    &lt;!-- Syncronize the user's address book / contacts. Not yet implemented. --&gt;
+    &lt;!-- Syncronize the user's address book / contacts. --&gt;
     &lt;addressBook type="carddav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
         &lt;!-- Authentication methods. See also &lt;incomingServer&gt;.
@@ -1419,20 +1484,33 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
                         Authenticate to the HTTP server using
                         WWW-Authenticate: Digest
               "OAuth2":
-                        OAuth2. Uses the same token as for email.
+                        OAuth2. Uses the same token as for email. &lt;scope&gt; needs to include
+                         addressbook/calendar.
               --&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;serverURL&gt;https://contacts.example.com/remote.php/dav&lt;serverURL&gt;
+      &lt;serverURL&gt;https://jmap.example.com/remote.php/dav&lt;serverURL&gt;
     &lt;/addressBook&gt;
 
-    &lt;!-- Syncronize the user's calendar. Not yet implemented. --&gt;
+    &lt;addressBook type="jmap"&gt;
+      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+      &lt;authentication&gt;http-basic&lt;/authentication&gt;
+      &lt;serverURL&gt;https://jmap.example.com&lt;serverURL&gt;
+    &lt;/addressBook&gt;
+
+    &lt;!-- Syncronize the user's calendar. --&gt;
     &lt;calendar type="caldav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
       &lt;serverURL&gt;https://calendar.example.com/remote.php/dav&lt;serverURL&gt;
     &lt;/calendar&gt;
 
-    &lt;!-- Upload files, allowing the user to share them. Not yet implemented.
+    &lt;calendar type="jmap"&gt;
+      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+      &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
+      &lt;serverURL&gt;https://calendar.example.com&lt;serverURL&gt;
+    &lt;/calendar&gt;
+
+    &lt;!-- Upload files, allowing the user to share them.
         This can be used for Thunderbird's FileLink feature,
         or to set up a file sync folder on the user's desktop. --&gt;
     &lt;fileShare type="webdav"&gt;
@@ -1441,9 +1519,9 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
       &lt;serverURL&gt;https://share.example.com/remote.php/dav&lt;serverURL&gt;
     &lt;/fileShare&gt;
 
-    &lt;!-- This allows to access the webmail service of the provider.
+    &lt;!-- This allows to login in to the webmail service of the provider.
         The URLs are loaded into a standard webbrowser for the user.
-        Specifying this is optional. --&gt;
+        This is optional. --&gt;
     &lt;webMail&gt;
       &lt;!-- Webpage where the user has to log in manually by entering username
           and password himself.
@@ -1483,22 +1561,35 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
       &lt;/loginPageInfo&gt;
     &lt;/webMail&gt;
 
-    &lt;!-- see description. Not yet supported, see bug 564043. --&gt;
+    &lt;!-- Ask user for custom input,
+       and use them as placeholders in the values.
+       Optional. --&gt;
     &lt;inputField key="USERNAME" label="Screen name"&gt;&lt;/inputField&gt;
     &lt;inputField key="GRANDMA" label="Grandma"&gt;Elise Bauer&lt;/inputField&gt;
 
+    &lt;!-- oAuth2 specced for mail apps,
+        e.g. clientID, expiry, and login page --&gt;
+    &lt;mAuth&gt;
+      &lt;authURL&gt;https://login.example.com/common/oauth2/v2.0/authorize&lt;/authURL&gt;
+      &lt;tokenURL&gt;https://login.example.com/common/oauth2/v2.0/token&lt;/tokenURL&gt;
+      &lt;issuer&gt;login.example.com&lt;/issuer&gt;
+      &lt;scope&gt;imap pop3 smtp webdav caldav carddav offline_access&lt;/scope&gt;
+      &lt;clientID&gt;autoconfig&lt;/clientID&gt;
+    &lt;/mAuth&gt;
+
     &lt;!-- Add this only when users (who already have an account) have to
         do something manually before the account can work with IMAP/POP or SSL.
-        Note: Per XML, &amp; (ampersand) needs to be escaped to &amp; a m p ;
-        (without spaces).
-        Not yet implemented, see bug 586364. --&gt;
+        Note: Per XML, &amp; (ampersand) needs to be escaped to
+        &amp; a m p ; (without spaces).
+        Mandatory only if the ISP requires such settings
+        before the configs above work. --&gt;
     &lt;enable
       visiturl="https://mail.google.com/mail/?ui=2&amp;shva=1#settings/fwdandpop"&gt;
       &lt;instruction&gt;Check 'Enable IMAP and POP' in Google settings page&lt;/instruction&gt;
       &lt;instruction lang="de"&gt;Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an&lt;/instruction&gt;
     &lt;/enable&gt;
 
-    &lt;clientConfigUpdate url="https://www.example.com/config/mozilla.xml" /&gt;
+    &lt;clientConfigUpdate url="https://www.example.com/config/mail.xml" /&gt;
 
 &lt;/clientConfig&gt;
 </pre><a href="#section-3.1-1" class="pilcrow">¶</a>
@@ -1515,10 +1606,10 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
 </div>
 </section>
 </div>
-<div id="config-retrieval">
+<div id="config-retrieval-for-mail-clients">
 <section id="section-4">
-      <h2 id="name-config-retrieval">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-config-retrieval" class="section-name selfRef">Config retrieval</a>
+      <h2 id="name-config-retrieval-for-mail-c">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-config-retrieval-for-mail-c" class="section-name selfRef">Config retrieval for mail clients</a>
       </h2>
 <p id="section-4-1">The mail client application, when it needs the configuration for a given email address,
 will perform several steps to retrieve the configuration from various sources.<a href="#section-4-1" class="pilcrow">¶</a></p>
@@ -1536,10 +1627,10 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
 <p id="section-4.1-3">To allow the mail provider to return a configuration adjusted for that mailbox, the client sends the email address as query parameter. This allows the mail provider to e.g. separate mailboxes on geographically local mail servers, e.g. a mail server located in the same office building where an employee works. However, while the protocol allows for such heterogenous configurations, mail providers are discouraged from doing so, and are instead encouraged to provide one single configuration for all their users. For example, DNS resolution based on location, mail proxy servers, or other techniques as necessary, can be used to route the traffic and host the mail efficiently.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1-4.1">
-            <p id="section-4.1-4.1.1">1.1. <code>https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%</code> (Required)<a href="#section-4.1-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-4.1.1">1.1. <code>https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%</code> (Required)<a href="#section-4.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.1-4.2">
-            <p id="section-4.1-4.2.1">1.2. <code>https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml</code> (Recommended)<a href="#section-4.1-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-4.2.1">1.2. <code>https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml</code> (Optional)<a href="#section-4.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.1-4.3">
             <p id="section-4.1-4.3.1">1.3. <code>http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml</code> (Optional)<a href="#section-4.1-4.3.1" class="pilcrow">¶</a></p>
@@ -1548,7 +1639,7 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
 <p id="section-4.1-5">For example:<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1-6.1">
-            <p id="section-4.1-6.1.1">1.1. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com<a href="#section-4.1-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-6.1.1">1.1. https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com<a href="#section-4.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.1-6.2">
             <p id="section-4.1-6.2.1">1.2. https://example.com/.well-known/autoconfig/mail/config-v1.1.xml<a href="#section-4.1-6.2.1" class="pilcrow">¶</a></p>
@@ -1557,6 +1648,8 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
             <p id="section-4.1-6.3.1">1.3. http://autoconfig.example.com/mail/config-v1.1.xml<a href="#section-4.1-6.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+<p id="section-4.1-7">Step 1.3. is mainly for legacy servers. Many current deployments
+use this HTTP URL.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="central-database">
@@ -1576,7 +1669,7 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
 <p id="section-4.2-6">For example:<a href="#section-4.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.2-7.1">
-            <p id="section-4.2-7.1.1">2.1. <a href="https://autoconfig.thunderbird.net/v1.1/geologist.com">https://autoconfig.thunderbird.net/v1.1/geologist.com</a><a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.2-7.1.1">2.1. <a href="https://autoconfig.ispdb.net/v1.1/geologist.com">https://autoconfig.ispdb.net/v1.1/geologist.com</a><a href="#section-4.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1593,43 +1686,43 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
             <p id="section-4.3-3.1.1">Remove the first component from the MX hostname, i.e. everything up to and including the first <code>.</code>, and use that as value for <code>%MXFULLDOMAIN%</code>.<a href="#section-4.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-3.2">
-            <p id="section-4.3-3.2.1">Extract only the second-level domain from the MX hostname, and use that as value for <code>%MXMAINDOMAIN%</code>. To determine the second-level domain, use the <a href="https://publicsuffix.org">Public Suffic List</a> or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-3.2.1">Extract only the second-level domain from the MX hostname, and use that as value for <code>%MXBASEDOMAIN%</code>. To determine the second-level domain, use the <a href="https://publicsuffix.org">Public Suffic List</a> or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.3-4">For example:<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-5.1">
-            <p id="section-4.3-5.1.1">For "mx.example.com", the MXFULLDOMAIN and MXMAINDOMAIN are both "example.com".<a href="#section-4.3-5.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-5.1.1">For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both "example.com".<a href="#section-4.3-5.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-5.2">
-            <p id="section-4.3-5.2.1">For "mx.example.co.uk", the MXFULLDOMAIN and MXMAINDOMAIN are both "example.co.uk".<a href="#section-4.3-5.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-5.2.1">For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both "example.co.uk".<a href="#section-4.3-5.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-5.3">
-            <p id="section-4.3-5.3.1">For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXMAINDOMAIN is "example.com".<a href="#section-4.3-5.3.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-5.3.1">For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXBASEDOMAIN is "example.com".<a href="#section-4.3-5.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.3-6">Then, attempt to retrieve the config for these MX domains, using the previous methods:<a href="#section-4.3-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-7.1">
-            <p id="section-4.3-7.1.1">3.1. <code>https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%</code> (Recommended)<a href="#section-4.3-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-7.1.1">3.1. <code>https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%</code> (Required)<a href="#section-4.3-7.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-7.2">
-            <p id="section-4.3-7.2.1">3.2. <code>https://autoconfig.%MXMAINDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%</code> (Recommended)<a href="#section-4.3-7.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-7.2.1">3.2. <code>https://autoconfig.%MXBASEDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%</code> (Recommended)<a href="#section-4.3-7.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-7.3">
             <p id="section-4.3-7.3.1">3.3. <code>%ISPDB%%MXFULLDOMAIN%</code> (Recommended)<a href="#section-4.3-7.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-7.4">
-            <p id="section-4.3-7.4.1">3.4. <code>%ISPDB%%MXMAINDOMAIN%</code> (Recommended)<a href="#section-4.3-7.4.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-7.4.1">3.4. <code>%ISPDB%%MXBASEDOMAIN%</code> (Recommended)<a href="#section-4.3-7.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.3-8">For example:<a href="#section-4.3-8" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-9.1">
-            <p id="section-4.3-9.1.1">3.1. https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com<a href="#section-4.3-9.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-9.1.1">3.1. https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com<a href="#section-4.3-9.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-9.2">
-            <p id="section-4.3-9.2.1">3.2. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com<a href="#section-4.3-9.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-9.2.1">3.2. https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com<a href="#section-4.3-9.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-9.3">
             <p id="section-4.3-9.3.1">3.3. https://autoconfig.thunderbird.net/v1.1/premium.europe.example.com<a href="#section-4.3-9.3.1" class="pilcrow">¶</a></p>
@@ -1715,15 +1808,99 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
 <p id="section-5.2-1">After the user confirmed the configuration, you <span class="bcp14">SHOULD</span> test the configuration, by attempting a login to each server configured. Only if the login succeeded, and the server is working, should the configuration be saved and retrieving and sending mail be started.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="oauth2-windows">
+<section id="section-5.3">
+        <h3 id="name-oauth2-windows">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-oauth2-windows" class="section-name selfRef">OAuth2 windows</a>
+        </h3>
+<p id="section-5.3-1">If the configuration contains OAuth2 authentication, or any other authentication that uses a web browser with URL redirects, you <span class="bcp14">MUST</span> show the full URL or the second-level domain of the current page to the end user, at all times, including after page changes, URL changes or redirects. This allows the end user to verify that he is logging in at the expected page, e.g. the login server of their company.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">(Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="oauth2-windows">
+</section>
+</div>
+<div id="config-publishing-for-mail-providers">
 <section id="section-6">
-      <h2 id="name-oauth2-windows">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-oauth2-windows" class="section-name selfRef">OAuth2 windows</a>
+      <h2 id="name-config-publishing-for-mail-">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-config-publishing-for-mail-" class="section-name selfRef">Config publishing for mail providers</a>
       </h2>
-<p id="section-6-1">If the configuration contains OAuth2 authentication, or any other authentication that uses a web browser with URL redirects, you <span class="bcp14">MUST</span> show the full URL or the second-level domain of the current page to the end user, at all times, including after page changes, URL changes or redirects. This allows the end user to verify that he is logging in at the expected page, e.g. the login server of their company.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">(Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-1">Mail service providers who want to support this specification
+and publish the mail configuration for their own mail service,
+so that mail client apps can be automatically configured,
+<span class="bcp14">SHOULD</span> follow this section as guideline and <span class="bcp14">MUST</span> respect the
+definitions in this specification.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<div id="config-location-for-single-domain">
+<section id="section-6.1">
+        <h3 id="name-config-location-for-single-">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-config-location-for-single-" class="section-name selfRef">Config location for single domain</a>
+        </h3>
+<p id="section-6.1-1">The preferred location to publish the configuration file is
+step 1.1. above, i.e.
+<code>https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%</code>
+e.g. for fred@example.com:
+https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
+For backwards compatibility, step 1.2. should also be implemented.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="config-location-based-on-mx-server">
+<section id="section-6.2">
+        <h3 id="name-config-location-based-on-mx">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-config-location-based-on-mx" class="section-name selfRef">Config location based on MX server</a>
+        </h3>
+<p id="section-6.2-1">For mail providers which host entire domains for their customers,
+the same URL is still preferred. Alternatively and less preferred,
+the location from step 3.1. above should be used, i.e.
+<code>https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%</code>
+E.g. if the MX server for customer domain example.net is "mx.premium.europe.example.com", then the config file should be at
+https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
+For backwards compatibility, step 3.2. should also be implemented.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="no-authentication-for-config">
+<section id="section-6.3">
+        <h3 id="name-no-authentication-for-confi">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-no-authentication-for-confi" class="section-name selfRef">No authentication for config</a>
+        </h3>
+<p id="section-6.3-1">Any of the above URLs for retrieving the config file <span class="bcp14">MUST NOT</span>
+require authentication, but <span class="bcp14">MUST</span> be public.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-2">This is because the config contains the authentication method.
+Without knowing the config, the client does not know which
+authentication method is required and which username form
+(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE")
+to use. Given that the config is required for authentication,
+the config itself cannot require authentication.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="return-config-for-non-existing-email-addresses">
+<section id="section-6.4">
+        <h3 id="name-return-config-for-non-exist">
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-return-config-for-non-exist" class="section-name selfRef">Return config for non-existing email addresses</a>
+        </h3>
+<p id="section-6.4-1">Servers <span class="bcp14">SHOULD</span> return a valid config, even if the email address
+sent as URL parameter does not exist. Otherwise, spammers
+or attackers would be able to test the validity of email addresses.
+This is true even if the config server needs the email address
+to determine which of multiple configurations is correct.
+In such a configuration, if the client sends a non-existing
+email address, the config server <span class="bcp14">SHOULD</span> return one of the
+valid configuations, so that valid and invalid email addresses
+are indistiguishable.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="oauth2-requirements">
+<section id="section-6.5">
+        <h3 id="name-oauth2-requirements">
+<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-oauth2-requirements" class="section-name selfRef">oAuth2 requirements</a>
+        </h3>
+<p id="section-6.5-1">If oAuth2 is used, the oAuth2 server <span class="bcp14">MUST</span> adhere to the
+mAuth specification. The oAuth2 server <span class="bcp14">MUST</span>
+either accept the public client ID as given in the config file,
+without secret, or <span class="bcp14">MUST</span> allow any string as client ID, without
+client registration. There are also specific requirements for
+expiry times and the login page, which are needed for
+mail client applications to work.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1816,7 +1993,12 @@ appear in all capitals, as shown here.<a href="#section-7-1" class="pilcrow">¶<
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-dns" class="section-name selfRef">DNS</a>
         </h3>
 <p id="section-9.2-1">Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure. This also applies to the DNS MX lookup and the https calls that base on its results, as described in section "MX".<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<p id="section-9.2-2">Such insecure configs may only be used, if the end user confirms the config, particularly the resulting second-level domains. See section "User approval".<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">One possible mitigation is to use multiple different DNS servers
+and verify that the results match, e.g. to use the native DNS
+resolver of the operating system, and additionally also query
+a hardcoded DoH (DNS over HTTPS) server. Nonetheless,
+the result should be used with care.<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-3">Such insecure configs may only be used, if the end user confirms the config, particularly the resulting second-level domains. See section "User approval".<a href="#section-9.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="config-updates">
