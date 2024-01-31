@@ -471,19 +471,26 @@ definitions in this specification.
 
 ## Config location for single domain
 
-The preferred location to publish the configuration file is
-step 1.1. above, i.e.
-`https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
-e.g. for fred@example.com:
-https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
-For backwards compatibility, step 1.2. should also be implemented.
+The configuration file SHOULD be published at the URL for
+step 1.1., i.e.
+
+* `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
+
+e.g. for fred@example.com
+
+* https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
+
+For backwards compatibility with older mail clients,
+step 1.2. should also be implemented.
 
 ## Config location for domain hosters
 
-For mail providers which host entire domains for their customers,
-the same URL listed in the previous secion is preferred.
+For mail providers which host entire domains for their business
+customers, the same URL as listed in the previous section is
+preferred.
 
-Alternatively, the location from step 3.1. above should be used, i.e.
+Alternatively, the configuration file SHOULD be published at
+the location for step 3.1., i.e.
 
 * `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
 
@@ -491,7 +498,8 @@ E.g. if the MX server for customer domain example.net is "mx.premium.europe.exam
 
 * https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
 
-For backwards compatibility, step 3.2. should also be implemented.
+For backwards compatibility with older mail clients,
+step 3.2. should also be implemented.
 
 ## No authentication for config
 
