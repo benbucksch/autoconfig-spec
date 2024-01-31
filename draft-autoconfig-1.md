@@ -464,8 +464,8 @@ definitions in this specification.
 
 * Configuration fields MUST NOT contain invalid or non-working
   configuration data.
-* Mail providers MUST return a working configuration, with
-  state-of-the-art security.
+* The provided configuration MUST be working,
+  and SHOULD use state-of-the-art security.
 * Configurations MUST be public and MUST NOT require
   authentication (see below).
 
