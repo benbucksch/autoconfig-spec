@@ -138,6 +138,8 @@ Table of Contents
 
    *  NextCloud email (https://apps.nextcloud.com/apps/mail)
 
+   *  Delta Chat (https://delta.chat/)
+
    and likely other mail clients.
 
    The purpose of this paper is to document and specify what is deployed
