@@ -3,7 +3,7 @@ title: "Mail Autoconfig"
 abbrev: "autoconfig"
 category: info
 
-docname: draft-bucksch-autoconfig
+docname: draft-autoconfig-1-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
