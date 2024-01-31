@@ -414,7 +414,7 @@ The mail client application may choose the mail config database provider. A publ
 
 For example:
 
-* 2.1. [https://autoconfig.thunderbird.net/v1.1/geologist.com](https://autoconfig.thunderbird.net/v1.1/geologist.com)
+* 2.1. [https://autoconfig.ispdb.net/v1.1/geologist.com](https://autoconfig.ispdb.net/v1.1/geologist.com)
 
 
 ## MX
