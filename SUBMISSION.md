@@ -5,8 +5,9 @@
 5. Upload the `draft-bucksch-autoconfig.md` file from git repo
 6. Click [XML], then [Download], and save it as
   `draft-bucksch-autoconfig.xml`
-7. Open the XML file, and in `<rfc docname="">`, add version
-  as "-02", e.g. `<rfc docName="draft-bucksch-autoconfig-01">`.
+7. Open the XML file, and in `<rfc docname="">`, change name and
+  add new version in form "-02", e.g.
+  `<rfc docName="draft-bucksch-autoconfig-02">`.
   Do not change the the file format version `<rfc version="3">`.
 8. Go to https://datatracker.ietf.org/submit/ and
   upload the XML file.
