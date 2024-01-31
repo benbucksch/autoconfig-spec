@@ -3,12 +3,12 @@ title: "Mail Autoconfig"
 abbrev: "autoconfig"
 category: info
 
-docname: draft-autoconfig-1-latest
+docname: draft-bucksch-autoconfig
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
-v: 4
+v: 1
 # area: AREA
 # workgroup: WG Working Group
 keyword:
