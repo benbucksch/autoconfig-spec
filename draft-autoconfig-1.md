@@ -366,7 +366,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
 
 TODO Schema for XML
 
-# Config retrieval
+# Config retrieval for mail clients
 
 The mail client application, when it needs the configuration for a given email address,
 will perform several steps to retrieve the configuration from various sources.
@@ -387,13 +387,13 @@ Mail providers MUST return a working configuration, with state-of-the-art securi
 
 To allow the mail provider to return a configuration adjusted for that mailbox, the client sends the email address as query parameter. This allows the mail provider to e.g. separate mailboxes on geographically local mail servers, e.g. a mail server located in the same office building where an employee works. However, while the protocol allows for such heterogenous configurations, mail providers are discouraged from doing so, and are instead encouraged to provide one single configuration for all their users. For example, DNS resolution based on location, mail proxy servers, or other techniques as necessary, can be used to route the traffic and host the mail efficiently.
 
-* 1.1. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Required)
-* 1.2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Recommended)
+* 1.1. `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Required)
+* 1.2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Optional)
 * 1.3. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Optional)
 
 For example:
 
-* 1.1. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
+* 1.1. https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
 * 1.2. https://example.com/.well-known/autoconfig/mail/config-v1.1.xml
 * 1.3. http://autoconfig.example.com/mail/config-v1.1.xml
 
@@ -432,15 +432,15 @@ If the previous mechanisms yield no result, the client may perform a DNS MX look
 
 Then, attempt to retrieve the config for these MX domains, using the previous methods:
 
-* 3.1. `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
-* 3.2. `https://autoconfig.%MXMAINDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
+* 3.1. `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Required)
+* 3.2. `https://autoconfig.%MXMAINDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
 * 3.3. `%ISPDB%%MXFULLDOMAIN%` (Recommended)
 * 3.4. `%ISPDB%%MXMAINDOMAIN%` (Recommended)
 
 For example:
 
-* 3.1. https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
-* 3.2. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
+* 3.1. https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
+* 3.2. https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
 * 3.3. https://autoconfig.thunderbird.net/v1.1/premium.europe.example.com
 * 3.4. https://autoconfig.thunderbird.net/v1.1/example.com
 
@@ -482,12 +482,48 @@ Independent of the mechanisms used to find the configuration, before using that 
 
 After the user confirmed the configuration, you SHOULD test the configuration, by attempting a login to each server configured. Only if the login succeeded, and the server is working, should the configuration be saved and retrieving and sending mail be started.
 
-# OAuth2 windows
+## OAuth2 windows
 
 If the configuration contains OAuth2 authentication, or any other authentication that uses a web browser with URL redirects, you MUST show the full URL or the second-level domain of the current page to the end user, at all times, including after page changes, URL changes or redirects. This allows the end user to verify that he is logging in at the expected page, e.g. the login server of their company.
 
 (Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)
 
+# Config publishing for mail providers
+
+Mail service providers who want to support this specification
+and publish the mail configuration for their own mail service,
+so that mail client apps can be automatically configured,
+SHOULD follow this section as guideline and MUST respect the
+definitions in this specification.
+
+## Config location for single domain
+
+The preferred location to publish the configuration file is
+step 1.1. above, i.e.
+`https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
+e.g. for fred@example.com:
+https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
+For backwards compatibility, step 1.2. should also be implemented.
+
+## Config location based on MX server
+
+For mail providers which host entire domains for their customers,
+the same URL is still preferred. Alternatively and less preferred,
+the location from step 3.1. above should be used, i.e.
+`https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
+E.g. if the MX server for customer domain example.net is "mx.premium.europe.example.com", then the config file should be at
+https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
+For backwards compatibility, step 3.2. should also be implemented.
+
+## oAuth2 requirements
+
+If oAuth2 is used, the oAuth2 server MUST adhere to the
+mAuth specification. The oAuth2 server MUST
+either accept the public client ID as given in the config file,
+without secret, or MUST allow any string as client ID, without
+client registration. There are also specific requirements for
+expiry times and the login page, which are needed for
+mail client applications to work.
 
 # Conventions and Definitions
 
