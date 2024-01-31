@@ -8,7 +8,7 @@ submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
-v: 1
+v: 2
 # area: AREA
 # workgroup: WG Working Group
 keyword:
@@ -128,7 +128,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                     "TLS-client-cert":
                               On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
                     "OAuth2":
-                              OAuth2. Works only on specific hardcoded servers, please see below. Should be added only as second alternative.
+                              mAuth. Should be added only as second alternative.
                     "none":
                               No authentication
                     -->
@@ -153,39 +153,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <port>443</port>
             <socketType>SSL</socketType>
             <username>%EMAILADDRESS%</username>
-                <!-- Authentication methods:
-                    "password-cleartext",
-                              Send password in the clear
-                              (dangerous, if SSL isn't used either).
-                              AUTH PLAIN, LOGIN or protocol-native login.
-                    "password-encrypted",
-                              A secure encrypted password mechanism.
-                              Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
-                    "NTLM":
-                              Use NTLM (or NTLMv2 or successors),
-                              the Windows login mechanism.
-                    "GSSAPI":
-                              Use Kerberos / GSSAPI,
-                              a single-signon mechanism used for big sites.
-                    "client-IP-address":
-                              The server recognizes this user based on the IP address.
-                              No authentication needed, the server will require no username nor password.
-                    "TLS-client-cert":
-                              On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
-                    "OAuth2":
-                              OAuth2. Works only on specific hardcoded servers, please see below. Should be added only as second alternative.
-                    "none":
-                              No authentication
-                    -->
-            <authentication>password-cleartext</authentication>
-            <pop3>
-                <!-- remove the following and leave to client/user? -->
-                <leaveMessagesOnServer>true</leaveMessagesOnServer>
-                <downloadOnBiff>true</downloadOnBiff>
-                <daysToLeaveMessagesOnServer>14</daysToLeaveMessagesOnServer>
-                <!-- only for servers which don't allow checks more often -->
-                <checkInterval minutes="15"/><!-- not yet supported -->
-            </pop3>
+            <authentication>http-basic</authentication>
             <password>optional: the user's password</password>
           </incomingServer>
 
@@ -251,7 +219,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                             Authenticate to the HTTP server using
                             WWW-Authenticate: Digest
                   "OAuth2":
-                            OAuth2. Uses the same token as for email. <scope> needs to include
+                            mAuth. Uses the same token as for email. <scope> needs to include
                              addressbook/calendar.
                   -->
           <authentication>http-basic</authentication>
@@ -381,8 +349,6 @@ For full support of this specification, all "Required" and "Recommended" mechani
 
 First step is to directly ask the mail provider and allow it to return the configuration. This step ensures that the protocol is decentralized and the mail provider is in control of the configuration issued to mail clients.
 
-Mail providers MUST return a working configuration, with state-of-the-art security. Configuration fields MUST NOT contain invalid or non-working configuration data.
-
 To allow the mail provider to return a configuration adjusted for that mailbox, the client sends the email address as query parameter. This allows the mail provider to e.g. separate mailboxes on geographically local mail servers, e.g. a mail server located in the same office building where an employee works. However, while the protocol allows for such heterogenous configurations, mail providers are discouraged from doing so, and are instead encouraged to provide one single configuration for all their users. For example, DNS resolution based on location, mail proxy servers, or other techniques as necessary, can be used to route the traffic and host the mail efficiently.
 
 * 1.1. `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Required)
@@ -496,6 +462,13 @@ so that mail client apps can be automatically configured,
 SHOULD follow this section as guideline and MUST respect the
 definitions in this specification.
 
+* Configuration fields MUST NOT contain invalid or non-working
+  configuration data.
+* Mail providers MUST return a working configuration, with
+  state-of-the-art security.
+* Configurations MUST be public and MUST NOT require
+  authentication (see below).
+
 ## Config location for single domain
 
 The preferred location to publish the configuration file is
@@ -505,14 +478,19 @@ e.g. for fred@example.com:
 https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
 For backwards compatibility, step 1.2. should also be implemented.
 
-## Config location based on MX server
+## Config location for domain hosters
 
 For mail providers which host entire domains for their customers,
-the same URL is still preferred. Alternatively and less preferred,
-the location from step 3.1. above should be used, i.e.
-`https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
+the same URL listed in the previous secion is preferred.
+
+Alternatively, the location from step 3.1. above should be used, i.e.
+
+* `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
+
 E.g. if the MX server for customer domain example.net is "mx.premium.europe.example.com", then the config file should be at
-https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
+
+* https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
+
 For backwards compatibility, step 3.2. should also be implemented.
 
 ## No authentication for config
