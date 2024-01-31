@@ -126,7 +126,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                               The server recognizes this user based on the IP address.
                               No authentication needed, the server will require no username nor password.
                     "TLS-client-cert":
-                              On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available. (Not yet supported by Thunderbird)
+                              On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
                     "OAuth2":
                               OAuth2. Works only on specific hardcoded servers, please see below. Should be added only as second alternative.
                     "none":
@@ -171,7 +171,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                               The server recognizes this user based on the IP address.
                               No authentication needed, the server will require no username nor password.
                     "TLS-client-cert":
-                              On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available. (Not yet supported by Thunderbird)
+                              On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
                     "OAuth2":
                               OAuth2. Works only on specific hardcoded servers, please see below. Should be added only as second alternative.
                     "none":
@@ -200,9 +200,6 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                     "SMTP-after-POP":
                         authenticate to incoming mail server first
                         before contacting the smtp server.
-                      Compatibility note: Thunderbird 3.0 accepts only "plain",
-                      "secure", "none", and "smtp-after-pop".
-                      It will ignore the whole XML file, if other values are given.
                 -->
             <authentication>password-cleartext</authentication>
             <password>optional: the user's password</password>
@@ -236,9 +233,9 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
               language of the ISP (customers), and a short English description,
               mostly for us.
           -->
-          <documentation url="http://www.example.com/help/mail/thunderbird">
-            <descr lang="en">Configure Thunderbird 2.0 for IMAP</descr>
-            <descr lang="de">Thunderbird 2.0 mit IMAP konfigurieren</descr>
+          <documentation url="http://www.example.com/help/mail/">
+            <descr lang="en">Configure mail app for IMAP</descr>
+            <descr lang="de">Email mit IMAP konfigurieren</descr>
           </documentation>
 
         </emailProvider>
@@ -407,7 +404,7 @@ The ISPDB contains the configurations for most mail providers with a market shar
 
 This is a useful fallback for mail providers which do not host a config server described in the previous step. Using a central database (ISPDB) of mail configurations for the large mail providers will increase the success rate of finding a valid configuration drastically, up to 10-fold.
 
-The mail client application may choose the mail config database provider. A public mail config database is available at base URL `https://autoconfig.thunderbird.net/v1.1/`. (TODO change ISPDB URL)
+The mail client application may choose the mail config database provider. A public mail config database is available at base URL `https://autoconfig.ispdb.net/v1.1/`.
 
 `%ISPDB%` below is the base URL of that database.
 
@@ -444,8 +441,8 @@ For example:
 
 * 3.1. https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
 * 3.2. https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
-* 3.3. https://autoconfig.thunderbird.net/v1.1/premium.europe.example.com
-* 3.4. https://autoconfig.thunderbird.net/v1.1/example.com
+* 3.3. https://autoconfig.ispdb.net/v1.1/premium.europe.example.com
+* 3.4. https://autoconfig.ispdb.net/v1.1/example.com
 
 
 ## Local disk
