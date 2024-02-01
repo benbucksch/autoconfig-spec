@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-30T00:51:46.670127+00:00",
+  "timestamp": "2024-02-01T00:54:13.292129+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -73,7 +73,7 @@
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/3",
       "state": "OPEN",
       "author": "link2xt",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "MTA-STS can be used to secure MX records, e.g. https://mta-sts.gmail.com/.well-known/mta-sts.txt contains `mx` records that are allowed to be in DNS.\r\n\r\nThis could be mentioned in relation to\r\nhttps://github.com/benbucksch/autoconfig-spec/commit/335bd87bba671052a44ac7d1dfad69cde76f5210",
@@ -89,34 +89,50 @@
       "id": "PR_kwDOKo_bRc5jZP3X",
       "title": "Add Delta Chat to the list of implementations",
       "url": "https://github.com/benbucksch/autoconfig-spec/pull/2",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "link2xt",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-01-07T00:39:46Z",
-      "updatedAt": "2024-01-07T22:57:37Z",
+      "updatedAt": "2024-01-31T19:06:55Z",
       "baseRepository": "benbucksch/autoconfig-spec",
       "baseRefName": "main",
-      "baseRefOid": "973115706ad553784148728468bc73072e8a1649",
+      "baseRefOid": "8988788f3a54cd5836cfaee1b2f2c8c147694ef1",
       "headRepository": "deltachat/autoconfig-spec",
       "headRefName": "link2xt/deltachat",
       "headRefOid": "04a7e0797c3f0a9145492bbcfd4762fc994f36de",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-01-31T19:06:55Z",
+      "mergedAt": "2024-01-31T19:06:55Z",
+      "mergedBy": "benbucksch",
+      "mergeCommit": {
+        "oid": "c2c679ae1c6e450661aae248e6dcb38d25b971dd"
+      },
       "comments": [
         {
           "author": "link2xt",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "Our implementation is here: https://github.com/deltachat/deltachat-core-rust/blob/main/src/configure/auto_mozilla.rs\r\n\r\nURLs tried are here:\r\nhttps://github.com/deltachat/deltachat-core-rust/blob/b9a58bf6258d6d5b60d16cd44318f16b61c6318b/src/configure.rs#L506-L532",
           "createdAt": "2024-01-07T22:57:35Z",
           "updatedAt": "2024-01-07T22:57:35Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKo_bRc5uizcV",
+          "commit": {
+            "abbreviatedOid": "04a7e07"
+          },
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-31T19:06:41Z",
+          "updatedAt": "2024-01-31T19:06:41Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
