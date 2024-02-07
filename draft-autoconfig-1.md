@@ -309,7 +309,8 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           <tokenURL>https://login.example.com/common/oauth2/v2.0/token</tokenURL>
           <issuer>login.example.com</issuer>
           <scope>imap pop3 smtp webdav caldav carddav offline_access</scope>
-          <clientID>autoconfig</clientID>
+          <clientID>messaging</clientID>
+          <clientSecret>notreally</clientSecret>
         </mAuth>
 
         <!-- Add this only when users (who already have an account) have to
