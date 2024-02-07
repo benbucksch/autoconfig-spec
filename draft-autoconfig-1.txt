@@ -4,8 +4,8 @@
 
 Network Working Group                                         B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                           31 January 2024
-Expires: 3 August 2024
+Intended status: Informational                           7 February 2024
+Expires: 10 August 2024
 
 
                             Mail Autoconfig
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 August 2024.
+   This Internet-Draft will expire on 10 August 2024.
 
 Copyright Notice
 
@@ -490,7 +490,7 @@ Table of Contents
 
    The mail client application may choose the mail config database
    provider.  A public mail config database is available at base URL
-   https://autoconfig.ispdb.net/v1.1/.
+   https://v1.ispdb.net/.
 
    %ISPDB% below is the base URL of that database.
 
@@ -498,8 +498,8 @@ Table of Contents
 
    For example:
 
-   *  2.1. https://autoconfig.ispdb.net/v1.1/geologist.com
-      (https://autoconfig.ispdb.net/v1.1/geologist.com)
+   *  2.1. https://v1.ispdb.net/geologist.com (https://v1.ispdb.net/
+      geologist.com)
 
 4.3.  MX
 
@@ -562,9 +562,9 @@ Table of Contents
    *  3.2. https://autoconfig.example.com/.well-known/mail-
       v1.xml?emailaddress=fred@example.com
 
-   *  3.3. https://autoconfig.ispdb.net/v1.1/premium.europe.example.com
+   *  3.3. https://v1.ispdb.net/premium.europe.example.com
 
-   *  3.4. https://autoconfig.ispdb.net/v1.1/example.com
+   *  3.4. https://v1.ispdb.net/example.com
 
 4.4.  Local disk
 
