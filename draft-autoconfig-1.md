@@ -370,7 +370,7 @@ The ISPDB contains the configurations for most mail providers with a market shar
 
 This is a useful fallback for mail providers which do not host a config server described in the previous step. Using a central database (ISPDB) of mail configurations for the large mail providers will increase the success rate of finding a valid configuration drastically, up to 10-fold.
 
-The mail client application may choose the mail config database provider. A public mail config database is available at base URL `https://autoconfig.ispdb.net/v1.1/`.
+The mail client application may choose the mail config database provider. A public mail config database is available at base URL `https://v1.ispdb.net/`.
 
 `%ISPDB%` below is the base URL of that database.
 
@@ -378,7 +378,7 @@ The mail client application may choose the mail config database provider. A publ
 
 For example:
 
-* 2.1. [https://autoconfig.ispdb.net/v1.1/geologist.com](https://autoconfig.ispdb.net/v1.1/geologist.com)
+* 2.1. [https://v1.ispdb.net/geologist.com](https://v1.ispdb.net/geologist.com)
 
 
 ## MX
@@ -407,8 +407,8 @@ For example:
 
 * 3.1. https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
 * 3.2. https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
-* 3.3. https://autoconfig.ispdb.net/v1.1/premium.europe.example.com
-* 3.4. https://autoconfig.ispdb.net/v1.1/example.com
+* 3.3. https://v1.ispdb.net/premium.europe.example.com
+* 3.4. https://v1.ispdb.net/example.com
 
 
 ## Local disk
