@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-06T00:51:14.188963+00:00",
+  "timestamp": "2024-02-08T00:51:06.289766+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -53,34 +53,250 @@
     {
       "number": 1,
       "id": "I_kwDOKo_bRc57RGcD",
-      "title": "allow individuell oauth2 config ",
+      "title": "Allow oAuth2 clientSecret ",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/1",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "NiasSt90",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "benbucksch"
+      ],
       "labels": [],
       "body": "In your xml format description [here](https://www.bucksch.org/1/projects/thunderbird/autoconfiguration/config-file-format.html) there was an `oauth2` block to configure a individuell oauth2/oidc configuration.\r\nBut these configuration sections lacks  the option to provide a `clientId`/`clientSecret` like in the following example.\r\n\r\n```xml\r\n<incomingServer type=\"imap\">\r\n      <hostname>imap.my-server.com</hostname>\r\n      <port>993</port>\r\n      <socketType>SSL</socketType>\r\n      <username>%EMAILADDRESS%</username>\r\n      <authentication>OAuth2</authentication>\r\n      <authentication>password-cleartext</authentication>\r\n      <oAuth2>\r\n        <issuer>sso.my-keycloak.com/auth/realms/myRealm<issuer>\r\n        <scope>imap<scope>\r\n        <authURL>https://sso.my-keycloak.com/auth/realms/myRealm/protocol/openid-connect/auth</authURL>\r\n        <tokenURL>https://sso.my-keycloak.com/auth/realms/myRealm/protocol/openid-connect/token</tokenURL>\r\n        <clientId>MUA</clientId>\r\n        <clientSecret>not-so-secret</clientSecret>\r\n      <oAuth2>\r\n    </incomingServer>\r\n```\r\n\r\nIn my opinion is this easier than to try to create dynamically a client on the target IDP. \r\n(mentioned [here](https://bugzilla.mozilla.org/show_bug.cgi?id=1602166)) \r\n",
       "createdAt": "2024-01-05T21:51:26Z",
-      "updatedAt": "2024-01-05T22:02:59Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-02-07T01:28:53Z",
+      "closedAt": "2024-02-07T01:28:19Z",
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "I agree. There's already `<clientID>`, and I just added `<clientSecret>`.\r\n\r\nFIXED",
+          "createdAt": "2024-02-07T01:28:20Z",
+          "updatedAt": "2024-02-07T01:28:20Z"
+        }
+      ]
     },
     {
       "number": 3,
       "id": "I_kwDOKo_bRc57UQXH",
       "title": "Mention MTA-STS regarding MX record security considerations",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/3",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "link2xt",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "benbucksch"
+      ],
       "labels": [],
       "body": "MTA-STS can be used to secure MX records, e.g. https://mta-sts.gmail.com/.well-known/mta-sts.txt contains `mx` records that are allowed to be in DNS.\r\n\r\nThis could be mentioned in relation to\r\nhttps://github.com/benbucksch/autoconfig-spec/commit/335bd87bba671052a44ac7d1dfad69cde76f5210",
       "createdAt": "2024-01-07T00:42:24Z",
-      "updatedAt": "2024-01-07T00:42:24Z",
-      "closedAt": null,
+      "updatedAt": "2024-02-07T00:38:37Z",
+      "closedAt": "2024-02-06T22:19:41Z",
+      "comments": [
+        {
+          "author": "cketti",
+          "authorAssociation": "NONE",
+          "body": "Can you explain how MTA-STS would help in the context of autoconfig?",
+          "createdAt": "2024-02-06T13:22:23Z",
+          "updatedAt": "2024-02-06T13:22:23Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Current draft describes MX record fallback:\r\nhttps://github.com/benbucksch/autoconfig-spec/blob/fdc206eb2c02eab22b5d167eb6b7da07b4591f83/draft-autoconfig-1.md#mx\r\n\r\nAnd in security considerations it says that relying on DNS is not secure:\r\nhttps://github.com/benbucksch/autoconfig-spec/blob/fdc206eb2c02eab22b5d167eb6b7da07b4591f83/draft-autoconfig-1.md#dns\r\n\r\nUnlike HTTPS connection to retrieve autoconfig XML, MX records can be easily spoofed if they are requested by a client device via malicious Wi-Fi hotspot. Let's say the client requests MX records for gmail.com, it will normally get `gmail-smtp-in.l.google.com.`, `alt1.gmail-smtp-in.l.google.com.`, ..., `alt4.gmail-smtp-in.l.google.com.`.\r\n\r\nIn this case google.com may be a malicious domain controlled by an attacker. But we can retrieve https://mta-sts.gmail.com/.well-known/mta-sts.txt and check the lines which come from gmail.com HTTPS host confirming that these MX records are not spoofed:\r\n```\r\nmx: gmail-smtp-in.l.google.com\r\nmx: *.gmail-smtp-in.l.google.com\r\n```",
+          "createdAt": "2024-02-06T19:33:43Z",
+          "updatedAt": "2024-02-06T19:33:43Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The other option would be to reduce the scope of the spec, describe how autoconfig over HTTPS works and not move the description of insecure alternatives (SRV, retrieving autoconfig XML over HTTP, MX records etc.) somewhere else.",
+          "createdAt": "2024-02-06T19:36:52Z",
+          "updatedAt": "2024-02-06T19:36:52Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "@link2xt The MX lookup is necessary to get decent detection rates. They need to stay in the spec. If we cannot rely on DNS, then our detection rates are very low.\r\n\r\nThe spec describes multiple ways and factors to mitigate this risk.",
+          "createdAt": "2024-02-06T20:52:14Z",
+          "updatedAt": "2024-02-06T20:58:38Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "@link2xt @cketti\r\n1. How widely is MTA-STS supported?\r\n\r\n> MX records can be easily spoofed if they are requested by a client device via malicious Wi-Fi hotspot\r\n\r\n2. The spec already mentions this risk and recommends to use DNS over HTTPS (DoH) to verify the MX records, to avoid such scenarios. What does MTA-STS add on top of that?",
+          "createdAt": "2024-02-06T20:55:47Z",
+          "updatedAt": "2024-02-06T20:55:59Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> 1. How widely is MTA-STS supported?\r\n\r\nI have no statistics at hand, but some list I collected looking into it some time ago, seems it is supported by many major providers:\r\n- https://mta-sts.google.com/.well-known/mta-sts.txt\r\n- https://mta-sts.gmx.com/.well-known/mta-sts.txt\r\n- https://mta-sts.comcast.net/.well-known/mta-sts.txt\r\n- https://mta-sts.belastingdienst.nl/.well-known/mta-sts.txt\r\n- https://mta-sts.protonmail.com/.well-known/mta-sts.txt\r\n- https://mta-sts.hardenize.com/.well-known/mta-sts.txt\r\n- https://mta-sts.yahoo.com/.well-known/mta-sts.txt\r\n\r\nYou can also find a lot of domains supporting it at https://www.google.com/search?q=inurl%3Amta-sts.txt\r\n\r\nGoogle Workspace supports it, but AFAIK does not require to setup mta-sts subdomain domain, it is optional: https://support.google.com/a/answer/9261504\r\n\r\n> 2\\. The spec already mentions this risk and recommends to use DNS over HTTPS (DoH) to verify the MX records, to avoid such scenarios. What does MTA-STS add on top of that?\r\n\r\nIn Delta Chat we are not going to use DoH because we don't want any dependency on central servers such as Google/Cloudflare DoH in the client. The only exception is the 8.8.8.8 fallback due to unresolved problems with DNS resolution in the dependency, map tiles in experimental location streaming feature and https://autoconfig.thunderbird.net/v1.1/ requests which we should probably just replace with an ISPDB snapshot preloaded into the binary.\r\n\r\nOur current solution is to query MX with system DNS, but then only allow to configure Gmail this way. So Google Workspace domains work, but an attacker controlling malicious Wi-Fi hotspot has to be Google to make any use of MX response spoofing.",
+          "createdAt": "2024-02-06T21:33:33Z",
+          "updatedAt": "2024-02-06T21:34:23Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> Delta Chat we are not going to use DoH because we don't want any dependency on central servers such as Google/Cloudflare DoH in the client\r\n\r\nI understand why you don't want to give information to third parties, esp. Google and co.\r\n\r\nTo run the full autoconfig, you will need the ISPDB, so you have this point of centralization anyways. You could use a DoH server of your own, or on the domain/owner of the ISPDB.\r\n\r\n*How* you validate the MX entry is your own choice.\r\n\r\nIndeed, it's maybe a good idea to add the MTA-STS in the same section where I mention DoH, as an alternative.",
+          "createdAt": "2024-02-06T21:37:55Z",
+          "updatedAt": "2024-02-06T21:39:17Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "MTA-STS works similarly to HSTS. The other MTA first makes a DNS query and then caches the result.\n\nAutoconfig will make the connection only once or very rarely, so there simply is no way to tell whether the server does support MTA STS.",
+          "createdAt": "2024-02-06T21:41:37Z",
+          "updatedAt": "2024-02-06T21:41:37Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "BTW, why is doing MX queries over DoH mentioned, but SRV queries were rejected completely?",
+          "createdAt": "2024-02-06T21:51:23Z",
+          "updatedAt": "2024-02-06T21:51:23Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> https://mta-sts.gmx.com/.well-known/mta-sts.txt\r\n\r\nThis specific example is not really that helpful, because don't need the MX record to look up the ISP for gmx.com, because it's gmx.com. (And we have gmx.com in the ISPDB.) We need the MX specifically for domain hosters, and the customer domains typically do *not* have MTA-STS. Indeed, not even gmx.biz (which is a gmx.net domain) has it: https://mta-sts.gmx.biz/.well-known/mta-sts.txt gives \"host not found\". So, for exactly those cases where we need the MX lookup, MTA-STS does not work, in current deployments, and is unlikely to work in the future, due to the configuration overhead per customer domain. MTA-STS is exactly the same method as autoconfig, so if you set up MTA-STS, you might just as well also set up autoconfig.\r\n\r\nI was about to add the following paragraph to section \"DNS\":\r\n\"\r\nThe MX server could be validated using MTA-STS, i.e.\r\nhttps://mta-sts.%EMAILDOMAIN%/.well-known/mta-sts.txt\r\nHowever, that is not widely deployed on customer domains,\r\ntherefore limiting its usefulness.\r\n\"\r\nBut I really doubt it would help anything in practice to make that additional call. In exactly the cases where we need it, it's not deployed.",
+          "createdAt": "2024-02-06T21:51:38Z",
+          "updatedAt": "2024-02-06T21:53:37Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> BTW, why is doing MX queries over DoH mentioned, but SRV queries were rejected completely?\r\n\r\nI would prefer not to add SRV because they are currently not supported by clients (at least Thunderbird, K-9 and Delta Chat). If they go into RFC, then some clients will support them and some not, so it is still better to just publish autoconfig XML, but complexity will be increased even more. Unless we have a list of existing providers which don't have autoconfig XML but have SRV records, adding this does not help.",
+          "createdAt": "2024-02-06T22:03:59Z",
+          "updatedAt": "2024-02-06T22:03:59Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "DNS SRV:\r\n> BTW, why ... SRV queries were rejected completely?\r\n\r\nThat's offtopic here, and it's a FAQ, so I wrote #4 for that.\r\n\r\n> Unless we have a list of existing providers which don't have autoconfig XML but have SRV records, adding this does not help.\r\n\r\nExactly.",
+          "createdAt": "2024-02-06T22:16:40Z",
+          "updatedAt": "2024-02-06T22:19:48Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> But I really doubt it would help anything in practice to make that additional call. In exactly the cases where we need it, it's not deployed.\r\n\r\nLet's close the issue then, at least for now.\r\n\r\nThe conclusion is that MX record lookup is optional and is intended for legacy setups which don't support autoconfig, so they are unlikely to support mta-sts as well. We better push them to support `https://autoconfig.*`.",
+          "createdAt": "2024-02-06T22:19:41Z",
+          "updatedAt": "2024-02-06T22:19:41Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> MX record lookup is optional\r\n\r\nActually, the MX record lookup is important for the autoconfig protocol. To fully support the protocol, and to get decent detection rates, the DNS MX lookup is needed.\r\n\r\nThe result is: If you're concerned about DNS spoofing, you can use your own DoH server or that of the ISPDB to validate the results. The spec also mentions multiple other mitigations of different nature. The combination works reasonably well.\r\n\r\n> We better push them to support https://autoconfig.*.\r\n\r\nAgreed. The -02 version of the spec has a section with recommendations for mail providers, both single domain providers and customer domain hosters.",
+          "createdAt": "2024-02-06T22:23:33Z",
+          "updatedAt": "2024-02-06T22:28:13Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Actually, the MX record lookup is important for the autoconfig protocol. To fully support the protocol, and to get decent detection rates, the DNS MX lookup is needed.\r\n\r\nIn Delta Chat I think we are not going to support MX lookup and say that provider should provide autoconfig, add them to preloaded provider database or recommend users to switch to a different provider, e.g. not use their work/university email if it has this broken autoconfig setup, but use their other email or create a [chatmail](https://delta.chat/en/2023-12-13-chatmail) account just for chatting. But this usecase is different from mail clients which care about corporate email setups, e.g. Evolution, Outlook, Thunderbird etc. \r\n\r\n> you can use your own DoH server or that of the ISPDB to validate the results\r\n\r\nWe already have a built-in [provider database](https://github.com/deltachat/provider-db), may at some point import Thunderbird ISPDB in there and stop requesting it as well.",
+          "createdAt": "2024-02-07T00:26:26Z",
+          "updatedAt": "2024-02-07T00:28:56Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "That's of course up to you, yes. I understand that your usecase is different.",
+          "createdAt": "2024-02-07T00:28:07Z",
+          "updatedAt": "2024-02-07T00:28:07Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> That's of course up to you, yes. I understand that your usecase is different.\r\n\r\nIt would be nice to turn \"If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain.\" into a formal \"MAY\" so we can skip it but still be considered a proper implementation from IETF point of view.",
+          "createdAt": "2024-02-07T00:32:49Z",
+          "updatedAt": "2024-02-07T00:32:49Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "It's intentionally mandatory for full spec support, because otherwise detection rates go down too much. See section 4, last paragraph. https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html#name-config-retrieval-for-mail-c",
+          "createdAt": "2024-02-07T00:36:08Z",
+          "updatedAt": "2024-02-07T00:38:37Z"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOKo_bRc5-d1sf",
+      "title": "Reasons why DNS SRV is not in the spec",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/4",
+      "state": "CLOSED",
+      "author": "benbucksch",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "Why do we not support DNS SRV:\r\n\r\n1. DNS SRV is just as insecure as HTTP.\r\nEverybody immediately screams \"insecure!!!!\" when they see HTTP, but then the very same persons want support for DNS SRV.\r\n(DNSSEC is not helping, because it's deployed in less than 1% of the domains, and shrinking.)\r\n\r\n2. DNS SRV does not give me all the necessary info for autoconfig. I don't know which authentication methods actually work (see the note in the spec why IMAP/SMTP CAPABILITIES do not help), I don't know the username form, and lots of other info that is in autoconfig. I cannot get a working config with DNS SRV. DNS SRV being insufficient is the whole reason why we need autoconfig.\r\nWe could invent a new SRV server record that points to autoconfig. Given that it would be new, support by mail providers would be very very limited. And it's an additional lookup.\r\n\r\n4. DNS SRV is a very old standard, but nonetheless still not very widely deployed on the \"long tail\" of domains. For large ISPs, we have https://autoconfig.domain and the ISPDB.\r\n\r\n5. DNS MX gives me the same information (in 99.5% of the cases), and it's available on 100% of the domains.\r\n\r\nIt's the combination of all these factors (but particularly 1 and 2) which make DNS SRV very unattractive.\r\n\r\nWe already make over a dozen server requests for a single email address autoconfig. We need to limit the number of queries. If a query doesn't significantly add to the detection rates, nor helps with an important case, it shouldn't be in the spec.",
+      "createdAt": "2024-02-06T22:08:13Z",
+      "updatedAt": "2024-02-06T22:30:51Z",
+      "closedAt": "2024-02-06T22:19:16Z",
       "comments": []
+    },
+    {
+      "number": 5,
+      "id": "I_kwDOKo_bRc5-d3FM",
+      "title": "https://autoconfig.ispdb.net/v1.1/ does not exist",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/5",
+      "state": "CLOSED",
+      "author": "link2xt",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "Since commit\r\nhttps://github.com/benbucksch/autoconfig-spec/commit/702fc975c969432ce5ed14354c5e75bf1f1ad936\r\nthere is a sentence\r\n\"A public mail config database is available at base URL `https://autoconfig.ispdb.net/v1.1/`.\"\r\n\r\nIt should either be removed or reverted to https://autoconfig.thunderbird.net/v1.1/, which is the standard ISPDB used by Thunderbird, K-9 and Delta Chat.\r\n\r\nI think it is fine to keep Thunderbird URL here.",
+      "createdAt": "2024-02-06T22:13:05Z",
+      "updatedAt": "2024-02-07T01:23:42Z",
+      "closedAt": "2024-02-07T01:23:42Z",
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "It will exist (under `/v1/`).",
+          "createdAt": "2024-02-06T22:35:30Z",
+          "updatedAt": "2024-02-06T22:36:21Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "I've shortened the base URL to https://v1.ispdb.net/\r\n\r\nNeed to wait for DNS to update for it to go live.",
+          "createdAt": "2024-02-07T00:00:50Z",
+          "updatedAt": "2024-02-07T00:01:07Z"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOKo_bRc5-ei0R",
+      "title": "mAuth specification",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/6",
+      "state": "OPEN",
+      "author": "link2xt",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "Specification refers to mAuth (OAuth for email), but there is no link to mAuth. Is there an existing specification for it?",
+      "createdAt": "2024-02-07T00:38:12Z",
+      "updatedAt": "2024-02-07T00:38:57Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "It is in the works.",
+          "createdAt": "2024-02-07T00:38:53Z",
+          "updatedAt": "2024-02-07T00:38:53Z"
+        }
+      ]
     }
   ],
   "pulls": [
