@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-25T00:55:04.415460+00:00",
+  "timestamp": "2024-02-27T00:50:45.650216+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -312,7 +312,7 @@
       "labels": [],
       "body": "The document currently contains this text:\r\n\r\n> The purpose of this paper is to document and specify what is deployed in the wild.\r\n\r\nHowever, that doesn't seem to be the case. For example, the main URL in the document is `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` as opposed to `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` that is used by current implementations.\r\n\r\nWhat is the purpose of this document? Create a new standard loosely based on what is currently used? Or document the status quo?\r\nI think either one is fine. But it should be stated clearly in the document.",
       "createdAt": "2024-02-22T18:40:44Z",
-      "updatedAt": "2024-02-24T02:15:21Z",
+      "updatedAt": "2024-02-26T11:26:51Z",
       "closedAt": null,
       "comments": [
         {
@@ -363,6 +363,13 @@
           "body": "> I don't think it makes sense to add yet another URL.\r\n\r\nI concur with the goal to keep the amount of URLs that a client as to query as small as possible. I have the same goal.\r\n\r\nI am incorporating feedback from multiple parties. Some IETF people told me to use the `.well-known/` best-practice. Yes, of course that means changing the URL. Given that this should become an Internet standard, we should use best practices. If I don't incorporate the feedback now in some way, I'll just get the same feedback again later.\r\n\r\nWhat you're asking is in direct contradiction to what other people asked me: it's impossible to change it and to not change it. As a compromise, I added the new URL, with the old ones as backwards compat.\r\n\r\nMy plan is to define the URLs as we think they are good, plus those for backwards compat. Then I'll make a server survey and see which backwards compat URLs are actually used. Then, I'll drop all old URLs that don't make any significant difference in the result, or can easily be replaced by talking to a handful ISPs.\r\n\r\n> value \"OAuth2\" ... How should an email client handle that?\r\n\r\nIf you have a complete OAuth2 config, either from the autoconfig under `<mAuth>`, or from hardcoded values in your app, you can use it.\r\n\r\nFor Thunderbird, it has no practical relevance. You have signed the contract with Google and Microsoft, you have a hardcoded client ID, and you handle their expiry times and all. Given that you can handle Gmail now, you can handle it then.\r\n\r\nTo put it in another way: To make systems work well, the sender needs to be very strict, and the receiver needs to be very liberal (Jon Postel). As mail client, you're not the audience for this particular angle. As a mail client, you need to deal with everything. The goal here is to make _ISPs_ configure their OAuth2 servers in a way that will work properly. It's mostly a red flag for _ISPs_ (other than Google, MS and Yahoo) that they need to configure their OAuth2 server in a specific way, if they want this to work. The goal is to make the system saner, so that mail clients don't have to deal with too much crazy nonsense from ISPs.\r\n",
           "createdAt": "2024-02-24T02:10:58Z",
           "updatedAt": "2024-02-24T02:15:21Z"
+        },
+        {
+          "author": "cketti",
+          "authorAssociation": "NONE",
+          "body": "> I am incorporating feedback from multiple parties. Some IETF people told me to use the .well-known/ best-practice. Yes, of course that means changing the URL. Given that this should become an Internet standard, we should use best practices. If I don't incorporate the feedback now in some way, I'll just get the same feedback again later.\r\n\r\nThat's a reasonable request for a new standard. I think it's quite unreasonable for an existing standard.\r\n\r\nThe goal of the `.well-known` standard is to avoid name conflicts. I don't think this has been a problem for autoconfig in the past, especially since `autoconfig.{emaildomain}` itself is a separate namespace already.\r\n\r\nAdding another URL is a change that requires a lot of people to make changes with absolutely no benefit for them.\r\n",
+          "createdAt": "2024-02-26T11:26:50Z",
+          "updatedAt": "2024-02-26T11:26:50Z"
         }
       ]
     }
