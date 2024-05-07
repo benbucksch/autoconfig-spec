@@ -65,6 +65,7 @@ Table of Contents
    3.  Data format
      3.1.  Sample config file
      3.2.  Formal definition
+     3.3.  Placeholders
    4.  Config retrieval for mail clients
      4.1.  Mail provider
        4.1.1.  Customzing the config for a specific user
@@ -408,6 +409,35 @@ Table of Contents
 
    TODO Schema for XML
 
+3.3.  Placeholders
+
+   The fields for <username>, <hostname>, <serverURL>, <displayName>,
+   <displayShortName> (*1) support placeholders.  The config returned by
+   the autoconfig server may contain these placeholders, which are to be
+   replaced by the client.  The following special strings (or
+   substrings/parts) of the value should be replaced by the client,
+   after the config was retrieved and before its values are actually
+   used.
+
+   +==================+============================+==================+
+   | Placeholder      | Replace with               | Example          |
+   +==================+============================+==================+
+   | %EMAILADDRESS%   | E-Mail-Address of the user | fred@example.com |
+   +------------------+----------------------------+------------------+
+   | %EMAILLOCALPART% | Part before @ in the E-    | fred             |
+   |                  | Mail-Address               |                  |
+   +------------------+----------------------------+------------------+
+   | %EMAILDOMAIN%    | Part after @ in the E-     | example.com      |
+   |                  | Mail-Address               |                  |
+   +------------------+----------------------------+------------------+
+   | %REALNAME%       | Real-world name of the     | Fred Flintstone  |
+   |                  | user                       |                  |
+   +------------------+----------------------------+------------------+
+
+                                 Table 1
+
+   *1 and possibly <inputField> value, <authURL>, <tokenURL>, <issuer>
+
 4.  Config retrieval for mail clients
 
    The mail client application, when it needs the configuration for a
@@ -423,7 +453,7 @@ Table of Contents
    location, with lower numbers meaning higher priority, e.g. 1.2 has
    higher priority than 4.1.
 
-   In the URLs below,%EMAILADDRESS shall be replaced with the email
+   In the URLs below,%EMAILADDRESS% shall be replaced with the email
    address that the user entered and wishes to use, and %EMAILDOMAIN%
    shall be replaced with the email domain extracted from the email
    address.  For example, for "fred@example.com", the email domain is
