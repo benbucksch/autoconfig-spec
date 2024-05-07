@@ -350,8 +350,6 @@ For full support of this specification, all "Required" and "Recommended" mechani
 
 First step is to directly ask the mail provider and allow it to return the configuration. This step ensures that the protocol is decentralized and the mail provider is in control of the configuration issued to mail clients.
 
-To allow the mail provider to return a configuration adjusted for that mailbox, the client sends the email address as query parameter. This allows the mail provider to e.g. separate mailboxes on geographically local mail servers, e.g. a mail server located in the same office building where an employee works. However, while the protocol allows for such heterogenous configurations, mail providers are discouraged from doing so, and are instead encouraged to provide one single configuration for all their users. For example, DNS resolution based on location, mail proxy servers, or other techniques as necessary, can be used to route the traffic and host the mail efficiently.
-
 * 1.1. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Required)
 * 1.2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Optional)
 * 1.3. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Optional)
@@ -364,6 +362,30 @@ For example:
 
 Step 1.3. is mainly for legacy servers. Many current deployments
 use this HTTP URL.
+
+### Customzing the config for a specific user
+
+To allow the mail provider to return a configuration adjusted for that mailbox, the
+client sends the email address as query parameter in URL 1.1. This allows the mail
+provider to e.g. separate mailboxes on geographically local mail servers, e.g. a
+mail server located in the same office building where an employee works.
+
+However, while the protocol allows for such heterogenous configurations, mail
+providers are discouraged from doing so, and are instead encouraged to provide one
+single configuration for all their users. For example, DNS resolution based on
+location, mail proxy servers, or other techniques as necessary, can be used to
+route the traffic and host the mail efficiently.
+
+This mechanism also allows the autoconfig server to map the email address to
+a username that cannot be expressed using the Placeholders (see section).
+However, this method is discouraged. Instead, the email server login should accept
+email addresses as username, and doing the mapping to internal usernames at login
+time, which avoids the need for the client to know a different username.
+
+To avoid that email addresses can be tested for validity, whenever customized
+configs are returned, the autoconfig server should respond to non-existing email
+addresses with a configuation that appears to be real and is similar in structure
+to real configurations, e.g. a random host out of the pool of actual hosts.
 
 ## Central database
 
