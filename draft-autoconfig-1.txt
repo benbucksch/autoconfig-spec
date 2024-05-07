@@ -4,8 +4,8 @@
 
 Network Working Group                                         B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                           7 February 2024
-Expires: 10 August 2024
+Intended status: Informational                                7 May 2024
+Expires: 8 November 2024
 
 
                             Mail Autoconfig
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 August 2024.
+   This Internet-Draft will expire on 8 November 2024.
 
 Copyright Notice
 
@@ -160,7 +160,7 @@ Table of Contents
 3.1.  Sample config file
 
 <?xml version="1.0"?>
-<clientConfig version="1.1">
+<clientConfig version="1.2">
     <emailProvider id="example.com">
       <domain>example.com</domain>
       <domain>example.net</domain>
@@ -455,8 +455,8 @@ Table of Contents
    as necessary, can be used to route the traffic and host the mail
    efficiently.
 
-   *  1.1. https://autoconfig.%EMAILDOMAIN%/.well-known/mail-
-      v1.xml?emailaddress=%EMAILADDRESS% (Required)
+   *  1.1. https://autoconfig.%EMAILDOMAIN%/mail/config-
+      v1.1.xml?emailaddress=%EMAILADDRESS% (Required)
 
    *  1.2. https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-
       v1.1.xml (Optional)
@@ -466,8 +466,8 @@ Table of Contents
 
    For example:
 
-   *  1.1. https://autoconfig.example.com/.well-known/mail-
-      v1.xml?emailaddress=fred@example.com
+   *  1.1. https://autoconfig.example.com/mail/config-
+      v1.1.xml?emailaddress=fred@example.com
 
    *  1.2. https://example.com/.well-known/autoconfig/mail/config-
       v1.1.xml
