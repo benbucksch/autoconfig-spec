@@ -333,6 +333,25 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
 
 TODO Schema for XML
 
+## Placeholders
+
+The fields for `<username>`, `<hostname>`, `<serverURL>`,
+`<displayName>`, `<displayShortName>` (*1) support placeholders.
+The config returned by the autoconfig server may contain these placeholders,
+which are to be replaced by the client.
+The following special strings (or substrings/parts) of the value should be replaced
+by the client, after the config was retrieved and before its values are actually
+used.
+
+| Placeholder               | Replace with | Example |
+| - | - | - |
+| `%EMAILADDRESS%` | E-Mail-Address of the user | `fred@example.com` |
+| `%EMAILLOCALPART%` | Part before `@` in the E-Mail-Address | `fred` |
+| `%EMAILDOMAIN%` | Part after `@` in the E-Mail-Address | `example.com` |
+| `%REALNAME%` | Real-world name of the user | `Fred Flintstone` |
+
+*1 and possibly `<inputField>` value, `<authURL>`, `<tokenURL>`, `<issuer>`
+
 # Config retrieval for mail clients
 
 The mail client application, when it needs the configuration for a given email address,
@@ -341,7 +360,7 @@ will perform several steps to retrieve the configuration from various sources.
 The steps are ordered by priority. They may all be requested at the same time, but a higher priorty
 result that is available MUST be preferred over a lower priority one, even if the lower priority one is available earlier. Lower priority requests MAY be cancelled, if a valid higher priority result has been successfully received. The priority is expressed below with the number before the URL or location, with lower numbers meaning higher priority, e.g. 1.2 has higher priority than 4.1.
 
-In the URLs below,`%EMAILADDRESS` shall be replaced with the email address that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".
+In the URLs below,`%EMAILADDRESS%` shall be replaced with the email address that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".
 
 For full support of this specification, all "Required" and "Recommended" mechanisms MUST be implemented and working. For partial support of this specification, all "Required" mechanisms MUST be implemented and working, and in this case, you shall make explicit when advertizing or referring to auto config that there is only partial support of this specification.
 
