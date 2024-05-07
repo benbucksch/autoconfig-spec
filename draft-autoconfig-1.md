@@ -352,13 +352,13 @@ First step is to directly ask the mail provider and allow it to return the confi
 
 To allow the mail provider to return a configuration adjusted for that mailbox, the client sends the email address as query parameter. This allows the mail provider to e.g. separate mailboxes on geographically local mail servers, e.g. a mail server located in the same office building where an employee works. However, while the protocol allows for such heterogenous configurations, mail providers are discouraged from doing so, and are instead encouraged to provide one single configuration for all their users. For example, DNS resolution based on location, mail proxy servers, or other techniques as necessary, can be used to route the traffic and host the mail efficiently.
 
-* 1.1. `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Required)
+* 1.1. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Required)
 * 1.2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Optional)
 * 1.3. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Optional)
 
 For example:
 
-* 1.1. https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
+* 1.1. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
 * 1.2. https://example.com/.well-known/autoconfig/mail/config-v1.1.xml
 * 1.3. http://autoconfig.example.com/mail/config-v1.1.xml
 
