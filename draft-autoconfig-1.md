@@ -86,7 +86,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
 ## Sample config file
 
     <?xml version="1.0"?>
-    <clientConfig version="1.1">
+    <clientConfig version="1.2">
         <emailProvider id="example.com">
           <domain>example.com</domain>
           <domain>example.net</domain>
