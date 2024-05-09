@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-07T00:12:26.119624+00:00",
+  "timestamp": "2024-05-09T00:12:08.567069+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -303,7 +303,7 @@
       "id": "I_kwDOKo_bRc6AIhVh",
       "title": "Backwards compatibility",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/7",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "cketti",
       "authorAssociation": "NONE",
       "assignees": [
@@ -312,8 +312,8 @@
       "labels": [],
       "body": "The document currently contains this text:\r\n\r\n> The purpose of this paper is to document and specify what is deployed in the wild.\r\n\r\nHowever, that doesn't seem to be the case. For example, the main URL in the document is `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` as opposed to `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` that is used by current implementations.\r\n\r\nWhat is the purpose of this document? Create a new standard loosely based on what is currently used? Or document the status quo?\r\nI think either one is fine. But it should be stated clearly in the document.",
       "createdAt": "2024-02-22T18:40:44Z",
-      "updatedAt": "2024-02-26T11:26:51Z",
-      "closedAt": null,
+      "updatedAt": "2024-05-07T16:08:48Z",
+      "closedAt": "2024-05-07T16:08:47Z",
       "comments": [
         {
           "author": "benbucksch",
@@ -370,6 +370,13 @@
           "body": "> I am incorporating feedback from multiple parties. Some IETF people told me to use the .well-known/ best-practice. Yes, of course that means changing the URL. Given that this should become an Internet standard, we should use best practices. If I don't incorporate the feedback now in some way, I'll just get the same feedback again later.\r\n\r\nThat's a reasonable request for a new standard. I think it's quite unreasonable for an existing standard.\r\n\r\nThe goal of the `.well-known` standard is to avoid name conflicts. I don't think this has been a problem for autoconfig in the past, especially since `autoconfig.{emaildomain}` itself is a separate namespace already.\r\n\r\nAdding another URL is a change that requires a lot of people to make changes with absolutely no benefit for them.\r\n",
           "createdAt": "2024-02-26T11:26:50Z",
           "updatedAt": "2024-02-26T11:26:50Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Hey cketti, after having thought about it, I agree with you.\r\nThe `autoconfig.domain` URL is dedicated to this protocol and therefore there is no conflict with any existing page or deployment setup of live sites. If it was a new protocol, we'd use `.well-known/` simply for consistency, but in this case, backwards compat is critical and using another URL has no advantage.\r\n\r\nI changed the 1.1. URL back to `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%`, as it was before and has always been used in practice. Thanks for your feedback.\r\n\r\nI therefore consider this resolved now. Fixed in git commit d32028722.\r\n\r\nConcerning the OAuth2 vs. mAuth, that is not a breaking change, because no ISP (other than the big 3-4) can do OAuth2 at all right now, and the only objective of mAuth is to do it properly and sanely before we deploy it widely to all ISPs. OAuth2 has never been properly specced for mail, and that's the objective now, before we deploy it to all kinds of small companies.",
+          "createdAt": "2024-05-07T16:08:47Z",
+          "updatedAt": "2024-05-07T16:08:47Z"
         }
       ]
     }
