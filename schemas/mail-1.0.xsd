@@ -6,8 +6,6 @@
                 <xs:element name="emailProvider">
                     <xs:complexType>
                         <xs:all>
-                            <xs:element name="displayShortName" minOccurs="0"/><!--TODO: Work In Progress-->
-                            <xs:element name="enableURL" minOccurs="0"/><!--TODO: Work In Progress-->
                             <xs:element minOccurs="0" name="id">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
@@ -16,6 +14,7 @@
                                 </xs:simpleType>
                             </xs:element>
                             <xs:element minOccurs="0" name="displayName" type="xs:string" />
+                            <xs:element minOccurs="0" name="displayShortName" type="xs:string" />
                             <xs:element minOccurs="0" maxOccurs="unbounded" name="domain">
                                 <xs:annotation>
                                     <xs:documentation>XSD 1.1 required, because attribute "maxOccurs" is "unbounded".</xs:documentation>
@@ -141,15 +140,28 @@
                                     <xs:attribute name="key" use="required">
                                         <xs:simpleType>
                                             <xs:restriction base="xs:string">
-                                                <xs:pattern value="[a-zA-Z0-9\-_]*" />
+                                                <xs:pattern value="[a-zA-Z0-9\-_]+" />
                                             </xs:restriction>
                                         </xs:simpleType>
                                     </xs:attribute>
                                     <xs:attribute name="label" type="xs:string" use="required" />
                                 </xs:complexType>
                             </xs:element>
+                            <xs:element minOccurs="0" maxOccurs="unbounded" name="enableURL">
+                                <xs:annotation>
+                                    <xs:documentation>XSD 1.1 required, because attribute "maxOccurs" is "unbounded".</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="url" type="xs:string" use="required" />
+                                            <xs:attribute name="instruction" type="xs:string" />
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:all>
-                        <xs:attribute name="id" />
+                        <xs:attribute name="id" type="xs:string" />
                     </xs:complexType>
                 </xs:element>
             </xs:all>
