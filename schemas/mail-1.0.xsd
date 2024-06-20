@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="urn:ietf:params:xml:ns:autoconfig:mail-1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="clientConfig">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="emailProvider">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="displayShortName" minOccurs="0"/><!--TODO: Work In Progress-->
+                            <xs:element name="enableURL" minOccurs="0"/><!--TODO: Work In Progress-->
+                            <xs:element minOccurs="0" name="id">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern value="[a-zA-Z0-9\-_]+" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="displayName" type="xs:string" />
+                            <xs:element minOccurs="0" maxOccurs="unbounded" name="domain">
+                                <xs:annotation>
+                                    <xs:documentation>XSD 1.1 required, because attribute "maxOccurs" is "unbounded".</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern value="[a-zA-Z0-9\-.%]+" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="incomingServer">
+                                <xs:complexType>
+                                    <xs:all>
+                                        <xs:element name="hostname">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:pattern value="[a-zA-Z0-9\-.%]+" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element name="port">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:integer">
+                                                    <xs:minInclusive value="1" />
+                                                    <xs:maxInclusive value="65535" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element name="username" type="xs:string" />
+                                        <xs:element name="authentication">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:enumeration value="plain" />
+                                                    <xs:enumeration value="secure" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element name="socketType">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:enumeration value="plain" />
+                                                    <xs:enumeration value="SSL" />
+                                                    <xs:enumeration value="STARTTLS" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element minOccurs="0" name="pop3">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element minOccurs="0" name="leaveMessagesOnServer" type="xs:boolean" />
+                                                    <xs:element minOccurs="0" name="daysToLeaveMessagesOnServer" type="xs:integer" />
+                                                    <xs:element minOccurs="0" name="downloadOnBiff" type="xs:boolean" />
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:all>
+                                    <xs:attribute name="type" use="required">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="imap" />
+                                                <xs:enumeration value="nntp" />
+                                                <xs:enumeration value="pop3" />
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="outgoingServer">
+                                <xs:complexType>
+                                    <xs:all>
+                                        <xs:element name="hostname">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:pattern value="[a-zA-Z0-9\-.%]+" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element name="port">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:integer">
+                                                    <xs:minInclusive value="1" />
+                                                    <xs:maxInclusive value="65535" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element minOccurs="0" name="username" type="xs:string" />
+                                        <xs:element name="socketType">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:enumeration value="plain" />
+                                                    <xs:enumeration value="SSL" />
+                                                    <xs:enumeration value="STARTTLS" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element name="authentication">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:enumeration value="none" />
+                                                    <xs:enumeration value="plain" />
+                                                    <xs:enumeration value="secure" />
+                                                    <xs:enumeration value="smtp-after-pop" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element minOccurs="0" name="addThisServer" type="xs:boolean" />
+                                        <xs:element minOccurs="0" name="useGlobalPreferredServer" type="xs:boolean" />
+                                    </xs:all>
+                                    <xs:attribute name="type" use="required">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="smtp" />
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" maxOccurs="unbounded" name="inputField">
+                                <xs:annotation>
+                                    <xs:documentation>XSD 1.1 required, because attribute "maxOccurs" is "unbounded".</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:attribute name="key" use="required">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:pattern value="[a-zA-Z0-9\-_]*" />
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="label" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                        <xs:attribute name="id" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+            <xs:attribute fixed="1.0" name="version" />
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
