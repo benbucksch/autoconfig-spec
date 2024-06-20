@@ -1,0 +1,467 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-06-20T00:12:19.173664+00:00",
+  "repo": "benbucksch/autoconfig-spec",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOKo_bRc57RGcD",
+      "title": "Allow oAuth2 clientSecret ",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/1",
+      "state": "CLOSED",
+      "author": "NiasSt90",
+      "authorAssociation": "NONE",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "In your xml format description [here](https://www.bucksch.org/1/projects/thunderbird/autoconfiguration/config-file-format.html) there was an `oauth2` block to configure a individuell oauth2/oidc configuration.\r\nBut these configuration sections lacks  the option to provide a `clientId`/`clientSecret` like in the following example.\r\n\r\n```xml\r\n<incomingServer type=\"imap\">\r\n      <hostname>imap.my-server.com</hostname>\r\n      <port>993</port>\r\n      <socketType>SSL</socketType>\r\n      <username>%EMAILADDRESS%</username>\r\n      <authentication>OAuth2</authentication>\r\n      <authentication>password-cleartext</authentication>\r\n      <oAuth2>\r\n        <issuer>sso.my-keycloak.com/auth/realms/myRealm<issuer>\r\n        <scope>imap<scope>\r\n        <authURL>https://sso.my-keycloak.com/auth/realms/myRealm/protocol/openid-connect/auth</authURL>\r\n        <tokenURL>https://sso.my-keycloak.com/auth/realms/myRealm/protocol/openid-connect/token</tokenURL>\r\n        <clientId>MUA</clientId>\r\n        <clientSecret>not-so-secret</clientSecret>\r\n      <oAuth2>\r\n    </incomingServer>\r\n```\r\n\r\nIn my opinion is this easier than to try to create dynamically a client on the target IDP. \r\n(mentioned [here](https://bugzilla.mozilla.org/show_bug.cgi?id=1602166)) \r\n",
+      "createdAt": "2024-01-05T21:51:26Z",
+      "updatedAt": "2024-02-07T01:28:53Z",
+      "closedAt": "2024-02-07T01:28:19Z",
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "I agree. There's already `<clientID>`, and I just added `<clientSecret>`.\r\n\r\nFIXED",
+          "createdAt": "2024-02-07T01:28:20Z",
+          "updatedAt": "2024-02-07T01:28:20Z"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "I_kwDOKo_bRc57UQXH",
+      "title": "Mention MTA-STS regarding MX record security considerations",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/3",
+      "state": "CLOSED",
+      "author": "link2xt",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "MTA-STS can be used to secure MX records, e.g. https://mta-sts.gmail.com/.well-known/mta-sts.txt contains `mx` records that are allowed to be in DNS.\r\n\r\nThis could be mentioned in relation to\r\nhttps://github.com/benbucksch/autoconfig-spec/commit/335bd87bba671052a44ac7d1dfad69cde76f5210",
+      "createdAt": "2024-01-07T00:42:24Z",
+      "updatedAt": "2024-02-07T00:38:37Z",
+      "closedAt": "2024-02-06T22:19:41Z",
+      "comments": [
+        {
+          "author": "cketti",
+          "authorAssociation": "NONE",
+          "body": "Can you explain how MTA-STS would help in the context of autoconfig?",
+          "createdAt": "2024-02-06T13:22:23Z",
+          "updatedAt": "2024-02-06T13:22:23Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Current draft describes MX record fallback:\r\nhttps://github.com/benbucksch/autoconfig-spec/blob/fdc206eb2c02eab22b5d167eb6b7da07b4591f83/draft-autoconfig-1.md#mx\r\n\r\nAnd in security considerations it says that relying on DNS is not secure:\r\nhttps://github.com/benbucksch/autoconfig-spec/blob/fdc206eb2c02eab22b5d167eb6b7da07b4591f83/draft-autoconfig-1.md#dns\r\n\r\nUnlike HTTPS connection to retrieve autoconfig XML, MX records can be easily spoofed if they are requested by a client device via malicious Wi-Fi hotspot. Let's say the client requests MX records for gmail.com, it will normally get `gmail-smtp-in.l.google.com.`, `alt1.gmail-smtp-in.l.google.com.`, ..., `alt4.gmail-smtp-in.l.google.com.`.\r\n\r\nIn this case google.com may be a malicious domain controlled by an attacker. But we can retrieve https://mta-sts.gmail.com/.well-known/mta-sts.txt and check the lines which come from gmail.com HTTPS host confirming that these MX records are not spoofed:\r\n```\r\nmx: gmail-smtp-in.l.google.com\r\nmx: *.gmail-smtp-in.l.google.com\r\n```",
+          "createdAt": "2024-02-06T19:33:43Z",
+          "updatedAt": "2024-02-06T19:33:43Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The other option would be to reduce the scope of the spec, describe how autoconfig over HTTPS works and not move the description of insecure alternatives (SRV, retrieving autoconfig XML over HTTP, MX records etc.) somewhere else.",
+          "createdAt": "2024-02-06T19:36:52Z",
+          "updatedAt": "2024-02-06T19:36:52Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "@link2xt The MX lookup is necessary to get decent detection rates. They need to stay in the spec. If we cannot rely on DNS, then our detection rates are very low.\r\n\r\nThe spec describes multiple ways and factors to mitigate this risk.",
+          "createdAt": "2024-02-06T20:52:14Z",
+          "updatedAt": "2024-02-06T20:58:38Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "@link2xt @cketti\r\n1. How widely is MTA-STS supported?\r\n\r\n> MX records can be easily spoofed if they are requested by a client device via malicious Wi-Fi hotspot\r\n\r\n2. The spec already mentions this risk and recommends to use DNS over HTTPS (DoH) to verify the MX records, to avoid such scenarios. What does MTA-STS add on top of that?",
+          "createdAt": "2024-02-06T20:55:47Z",
+          "updatedAt": "2024-02-06T20:55:59Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> 1. How widely is MTA-STS supported?\r\n\r\nI have no statistics at hand, but some list I collected looking into it some time ago, seems it is supported by many major providers:\r\n- https://mta-sts.google.com/.well-known/mta-sts.txt\r\n- https://mta-sts.gmx.com/.well-known/mta-sts.txt\r\n- https://mta-sts.comcast.net/.well-known/mta-sts.txt\r\n- https://mta-sts.belastingdienst.nl/.well-known/mta-sts.txt\r\n- https://mta-sts.protonmail.com/.well-known/mta-sts.txt\r\n- https://mta-sts.hardenize.com/.well-known/mta-sts.txt\r\n- https://mta-sts.yahoo.com/.well-known/mta-sts.txt\r\n\r\nYou can also find a lot of domains supporting it at https://www.google.com/search?q=inurl%3Amta-sts.txt\r\n\r\nGoogle Workspace supports it, but AFAIK does not require to setup mta-sts subdomain domain, it is optional: https://support.google.com/a/answer/9261504\r\n\r\n> 2\\. The spec already mentions this risk and recommends to use DNS over HTTPS (DoH) to verify the MX records, to avoid such scenarios. What does MTA-STS add on top of that?\r\n\r\nIn Delta Chat we are not going to use DoH because we don't want any dependency on central servers such as Google/Cloudflare DoH in the client. The only exception is the 8.8.8.8 fallback due to unresolved problems with DNS resolution in the dependency, map tiles in experimental location streaming feature and https://autoconfig.thunderbird.net/v1.1/ requests which we should probably just replace with an ISPDB snapshot preloaded into the binary.\r\n\r\nOur current solution is to query MX with system DNS, but then only allow to configure Gmail this way. So Google Workspace domains work, but an attacker controlling malicious Wi-Fi hotspot has to be Google to make any use of MX response spoofing.",
+          "createdAt": "2024-02-06T21:33:33Z",
+          "updatedAt": "2024-02-06T21:34:23Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> Delta Chat we are not going to use DoH because we don't want any dependency on central servers such as Google/Cloudflare DoH in the client\r\n\r\nI understand why you don't want to give information to third parties, esp. Google and co.\r\n\r\nTo run the full autoconfig, you will need the ISPDB, so you have this point of centralization anyways. You could use a DoH server of your own, or on the domain/owner of the ISPDB.\r\n\r\n*How* you validate the MX entry is your own choice.\r\n\r\nIndeed, it's maybe a good idea to add the MTA-STS in the same section where I mention DoH, as an alternative.",
+          "createdAt": "2024-02-06T21:37:55Z",
+          "updatedAt": "2024-02-06T21:39:17Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "MTA-STS works similarly to HSTS. The other MTA first makes a DNS query and then caches the result.\n\nAutoconfig will make the connection only once or very rarely, so there simply is no way to tell whether the server does support MTA STS.",
+          "createdAt": "2024-02-06T21:41:37Z",
+          "updatedAt": "2024-02-06T21:41:37Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "BTW, why is doing MX queries over DoH mentioned, but SRV queries were rejected completely?",
+          "createdAt": "2024-02-06T21:51:23Z",
+          "updatedAt": "2024-02-06T21:51:23Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> https://mta-sts.gmx.com/.well-known/mta-sts.txt\r\n\r\nThis specific example is not really that helpful, because don't need the MX record to look up the ISP for gmx.com, because it's gmx.com. (And we have gmx.com in the ISPDB.) We need the MX specifically for domain hosters, and the customer domains typically do *not* have MTA-STS. Indeed, not even gmx.biz (which is a gmx.net domain) has it: https://mta-sts.gmx.biz/.well-known/mta-sts.txt gives \"host not found\". So, for exactly those cases where we need the MX lookup, MTA-STS does not work, in current deployments, and is unlikely to work in the future, due to the configuration overhead per customer domain. MTA-STS is exactly the same method as autoconfig, so if you set up MTA-STS, you might just as well also set up autoconfig.\r\n\r\nI was about to add the following paragraph to section \"DNS\":\r\n\"\r\nThe MX server could be validated using MTA-STS, i.e.\r\nhttps://mta-sts.%EMAILDOMAIN%/.well-known/mta-sts.txt\r\nHowever, that is not widely deployed on customer domains,\r\ntherefore limiting its usefulness.\r\n\"\r\nBut I really doubt it would help anything in practice to make that additional call. In exactly the cases where we need it, it's not deployed.",
+          "createdAt": "2024-02-06T21:51:38Z",
+          "updatedAt": "2024-02-06T21:53:37Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> BTW, why is doing MX queries over DoH mentioned, but SRV queries were rejected completely?\r\n\r\nI would prefer not to add SRV because they are currently not supported by clients (at least Thunderbird, K-9 and Delta Chat). If they go into RFC, then some clients will support them and some not, so it is still better to just publish autoconfig XML, but complexity will be increased even more. Unless we have a list of existing providers which don't have autoconfig XML but have SRV records, adding this does not help.",
+          "createdAt": "2024-02-06T22:03:59Z",
+          "updatedAt": "2024-02-06T22:03:59Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "DNS SRV:\r\n> BTW, why ... SRV queries were rejected completely?\r\n\r\nThat's offtopic here, and it's a FAQ, so I wrote #4 for that.\r\n\r\n> Unless we have a list of existing providers which don't have autoconfig XML but have SRV records, adding this does not help.\r\n\r\nExactly.",
+          "createdAt": "2024-02-06T22:16:40Z",
+          "updatedAt": "2024-02-06T22:19:48Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> But I really doubt it would help anything in practice to make that additional call. In exactly the cases where we need it, it's not deployed.\r\n\r\nLet's close the issue then, at least for now.\r\n\r\nThe conclusion is that MX record lookup is optional and is intended for legacy setups which don't support autoconfig, so they are unlikely to support mta-sts as well. We better push them to support `https://autoconfig.*`.",
+          "createdAt": "2024-02-06T22:19:41Z",
+          "updatedAt": "2024-02-06T22:19:41Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> MX record lookup is optional\r\n\r\nActually, the MX record lookup is important for the autoconfig protocol. To fully support the protocol, and to get decent detection rates, the DNS MX lookup is needed.\r\n\r\nThe result is: If you're concerned about DNS spoofing, you can use your own DoH server or that of the ISPDB to validate the results. The spec also mentions multiple other mitigations of different nature. The combination works reasonably well.\r\n\r\n> We better push them to support https://autoconfig.*.\r\n\r\nAgreed. The -02 version of the spec has a section with recommendations for mail providers, both single domain providers and customer domain hosters.",
+          "createdAt": "2024-02-06T22:23:33Z",
+          "updatedAt": "2024-02-06T22:28:13Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Actually, the MX record lookup is important for the autoconfig protocol. To fully support the protocol, and to get decent detection rates, the DNS MX lookup is needed.\r\n\r\nIn Delta Chat I think we are not going to support MX lookup and say that provider should provide autoconfig, add them to preloaded provider database or recommend users to switch to a different provider, e.g. not use their work/university email if it has this broken autoconfig setup, but use their other email or create a [chatmail](https://delta.chat/en/2023-12-13-chatmail) account just for chatting. But this usecase is different from mail clients which care about corporate email setups, e.g. Evolution, Outlook, Thunderbird etc. \r\n\r\n> you can use your own DoH server or that of the ISPDB to validate the results\r\n\r\nWe already have a built-in [provider database](https://github.com/deltachat/provider-db), may at some point import Thunderbird ISPDB in there and stop requesting it as well.",
+          "createdAt": "2024-02-07T00:26:26Z",
+          "updatedAt": "2024-02-07T00:28:56Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "That's of course up to you, yes. I understand that your usecase is different.",
+          "createdAt": "2024-02-07T00:28:07Z",
+          "updatedAt": "2024-02-07T00:28:07Z"
+        },
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> That's of course up to you, yes. I understand that your usecase is different.\r\n\r\nIt would be nice to turn \"If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain.\" into a formal \"MAY\" so we can skip it but still be considered a proper implementation from IETF point of view.",
+          "createdAt": "2024-02-07T00:32:49Z",
+          "updatedAt": "2024-02-07T00:32:49Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "It's intentionally mandatory for full spec support, because otherwise detection rates go down too much. See section 4, last paragraph. https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html#name-config-retrieval-for-mail-c",
+          "createdAt": "2024-02-07T00:36:08Z",
+          "updatedAt": "2024-02-07T00:38:37Z"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOKo_bRc5-d1sf",
+      "title": "Reasons why DNS SRV is not in the spec",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/4",
+      "state": "CLOSED",
+      "author": "benbucksch",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "Why do we not support DNS SRV:\r\n\r\n1. DNS SRV is just as insecure as HTTP.\r\nEverybody immediately screams \"insecure!!!!\" when they see HTTP, but then the very same persons want support for DNS SRV.\r\n(DNSSEC is not helping, because it's deployed in less than 1% of the domains, and shrinking.)\r\n\r\n2. DNS SRV does not give me all the necessary info for autoconfig. I don't know which authentication methods actually work (see the note in the spec why IMAP/SMTP CAPABILITIES do not help), I don't know the username form, and lots of other info that is in autoconfig. I cannot get a working config with DNS SRV. DNS SRV being insufficient is the whole reason why we need autoconfig.\r\nWe could invent a new SRV server record that points to autoconfig. Given that it would be new, support by mail providers would be very very limited. And it's an additional lookup.\r\n\r\n4. DNS SRV is a very old standard, but nonetheless still not very widely deployed on the \"long tail\" of domains. For large ISPs, we have https://autoconfig.domain and the ISPDB.\r\n\r\n5. DNS MX gives me the same information (in 99.5% of the cases), and it's available on 100% of the domains.\r\n\r\nIt's the combination of all these factors (but particularly 1 and 2) which make DNS SRV very unattractive.\r\n\r\nWe already make over a dozen server requests for a single email address autoconfig. We need to limit the number of queries. If a query doesn't significantly add to the detection rates, nor helps with an important case, it shouldn't be in the spec.",
+      "createdAt": "2024-02-06T22:08:13Z",
+      "updatedAt": "2024-02-06T22:30:51Z",
+      "closedAt": "2024-02-06T22:19:16Z",
+      "comments": []
+    },
+    {
+      "number": 5,
+      "id": "I_kwDOKo_bRc5-d3FM",
+      "title": "https://autoconfig.ispdb.net/v1.1/ does not exist",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/5",
+      "state": "CLOSED",
+      "author": "link2xt",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "Since commit\r\nhttps://github.com/benbucksch/autoconfig-spec/commit/702fc975c969432ce5ed14354c5e75bf1f1ad936\r\nthere is a sentence\r\n\"A public mail config database is available at base URL `https://autoconfig.ispdb.net/v1.1/`.\"\r\n\r\nIt should either be removed or reverted to https://autoconfig.thunderbird.net/v1.1/, which is the standard ISPDB used by Thunderbird, K-9 and Delta Chat.\r\n\r\nI think it is fine to keep Thunderbird URL here.",
+      "createdAt": "2024-02-06T22:13:05Z",
+      "updatedAt": "2024-02-07T01:23:42Z",
+      "closedAt": "2024-02-07T01:23:42Z",
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "It will exist (under `/v1/`).",
+          "createdAt": "2024-02-06T22:35:30Z",
+          "updatedAt": "2024-02-06T22:36:21Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "I've shortened the base URL to https://v1.ispdb.net/\r\n\r\nNeed to wait for DNS to update for it to go live.",
+          "createdAt": "2024-02-07T00:00:50Z",
+          "updatedAt": "2024-02-07T00:01:07Z"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOKo_bRc5-ei0R",
+      "title": "mAuth specification",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/6",
+      "state": "OPEN",
+      "author": "link2xt",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "Specification refers to mAuth (OAuth for email), but there is no link to mAuth. Is there an existing specification for it?",
+      "createdAt": "2024-02-07T00:38:12Z",
+      "updatedAt": "2024-02-07T00:38:57Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "It is in the works.",
+          "createdAt": "2024-02-07T00:38:53Z",
+          "updatedAt": "2024-02-07T00:38:53Z"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "I_kwDOKo_bRc6AIhVh",
+      "title": "Backwards compatibility",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/7",
+      "state": "CLOSED",
+      "author": "cketti",
+      "authorAssociation": "NONE",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "The document currently contains this text:\r\n\r\n> The purpose of this paper is to document and specify what is deployed in the wild.\r\n\r\nHowever, that doesn't seem to be the case. For example, the main URL in the document is `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` as opposed to `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` that is used by current implementations.\r\n\r\nWhat is the purpose of this document? Create a new standard loosely based on what is currently used? Or document the status quo?\r\nI think either one is fine. But it should be stated clearly in the document.",
+      "createdAt": "2024-02-22T18:40:44Z",
+      "updatedAt": "2024-05-07T16:08:48Z",
+      "closedAt": "2024-05-07T16:08:47Z",
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "The purpose was to only document what is deployed.\r\nThen people came and wanted all kinds of changes.\r\n\r\nHow about:\r\n\"The purpose of this paper is to document and specify what is deployed in the wild, and in some cases adjust it to current best practices.\"\r\n?",
+          "createdAt": "2024-02-23T00:32:46Z",
+          "updatedAt": "2024-02-23T00:32:46Z"
+        },
+        {
+          "author": "cketti",
+          "authorAssociation": "NONE",
+          "body": "I don't think that clears things up. Changing the URLs is an incompatible change. So effectively this is creating a new standard. At that point you might as well change everything else people complain about (e.g. use JSON instead of XML).\r\n\r\nIf you want to document what's currently deployed, you could still add new things. But it has to be done in a backwards compatible way. E.g. use a different authentication identifier for mAuth instead of \"OAuth2\" which is already in use for something else.",
+          "createdAt": "2024-02-23T14:43:08Z",
+          "updatedAt": "2024-02-23T14:43:08Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "The URL changes I made are backwards compatible. The new URLs are different, but the old ones are still in there for backwards compat.\r\n\r\n> If you want to document what's currently deployed, you could still add new things.\r\n\r\nThat's what I'm doing. Did you find a case where I _removed_ an URL that is important in practice? If so, I'd like to know.\r\n\r\n> E.g. use a different authentication identifier for mAuth instead of \"OAuth2\" which is already in use for something else.\r\n\r\nNobody uses `<oAuth2>` yet, so that's not a backwards incompatible change.",
+          "createdAt": "2024-02-23T16:32:02Z",
+          "updatedAt": "2024-02-23T16:32:02Z"
+        },
+        {
+          "author": "cketti",
+          "authorAssociation": "NONE",
+          "body": "### Section [3.1](https://datatracker.ietf.org/doc/html/draft-bucksch-autoconfig-02#section-3.1):\r\n\r\n```xml\r\n<!-- Authentication methods:\r\n     [\u2026]\r\n     \"OAuth2\":\r\n               mAuth. Should be added only as second alternative.\r\n     [\u2026]\r\n-->\r\n<authentication>password-cleartext</authentication>\r\n```\r\n\r\n`OAuth2` is currently used with providers like Gmail that require manual client registration before OAuth2 can be used. This is incompatible with the proposed mAuth mechanism. The value for mAuth could be `mAuth` or something like `OAuth2-static`.\r\n\r\n### Section [4.1](https://datatracker.ietf.org/doc/html/draft-bucksch-autoconfig-02#name-mail-provider):\r\n\r\n> * 1.1. `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Required)\r\n> * 1.2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Optional)\r\n> * 1.3. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Optional)\r\n\r\nThe list of URLs used by current implementations is:\r\n\r\n- `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%`\r\n- `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%`\r\n- `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml`\r\n\r\nLeaving out `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` is an incompatible change.\r\n\r\nThe `\u2026/.well-known/mail-v1.xml?\u2026` URL is repeated in section [4.3](https://datatracker.ietf.org/doc/html/draft-bucksch-autoconfig-02#section-4.3), [6.1](https://datatracker.ietf.org/doc/html/draft-bucksch-autoconfig-02#section-6.1), and [6.2](https://datatracker.ietf.org/doc/html/draft-bucksch-autoconfig-02#section-6.2).",
+          "createdAt": "2024-02-23T17:00:34Z",
+          "updatedAt": "2024-02-23T17:12:08Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> Leaving out https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS% is an incompatible change.\r\n\r\nThat was probably unintentionally removed. My bad. You're right, that URL should stay for backwards compat. Thanks for catching it.\r\n\r\n(FWIW, for MX, we will put only the new URLs in the spec, because Thunderbird so far does *not* query that old URL for MX.)\r\n\r\n> OAuth2 is currently used with providers like Gmail\r\n\r\nYou mean for `<authentication>OAuth</authentication>` ? Note that the value there did not change. Only the description changed. So, this is a backwards compatible change.\r\n\r\nIf specific email clients (like Thunderbird) do special things for specific providers (like Gmail), that's their business and between Thunderbird and Google. The spec tries to get something working for all email clients and all providers (if they implement the spec) at the same time, without contracts between the parties.",
+          "createdAt": "2024-02-23T18:54:50Z",
+          "updatedAt": "2024-02-23T18:54:50Z"
+        },
+        {
+          "author": "cketti",
+          "authorAssociation": "NONE",
+          "body": "Apologies. I had another look. And the URLs currently in use are:\r\n- `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%`\r\n- `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%`\r\n- `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%`\r\n- `http://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%`\r\n\r\nI don't think it makes sense to add yet another URL. Clients already need to issue too many HTTP requests when trying to find server settings. We should work on a deprecation strategy to get rid of some of them, not add more.\r\n\r\nWhat's the advantage of adding another one?\r\nHow is it better for email providers?\r\nHow is it better for email clients?\r\nHow is it better for users?\r\n\r\nIMO adding another URL would put a needless burden on the ecosystem. With no practical upside.\r\n\r\n> (FWIW, for MX, we will put only the new URLs in the spec, because Thunderbird so far does not query that old URL for MX.)\r\n\r\nI don't think that's a good idea. At least Evolution and Nextcloud Mail already use the \"old\" URLs after an MX lookup.\r\n\r\nAlso, using the existing URLs gives us compatibility with services that already deploy autoconfig and support customer domains, but are not in a fallback database. Example: https://github.com/thunderbird/autoconfig/pull/86\r\nForcing email providers to make the config available under yet another URL to be able to support customer domains doesn't make sense.\r\n\r\n> You mean for <authentication>OAuth</authentication> ? Note that the value there did not change. Only the description changed. So, this is a backwards compatible change.\r\n\r\nYou keep the name, but change the meaning. How is that not an incompatible change? \r\n\r\n> If specific email clients (like Thunderbird) do special things for specific providers (like Gmail), that's their business and between Thunderbird and Google. The spec tries to get something working for all email clients and all providers (if they implement the spec) at the same time, without contracts between the parties.\r\n\r\nThere are currently configs using the \"OAuth2\" value in Thunderbird's fallback database. Thunderbird uses this value to decide whether to use OAuth2. Almost all of the clients also implementing Autoconfig use this database. Some of them also support OAuth2.\r\nWith this change all currently existing configs using the value \"OAuth2\" will become invalid because the providers don't support mAuth. How should an email client handle that? Currently they (hopefully) ignore the \"OAuth2\" value when they don't support it with a particular provider. Once they add support for mAuth, they won't know if \"OAuth2\" in a config means \"this is OAuth2 with a provider I don't support\" or \"this is mAuth, I can do this\". This problem can be easily avoided by using a different value.\r\n",
+          "createdAt": "2024-02-24T01:19:06Z",
+          "updatedAt": "2024-02-24T01:19:06Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> I don't think it makes sense to add yet another URL.\r\n\r\nI concur with the goal to keep the amount of URLs that a client as to query as small as possible. I have the same goal.\r\n\r\nI am incorporating feedback from multiple parties. Some IETF people told me to use the `.well-known/` best-practice. Yes, of course that means changing the URL. Given that this should become an Internet standard, we should use best practices. If I don't incorporate the feedback now in some way, I'll just get the same feedback again later.\r\n\r\nWhat you're asking is in direct contradiction to what other people asked me: it's impossible to change it and to not change it. As a compromise, I added the new URL, with the old ones as backwards compat.\r\n\r\nMy plan is to define the URLs as we think they are good, plus those for backwards compat. Then I'll make a server survey and see which backwards compat URLs are actually used. Then, I'll drop all old URLs that don't make any significant difference in the result, or can easily be replaced by talking to a handful ISPs.\r\n\r\n> value \"OAuth2\" ... How should an email client handle that?\r\n\r\nIf you have a complete OAuth2 config, either from the autoconfig under `<mAuth>`, or from hardcoded values in your app, you can use it.\r\n\r\nFor Thunderbird, it has no practical relevance. You have signed the contract with Google and Microsoft, you have a hardcoded client ID, and you handle their expiry times and all. Given that you can handle Gmail now, you can handle it then.\r\n\r\nTo put it in another way: To make systems work well, the sender needs to be very strict, and the receiver needs to be very liberal (Jon Postel). As mail client, you're not the audience for this particular angle. As a mail client, you need to deal with everything. The goal here is to make _ISPs_ configure their OAuth2 servers in a way that will work properly. It's mostly a red flag for _ISPs_ (other than Google, MS and Yahoo) that they need to configure their OAuth2 server in a specific way, if they want this to work. The goal is to make the system saner, so that mail clients don't have to deal with too much crazy nonsense from ISPs.\r\n",
+          "createdAt": "2024-02-24T02:10:58Z",
+          "updatedAt": "2024-02-24T02:15:21Z"
+        },
+        {
+          "author": "cketti",
+          "authorAssociation": "NONE",
+          "body": "> I am incorporating feedback from multiple parties. Some IETF people told me to use the .well-known/ best-practice. Yes, of course that means changing the URL. Given that this should become an Internet standard, we should use best practices. If I don't incorporate the feedback now in some way, I'll just get the same feedback again later.\r\n\r\nThat's a reasonable request for a new standard. I think it's quite unreasonable for an existing standard.\r\n\r\nThe goal of the `.well-known` standard is to avoid name conflicts. I don't think this has been a problem for autoconfig in the past, especially since `autoconfig.{emaildomain}` itself is a separate namespace already.\r\n\r\nAdding another URL is a change that requires a lot of people to make changes with absolutely no benefit for them.\r\n",
+          "createdAt": "2024-02-26T11:26:50Z",
+          "updatedAt": "2024-02-26T11:26:50Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Hey cketti, after having thought about it, I agree with you.\r\nThe `autoconfig.domain` URL is dedicated to this protocol and therefore there is no conflict with any existing page or deployment setup of live sites. If it was a new protocol, we'd use `.well-known/` simply for consistency, but in this case, backwards compat is critical and using another URL has no advantage.\r\n\r\nI changed the 1.1. URL back to `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%`, as it was before and has always been used in practice. Thanks for your feedback.\r\n\r\nI therefore consider this resolved now. Fixed in git commit d32028722.\r\n\r\nConcerning the OAuth2 vs. mAuth, that is not a breaking change, because no ISP (other than the big 3-4) can do OAuth2 at all right now, and the only objective of mAuth is to do it properly and sanely before we deploy it widely to all ISPs. OAuth2 has never been properly specced for mail, and that's the objective now, before we deploy it to all kinds of small companies.",
+          "createdAt": "2024-05-07T16:08:47Z",
+          "updatedAt": "2024-05-07T16:08:47Z"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOKo_bRc6MfDn4",
+      "title": "Historical information on Autoconfig",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/8",
+      "state": "OPEN",
+      "author": "ben221199",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "# Versions\r\n\r\nThere are 2 versions of Autoconfig: `1.0` and `1.1`.\r\n\r\nAutoconfig 1.0 was supported in ThunderBird 3.0.\r\nAutoconfig 1.1 is supported in ThunderBird 3.1 and later.\r\n\r\n# URLs\r\n\r\nEach version has its own URLs to request XML data.\r\n\r\nFor `1.0` this is:\r\n- `https://autoconfig.$DOMAIN/mail/mozilla.xml?emailaddress=$EMAILADDRESS`\r\n\r\nFor `1.1` this is:\r\n- `http://autoconfig.$DOMAIN/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS`\r\n- `http://$DOMAIN/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS` (As fallback)\r\n\r\nNOTE: The variable `emailaddress` is sent, containing the e-mailaddress.\r\n\r\n# ISPDB URLs\r\n\r\nThere is also a central ISP database hosted by ThunderBird that contains some domains. This URL is saved in the `mailnews.auto_config_url` preference.\r\n\r\nFor `1.0` this is:\r\n- `https://live.mozillamessaging.com/autoconfig/`\r\n\r\nFor `1.1` this was:\r\n- `https://live.mozillamessaging.com/autoconfig/v1.1/`\r\n\r\nBut now it is:\r\n- `https://live.thunderbird.net/autoconfig/v1.1/`\r\n\r\nNOTE: The variable `emailaddress` will not be send to the ISPDB.\r\n\r\nNOTE: Since some version 3.0.x (I have to investigate further), it is possible to use `{{domain}}`. If present, ThunderBird will replace this variable with the domain name. Else, it will append it. There is also a variable `{{accounts}}`. That one will always be replaced if present.\r\n\r\n# XML\r\n\r\nBoth versions use XML for sending their information. There are some difference that make them incompatible with each other.\r\n\r\n- `<clientConfig>` - The root element. Both versions present.\r\n  - `<emailProvider>` - The email provider element. Inside `<clientConfig>`. Only once. Both versions present.\r\n    - `<id>` - The email provider ID. In 1.0 it is an element inside `<emailProvider>`. Only once. In 1.1, the element is gone. It is now an attribute on `<emailProvider>`.\r\n    - `<displayName>` - The display name of the email provider. Inside `<emailProvider>`. Only once. Both versions present.\r\n    - `<domain>` - The domain element. Inside `<emailProvider>`. Multiple possible. Both versions present.\r\n    - `<incomingServer>` - An incoming server. Has a `type` attribute. Only `pop3`, `nntp` or `imap` allowed. Inside `<emailProvider>`. Multiple possible in 1.1, not in 1.0. Both versions present.\r\n      - `<hostname>` - Hostname of the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<port>` - Port of the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<username>` - Username to use to connect to the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<socketType>` - Socket type. A value of `plain`, `SSL` or `STARTTLS`. Inside `<incomingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<authentication>` - Authentication. For 1.0, a value of `plain` or `secure`. For 1.1, a value of `password-cleartext`, `plain`, `password-encrypted`, `secure`, `GSSAPI` or `NTLM`, where `plain` and `secure` are deprecated. Inside `<incomingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<pop3>` - Additional POP3 options. Inside `<incomingServer>`. Only once. Both versions present. Only useful when type is POP3.\r\n        - `<leaveMessagesOnServer>` - Leave messages on server. Boolean. Inside `<pop3>`. Only once. Both versions present.\r\n        - `<daysToLeaveMessagesOnServer>` - Days to leave messages on the server. Integer. Inside `<pop3>`. Only once. Both versions present.\r\n        - `<downloadOnBiff>` - (I don't know what this does, but something with downloading) Boolean. Inside `<pop3>`. Only once. Both versions present.\r\n    - `<outgoingServer>` - An outgoing server. Has a `type` attribute. Only `smtp` allowed. Inside `<emailProvider>`. Multiple possible in 1.1, not in 1.0. Both versions present.\r\n      - `<hostname>` - Hostname of the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<port>` - Port of the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<username>` - Username to use to connect to the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<socketType>` - Socket type. A value of `plain`, `SSL` or `STARTTLS`. Inside `<outgoingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<authentication>` - Authentication. For 1.0, a value of `none`, `plain`, `secure` or `smtp-after-pop`. For 1.1, a value of `none`, `client-IP-address`, `smtp-after-pop`, `password-cleartext`, `plain`, `password-encrypted`, `secure`, `GSSAPI` or `NTLM`, where `plain` and `secure` are deprecated. Inside `<outgoingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<addThisServer>` - Field to add this server to the SMTP server list. Contains a boolean. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<useGlobalPreferredServer>` - Field to use global preferred server of the SMTP server list. Contains a boolean. Inside `<outgoingServer>`. Only once. Both versions present.\r\n    - `<inputField>` - An input field. Has a `key` attribute and a `label` attribute. The value is inside the element. Inside `<emailProvider>`. Multiple possible. Both versions present. Optional.\r\n\r\nNOTE: In some later versions I came across the `exchange` type for incoming servers (including `<owaURL>`, `<ewsURL>` and `<easURL>`), the `<useGlobalPreferredServer>` inside an incoming server, the `<password>` element in both incoming and outgoing servers and the `OAuth2` authentication option. For now I see them as non-1.1 and I don't list them in the list above.\r\n\r\nNOTE: It doesn't seem that ThunderBird checks version. For now, I didn't list the `version` attribute on `<clientConfig>`.\r\n\r\nNOTE: I didn't yet specify which elements are required and which are optional.\r\n\r\nNOTE: I didn't yet specify which elements support variables and will possibily have some parts replaced by real values.",
+      "createdAt": "2024-06-17T10:09:23Z",
+      "updatedAt": "2024-06-17T10:46:27Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "With the information above and after having done some analysis of the code, I think the RFC should define a new version: `1.2`. Why? Because ThunderBird checks and throws on some values at the moment and in the past, so extending 1.0 and/or 1.1 isn't a simple option.\r\n\r\nApart from specifying 1.2, I think the RFC should also give some attention to 1.0 and 1.1. Because ThunderBird doesn't check `version` and `xmlns`, I think we could make really nice section for it. Change some behaviour, but make it compatible with older clients. Some ideas:\r\n\r\n# URLs\r\n\r\nAt the moment, `1.1` uses the following 2 URLs:\r\n- `http://autoconfig.$DOMAIN/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS`\r\n- `http://$DOMAIN//.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS`\r\n\r\nFor `1.0`, we do to the same:\r\n- `http://autoconfig.$DOMAIN/mail/config-v1.0.xml?emailaddress=$EMAILADDRESS`\r\n- `http://$DOMAIN//.well-known/autoconfig/mail/config-v1.0.xml?emailaddress=$EMAILADDRESS`\r\n\r\nWhat about `https://autoconfig.$DOMAIN/mail/mozilla.xml?emailaddress=$EMAILADDRESS`? For backward compatibility with old ThunderBird, we make it redirect to one of the NEW 1.0 URLs. (Or we server the same content. The server owner is the boss.) New clients should use the new URLs.\r\n\r\n# XML\r\n\r\nFor both versions, DTDs and XSDs will be written. Invalid client configs will fail validation. Valid client configs will pass. Because ThunderBird doesn't check `version` and `xmlns` attributes, we can define them with retroactivity. In 1.0, the `version` attrribute is optional and if present MUST contain `1.0`. In 1.1 the attribute must always be present and be `1.1`. For `xmlns` we will invent an URN XMLNS and register it at IANA. For example: `urn:ietf:params:xml:ns:autoconfig-1.0` and `urn:ietf:params:xml:ns:autoconfig-1.1`. Values and elements added over time will possibly not be allowed.\r\n\r\n# Version 1.2\r\n\r\nWhat about 1.2? We should design it with extendibility in mind. Of course we can define a version 1.3, but I think that is not best practice if a client has to check all versions backwards to find the client config served by a server that it supports. With 1.2 defined, it client has to check 6 URLs (possibly 7 if it also checks `mozilla.xml`). Lets keep it at that amount by doing some smart things.\r\n\r\nSo, the URLs will be:\r\n- `http://autoconfig.$DOMAIN/mail/config-v1.2.xml?emailaddress=$EMAILADDRESS`\r\n- `http://$DOMAIN//.well-known/autoconfig/mail/config-v1.2.xml?emailaddress=$EMAILADDRESS`\r\n\r\nThe version attribute on `<clientConfig>` will be:\r\n- `<clientConfig version=\"1.2\">`\r\n\r\nAnd the XMLNS will be (as example):\r\n- `urn:ietf:params:xml:ns:autoconfig-1.2`",
+          "createdAt": "2024-06-17T10:35:06Z",
+          "updatedAt": "2024-06-17T10:35:06Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "I saw the latest draft had `1.2` in its version due to https://github.com/benbucksch/autoconfig-spec/commit/4fa94ced85ba2270ffefb18b286fe5db10b6bd05. That is cool.",
+          "createdAt": "2024-06-17T10:46:26Z",
+          "updatedAt": "2024-06-17T10:46:26Z"
+        }
+      ]
+    }
+  ],
+  "pulls": [
+    {
+      "number": 2,
+      "id": "PR_kwDOKo_bRc5jZP3X",
+      "title": "Add Delta Chat to the list of implementations",
+      "url": "https://github.com/benbucksch/autoconfig-spec/pull/2",
+      "state": "MERGED",
+      "author": "link2xt",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-01-07T00:39:46Z",
+      "updatedAt": "2024-01-31T19:06:55Z",
+      "baseRepository": "benbucksch/autoconfig-spec",
+      "baseRefName": "main",
+      "baseRefOid": "8988788f3a54cd5836cfaee1b2f2c8c147694ef1",
+      "headRepository": "deltachat/autoconfig-spec",
+      "headRefName": "link2xt/deltachat",
+      "headRefOid": "04a7e0797c3f0a9145492bbcfd4762fc994f36de",
+      "closedAt": "2024-01-31T19:06:55Z",
+      "mergedAt": "2024-01-31T19:06:55Z",
+      "mergedBy": "benbucksch",
+      "mergeCommit": {
+        "oid": "c2c679ae1c6e450661aae248e6dcb38d25b971dd"
+      },
+      "comments": [
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Our implementation is here: https://github.com/deltachat/deltachat-core-rust/blob/main/src/configure/auto_mozilla.rs\r\n\r\nURLs tried are here:\r\nhttps://github.com/deltachat/deltachat-core-rust/blob/b9a58bf6258d6d5b60d16cd44318f16b61c6318b/src/configure.rs#L506-L532",
+          "createdAt": "2024-01-07T22:57:35Z",
+          "updatedAt": "2024-01-07T22:57:35Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKo_bRc5uizcV",
+          "commit": {
+            "abbreviatedOid": "04a7e07"
+          },
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-31T19:06:41Z",
+          "updatedAt": "2024-01-31T19:06:41Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
