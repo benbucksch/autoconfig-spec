@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-06-20T00:12:19.173664+00:00",
+  "timestamp": "2024-06-23T00:13:54.939892+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -392,7 +392,7 @@
       "labels": [],
       "body": "# Versions\r\n\r\nThere are 2 versions of Autoconfig: `1.0` and `1.1`.\r\n\r\nAutoconfig 1.0 was supported in ThunderBird 3.0.\r\nAutoconfig 1.1 is supported in ThunderBird 3.1 and later.\r\n\r\n# URLs\r\n\r\nEach version has its own URLs to request XML data.\r\n\r\nFor `1.0` this is:\r\n- `https://autoconfig.$DOMAIN/mail/mozilla.xml?emailaddress=$EMAILADDRESS`\r\n\r\nFor `1.1` this is:\r\n- `http://autoconfig.$DOMAIN/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS`\r\n- `http://$DOMAIN/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS` (As fallback)\r\n\r\nNOTE: The variable `emailaddress` is sent, containing the e-mailaddress.\r\n\r\n# ISPDB URLs\r\n\r\nThere is also a central ISP database hosted by ThunderBird that contains some domains. This URL is saved in the `mailnews.auto_config_url` preference.\r\n\r\nFor `1.0` this is:\r\n- `https://live.mozillamessaging.com/autoconfig/`\r\n\r\nFor `1.1` this was:\r\n- `https://live.mozillamessaging.com/autoconfig/v1.1/`\r\n\r\nBut now it is:\r\n- `https://live.thunderbird.net/autoconfig/v1.1/`\r\n\r\nNOTE: The variable `emailaddress` will not be send to the ISPDB.\r\n\r\nNOTE: Since some version 3.0.x (I have to investigate further), it is possible to use `{{domain}}`. If present, ThunderBird will replace this variable with the domain name. Else, it will append it. There is also a variable `{{accounts}}`. That one will always be replaced if present.\r\n\r\n# XML\r\n\r\nBoth versions use XML for sending their information. There are some difference that make them incompatible with each other.\r\n\r\n- `<clientConfig>` - The root element. Both versions present.\r\n  - `<emailProvider>` - The email provider element. Inside `<clientConfig>`. Only once. Both versions present.\r\n    - `<id>` - The email provider ID. In 1.0 it is an element inside `<emailProvider>`. Only once. In 1.1, the element is gone. It is now an attribute on `<emailProvider>`.\r\n    - `<displayName>` - The display name of the email provider. Inside `<emailProvider>`. Only once. Both versions present.\r\n    - `<domain>` - The domain element. Inside `<emailProvider>`. Multiple possible. Both versions present.\r\n    - `<incomingServer>` - An incoming server. Has a `type` attribute. Only `pop3`, `nntp` or `imap` allowed. Inside `<emailProvider>`. Multiple possible in 1.1, not in 1.0. Both versions present.\r\n      - `<hostname>` - Hostname of the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<port>` - Port of the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<username>` - Username to use to connect to the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<socketType>` - Socket type. A value of `plain`, `SSL` or `STARTTLS`. Inside `<incomingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<authentication>` - Authentication. For 1.0, a value of `plain` or `secure`. For 1.1, a value of `password-cleartext`, `plain`, `password-encrypted`, `secure`, `GSSAPI` or `NTLM`, where `plain` and `secure` are deprecated. Inside `<incomingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<pop3>` - Additional POP3 options. Inside `<incomingServer>`. Only once. Both versions present. Only useful when type is POP3.\r\n        - `<leaveMessagesOnServer>` - Leave messages on server. Boolean. Inside `<pop3>`. Only once. Both versions present.\r\n        - `<daysToLeaveMessagesOnServer>` - Days to leave messages on the server. Integer. Inside `<pop3>`. Only once. Both versions present.\r\n        - `<downloadOnBiff>` - (I don't know what this does, but something with downloading) Boolean. Inside `<pop3>`. Only once. Both versions present.\r\n    - `<outgoingServer>` - An outgoing server. Has a `type` attribute. Only `smtp` allowed. Inside `<emailProvider>`. Multiple possible in 1.1, not in 1.0. Both versions present.\r\n      - `<hostname>` - Hostname of the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<port>` - Port of the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<username>` - Username to use to connect to the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<socketType>` - Socket type. A value of `plain`, `SSL` or `STARTTLS`. Inside `<outgoingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<authentication>` - Authentication. For 1.0, a value of `none`, `plain`, `secure` or `smtp-after-pop`. For 1.1, a value of `none`, `client-IP-address`, `smtp-after-pop`, `password-cleartext`, `plain`, `password-encrypted`, `secure`, `GSSAPI` or `NTLM`, where `plain` and `secure` are deprecated. Inside `<outgoingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<addThisServer>` - Field to add this server to the SMTP server list. Contains a boolean. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<useGlobalPreferredServer>` - Field to use global preferred server of the SMTP server list. Contains a boolean. Inside `<outgoingServer>`. Only once. Both versions present.\r\n    - `<inputField>` - An input field. Has a `key` attribute and a `label` attribute. The value is inside the element. Inside `<emailProvider>`. Multiple possible. Both versions present. Optional.\r\n\r\nNOTE: In some later versions I came across the `exchange` type for incoming servers (including `<owaURL>`, `<ewsURL>` and `<easURL>`), the `<useGlobalPreferredServer>` inside an incoming server, the `<password>` element in both incoming and outgoing servers and the `OAuth2` authentication option. For now I see them as non-1.1 and I don't list them in the list above.\r\n\r\nNOTE: It doesn't seem that ThunderBird checks version. For now, I didn't list the `version` attribute on `<clientConfig>`.\r\n\r\nNOTE: I didn't yet specify which elements are required and which are optional.\r\n\r\nNOTE: I didn't yet specify which elements support variables and will possibily have some parts replaced by real values.",
       "createdAt": "2024-06-17T10:09:23Z",
-      "updatedAt": "2024-06-17T10:46:27Z",
+      "updatedAt": "2024-06-21T08:49:47Z",
       "closedAt": null,
       "comments": [
         {
@@ -408,6 +408,55 @@
           "body": "I saw the latest draft had `1.2` in its version due to https://github.com/benbucksch/autoconfig-spec/commit/4fa94ced85ba2270ffefb18b286fe5db10b6bd05. That is cool.",
           "createdAt": "2024-06-17T10:46:26Z",
           "updatedAt": "2024-06-17T10:46:26Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "The minimal config file for 1.0 is this:\r\n```xml\r\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<clientConfig><!--Element name is not checked-->\r\n\t<emailProvider><!--Throwing doesn't work when element is absent, but an exception will occur due to missing children-->\r\n\t\t<incomingServer type=\"imap\"><!--Only checks for \"type\" attribute having one of the three values.-->\r\n\t\t\t<hostname>imap.googlemail.com</hostname><!--Required to be filled during variable replacement-->\r\n\t\t\t<socketType>SSL</socketType><!--Checks if having one of the three values.-->\r\n\t\t\t<authentication>plain</authentication><!--Checks if having one of the two values.-->\r\n\t\t</incomingServer>\r\n\r\n\t\t<outgoingServer type=\"smtp\"><!--Only checks for \"type\" attribute having \"smtp\".-->\r\n\t\t\t<hostname>smtp.googlemail.com</hostname><!--Required to be filled during variable replacement-->\r\n\t\t\t<socketType>SSL</socketType><!--Checks if having one of the three values.-->\r\n\t\t\t<authentication>plain</authentication><!--Checks if having one of the four values.-->\r\n\t\t</outgoingServer>\r\n\t</emailProvider>\r\n</clientConfig>\r\n\r\n```",
+          "createdAt": "2024-06-20T12:35:48Z",
+          "updatedAt": "2024-06-20T12:35:56Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Hey,\n\nthanks for the archeological info on autoconfig v1.0. The main difference was support for oAuth2 auth method, IIRC, which required us to allow a fallback auth method, which required us to make auth a 1:n relation (multiple entries), whereas v1.0 allowed only 1 auth method per server.\n\nHowever, it is irrelevant today, because only Thunderbird 3.0 supported v1.0, and that is now very dead (since over 15 years), so it's not worth documenting or discussing it.\n\nIn the process of standardizing, we'll likely make a few backwards-compatible changes and call it v1.2, but still on the old URLs, if they are widely used.\n\nBen Bucksch\n",
+          "createdAt": "2024-06-20T21:39:01Z",
+          "updatedAt": "2024-06-20T21:39:01Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "P.S. Are you Ben Campbell from Thunderbird? You are appearing only as \"Ben\", which is confusing, because that's also me. Would you mind adding some other word (not number) to your name, so we can differentiate the various persons?\n",
+          "createdAt": "2024-06-20T21:43:01Z",
+          "updatedAt": "2024-06-20T21:43:01Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "> P.S. Are you Ben Campbell from Thunderbird? You are appearing only as \"Ben\", which is confusing, because that's also me. Would you mind adding some other word (not number) to your name, so we can differentiate the various persons?\r\n\r\nI'm not. I'm a Ben from The Netherlands. I never worked for Thunderbird. I can look into adding my lastname.",
+          "createdAt": "2024-06-21T07:14:03Z",
+          "updatedAt": "2024-06-21T07:14:03Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "> Hey,\r\n\r\nHello @benbucksch,\r\n\r\nThank you for your response.\r\n\r\n> thanks for the archeological info on autoconfig v1.0. The main difference was support for oAuth2 auth method, IIRC, which required us to allow a fallback auth method, which required us to make auth a 1:n relation (multiple entries), whereas v1.0 allowed only 1 auth method per server.\r\n\r\nDuring this archeological find, I also made the XSD for v1.0, see #9. I also made a script that runs this XSD against ALL (yes, really all) versions of ALL files in https://github.com/ben221199/autoconfig.mozillamessaging.com (a fork of a fork of the Mozilla SVN repository). This dump is downloadable via \"Releases\" to do analysis yourself.\r\n\r\nI programmatically added the `xmlns` attribute. After that, the XSD passed for 99% of the files. The last 1% failed because of bugs in the files. I fixed those programmatically too. For example, `t-online.de imap ssl` and `t-online.de pop ssl` had the socket type `TLS` for a while and this was fixed in https://github.com/ben221199/autoconfig.mozillamessaging.com/commit/788df595c6622c6e607f599960030f1bf951f62e. In my code I added `content = content.replace(\">TLS<\",\">STARTTLS<\");`. I had to fix 6 bugs, but after that I got the full 100%. I believe that my XSD for v1.0 is fully complete. I'm planning to do this too for v1.1.\r\n\r\n> However, it is irrelevant today, because only Thunderbird 3.0 supported v1.0, and that is now very dead (since over 15 years), so it's not worth documenting or discussing it.\r\n\r\nOkay, maybe it is not something for the main document, but would it be okay to have it in an Appendix? Just 1 or 2 paragraphs, the used URLs and the XSD. Nothing more. Because it is in a appendix, people will mostly look to the main document and implement v1.2, but for the people that want to have v1.0 for some reason (like me), the info about v1.0 is there, somewhere at the end.\r\n\r\n> In the process of standardizing, we'll likely make a few backwards-compatible changes and call it v1.2, but still on the old URLs, if they are widely used.\r\n\r\nI think I don't like this solution. Mainly because there is `v1.1` in the URL, while the content is v1.2, which is very confusing and will likely produce many 404 errors. The other reason is that v1.1 is being parsed in a specific way by ThunderBird at the moment. If some value isn't there, the whole parsing could fail. If you serve 1.2 files on those v1.1 URLs, v1.2 files will be handled the same as v1.2 files. This puts many restrictions on extending v1.2 without the parsing going to crash. When introducing new URLs, you don't restrict yourself in being v1.1 compatible. You can introduce what element, attribute or value you want. Also, you can force Thunderbird in rules how to parse it, for example, being lax for an unsupported value and ignore that part instead of strict and throwing exceptions for the whole parsing.\r\n\r\n> Ben Bucksch\r\n\r\nBen van Hartingsveldt",
+          "createdAt": "2024-06-21T07:52:34Z",
+          "updatedAt": "2024-06-21T07:54:12Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "It's an important goal of this standard to stay compatible with existing configs at ISPs. We control the ISPDB, but not the ISPs. While being logical and clean is very important to me, being compatible is more important.\n\nI'll need to do a survey to see which URLs matter in practice. The choice will depend on that.\n\nv1.0 is really dead since a very long time, and existed only for a few months, but even worth an appendix. v1.1 was essentially a bugfix. I do not want people to feel that they should implement v1.0.\n\nDid you implement autoconfig in some software?\n\nThanks for the XSDs and other validators. That's useful.\n",
+          "createdAt": "2024-06-21T08:47:50Z",
+          "updatedAt": "2024-06-21T08:47:50Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "sorry, typo: ... *not* even worth....\n\nI wrote:\n> v1.0 is really dead since a very long time, and existed only for a few months, but even worth an appendix.\n",
+          "createdAt": "2024-06-21T08:49:46Z",
+          "updatedAt": "2024-06-21T08:49:46Z"
         }
       ]
     }
@@ -462,6 +511,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOKo_bRc5zFHAk",
+      "title": "Add XSD schemas",
+      "url": "https://github.com/benbucksch/autoconfig-spec/pull/9",
+      "state": "OPEN",
+      "author": "ben221199",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This pull request will add the XSD schemas for Autoconfig Mail.",
+      "createdAt": "2024-06-20T14:09:00Z",
+      "updatedAt": "2024-06-20T20:37:19Z",
+      "baseRepository": "benbucksch/autoconfig-spec",
+      "baseRefName": "main",
+      "baseRefOid": "786d23d0933827cdd36753e26d65d190035b69a2",
+      "headRepository": "ben221199/autoconfig-spec",
+      "headRefName": "main",
+      "headRefOid": "a4061ae9c4796ac7d1cc51a455bae98c7764af4c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
