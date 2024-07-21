@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-18T00:12:58.655795+00:00",
+  "timestamp": "2024-07-21T00:14:35.615892+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -457,6 +457,53 @@
           "body": "sorry, typo: ... *not* even worth....\n\nI wrote:\n> v1.0 is really dead since a very long time, and existed only for a few months, but even worth an appendix.\n",
           "createdAt": "2024-06-21T08:49:46Z",
           "updatedAt": "2024-06-21T08:49:46Z"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOKo_bRc6QBNO-",
+      "title": "XML syntax typos in sample XML",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/10",
+      "state": "OPEN",
+      "author": "gabviv73",
+      "authorAssociation": "NONE",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "On line 128, the tag is not closed\r\n\r\nWrong:\r\n\r\n      <serverURL>https://jmap.example.com/remote.php/dav<serverURL>\r\n\r\nRight:\r\n\r\n      <serverURL>https://jmap.example.com/remote.php/dav</serverURL>\r\n",
+      "createdAt": "2024-07-18T12:30:59Z",
+      "updatedAt": "2024-07-18T15:31:22Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gabviv73",
+          "authorAssociation": "NONE",
+          "body": "Same at line 144 , 151, 57, 166.\r\nOn line 235 `&` must be substituted with `&amp;`\r\n",
+          "createdAt": "2024-07-18T12:58:04Z",
+          "updatedAt": "2024-07-18T12:58:04Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Thanks! Any other typos or syntax errors that I can fix at the same time?",
+          "createdAt": "2024-07-18T13:02:32Z",
+          "updatedAt": "2024-07-18T13:02:55Z"
+        },
+        {
+          "author": "gabviv73",
+          "authorAssociation": "NONE",
+          "body": "Nope to my eyes and to Firefox...\r\nI've used your template to build this: [https://github.com/gabviv73/EmailAutoConfig](https://github.com/gabviv73/EmailAutoConfig). Tested with Thunderbird and it works. Unfortunately, Caldav and Carddav seems to not be implemented in TB autoconfig: am I right ?",
+          "createdAt": "2024-07-18T15:29:48Z",
+          "updatedAt": "2024-07-18T15:29:48Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> Unfortunately, Caldav and Carddav seems to not be implemented in TB autoconfig: am I right ?\r\n\r\nCorrect. Thunderbird uses RFC 6764.",
+          "createdAt": "2024-07-18T15:31:22Z",
+          "updatedAt": "2024-07-18T15:31:22Z"
         }
       ]
     }
