@@ -1205,7 +1205,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-return-config-for-non-exist" class="internal xref">Return config for non-existing email addresses</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
-                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-oauth2-requirements" class="internal xref">oAuth2 requirements</a></p>
+                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-oauth2-requirements" class="internal xref">OAuth2 requirements</a></p>
 </li>
             </ul>
 </li>
@@ -1464,14 +1464,14 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
                          addressbook/calendar.
               --&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;url&gt;https://jmap.example.com/remote.php/dav&lt;url&gt;
+      &lt;url&gt;https://jmap.example.com/remote.php/dav&lt;/url&gt;
     &lt;/addressBook&gt;
 
     &lt;!-- Syncronize the user's calendar. --&gt;
     &lt;calendar type="caldav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
-      &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;url&gt;
+      &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;/url&gt;
     &lt;/calendar&gt;
 
     &lt;!-- Upload files, allowing the user to share them.
@@ -1480,7 +1480,7 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
     &lt;fileShare type="webdav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
-      &lt;url&gt;https://share.example.com/remote.php/dav&lt;url&gt;
+      &lt;url&gt;https://share.example.com/remote.php/dav&lt;/url&gt;
     &lt;/fileShare&gt;
 
     &lt;!-- This allows to login in to the webmail service of the provider.
@@ -1532,7 +1532,9 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
     &lt;inputField key="GRANDMA" label="Grandma"&gt;Elise Bauer&lt;/inputField&gt;
 
     &lt;!-- oAuth2 specced for mail apps,
-        e.g. clientID, expiry, and login page --&gt;
+        e.g. clientID, expiry, and login page
+        MUST adhere to mAuth &lt;https://benbucksch.github.io/mauth-spec/draft-mauth.html&gt;
+        --&gt;
     &lt;mAuth&gt;
       &lt;authURL&gt;https://login.example.com/common/oauth2/v2.0/authorize&lt;/authURL&gt;
       &lt;tokenURL&gt;https://login.example.com/common/oauth2/v2.0/token&lt;/tokenURL&gt;
@@ -1545,12 +1547,12 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
 
     &lt;!-- Add this only when users (who already have an account) have to
         do something manually before the account can work with IMAP/POP or SSL.
-        Note: Per XML, &amp; (ampersand) needs to be escaped to
-        &amp; a m p ; (without spaces).
         Mandatory only if the ISP requires such settings
-        before the configs above work. --&gt;
+        before the configs above work.
+        Note: Per XML, &amp; (ampersand) needs to be escaped to
+        &amp; a m p ; (without spaces). --&gt;
     &lt;enable
-      visiturl="https://mail.google.com/mail/?ui=2&amp;shva=1#settings/fwdandpop"&gt;
+      visiturl="https://mail.google.com/mail/?ui=2&amp;amp;shva=1#settings/fwdandpop"&gt;
       &lt;instruction&gt;Check 'Enable IMAP and POP' in Google settings page&lt;/instruction&gt;
       &lt;instruction lang="de"&gt;Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an&lt;/instruction&gt;
     &lt;/enable&gt;
@@ -1976,15 +1978,16 @@ are indistiguishable.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
 <div id="oauth2-requirements">
 <section id="section-6.5">
         <h3 id="name-oauth2-requirements">
-<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-oauth2-requirements" class="section-name selfRef">oAuth2 requirements</a>
+<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-oauth2-requirements" class="section-name selfRef">OAuth2 requirements</a>
         </h3>
-<p id="section-6.5-1">If oAuth2 is used, the oAuth2 server <span class="bcp14">MUST</span> adhere to the
-mAuth specification. The oAuth2 server <span class="bcp14">MUST</span>
-either accept the public client ID as given in the config file,
-without secret, or <span class="bcp14">MUST</span> allow any string as client ID, without
-client registration. There are also specific requirements for
-expiry times and the login page, which are needed for
-mail client applications to work.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
+<p id="section-6.5-1">If OAuth2 is used, the OAuth2 server <span class="bcp14">MUST</span> adhere to the
+<a href="https://benbucksch.github.io/mauth-spec/draft-mauth.html">mAuth</a>
+specification.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
+<p id="section-6.5-2">The OAuth2 server <span class="bcp14">MUST</span> either accept the public client ID
+as given in the config file, without secret, or <span class="bcp14">MUST</span> allow the
+string <code>open</code> as client ID, or both.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
+<p id="section-6.5-3">There are also specific requirements for expiry times and
+the login page, which are needed for mail client applications to work.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
