@@ -103,6 +103,8 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
               "imap": IMAP
               "pop3": POP3
               "jmap": JMAP
+              "ews": Microsoft Exchange Web Services
+              "activesync": Microsoft ActiveSync
               -->
           <incomingServer type="imap">
             <hostname>imap.example.com</hostname>
@@ -155,12 +157,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             </pop3>
           </incomingServer>
 
-          <incomingServer type="jmap">
-            <url>https://jmap.example.com</url>
-            <username>%EMAILADDRESS%</username>
-            <authentication>http-basic</authentication>
-          </incomingServer>
-
+          <!-- Needed only for IMAP or POP3 -->
           <outgoingServer type="smtp">
             <hostname>smtp.googlemail.com</hostname>
             <port>587</port>
@@ -176,6 +173,24 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <authentication>password-cleartext</authentication>
             <password>optional: the user's password</password>
           </outgoingServer>
+
+          <incomingServer type="jmap">
+            <url>https://jmap.example.com</url>
+            <username>%EMAILADDRESS%</username>
+            <authentication>http-basic</authentication>
+          </incomingServer>
+
+          <incomingServer type="ews">
+            <url>https://mail.example.com/EWS/Exchange.asmx</url>
+            <username>%EMAILADDRESS%</username>
+            <authentication>http-basic</authentication>
+          </incomingServer>
+
+          <incomingServer type="activesync">
+            <url>https://mail.example.com/Microsoft-Server-ActiveSync</url>
+            <username>%EMAILADDRESS%</username>
+            <authentication>OAuth2</authentication>
+          </incomingServer>
 
           <!-- A page where the ISP describes the configuration.
               This is purely informational and currently mainly for
