@@ -224,14 +224,14 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                              addressbook/calendar.
                   -->
           <authentication>http-basic</authentication>
-          <url>https://jmap.example.com/remote.php/dav<url>
+          <url>https://jmap.example.com/remote.php/dav</url>
         </addressBook>
 
         <!-- Syncronize the user's calendar. -->
         <calendar type="caldav">
           <username>%EMAILADDRESS%</username>
           <authentication>http-basic</authentication> <!-- see <addressBook> -->
-          <url>https://calendar.example.com/remote.php/dav<url>
+          <url>https://calendar.example.com/remote.php/dav</url>
         </calendar>
 
         <!-- Upload files, allowing the user to share them.
@@ -240,7 +240,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
         <fileShare type="webdav">
           <username>%EMAILADDRESS%</username>
           <authentication>http-basic</authentication> <!-- see <addressBook> -->
-          <url>https://share.example.com/remote.php/dav<url>
+          <url>https://share.example.com/remote.php/dav</url>
         </fileShare>
 
         <!-- This allows to login in to the webmail service of the provider.
@@ -305,12 +305,12 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
 
         <!-- Add this only when users (who already have an account) have to
             do something manually before the account can work with IMAP/POP or SSL.
-            Note: Per XML, & (ampersand) needs to be escaped to
-            & a m p ; (without spaces).
             Mandatory only if the ISP requires such settings
-            before the configs above work. -->
+            before the configs above work.
+            Note: Per XML, & (ampersand) needs to be escaped to
+            & a m p ; (without spaces). -->
         <enable
-          visiturl="https://mail.google.com/mail/?ui=2&shva=1#settings/fwdandpop">
+          visiturl="https://mail.google.com/mail/?ui=2&amp;shva=1#settings/fwdandpop">
           <instruction>Check 'Enable IMAP and POP' in Google settings page</instruction>
           <instruction lang="de">Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an</instruction>
         </enable>
