@@ -174,10 +174,12 @@ Table of Contents
           "imap": IMAP
           "pop3": POP3
           "jmap": JMAP
+          "ews": Microsoft Exchange Web Services
+          "activesync": Microsoft ActiveSync
           -->
-      <incomingServer type="pop3">
-        <hostname>pop.example.com</hostname>
-        <port>995</port>
+      <incomingServer type="imap">
+        <hostname>imap.example.com</hostname>
+        <port>993</port>
           <!-- "plain": no encryption
                 "SSL": SSL 3 or TLS 1 on SSL-specific port
                 "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
@@ -198,9 +200,6 @@ Table of Contents
                 "GSSAPI":
                           Use Kerberos / GSSAPI,
                           a single-signon mechanism used for big sites.
-                "client-IP-address":
-                          The server recognizes this user based on the IP address.
-                          No authentication needed, the server will require no username nor password.
                 "TLS-client-cert":
                           On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
                 "OAuth2":
@@ -209,14 +208,6 @@ Table of Contents
                           No authentication
                 -->
         <authentication>password-cleartext</authentication>
-        <pop3>
-            <!-- remove the following and leave to client/user? -->
-            <leaveMessagesOnServer>true</leaveMessagesOnServer>
-            <downloadOnBiff>true</downloadOnBiff>
-            <daysToLeaveMessagesOnServer>14</daysToLeaveMessagesOnServer>
-            <!-- only for servers which don't allow checks more often -->
-            <checkInterval minutes="15"/><!-- not yet supported -->
-        </pop3>
         <password>optional: the user's password</password>
       </incomingServer>
 
@@ -224,48 +215,53 @@ Table of Contents
         and even multiple IMAP server configs.
         The first config is the preferred one, but the user or
         or client can choose the alternative configs. -->
-      <incomingServer type="jmap">
-        <hostname>jmap.example.com</hostname>
-        <port>443</port>
+      <incomingServer type="pop3">
+        <hostname>pop.example.com</hostname>
+        <port>995</port>
         <socketType>SSL</socketType>
         <username>%EMAILADDRESS%</username>
-        <authentication>http-basic</authentication>
-        <password>optional: the user's password</password>
+        <authentication>password-cleartext</authentication>
+        <pop3>
+            <!-- optional -->
+            <leaveMessagesOnServer>true</leaveMessagesOnServer>
+            <daysToLeaveMessagesOnServer>14</daysToLeaveMessagesOnServer>
+        </pop3>
       </incomingServer>
 
+      <!-- Needed only for IMAP or POP3 -->
       <outgoingServer type="smtp">
         <hostname>smtp.googlemail.com</hostname>
         <port>587</port>
-        <socketType>STARTTLS</socketType> <!-- see <incomingServer> -->
+        <socketType>STARTTLS</socketType>
         <username>%EMAILADDRESS%</username> <!-- if smtp-auth -->
             <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
                 For values, see incoming.
                 Additional options here:
-                "SMTP-after-POP":
-                    authenticate to incoming mail server first
-                    before contacting the smtp server.
+                "client-IP-address":
+                          The server recognizes this user based on the IP address.
+                          No authentication needed, the server will require no username nor password.
             -->
         <authentication>password-cleartext</authentication>
         <password>optional: the user's password</password>
-            <!-- If the server makes some additional requirements beyond <authentication>:
-                "client-IP-address": The server is only reachable or works,
-                    if the user is in a certain IP network, e.g.
-                    the dialed into the ISP's network (DSL, cable, modem) or
-                    connected to a company network.
-                    Note: <authentication>client-IP-address</>
-                    means that you may use the server without any auth.
-                    <authentication>password-cleartext</> *and*
-                    <restriction>client-IP-address</> means that you need to
-                    be in the correct IP network *and* (should) authenticate.
-                    Servers which do that are highly discouraged and
-                    should be avoided, see {{bug|556267}}.
-                Not yet implemented. Spec (element name?) up to change.
-            -->
-        <restriction>client-IP-address</restriction>
-        <!-- remove the following and leave to client/user? -->
-        <addThisServer>true</addThisServer>
-        <useGlobalPreferredServer>true</useGlobalPreferredServer>
       </outgoingServer>
+
+      <incomingServer type="jmap">
+        <url>https://jmap.example.com</url>
+        <username>%EMAILADDRESS%</username>
+        <authentication>http-basic</authentication>
+      </incomingServer>
+
+      <incomingServer type="ews">
+        <url>https://mail.example.com/EWS/Exchange.asmx</url>
+        <username>%EMAILADDRESS%</username>
+        <authentication>http-basic</authentication>
+      </incomingServer>
+
+      <incomingServer type="activesync">
+        <url>https://mail.example.com/Microsoft-Server-ActiveSync</url>
+        <username>%EMAILADDRESS%</username>
+        <authentication>OAuth2</authentication>
+      </incomingServer>
 
       <!-- A page where the ISP describes the configuration.
           This is purely informational and currently mainly for
@@ -299,26 +295,14 @@ Table of Contents
                          addressbook/calendar.
               -->
       <authentication>http-basic</authentication>
-      <serverURL>https://jmap.example.com/remote.php/dav<serverURL>
-    </addressBook>
-
-    <addressBook type="jmap">
-      <username>%EMAILADDRESS%</username>
-      <authentication>http-basic</authentication>
-      <serverURL>https://jmap.example.com<serverURL>
+      <url>https://jmap.example.com/remote.php/dav<url>
     </addressBook>
 
     <!-- Syncronize the user's calendar. -->
     <calendar type="caldav">
       <username>%EMAILADDRESS%</username>
       <authentication>http-basic</authentication> <!-- see <addressBook> -->
-      <serverURL>https://calendar.example.com/remote.php/dav<serverURL>
-    </calendar>
-
-    <calendar type="jmap">
-      <username>%EMAILADDRESS%</username>
-      <authentication>http-basic</authentication> <!-- see <addressBook> -->
-      <serverURL>https://calendar.example.com<serverURL>
+      <url>https://calendar.example.com/remote.php/dav<url>
     </calendar>
 
     <!-- Upload files, allowing the user to share them.
@@ -327,7 +311,7 @@ Table of Contents
     <fileShare type="webdav">
       <username>%EMAILADDRESS%</username>
       <authentication>http-basic</authentication> <!-- see <addressBook> -->
-      <serverURL>https://share.example.com/remote.php/dav<serverURL>
+      <url>https://share.example.com/remote.php/dav<url>
     </fileShare>
 
     <!-- This allows to login in to the webmail service of the provider.
@@ -384,9 +368,10 @@ Table of Contents
       <authURL>https://login.example.com/common/oauth2/v2.0/authorize</authURL>
       <tokenURL>https://login.example.com/common/oauth2/v2.0/token</tokenURL>
       <issuer>login.example.com</issuer>
-      <scope>imap pop3 smtp webdav caldav carddav offline_access</scope>
-      <clientID>messaging</clientID>
-      <clientSecret>notreally</clientSecret>
+      <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
+      <clientID>open</clientID>
+      <!-- optional -->
+      <clientSecret>give-me-your-pass-word</clientSecret>
     </mAuth>
 
     <!-- Add this only when users (who already have an account) have to
