@@ -9,17 +9,22 @@ number:
 date:
 consensus: true
 v: 2
-# area: AREA
-# workgroup: WG Working Group
+# area: art
+# workgroup: extra
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - config
+ - autoconfig
+ - autodiscover
+ - mail
+ - IMAP
+ - POP3
+ - SMTP
+ - JMAP
 venue:
-#  group: WG
+#  group: extra
 #  type: Working Group
-#  mail: WG@example.com
-#  arch: https://example.com/WG
+#  mail: extra@ietf.org
+#  arch: https://mailarchive.ietf.org/arch/browse/extra/
   github: "benbucksch/autoconfig-spec"
   latest: "https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html"
 
