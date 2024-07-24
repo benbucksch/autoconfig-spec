@@ -292,7 +292,9 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
         <inputField key="GRANDMA" label="Grandma">Elise Bauer</inputField>
 
         <!-- oAuth2 specced for mail apps,
-            e.g. clientID, expiry, and login page -->
+            e.g. clientID, expiry, and login page
+            MUST adhere to mAuth <https://benbucksch.github.io/mauth-spec/draft-mauth.html>
+            -->
         <mAuth>
           <authURL>https://login.example.com/common/oauth2/v2.0/authorize</authURL>
           <tokenURL>https://login.example.com/common/oauth2/v2.0/token</tokenURL>
@@ -557,15 +559,18 @@ email address, the config server SHOULD return one of the
 valid configuations, so that valid and invalid email addresses
 are indistiguishable.
 
-## oAuth2 requirements
+## OAuth2 requirements
 
-If oAuth2 is used, the oAuth2 server MUST adhere to the
-mAuth specification. The oAuth2 server MUST
-either accept the public client ID as given in the config file,
-without secret, or MUST allow any string as client ID, without
-client registration. There are also specific requirements for
-expiry times and the login page, which are needed for
-mail client applications to work.
+If OAuth2 is used, the OAuth2 server MUST adhere to the
+[mAuth](https://benbucksch.github.io/mauth-spec/draft-mauth.html)
+specification.
+
+The OAuth2 server MUST either accept the public client ID
+as given in the config file, without secret, or MUST allow the
+string `open` as client ID, or both.
+
+There are also specific requirements for expiry times and
+the login page, which are needed for mail client applications to work.
 
 # Conventions and Definitions
 
