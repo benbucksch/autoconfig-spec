@@ -1343,10 +1343,12 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
           "imap": IMAP
           "pop3": POP3
           "jmap": JMAP
+          "ews": Microsoft Exchange Web Services
+          "activesync": Microsoft ActiveSync
           --&gt;
-      &lt;incomingServer type="pop3"&gt;
-        &lt;hostname&gt;pop.example.com&lt;/hostname&gt;
-        &lt;port&gt;995&lt;/port&gt;
+      &lt;incomingServer type="imap"&gt;
+        &lt;hostname&gt;imap.example.com&lt;/hostname&gt;
+        &lt;port&gt;993&lt;/port&gt;
           &lt;!-- "plain": no encryption
                 "SSL": SSL 3 or TLS 1 on SSL-specific port
                 "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
@@ -1367,9 +1369,6 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
                 "GSSAPI":
                           Use Kerberos / GSSAPI,
                           a single-signon mechanism used for big sites.
-                "client-IP-address":
-                          The server recognizes this user based on the IP address.
-                          No authentication needed, the server will require no username nor password.
                 "TLS-client-cert":
                           On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
                 "OAuth2":
@@ -1378,14 +1377,6 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
                           No authentication
                 --&gt;
         &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
-        &lt;pop3&gt;
-            &lt;!-- remove the following and leave to client/user? --&gt;
-            &lt;leaveMessagesOnServer&gt;true&lt;/leaveMessagesOnServer&gt;
-            &lt;downloadOnBiff&gt;true&lt;/downloadOnBiff&gt;
-            &lt;daysToLeaveMessagesOnServer&gt;14&lt;/daysToLeaveMessagesOnServer&gt;
-            &lt;!-- only for servers which don't allow checks more often --&gt;
-            &lt;checkInterval minutes="15"/&gt;&lt;!-- not yet supported --&gt;
-        &lt;/pop3&gt;
         &lt;password&gt;optional: the user's password&lt;/password&gt;
       &lt;/incomingServer&gt;
 
@@ -1393,48 +1384,53 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
         and even multiple IMAP server configs.
         The first config is the preferred one, but the user or
         or client can choose the alternative configs. --&gt;
-      &lt;incomingServer type="jmap"&gt;
-        &lt;hostname&gt;jmap.example.com&lt;/hostname&gt;
-        &lt;port&gt;443&lt;/port&gt;
+      &lt;incomingServer type="pop3"&gt;
+        &lt;hostname&gt;pop.example.com&lt;/hostname&gt;
+        &lt;port&gt;995&lt;/port&gt;
         &lt;socketType&gt;SSL&lt;/socketType&gt;
         &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;authentication&gt;http-basic&lt;/authentication&gt;
-        &lt;password&gt;optional: the user's password&lt;/password&gt;
+        &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
+        &lt;pop3&gt;
+            &lt;!-- optional --&gt;
+            &lt;leaveMessagesOnServer&gt;true&lt;/leaveMessagesOnServer&gt;
+            &lt;daysToLeaveMessagesOnServer&gt;14&lt;/daysToLeaveMessagesOnServer&gt;
+        &lt;/pop3&gt;
       &lt;/incomingServer&gt;
 
+      &lt;!-- Needed only for IMAP or POP3 --&gt;
       &lt;outgoingServer type="smtp"&gt;
         &lt;hostname&gt;smtp.googlemail.com&lt;/hostname&gt;
         &lt;port&gt;587&lt;/port&gt;
-        &lt;socketType&gt;STARTTLS&lt;/socketType&gt; &lt;!-- see &lt;incomingServer&gt; --&gt;
+        &lt;socketType&gt;STARTTLS&lt;/socketType&gt;
         &lt;username&gt;%EMAILADDRESS%&lt;/username&gt; &lt;!-- if smtp-auth --&gt;
             &lt;!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
                 For values, see incoming.
                 Additional options here:
-                "SMTP-after-POP":
-                    authenticate to incoming mail server first
-                    before contacting the smtp server.
+                "client-IP-address":
+                          The server recognizes this user based on the IP address.
+                          No authentication needed, the server will require no username nor password.
             --&gt;
         &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
         &lt;password&gt;optional: the user's password&lt;/password&gt;
-            &lt;!-- If the server makes some additional requirements beyond &lt;authentication&gt;:
-                "client-IP-address": The server is only reachable or works,
-                    if the user is in a certain IP network, e.g.
-                    the dialed into the ISP's network (DSL, cable, modem) or
-                    connected to a company network.
-                    Note: &lt;authentication&gt;client-IP-address&lt;/&gt;
-                    means that you may use the server without any auth.
-                    &lt;authentication&gt;password-cleartext&lt;/&gt; *and*
-                    &lt;restriction&gt;client-IP-address&lt;/&gt; means that you need to
-                    be in the correct IP network *and* (should) authenticate.
-                    Servers which do that are highly discouraged and
-                    should be avoided, see {{bug|556267}}.
-                Not yet implemented. Spec (element name?) up to change.
-            --&gt;
-        &lt;restriction&gt;client-IP-address&lt;/restriction&gt;
-        &lt;!-- remove the following and leave to client/user? --&gt;
-        &lt;addThisServer&gt;true&lt;/addThisServer&gt;
-        &lt;useGlobalPreferredServer&gt;true&lt;/useGlobalPreferredServer&gt;
       &lt;/outgoingServer&gt;
+
+      &lt;incomingServer type="jmap"&gt;
+        &lt;url&gt;https://jmap.example.com&lt;/url&gt;
+        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+        &lt;authentication&gt;http-basic&lt;/authentication&gt;
+      &lt;/incomingServer&gt;
+
+      &lt;incomingServer type="ews"&gt;
+        &lt;url&gt;https://mail.example.com/EWS/Exchange.asmx&lt;/url&gt;
+        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+        &lt;authentication&gt;http-basic&lt;/authentication&gt;
+      &lt;/incomingServer&gt;
+
+      &lt;incomingServer type="activesync"&gt;
+        &lt;url&gt;https://mail.example.com/Microsoft-Server-ActiveSync&lt;/url&gt;
+        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+        &lt;authentication&gt;OAuth2&lt;/authentication&gt;
+      &lt;/incomingServer&gt;
 
       &lt;!-- A page where the ISP describes the configuration.
           This is purely informational and currently mainly for
@@ -1468,26 +1464,14 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
                          addressbook/calendar.
               --&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;serverURL&gt;https://jmap.example.com/remote.php/dav&lt;serverURL&gt;
-    &lt;/addressBook&gt;
-
-    &lt;addressBook type="jmap"&gt;
-      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;serverURL&gt;https://jmap.example.com&lt;serverURL&gt;
+      &lt;url&gt;https://jmap.example.com/remote.php/dav&lt;url&gt;
     &lt;/addressBook&gt;
 
     &lt;!-- Syncronize the user's calendar. --&gt;
     &lt;calendar type="caldav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
-      &lt;serverURL&gt;https://calendar.example.com/remote.php/dav&lt;serverURL&gt;
-    &lt;/calendar&gt;
-
-    &lt;calendar type="jmap"&gt;
-      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
-      &lt;serverURL&gt;https://calendar.example.com&lt;serverURL&gt;
+      &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;url&gt;
     &lt;/calendar&gt;
 
     &lt;!-- Upload files, allowing the user to share them.
@@ -1496,7 +1480,7 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
     &lt;fileShare type="webdav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
-      &lt;serverURL&gt;https://share.example.com/remote.php/dav&lt;serverURL&gt;
+      &lt;url&gt;https://share.example.com/remote.php/dav&lt;url&gt;
     &lt;/fileShare&gt;
 
     &lt;!-- This allows to login in to the webmail service of the provider.
@@ -1553,9 +1537,10 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
       &lt;authURL&gt;https://login.example.com/common/oauth2/v2.0/authorize&lt;/authURL&gt;
       &lt;tokenURL&gt;https://login.example.com/common/oauth2/v2.0/token&lt;/tokenURL&gt;
       &lt;issuer&gt;login.example.com&lt;/issuer&gt;
-      &lt;scope&gt;imap pop3 smtp webdav caldav carddav offline_access&lt;/scope&gt;
-      &lt;clientID&gt;messaging&lt;/clientID&gt;
-      &lt;clientSecret&gt;notreally&lt;/clientSecret&gt;
+      &lt;scope&gt;IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access&lt;/scope&gt;
+      &lt;clientID&gt;open&lt;/clientID&gt;
+      &lt;!-- optional --&gt;
+      &lt;clientSecret&gt;give-me-your-pass-word&lt;/clientSecret&gt;
     &lt;/mAuth&gt;
 
     &lt;!-- Add this only when users (who already have an account) have to
