@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-23T00:13:25.465212+00:00",
+  "timestamp": "2024-07-25T00:13:08.114810+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -277,7 +277,7 @@
       "id": "I_kwDOKo_bRc5-ei0R",
       "title": "mAuth specification",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/6",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "link2xt",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -286,8 +286,8 @@
       "labels": [],
       "body": "Specification refers to mAuth (OAuth for email), but there is no link to mAuth. Is there an existing specification for it?",
       "createdAt": "2024-02-07T00:38:12Z",
-      "updatedAt": "2024-02-07T00:38:57Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-24T01:33:00Z",
+      "closedAt": "2024-07-24T01:33:00Z",
       "comments": [
         {
           "author": "benbucksch",
@@ -295,6 +295,13 @@
           "body": "It is in the works.",
           "createdAt": "2024-02-07T00:38:53Z",
           "updatedAt": "2024-02-07T00:38:53Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Here you are :)\r\n* https://benbucksch.github.io/mauth-spec/draft-mauth.html\r\n* https://github.com/benbucksch/mauth-spec\r\n* https://datatracker.ietf.org/doc/draft-bucksch-mauth/\r\n\r\nFIXED",
+          "createdAt": "2024-07-24T01:33:00Z",
+          "updatedAt": "2024-07-24T01:33:00Z"
         }
       ]
     },
@@ -465,7 +472,7 @@
       "id": "I_kwDOKo_bRc6QBNO-",
       "title": "XML syntax typos in sample XML",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/10",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gabviv73",
       "authorAssociation": "NONE",
       "assignees": [
@@ -474,8 +481,8 @@
       "labels": [],
       "body": "On line 128, the tag is not closed\r\n\r\nWrong:\r\n\r\n      <serverURL>https://jmap.example.com/remote.php/dav<serverURL>\r\n\r\nRight:\r\n\r\n      <serverURL>https://jmap.example.com/remote.php/dav</serverURL>\r\n",
       "createdAt": "2024-07-18T12:30:59Z",
-      "updatedAt": "2024-07-18T15:31:22Z",
-      "closedAt": null,
+      "updatedAt": "2024-07-24T01:46:50Z",
+      "closedAt": "2024-07-24T01:46:50Z",
       "comments": [
         {
           "author": "gabviv73",
@@ -504,6 +511,13 @@
           "body": "> Unfortunately, Caldav and Carddav seems to not be implemented in TB autoconfig: am I right ?\r\n\r\nCorrect. Thunderbird uses RFC 6764.",
           "createdAt": "2024-07-18T15:31:22Z",
           "updatedAt": "2024-07-18T15:31:22Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "FIXED\r\n@gabviv73 Thanks for the report.",
+          "createdAt": "2024-07-24T01:46:50Z",
+          "updatedAt": "2024-07-24T01:46:50Z"
         }
       ]
     }
@@ -571,7 +585,7 @@
       "labels": [],
       "body": "This pull request will add the XSD schemas for Autoconfig Mail.",
       "createdAt": "2024-06-20T14:09:00Z",
-      "updatedAt": "2024-06-20T20:37:19Z",
+      "updatedAt": "2024-07-24T07:32:33Z",
       "baseRepository": "benbucksch/autoconfig-spec",
       "baseRefName": "main",
       "baseRefOid": "786d23d0933827cdd36753e26d65d190035b69a2",
@@ -582,8 +596,30 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "Hi @benbucksch,\r\n\r\nOf course. As far as I know, the XSD of 1.0 is finished and the XSD of 1.1 is almost finished. I'm planning to do 1.2 as soon as I have time.",
+          "createdAt": "2024-07-24T07:32:32Z",
+          "updatedAt": "2024-07-24T07:32:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKo_bRc6C27N0",
+          "commit": {
+            "abbreviatedOid": "a4061ae"
+          },
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "Thanks so much for the XSD!\r\n\r\nHowever, I see that it's a schema for the version 1.0, which was in use only for a few months 15 years ago and has since not been used anymore. It doesn't match the spec anymore.\r\n\r\nWould you mind updating the XSD with the sample in the current spec?",
+          "createdAt": "2024-07-24T01:31:02Z",
+          "updatedAt": "2024-07-24T01:31:02Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
