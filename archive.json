@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-11T00:14:52.393754+00:00",
+  "timestamp": "2024-08-13T00:14:04.642059+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -533,9 +533,17 @@
       "labels": [],
       "body": "Currently the standard specifies that the following URLs should be tried:\r\n1. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS% `\r\n2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml`\r\n3. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml`\r\n\r\nBut it is not specified what the client should do if it fails to connect to these URLs. Some clients attempt heuristics like trying `mail.example.org`, `imap.example.org` etc. subdomains on various ports. This may be a bad idea if autoconfig actually exists but HTTPS connection failed due to a spurious network error or the connection to HTTPS port being blocked.\r\n\r\nMaybe it makes sense to specify that if DNS resolution fails for `autoconfig.example.org`, the client should abort the whole configuration procedure? If `autoconfig.example.org` resolution returns NXDOMAIN then we cannot guarantee anything, but if DNS resolution times out we better not proceed.\r\n\r\nThis way provider publishing on `autoconfig.` subdomain (in contrast to using `.well-known` URL) can ensure that autoconfig is always used as long as the client uses a non-malicious DNS resolver, e.g. a trusted DoH resolver or a recursive resolver running on a trusted LAN.",
       "createdAt": "2024-08-09T08:12:08Z",
-      "updatedAt": "2024-08-09T08:13:22Z",
+      "updatedAt": "2024-08-11T00:16:52Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "link2xt",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "On a second thought, there is still a problem of what to do if `autoconfig.` subdomain resolves to IP address, but we fail to connect due to connection being refused or timeout.",
+          "createdAt": "2024-08-11T00:16:51Z",
+          "updatedAt": "2024-08-11T00:16:51Z"
+        }
+      ]
     }
   ],
   "pulls": [
