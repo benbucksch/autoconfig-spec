@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-08-27T00:13:42.631665+00:00",
+  "timestamp": "2024-08-29T00:13:53.743684+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -544,6 +544,22 @@
           "updatedAt": "2024-08-11T00:16:51Z"
         }
       ]
+    },
+    {
+      "number": 12,
+      "id": "I_kwDOKo_bRc6UXdeX",
+      "title": "Consider HTTP downgrade attacks",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/12",
+      "state": "OPEN",
+      "author": "mimi89999",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In the security considerations only an attack on the DNS protocol was considered and DoH was presented as a possible mitigation.\n\nEven with DNS secured by using DoH, I think it might still be possible for an attacker performing a MITM attack to present a forged configuration.\n\nAn attacker could monitor HTTPS connections and drop them if the value of the SNI header starts with `autoconfig.`. The client could then fallback to the HTTP URL from 1.3 and the attacker could present it with the forged configuration.",
+      "createdAt": "2024-08-27T12:15:19Z",
+      "updatedAt": "2024-08-27T12:15:19Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
