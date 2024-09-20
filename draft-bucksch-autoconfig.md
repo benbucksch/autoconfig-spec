@@ -3,14 +3,14 @@ title: "Mail Autoconfig"
 abbrev: "autoconfig"
 category: info
 
-docname: draft-bucksch-autoconfig-latest
+docname: draft-ietf-mailmaint-autoconfig-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
 v: 2
-# area: art
-# workgroup: extra
+area: art
+workgroup: mailmaint
 keyword:
  - config
  - autoconfig
@@ -21,10 +21,10 @@ keyword:
  - SMTP
  - JMAP
 venue:
-#  group: extra
-#  type: Working Group
-#  mail: extra@ietf.org
-#  arch: https://mailarchive.ietf.org/arch/browse/extra/
+  group: mailmaint
+  type: Working Group
+  mail: mailmaint@ietf.org
+  arch: https://mailarchive.ietf.org/arch/browse/mailmaint/
   github: "benbucksch/autoconfig-spec"
   latest: "https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html"
 
