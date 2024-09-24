@@ -421,8 +421,9 @@ Many companies do not maintain their own mail server, but let their email be hos
 
 If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain. Only the highest priority MX hostname is considered. From that MX hostname, 2 values are extracted:
 
-* Remove the first component from the MX hostname, i.e. everything up to and including the first `.`, and use that as value for `%MXFULLDOMAIN%`.
 * Extract only the second-level domain from the MX hostname, and use that as value for `%MXBASEDOMAIN%`. To determine the second-level domain, use the [Public Suffic List](https://publicsuffix.org) or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".
+* Remove the first component from the MX hostname, i.e. everything up to and including the first `.`, and use that as value for `%MXFULLDOMAIN%`. If it is shorter or the
+same length as `%MXBASEDOMAIN%`, then skip it.
 
 For example:
 
