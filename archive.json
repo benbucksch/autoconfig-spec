@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-24T00:15:05.856438+00:00",
+  "timestamp": "2024-09-26T00:14:37.279850+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -392,15 +392,17 @@
       "id": "I_kwDOKo_bRc6MfDn4",
       "title": "Historical information on Autoconfig",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/8",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ben221199",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "benbucksch"
+      ],
       "labels": [],
       "body": "# Versions\r\n\r\nThere are 2 versions of Autoconfig: `1.0` and `1.1`.\r\n\r\nAutoconfig 1.0 was supported in ThunderBird 3.0.\r\nAutoconfig 1.1 is supported in ThunderBird 3.1 and later.\r\n\r\n# URLs\r\n\r\nEach version has its own URLs to request XML data.\r\n\r\nFor `1.0` this is:\r\n- `https://autoconfig.$DOMAIN/mail/mozilla.xml?emailaddress=$EMAILADDRESS`\r\n\r\nFor `1.1` this is:\r\n- `http://autoconfig.$DOMAIN/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS`\r\n- `http://$DOMAIN/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS` (As fallback)\r\n\r\nNOTE: The variable `emailaddress` is sent, containing the e-mailaddress.\r\n\r\n# ISPDB URLs\r\n\r\nThere is also a central ISP database hosted by ThunderBird that contains some domains. This URL is saved in the `mailnews.auto_config_url` preference.\r\n\r\nFor `1.0` this is:\r\n- `https://live.mozillamessaging.com/autoconfig/`\r\n\r\nFor `1.1` this was:\r\n- `https://live.mozillamessaging.com/autoconfig/v1.1/`\r\n\r\nBut now it is:\r\n- `https://live.thunderbird.net/autoconfig/v1.1/`\r\n\r\nNOTE: The variable `emailaddress` will not be send to the ISPDB.\r\n\r\nNOTE: Since some version 3.0.x (I have to investigate further), it is possible to use `{{domain}}`. If present, ThunderBird will replace this variable with the domain name. Else, it will append it. There is also a variable `{{accounts}}`. That one will always be replaced if present.\r\n\r\n# XML\r\n\r\nBoth versions use XML for sending their information. There are some difference that make them incompatible with each other.\r\n\r\n- `<clientConfig>` - The root element. Both versions present.\r\n  - `<emailProvider>` - The email provider element. Inside `<clientConfig>`. Only once. Both versions present.\r\n    - `<id>` - The email provider ID. In 1.0 it is an element inside `<emailProvider>`. Only once. In 1.1, the element is gone. It is now an attribute on `<emailProvider>`.\r\n    - `<displayName>` - The display name of the email provider. Inside `<emailProvider>`. Only once. Both versions present.\r\n    - `<domain>` - The domain element. Inside `<emailProvider>`. Multiple possible. Both versions present.\r\n    - `<incomingServer>` - An incoming server. Has a `type` attribute. Only `pop3`, `nntp` or `imap` allowed. Inside `<emailProvider>`. Multiple possible in 1.1, not in 1.0. Both versions present.\r\n      - `<hostname>` - Hostname of the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<port>` - Port of the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<username>` - Username to use to connect to the server. Inside `<incomingServer>`. Only once. Both versions present.\r\n      - `<socketType>` - Socket type. A value of `plain`, `SSL` or `STARTTLS`. Inside `<incomingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<authentication>` - Authentication. For 1.0, a value of `plain` or `secure`. For 1.1, a value of `password-cleartext`, `plain`, `password-encrypted`, `secure`, `GSSAPI` or `NTLM`, where `plain` and `secure` are deprecated. Inside `<incomingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<pop3>` - Additional POP3 options. Inside `<incomingServer>`. Only once. Both versions present. Only useful when type is POP3.\r\n        - `<leaveMessagesOnServer>` - Leave messages on server. Boolean. Inside `<pop3>`. Only once. Both versions present.\r\n        - `<daysToLeaveMessagesOnServer>` - Days to leave messages on the server. Integer. Inside `<pop3>`. Only once. Both versions present.\r\n        - `<downloadOnBiff>` - (I don't know what this does, but something with downloading) Boolean. Inside `<pop3>`. Only once. Both versions present.\r\n    - `<outgoingServer>` - An outgoing server. Has a `type` attribute. Only `smtp` allowed. Inside `<emailProvider>`. Multiple possible in 1.1, not in 1.0. Both versions present.\r\n      - `<hostname>` - Hostname of the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<port>` - Port of the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<username>` - Username to use to connect to the server. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<socketType>` - Socket type. A value of `plain`, `SSL` or `STARTTLS`. Inside `<outgoingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<authentication>` - Authentication. For 1.0, a value of `none`, `plain`, `secure` or `smtp-after-pop`. For 1.1, a value of `none`, `client-IP-address`, `smtp-after-pop`, `password-cleartext`, `plain`, `password-encrypted`, `secure`, `GSSAPI` or `NTLM`, where `plain` and `secure` are deprecated. Inside `<outgoingServer>`. Only once in 1.0. Multiple possible in 1.1. Both versions present.\r\n      - `<addThisServer>` - Field to add this server to the SMTP server list. Contains a boolean. Inside `<outgoingServer>`. Only once. Both versions present.\r\n      - `<useGlobalPreferredServer>` - Field to use global preferred server of the SMTP server list. Contains a boolean. Inside `<outgoingServer>`. Only once. Both versions present.\r\n    - `<inputField>` - An input field. Has a `key` attribute and a `label` attribute. The value is inside the element. Inside `<emailProvider>`. Multiple possible. Both versions present. Optional.\r\n\r\nNOTE: In some later versions I came across the `exchange` type for incoming servers (including `<owaURL>`, `<ewsURL>` and `<easURL>`), the `<useGlobalPreferredServer>` inside an incoming server, the `<password>` element in both incoming and outgoing servers and the `OAuth2` authentication option. For now I see them as non-1.1 and I don't list them in the list above.\r\n\r\nNOTE: It doesn't seem that ThunderBird checks version. For now, I didn't list the `version` attribute on `<clientConfig>`.\r\n\r\nNOTE: I didn't yet specify which elements are required and which are optional.\r\n\r\nNOTE: I didn't yet specify which elements support variables and will possibily have some parts replaced by real values.",
       "createdAt": "2024-06-17T10:09:23Z",
-      "updatedAt": "2024-06-21T08:49:47Z",
-      "closedAt": null,
+      "updatedAt": "2024-09-24T21:03:18Z",
+      "closedAt": "2024-09-24T18:48:58Z",
       "comments": [
         {
           "author": "ben221199",
@@ -464,6 +466,20 @@
           "body": "sorry, typo: ... *not* even worth....\n\nI wrote:\n> v1.0 is really dead since a very long time, and existed only for a few months, but even worth an appendix.\n",
           "createdAt": "2024-06-21T08:49:46Z",
           "updatedAt": "2024-06-21T08:49:46Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Hey @ben221199 , if you have an XSD for 1.2, which the specification specifies, I'd be very happy. Please feel free to open another PR for that.\r\n\r\nI think we can close this now. The info will be archived as part of this issue.",
+          "createdAt": "2024-09-24T18:48:58Z",
+          "updatedAt": "2024-09-24T18:48:58Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "My reaction on #9:\r\n> Hi @benbucksch, sorry for my inactivity last months. I had to focus on some other projects. I will finish 1.1 and add 1.2 as soon as I have time.\r\n\r\nAlso, if possible, I would prefer reopening #9 when I'm done commiting, because it is the original PR with all conversations.",
+          "createdAt": "2024-09-24T21:03:16Z",
+          "updatedAt": "2024-09-24T21:03:16Z"
         }
       ]
     },
@@ -526,15 +542,17 @@
       "id": "I_kwDOKo_bRc6SeIEO",
       "title": "Preventing spurious \"downgrade\" to heuristics",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/11",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "link2xt",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "benbucksch"
+      ],
       "labels": [],
       "body": "Currently the standard specifies that the following URLs should be tried:\r\n1. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS% `\r\n2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml`\r\n3. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml`\r\n\r\nBut it is not specified what the client should do if it fails to connect to these URLs. Some clients attempt heuristics like trying `mail.example.org`, `imap.example.org` etc. subdomains on various ports. This may be a bad idea if autoconfig actually exists but HTTPS connection failed due to a spurious network error or the connection to HTTPS port being blocked.\r\n\r\nMaybe it makes sense to specify that if DNS resolution fails for `autoconfig.example.org`, the client should abort the whole configuration procedure? If `autoconfig.example.org` resolution returns NXDOMAIN then we cannot guarantee anything, but if DNS resolution times out we better not proceed.\r\n\r\nThis way provider publishing on `autoconfig.` subdomain (in contrast to using `.well-known` URL) can ensure that autoconfig is always used as long as the client uses a non-malicious DNS resolver, e.g. a trusted DoH resolver or a recursive resolver running on a trusted LAN.",
       "createdAt": "2024-08-09T08:12:08Z",
-      "updatedAt": "2024-08-11T00:16:52Z",
-      "closedAt": null,
+      "updatedAt": "2024-09-24T18:43:36Z",
+      "closedAt": "2024-09-24T18:43:36Z",
       "comments": [
         {
           "author": "link2xt",
@@ -542,6 +560,13 @@
           "body": "On a second thought, there is still a problem of what to do if `autoconfig.` subdomain resolves to IP address, but we fail to connect due to connection being refused or timeout.",
           "createdAt": "2024-08-11T00:16:51Z",
           "updatedAt": "2024-08-11T00:16:51Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> if DNS resolution fails for autoconfig.example.org, the client should abort the whole configuration procedure?\r\n\r\n> there is still a problem of what to do if autoconfig. subdomain resolves to IP address, but we fail to connect due to connection being refused or timeout.\r\n\r\nExactly. Unfortunately, exactly such failures happen in reality for many domains. We get _all imaginable_ responses, reasonable and not. We get \"no domain\", we get a redirect to a HTML page, we even get resolutions to IP addresses which then do a firewall DROP instead of REJECT, meaning that they never even respond with a \"IP address does not exist\", but they are simply blackholing unknown hosts and we run into TCP level timeouts. We get everything you can imagine, even from important domains. So, we cannot assume a nice explicit \"does not exist\" response. Insisting on it would break all other mechanisms.\r\n\r\n> it is not specified what the client should do if it fails to connect to these URLs.\r\n\r\nActually it is specified:\r\n[4.2](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#section-4.2).  [Central database](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-central-database)\r\n[4.3](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#section-4.3).  [MX](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-mx)\r\n[4.4](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#section-4.4).  [Local disk](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-local-disk)\r\n[4.5](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#section-4.5).  [Other mechanisms](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-other-mechanisms)\r\n[4.6](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#section-4.6).  [Manual configuration](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-manual-configuration)\r\n\r\n[4. Intro](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-config-retrieval-for-mail-c) even explicitly states: \"The steps are ordered by priority. ... a higher priorty result that is available MUST be preferred over a lower priority one\".\r\n\r\nAnd [4.5](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#section-4.5).  [Other mechanisms](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-other-mechanisms) says\r\n\"\r\nIf you implement ... alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods SHOULD be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section \"Security considerations\".\r\n\"\r\n\r\nSo, it is indeed \"specified what the client should do if it fails to connect to these URLs\", so closing.",
+          "createdAt": "2024-09-24T18:43:36Z",
+          "updatedAt": "2024-09-24T18:43:36Z"
         }
       ]
     },
@@ -550,16 +575,136 @@
       "id": "I_kwDOKo_bRc6UXdeX",
       "title": "Consider HTTP downgrade attacks",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/12",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mimi89999",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "benbucksch"
+      ],
       "labels": [],
       "body": "In the security considerations only an attack on the DNS protocol was considered and DoH was presented as a possible mitigation.\n\nEven with DNS secured by using DoH, I think it might still be possible for an attacker performing a MITM attack to present a forged configuration.\n\nAn attacker could monitor HTTPS connections and drop them if the value of the SNI header starts with `autoconfig.`. The client could then fallback to the HTTP URL from 1.3 and the attacker could present it with the forged configuration.",
       "createdAt": "2024-08-27T12:15:19Z",
-      "updatedAt": "2024-08-27T12:15:19Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-09-24T19:35:48Z",
+      "closedAt": "2024-09-24T16:07:25Z",
+      "comments": [
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "@benbucksch I saw that the draft was adopted. Could you please give a comment on that issue?",
+          "createdAt": "2024-09-24T10:44:50Z",
+          "updatedAt": "2024-09-24T10:44:50Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "We try HTTPS first, so if we remove HTTP as well, then we simply fall back into other mechanisms.\r\n\r\nThis HTTP mechanism is necessary, because it delivers a large percentage of the actual configurations in the wild. If we completely ignore those configs, then we won't get a config. The mail client will simply fall back into Exchange AutoDiscover V1, which also falls back to HTTP (and which is outside the scope of this spec), and where HTTP is likewise necessary to work, because delivers 90% of the configs. If you disable that as well, you simply get no config, and then all bets are off.\r\n\r\nAlthough many many many community members have complained about this, nobody was able to show an alternative solution that actually works for hosters in practice.\r\n\r\nI cannot see a way to make it 100% bullet proof and still work as well for end users to find a working config.\r\n\r\nThere are several mitigations, which are also mentioned in the specification:\r\n* The attacker would need to sit between the user and the server. This requires physical access or national level access. While such scenarios exist, this prevents by far most attackers.\r\n* It requires an active attack, not just a passive attack. This presents a hurdle for attackers that operate on the national level, because it exposes them. Same is true for attackers with physical access who want to stay undetected. There are nations who do not care, and are well-known to hack their citizens, but then their citiens can be more careful, see below.\r\n* In 15 years since this protocol is deployed in the wild, I have never heard of such an attack. That is despite that many many many community members like you have complained about HTTP. Not even a single one has reported an actual attack. Just because a problem never happened so far doesn't mean it will not become a problem in the future (compare plain text passwords for IMAP in 1995), but it is one factor. OTOH, autoconfig helps 100000 people *every day* to configure their email address, and if we removed HTTP, it would not work for them in many cases.\r\n* The attacker would need to time the attack in the exact moment when the user configures his email address. This normally happens only once every few years. This makes autoconfig a very unattractive target for attackers. The spec specifically discourages from regularly running the autoconfig for reconfig, for this reason. An attacker could also block the mail server config, provoking a user into a new config. However, most users would simply complain about the server failing to the admin, which would make the attack visible.\r\n* Most importantly, the user has to explicitly verify the configuration. This is a _mandatory_ part of the protocol, exactly because we cannot be 100% certain and bullet proof, at least not in theory.\r\n\r\nSo, I believe that the *combination* of the above factors puts the bar for attackers sufficiently hight that th\r\n\r\nLast but not least, the HTTP URL explicitly and intentionally marked as \"optional\", therefore it's up to the mail client implementation to decide whether they want to implement this mechanism. But they should be aware that if they do not implement it, they simply won't be able to configure many of the email addresses.",
+          "createdAt": "2024-09-24T16:05:47Z",
+          "updatedAt": "2024-09-24T16:05:47Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "> The attacker would need to sit between the user and the server. This requires physical access or national level access. While such scenarios exist, this prevents by far most attackers.\r\n\r\nTargeted attacks are indeed difficult, but opportunistic ones are not. Think about an attacker with an access point in an airport/cafe/restaurant/university/library/whatever. He could gather credentials and then use them to extract sensitive data from the inbox or attempt to reset passwords to sensitive online accounts as most send password reset links via e-mail without requiring any additional authentication.\r\n\r\n> It requires an active attack, not just a passive attack. This presents a hurdle for attackers that operate on the national level, because it exposes them. Same is true for attackers with physical access who want to stay undetected. There are nations who do not care, and are well-known to hack their citizens, but then their citiens can be more careful, see below.\r\n\r\n\"You say there is an issue with our Wi-Fi? But it works fine for me. I can access google.com and bbc.com just file. See? Since you really insist, I will ask the IT guy about this. He comes here once a week.\" That's assuming that there is somebody who noticed the attack and had enough technical knowledge to understand what was going on.\r\n\r\n> In 15 years since this protocol is deployed in the wild, I have never heard of such an attack.\r\n\r\nBefore HTTPS was common, warnings against using public Wi-Fi networks were common.\r\n\r\n> The attacker would need to time the attack in the exact moment when the user configures his email address.\r\n\r\nEven if the attack would yield only one pair of credentials after several days, if the inbox contains very sensitive data or the user has sensitive online accounts linked to that e-mail address, it could still make the attack worthy.\r\n\r\n> Most importantly, the user has to explicitly verify the configuration. This is a mandatory part of the protocol, exactly because we cannot be 100% certain and bullet proof, at least not in theory.\r\n\r\nThat's very convenient to put in the spec, but that's basically assuming that the user understands the screen with the configuration and any potentially displayed warnings and not just click through it. That's also assuming that the user knows the correct config or knows how to find it. That's quite unlikely.",
+          "createdAt": "2024-09-24T18:44:42Z",
+          "updatedAt": "2024-09-24T18:44:42Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> Think about an attacker with an access point in an airport/cafe/restaurant/university/library/whatever. \r\n\r\nYou wouldn't normally configure a new mail account in such situations. Esp. one with \"very sensitive data\". And the rare cases when you do, and the app asks you to check the domain, then you better don't approve a unusual domain.\r\n\r\nThe mitigations work in concert together. You can shoot holes in every single one of them, but **in combination**, the likeliness of a successful attack is very low.\r\n\r\nIt's nice to be 100% secure, but if that's not possible, or it means that we get no config at all in many cases, then that's not helpful for the user.\r\n\r\nThe only working solution I can imagine is to move ISP HTTP (step 1.3) below the ISP DB (step 2.1) in priority, and possibly below MX (step 3.x), if you use DoH.",
+          "createdAt": "2024-09-24T19:01:28Z",
+          "updatedAt": "2024-09-24T19:16:51Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "If this is considered an acceptable risk, maybe it's worth at least mentioning it in security considerations? That section currently only mentions risks related to the SRV protocol, but not HTTP.",
+          "createdAt": "2024-09-24T19:19:32Z",
+          "updatedAt": "2024-09-24T19:19:32Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Fair point, yes.",
+          "createdAt": "2024-09-24T19:20:21Z",
+          "updatedAt": "2024-09-24T19:20:21Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Section 9.2 \"DNS\" mentiones in the first sentence: \"Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure.\" However, the title says only \"DNS\", and the rest of the section speaks only about DNS, so it could be clearer, yes.\r\n\r\nAlso, it should maybe explictly explain the above concept of mitigation by a combination of mitigation factors.",
+          "createdAt": "2024-09-24T19:23:01Z",
+          "updatedAt": "2024-09-24T19:35:48Z"
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOKo_bRc6Xs19f",
+      "title": "Security of MX config retrieval method",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/13",
+      "state": "CLOSED",
+      "author": "mimi89999",
+      "authorAssociation": "NONE",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "Hello,\r\n\r\nI have some doubts about the security of the the MX config retrieval method: https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-mx\r\n\r\nThe spec describes the following step:\r\n> Remove the first component from the MX hostname, i.e. everything up to and including the first ., and use that as value for %MXFULLDOMAIN%.\r\n\r\nWhile it's common, to use subdomains like `mx0` in MX records, I don't think that it's prohibited to use domains under a public suffix. In fact https://datatracker.ietf.org/doc/html/rfc1912#section-2.5 states that:\r\n> It is a good idea to give every host an MX record, even if it points to itself!\r\n\r\nTherefore the domain `example.com` could have the following record (omitting some fields for clarity):\r\n```\r\nexample.com.    MX    10    example.com.pl.\r\n```\r\nThe domain `example.com.pl` could also have an MX record pointing to itself:\r\n```\r\nexample.com.pl.    MX    10    example.com.pl.\r\n```\r\n\r\nFollowing the first step and removing the first component will yield `%MXFULLDOMAIN%` equal to `com.pl`. Then in step 3.1 `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` will be requested, that is `https://autoconfig.com.pl/.well-known/mail-v1.xml`. However, `autoconfig.com.pl` is a domain available for registration.",
+      "createdAt": "2024-09-24T11:21:27Z",
+      "updatedAt": "2024-09-24T20:14:43Z",
+      "closedAt": "2024-09-24T18:25:00Z",
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "The [spec](https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html#name-mx) states:\r\n\"\r\nFrom that MX hostname, 2 values are extracted:\r\n* Remove the first component from the MX hostname, i.e. everything up to and including the first ., and use that as value for %MXFULLDOMAIN%.\r\n* Extract only the second-level domain from the MX hostname, and use that as value for %MXBASEDOMAIN%. To determine the second-level domain, use the [Public Suffic List](https://publicsuffix.org/) or a similarly suited method, to correctly handle domains like \".co.uk\" and \".com.au\".\r\n\r\n\"\r\n\r\n1. The `%MXBASEDOMAIN%` already explicitly refers to the public suffix list and \".com.au\"\r\n2. In your example, the `%MXFULLDOMAIN%` would be shorter than `%MXBASEDOMAIN%`. As the name implies, that was not intended. We could define that `%MXFULLDOMAIN%` should be skipped, if it's shorter than or identical (length) to `%MXBASEDOMAIN%`. That should fix the issue you present here. Would you concur that this solves the issue?\r\n\r\n3. This is an extreme edge case. For important domains, such flimsy domains should not be used. It is the responsibility of the domain owner to ensure that his domain is secure. If \"com.pl\" is not an official domain for public registration, but only a small company reselling domains, then \"example.com.pl\" put itself in an unstable domain. As such, the extend of the problem is very limited to such third level domains.",
+          "createdAt": "2024-09-24T15:21:55Z",
+          "updatedAt": "2024-09-24T15:23:01Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "> This is an extreme edge case. For important domains, such flimsy domains should not be used. It is the responsibility of the domain owner to ensure that his domain is secure. If \"com.pl\" is not an official domain for public registration, but only a small company reselling domains, then \"example.com.pl\" put itself in an unstable domain. As such, the extend of the problem is very limited to such third level domains.\r\n\r\nThe `com.pl` domain is managed by the `.pl` registry. It's one of the functional domains: https://dns.pl/lista_domen_funkcjonalnych. They also have some regional domains: https://dns.pl/lista_domen_regionalnych\r\n\r\nIn fact, this will also work for `example.co.uk` with ` autoconfig.co.uk` available for registration and some top level domains like `example.pl` (`autoconfig.pl`), `example.moe` (`autoconfig.moe`), etc. Namecheap shows quite an impressive list: https://www.namecheap.com/domains/registration/results/?type=beast&share=150e9d107aa011efb5bd8b16e8d18951&sort=Default\r\n\r\n> In your example, the %MXFULLDOMAIN% would be shorter than %MXBASEDOMAIN%. As the name implies, that was not intended. We could define that %MXFULLDOMAIN% should be skipped, if it's shorter than or identical (length) to %MXBASEDOMAIN%. That should fix the issue you present here. Would you concur that this solves the issue?\r\n\r\nI think that this will mostly solve the issue. While the name might suggest that, I believe that it's better to explicitly state that in the spec. There are some rare cases of domains like `netlib.re` with subdomains available for registration that are not present in the [PLS](https://publicsuffix.org/list/public_suffix_list.dat), but those are flimsy domains that you talked about in 3.",
+          "createdAt": "2024-09-24T18:17:18Z",
+          "updatedAt": "2024-09-24T18:17:18Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> I think that this will mostly solve the issue. While the name might suggest that, I believe that it's better to explicitly state that in the spec\r\n\r\nOK, fixed in d53b5beeb. Thanks for pointing this out.",
+          "createdAt": "2024-09-24T18:25:54Z",
+          "updatedAt": "2024-09-24T18:25:54Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "I've simplified this to: \"... `%MXFULLDOMAIN%`. Use it only if it is longer than `%MXBASEDOMAIN%`.\"",
+          "createdAt": "2024-09-24T18:28:50Z",
+          "updatedAt": "2024-09-24T18:28:50Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "> If it is shorter or the same length as `%MXBASEDOMAIN%`, then skip it.\r\n\r\nMaybe changing the wording to include `MUST` would be better? Also 3.1 should be skipped.",
+          "createdAt": "2024-09-24T18:48:08Z",
+          "updatedAt": "2024-09-24T18:48:36Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> Maybe changing the wording to include MUST would be better?\r\n\r\nAs mentioned, I've changed it so \"Use it only if it is longer than `%MXBASEDOMAIN%`.\"\r\n\r\n> Also 3.1 should be skipped.\r\n\r\nYes, that's what the sentence above means. 3.1 is `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` , so if you're not using `%MXFULLDOMAIN%`, that means you're skipping this step 3.1.",
+          "createdAt": "2024-09-24T18:53:24Z",
+          "updatedAt": "2024-09-24T18:53:24Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "Hm. That makes sense, but I still have some doubts. This is not an obvious issue and I fear that some implementations might make an issue here.",
+          "createdAt": "2024-09-24T20:14:42Z",
+          "updatedAt": "2024-09-24T20:14:42Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -618,21 +763,21 @@
       "id": "PR_kwDOKo_bRc5zFHAk",
       "title": "Add XSD schemas",
       "url": "https://github.com/benbucksch/autoconfig-spec/pull/9",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ben221199",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "This pull request will add the XSD schemas for Autoconfig Mail.",
       "createdAt": "2024-06-20T14:09:00Z",
-      "updatedAt": "2024-07-24T07:32:33Z",
+      "updatedAt": "2024-09-25T16:12:27Z",
       "baseRepository": "benbucksch/autoconfig-spec",
       "baseRefName": "main",
       "baseRefOid": "786d23d0933827cdd36753e26d65d190035b69a2",
       "headRepository": "ben221199/autoconfig-spec",
       "headRefName": "main",
       "headRefOid": "a4061ae9c4796ac7d1cc51a455bae98c7764af4c",
-      "closedAt": null,
+      "closedAt": "2024-09-24T18:47:06Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -643,6 +788,27 @@
           "body": "Hi @benbucksch,\r\n\r\nOf course. As far as I know, the XSD of 1.0 is finished and the XSD of 1.1 is almost finished. I'm planning to do 1.2 as soon as I have time.",
           "createdAt": "2024-07-24T07:32:32Z",
           "updatedAt": "2024-07-24T07:32:32Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "@ben221199\r\nIf you have an XSD for 1.2, which is what the specification specifies, that would be very helpful. I'd be happy about that. Please do feel free to open another PR for that.\r\n\r\nI'm going to close this specific PR, because it has only the XSD for 1.0, which was used only few a few months 15 years ago and nobody uses anymore.",
+          "createdAt": "2024-09-24T18:47:06Z",
+          "updatedAt": "2024-09-24T18:47:23Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "Hi @benbucksch, sorry for my inactivity last months. I had to focus on some other projects. I will finish 1.1 and add 1.2 as soon as I have time.",
+          "createdAt": "2024-09-24T20:57:00Z",
+          "updatedAt": "2024-09-24T20:57:00Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "@ben221199 No problem. Don't worry much about 1.1, because it's not relevant for the spec here.",
+          "createdAt": "2024-09-25T16:12:26Z",
+          "updatedAt": "2024-09-25T16:12:26Z"
         }
       ],
       "reviews": [
