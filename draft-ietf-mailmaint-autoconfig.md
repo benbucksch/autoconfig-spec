@@ -626,6 +626,10 @@ An attacker gaining the plain text password of a real user is a very significant
 
 Multi-factor authentication might not defend against such attacks, because the user may believe to be logging into his email and therefore comply with any multi-factor authentication steps required.
 
+## HTTP
+
+During the Mail provider configuration retrieval process, the mail client first attempts to fetch the configuration using HTTPS URLs. If this attempt fails due to a blocked HTTPS connection or because the server does not support HTTPS, the client may fall back to using HTTP. This fallback poses a significant security risk. Since HTTP is neither encrypted nor authenticated, an attacker could intercept the request and provide the client with a malicious, forged configuration.
+
 ## DNS
 
 Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure. This also applies to the DNS MX lookup and the https calls that base on its results, as described in section "MX".
