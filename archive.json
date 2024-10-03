@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-01T00:16:54.635496+00:00",
+  "timestamp": "2024-10-03T00:14:54.248823+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -705,6 +705,51 @@
           "updatedAt": "2024-09-24T20:14:42Z"
         }
       ]
+    },
+    {
+      "number": 15,
+      "id": "I_kwDOKo_bRc6Yk1yQ",
+      "title": "Breaking changes between version 1.1 and 1.2 (and the future of AutoConfig)",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/15",
+      "state": "OPEN",
+      "author": "ben221199",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "When comparing my schemas, this are the changes between 1.1 and 1.2:\r\n1. Add `<url>` inside `<incomingServer>`\r\n2. Make `<hostname>`, `<port>`, `<password>` and `<socketType>` inside `<incomingServer>` optional\r\n3. Add `http-basic` as value for `<authentication>` inside `<incomingServer>`\r\n4. Add `jmap`, `ews` and `activesync` to the enum for the `type` attribute on `<incomingServer>`\r\n5. Make `<password>` inside `<outgoingServer>` optional\r\n6. Add `<addressBook>`, `<calendar>`, `<fileShare>`, `<mAuth>`, `<enable>`, `<clientConfigUpdate>` on `<clientConfig>`\r\n7. Add `<inputField>` on `<clientConfig>`\r\n\r\nThere may be more changes that I missed, but I will go with these for now.\r\n\r\n---\r\n\r\nBy the way that ThunderBird is implemented, I assume that extended enums (change 3 and 4) will break the code. Also, in change 1, `<url>` is used instead of `<hostname>` and `<port>`, which likely breaks many clients that expect an hostname and port. Change 7 seems to me like a mistake, because `<inputField>` was inside `<emailProvider>` before. And last, I don't like change 6.\r\n\r\nIn my conclusion, we can minimalize the breaking changes problem to introduce a new 1.2 URL instead of building on the same URL. \r\n\r\n---\r\n\r\nAlso, I don't think we should add all those other types of services in this AutoConfig. Currently, the 1.1 URL is `http://autoconfig.$DOMAIN/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS` (or `http://$DOMAIN/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS`). Notice the `mail` part in the URL, so let this be AutoConfig Mail, and lets make an AutoConfig Calendar and AutoConfig Contacts seperately. We may link those URLs in some general AutoConfig file.\r\n\r\nFor now, XML is fine for 1.2, but when developing 2.0, the switch to JSON seems pretty straight forward.",
+      "createdAt": "2024-10-01T17:17:04Z",
+      "updatedAt": "2024-10-01T18:12:51Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "Example of my idea:\r\n\r\n## AutoConfig 1.*\r\n\r\nThe XML versions.\r\n\r\nAutoConfig (new spec):\r\n```xml\r\n<clientConfigList version=\"1.0\">\r\n  <clientConfig url=\"https://autoconfig.mozzila.com/mail/config-v1.1.xml\" type=\"mail\" version=\"1.1\"/>\r\n  <clientConfig url=\"https://autoconfig.mozzila.com/mail/config-v1.2.xml\" type=\"mail\" version=\"1.2\"/>\r\n  <clientConfig url=\"https://autoconfig.mozzila.com/calendar/config-v1.0.xml\" type=\"calendar\" version=\"1.0\"/>\r\n  <clientConfig url=\"https://autoconfig.mozzila.com/contacts/config-v1.0.xml\" type=\"contacts\" version=\"1.0\"/>\r\n</clientConfigList>\r\n```\r\n\r\nAutoConfig Mail (<ins>**this spec**</ins>):\r\n```xml\r\n<clientConfig version=\"1.0, 1.1 or 1.2\">\r\n  <emailProvider>\r\n    ...\r\n  </emailProvider>\r\n</clientConfig>\r\n```\r\n\r\nAutoConfig Calendar (new other spec):\r\n```xml\r\n<clientConfig version=\"1.0\">\r\n  <calendarProvider>\r\n    ...\r\n  </calendarProvider>\r\n</clientConfig>\r\n```\r\n\r\nAutoConfig Contacts (new other spec):\r\n```xml\r\n<clientConfig version=\"1.0\">\r\n  <contactsProvider>\r\n    ...\r\n  </contactsProvider>\r\n</clientConfig>\r\n```\r\n\r\n## AutoConfig 2.*'\r\n\r\nThe JSON versions.\r\n\r\nAutoConfig (all specs in one):\r\n```json\r\n{\r\n  \"providers\" : [\r\n    ...\r\n  ]\r\n}\r\n```",
+          "createdAt": "2024-10-01T17:27:21Z",
+          "updatedAt": "2024-10-01T17:27:21Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> When comparing my schemas, this are the changes between 1.1 and 1.2:\r\n>\r\n>     Add <url> inside <incomingServer>\r\n>     Make <hostname>, <port>, <password> and <socketType> inside <incomingServer> optional\r\n\r\n\r\nDoes XSD support something like \"subclasses\"? That you can define `<incomingServer>` more generally, and then specifically for each protocol?\r\n\r\nIn 1.2 (the current spec), a config \r\n```\r\n<incomingServer type=\"imap\">\r\n  <url>https://example.com</url>\r\n</incomingServer>\r\n```\r\nis **not** valid. And a JMAP server without URL and with hostname and port is not valid.\r\n\r\nVersion 1.1 supported only IMAP and POP3 and therefore the problem didn't appear.\r\n\r\n>     Add `http-basic` as value for `<authentication>` inside `<incomingServer>` \r\n\r\n\r\nDitto. Not valid for IMAP, but only for configs with a URL.\r\n\r\n\r\n>     Make `<password>` inside `<outgoingServer>` optional\r\n\r\n\r\nPassword was always optional for both incomingServer and outgoingServer\r\n\r\n\r\n>     Add `<addressBook>, <calendar>, <fileShare>, <mAuth>, <enable>, <clientConfigUpdate>`\r\n>     Add `<inputField>`\r\n\r\n\r\n`<enable>`, `<clientConfigUpdate>`, `<inputField>` were already there in 1.1 spec, but are not used by Thunderbird.\r\n\r\nhttps://wiki.mozilla.org/index.php?title=Thunderbird:Autoconfiguration:ConfigFileFormat&oldid=1227306 (revision from 2020)\r\n\r\n",
+          "createdAt": "2024-10-01T17:51:02Z",
+          "updatedAt": "2024-10-01T17:51:02Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> By the way that ThunderBird is implemented, I assume that extended enums (change 3 and 4) will break the code. Also, in change 1, <url> is used instead of <hostname> and <port>, which likely breaks many clients that expect an hostname and port.\r\n\r\nhm, interesting. I checked. From how I wrote the Thunderbird code back then, and how I read it now, there is a [try/catch](https://searchfox.org/comm-central/source/mail/components/accountcreation/modules/readFromXML.sys.mjs#196) around the processing of an `<incomingServer>` element. Yes, `type=\"jmap\"` would throw, it would be cause *inside* the `for` loop, and the code would start reading the next `<incomingServer>`. After the loop, there's a check whether *any* valid `<incomingServer>` was found. If so, that config is used and the \"invalid\" (actually not yet supported) config is simply ignored. If no config at all is found (`if (!d.incoming.hostname)`), then it would throw the error and stop.\r\n\r\nSo, effect is: Thunderbird would ignore an `<incomingServer type=\"jmap\">` as if it doesn't exist, and continue reading the rest of the config. So, I don't see a problem.\r\n\r\nWould you concur with my reading of the code?\r\n\r\nYou have a good point, though: The spec should mandate clients to ignore config parts that the client cannot understand, but process the rest. This is the only way that we can continue evolving the spec. Otherwise we're completely stuck.",
+          "createdAt": "2024-10-01T18:00:19Z",
+          "updatedAt": "2024-10-01T18:00:19Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> Example of my idea:\r\n> ```\r\n> <clientConfigList version=\"1.0\">\r\n>   <clientConfig url=\"https://autoconfig.mozzila.com/mail/config-v1.1.xml\" type=\"mail\" version=\"1.1\"/>\r\n>   <clientConfig url=\"https://autoconfig.mozzila.com/mail/config-v1.2.xml\" type=\"mail\" version=\"1.2\"/>\r\n>   <clientConfig url=\"https://autoconfig.mozzila.com/calendar/config-v1.0.xml\" type=\"calendar\" version=\"1.0\"/>\r\n>   <clientConfig url=\"https://autoconfig.mozzila.com/contacts/config-v1.0.xml\" type=\"contacts\" version=\"1.0\"/>\r\n> </clientConfigList>\r\n> ```\r\n\r\nThanks for the idea. But I disagree here.\r\n\r\n1. All services that hosters provide to users and that mail apps may reasonably implement should be in the config. Even chat and video conference accounts. The mail client should have to read only this one file to set up this email account with all associated services.\r\n\r\n2. Creating multiple separate autoconfig protocols or URLs creates more burden for implementors, and we'll need to make even more URL queries. We already have many URL queries, to cover different scenarios and providers. I don't want to multiply by 4 or 6. It would also increase the possibilities to fail.\r\n\r\n3. An email client should also sync contacts, otherwise it's hard to send mail. If it does calendar, and the email account supports calendar sync, why would you not have that set up? If you do, why not do it in the same doc?\r\n\r\n4. The separation makes even less sense for protocols like JMAP, EWS, ActiveSync, MS Graph. Basically *all* modern mail protocols come with contact and calendar sync already built in, on the very same server connection. Why artifically separate it for autoconfig, when it's already united in the server protocols?",
+          "createdAt": "2024-10-01T18:08:16Z",
+          "updatedAt": "2024-10-01T18:12:51Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -826,6 +871,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 14,
+      "id": "PR_kwDOKo_bRc59PcKf",
+      "title": "Add HTTP security considerations",
+      "url": "https://github.com/benbucksch/autoconfig-spec/pull/14",
+      "state": "OPEN",
+      "author": "mimi89999",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-10-01T11:36:45Z",
+      "updatedAt": "2024-10-01T11:36:45Z",
+      "baseRepository": "benbucksch/autoconfig-spec",
+      "baseRefName": "main",
+      "baseRefOid": "d53b5beeb31c1524020a6105dba858014f941d8f",
+      "headRepository": "mimi89999/autoconfig-spec",
+      "headRefName": "http_sc",
+      "headRefOid": "cfba5ae98e35a4226bad6f371a19a429780e4672",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
