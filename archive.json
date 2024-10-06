@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-03T00:14:54.248823+00:00",
+  "timestamp": "2024-10-06T00:16:25.505694+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -718,7 +718,7 @@
       "labels": [],
       "body": "When comparing my schemas, this are the changes between 1.1 and 1.2:\r\n1. Add `<url>` inside `<incomingServer>`\r\n2. Make `<hostname>`, `<port>`, `<password>` and `<socketType>` inside `<incomingServer>` optional\r\n3. Add `http-basic` as value for `<authentication>` inside `<incomingServer>`\r\n4. Add `jmap`, `ews` and `activesync` to the enum for the `type` attribute on `<incomingServer>`\r\n5. Make `<password>` inside `<outgoingServer>` optional\r\n6. Add `<addressBook>`, `<calendar>`, `<fileShare>`, `<mAuth>`, `<enable>`, `<clientConfigUpdate>` on `<clientConfig>`\r\n7. Add `<inputField>` on `<clientConfig>`\r\n\r\nThere may be more changes that I missed, but I will go with these for now.\r\n\r\n---\r\n\r\nBy the way that ThunderBird is implemented, I assume that extended enums (change 3 and 4) will break the code. Also, in change 1, `<url>` is used instead of `<hostname>` and `<port>`, which likely breaks many clients that expect an hostname and port. Change 7 seems to me like a mistake, because `<inputField>` was inside `<emailProvider>` before. And last, I don't like change 6.\r\n\r\nIn my conclusion, we can minimalize the breaking changes problem to introduce a new 1.2 URL instead of building on the same URL. \r\n\r\n---\r\n\r\nAlso, I don't think we should add all those other types of services in this AutoConfig. Currently, the 1.1 URL is `http://autoconfig.$DOMAIN/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS` (or `http://$DOMAIN/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS`). Notice the `mail` part in the URL, so let this be AutoConfig Mail, and lets make an AutoConfig Calendar and AutoConfig Contacts seperately. We may link those URLs in some general AutoConfig file.\r\n\r\nFor now, XML is fine for 1.2, but when developing 2.0, the switch to JSON seems pretty straight forward.",
       "createdAt": "2024-10-01T17:17:04Z",
-      "updatedAt": "2024-10-01T18:12:51Z",
+      "updatedAt": "2024-10-04T14:27:01Z",
       "closedAt": null,
       "comments": [
         {
@@ -748,6 +748,34 @@
           "body": "> Example of my idea:\r\n> ```\r\n> <clientConfigList version=\"1.0\">\r\n>   <clientConfig url=\"https://autoconfig.mozzila.com/mail/config-v1.1.xml\" type=\"mail\" version=\"1.1\"/>\r\n>   <clientConfig url=\"https://autoconfig.mozzila.com/mail/config-v1.2.xml\" type=\"mail\" version=\"1.2\"/>\r\n>   <clientConfig url=\"https://autoconfig.mozzila.com/calendar/config-v1.0.xml\" type=\"calendar\" version=\"1.0\"/>\r\n>   <clientConfig url=\"https://autoconfig.mozzila.com/contacts/config-v1.0.xml\" type=\"contacts\" version=\"1.0\"/>\r\n> </clientConfigList>\r\n> ```\r\n\r\nThanks for the idea. But I disagree here.\r\n\r\n1. All services that hosters provide to users and that mail apps may reasonably implement should be in the config. Even chat and video conference accounts. The mail client should have to read only this one file to set up this email account with all associated services.\r\n\r\n2. Creating multiple separate autoconfig protocols or URLs creates more burden for implementors, and we'll need to make even more URL queries. We already have many URL queries, to cover different scenarios and providers. I don't want to multiply by 4 or 6. It would also increase the possibilities to fail.\r\n\r\n3. An email client should also sync contacts, otherwise it's hard to send mail. If it does calendar, and the email account supports calendar sync, why would you not have that set up? If you do, why not do it in the same doc?\r\n\r\n4. The separation makes even less sense for protocols like JMAP, EWS, ActiveSync, MS Graph. Basically *all* modern mail protocols come with contact and calendar sync already built in, on the very same server connection. Why artifically separate it for autoconfig, when it's already united in the server protocols?",
           "createdAt": "2024-10-01T18:08:16Z",
           "updatedAt": "2024-10-01T18:12:51Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "> You have a good point, though: The spec should mandate clients to ignore config parts that the client cannot understand, but process the rest. This is the only way that we can continue evolving the spec. Otherwise we're completely stuck.\r\n\r\nI have no problems with the current spec being strict. We are talking about XML here, so having a XML namespace with some rules seems fine with me.\r\n\r\nI think we can change this as soon as we start working on AutoConfig 2.0 with JSON, but for XML I think we need some form of XSD strictness.",
+          "createdAt": "2024-10-04T11:54:03Z",
+          "updatedAt": "2024-10-04T11:55:18Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "> > Example of my idea:\r\n> > ```\r\n> > <clientConfigList version=\"1.0\">\r\n> >   <clientConfig url=\"https://autoconfig.mozzila.com/mail/config-v1.1.xml\" type=\"mail\" version=\"1.1\"/>\r\n> >   <clientConfig url=\"https://autoconfig.mozzila.com/mail/config-v1.2.xml\" type=\"mail\" version=\"1.2\"/>\r\n> >   <clientConfig url=\"https://autoconfig.mozzila.com/calendar/config-v1.0.xml\" type=\"calendar\" version=\"1.0\"/>\r\n> >   <clientConfig url=\"https://autoconfig.mozzila.com/contacts/config-v1.0.xml\" type=\"contacts\" version=\"1.0\"/>\r\n> > </clientConfigList>\r\n> > ```\r\n> \r\n> Thanks for the idea. But I disagree here.\r\n> \r\n> 1. All services that hosters provide to users and that mail apps may reasonably implement should be in the config. Even chat and video conference accounts. The mail client should have to read only this one file to set up this email account with all associated services.\r\n\r\nI agree that having to check as less files as possible is the best approach, yes.\r\n\r\n> 2. Creating multiple separate autoconfig protocols or URLs creates more burden for implementors, and we'll need to make even more URL queries. We already have many URL queries, to cover different scenarios and providers. I don't want to multiply by 4 or 6. It would also increase the possibilities to fail.\r\n\r\nAgreed, but sometimes the history of a spec forces you to introduce a new URL, in this case because this has been done before with 1.0 to 1.1 and because there could be breaking changes.\r\n\r\n> 3. An email client should also sync contacts, otherwise it's hard to send mail. If it does calendar, and the email account supports calendar sync, why would you not have that set up? If you do, why not do it in the same doc?\r\n\r\nYeah, like how the ActiveSync is a protocol for all those things. I understand. However, the current URL has `/mail/` in it, so that is why I call it `AutoConfig Mail` and not just `AutoConfig`. Is there a reason to keep the word `/mail/` in it, except for backward compatibility and historic stuff?\r\n\r\n> 4. The separation makes even less sense for protocols like JMAP, EWS, ActiveSync, MS Graph. Basically _all_ modern mail protocols come with contact and calendar sync already built in, on the very same server connection. Why artifically separate it for autoconfig, when it's already united in the server protocols?\r\n\r\nI made the seperation, because it may be an option to want a calendar (ICS/CalDAV) or a contact list (VCF/CardDAV) without any mail, where all those for protocols/formats are also distinct things (like IMAP/POP and SMTP).\r\n\r\n---\r\n\r\nI call the protocol `AutoConfig Mail` (instead of just `AutoConfig`) for a reason. This is because the URL contains the part `/mail/`, but also because is mainly focussed on mail. In my head it a bit strange to have `AutoConfig Mail` also configure your calendar, contacts and even cloud space. There may be reasons for it to keep it `AutoConfig Mail` (with all those configurations), but if you are thinking about dropping the `Mail` part (which seems more logical in that case), an URL without `/mail/` should be used and the versioning should be `1.0` again (because we are technically talking about a new format). This means that, from that moment, you are free to design a fully a new format. This can be XML again, or you could directly choose to do JSON.",
+          "createdAt": "2024-10-04T12:25:02Z",
+          "updatedAt": "2024-10-04T12:25:02Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> Is there a reason to keep the word /mail/ in it, except for backward compatibility and historic stuff?\r\n\r\nNo, purely for backward compat with existing servers and clients. Mostly the servers. Otherwise we'd also add `.well-known/`. But that's just a string, just ignore what it says.",
+          "createdAt": "2024-10-04T14:25:40Z",
+          "updatedAt": "2024-10-04T14:25:40Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> I have no problems with the current spec being strict.\r\n\r\n1.0 was strict and made it impossible to add OAuth2 auth. So, we want to be able to add new properties, elements etc..",
+          "createdAt": "2024-10-04T14:27:00Z",
+          "updatedAt": "2024-10-04T14:27:00Z"
         }
       ]
     }
