@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-13T00:16:20.818171+00:00",
+  "timestamp": "2024-10-15T00:15:12.540926+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -912,7 +912,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-10-01T11:36:45Z",
-      "updatedAt": "2024-10-01T11:36:45Z",
+      "updatedAt": "2024-10-14T08:47:06Z",
       "baseRepository": "benbucksch/autoconfig-spec",
       "baseRefName": "main",
       "baseRefOid": "d53b5beeb31c1524020a6105dba858014f941d8f",
@@ -923,7 +923,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "@benbucksch Could you please review this pull request?",
+          "createdAt": "2024-10-14T08:47:05Z",
+          "updatedAt": "2024-10-14T08:47:05Z"
+        }
+      ],
       "reviews": []
     }
   ]
