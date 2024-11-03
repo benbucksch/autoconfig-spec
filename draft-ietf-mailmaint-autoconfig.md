@@ -151,7 +151,6 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
               one that they support.
               -->
             <authentication>password-cleartext</authentication>
-            <password>optional: the user's password</password>
           </incomingServer>
 
           <!-- You can have multiple incoming servers,
@@ -185,7 +184,6 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
                 will not work for remote workers.
               -->
             <authentication>password-cleartext</authentication>
-            <password>optional: the user's password</password>
           </outgoingServer>
 
           <incomingServer type="jmap">
@@ -263,54 +261,6 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           <url>https://share.example.com/remote.php/dav</url>
         </fileShare>
 
-        <!-- This allows to login in to the webmail service of the provider.
-            The URLs are loaded into a standard webbrowser for the user.
-            This is optional. -->
-        <webMail>
-          <!-- Webpage where the user has to log in manually by entering username
-              and password himself.
-              HTTPS required. -->
-          <loginPage url="https://mail.example.com/login/" />
-
-          <!-- Same as loginAutomaticDOM, but the website makes checks that
-              the user comes from the login page. So, open the login page
-              in the browser, get the page's DOM, fill out name and password
-              fields for the user, and trigger the login button.
-              The login button might not be an HTML button, just a div, so
-              to trigger it, send a click event to it.
-              HTTPS is required for the URL. -->
-          <loginPageInfo url="https://mail.example.com/login/">
-            <!-- What to fill into the usernameField.
-                Format is the same as for <username> within <incomingServer>,
-                including placeholders. See below for valid placeholders. -->
-            <username>%EMAILADDRESS%</username>
-            <!-- Allows to find the textfield on the page, to fill it out.
-                The id attribute give the DOM ID,
-                The name attribute give the DOM name attribute.
-                One or both of id and name attributes must exist.
-                Try the ID first (e.g. using getElementById()), if existing.
-                Otherwise, try finding the element by name.
-                Don't treat the IDs given in this XML file as trusted,
-                but before using them, verify the format
-                (e.g. only characters and digits for IDs).
-                If you use powerful functions like jQuery, and the XML returns
-                you code in the username ID, and you feed it unchecked to jQuery,
-                it may be executed. -->
-            <usernameField id="email_field" name="email" />
-            <passwordField name="password" />
-            <!-- The submit button to trigger the server submit
-                after filling in the fields.
-                id and name attributes: See <usernameField> -->
-            <loginButton id="submit_button" name="login"/>
-          </loginPageInfo>
-        </webMail>
-
-        <!-- Ask user for custom input,
-          and use them as placeholders in the values.
-          Optional. -->
-        <inputField key="USERNAME" label="Screen name"></inputField>
-        <inputField key="GRANDMA" label="Grandma">Elise Bauer</inputField>
-
         <!-- OAuth2 config for mail and other native and
           public client apps.
           Gives e.g. clientID, expiry, and login page
@@ -325,20 +275,6 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           <!-- optional -->
           <clientSecret>give-me-your-password</clientSecret>
         </oAuth2>
-
-        <!-- Add this only when users
-          (who already have an account) have to do something
-          manually before the account can work with
-          IMAP/POP or SSL.
-          Mandatory only if the ISP requires such settings
-          before the configs above work.
-          Note: Per XML, & (ampersand) needs to be escaped to
-          & a m p ; (without spaces). -->
-        <enable
-          visiturl="https://mail.google.com/mail/?ui=2&amp;shva=1#settings/fwdandpop">
-          <instruction>Check 'Enable IMAP and POP' in Google settings page</instruction>
-          <instruction lang="de">Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an</instruction>
-        </enable>
 
         <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
 
