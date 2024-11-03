@@ -16,6 +16,7 @@ keyword:
  - autoconfig
  - autodiscover
  - mail
+ - email
  - IMAP
  - POP3
  - SMTP
@@ -67,6 +68,8 @@ config database (used as fallback) contains configurations for over 50% of all e
 Currently, this protocol or parts of it has been implemented by:
 
 * [Thunderbird](https://thunderbird.net)
+* [Mustang](https://mustang.im/)
+* [Parula](https://www.beonex.com/parula/)
 * [Evolution](https://projects.gnome.org/evolution/)
 * [KMail](https://userbase.kde.org/KMail)
 * [Kontact](https://www.kontact.org)
@@ -77,9 +80,7 @@ Currently, this protocol or parts of it has been implemented by:
 
 and likely other mail clients.
 
-The purpose of this paper is to document and specify what is deployed in the wild. A later version 2 of the protocol might be based on JSON.
-
-Additionally, there are known problems with OAuth2 in combination with mail clients, which would need to be solved by another specification.
+The purpose of this paper is to document and specify what is deployed and used in the wild. A later version 2 of the protocol might be based on JSON.
 
 # Data format
 
@@ -111,31 +112,44 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <port>993</port>
               <!-- "plain": no encryption
                     "SSL": SSL 3 or TLS 1 on SSL-specific port
-                    "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
+                    "STARTTLS": listening on normal plain port
+                      and mandatory upgrade to TLS via STARTTLS
                     -->
             <socketType>SSL</socketType>
             <username>%EMAILADDRESS%</username>
-                <!-- Authentication methods:
-                    "password-cleartext",
-                              Send password in the clear
-                              (dangerous, if SSL isn't used either).
-                              AUTH PLAIN, LOGIN or protocol-native login.
-                    "password-encrypted",
-                              A secure encrypted password mechanism.
-                              Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
-                    "NTLM":
-                              Use NTLM (or NTLMv2 or successors),
-                              the Windows login mechanism.
-                    "GSSAPI":
-                              Use Kerberos / GSSAPI,
-                              a single-signon mechanism used for big sites.
-                    "TLS-client-cert":
-                              On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
-                    "OAuth2":
-                              mAuth. Should be added only as second alternative.
-                    "none":
-                              No authentication
-                    -->
+            <!-- Authentication methods:
+              "password-cleartext",
+                Send password in the clear
+                (dangerous, if SSL isn't used either).
+                AUTH PLAIN, LOGIN or protocol-native login.
+              "password-encrypted",
+                A secure encrypted password mechanism.
+                Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
+              "NTLM":
+                Use NTLM (or NTLMv2 or successors),
+                the Windows login mechanism.
+              "GSSAPI":
+                Use Kerberos / GSSAPI,
+                a single-signon mechanism used for big sites.
+              "TLS-client-cert":
+                On the SSL/TLS layer, the server requests a
+                client certificate and the client sends one
+                (possibly after letting the user select/confirm
+                one), if available.
+              "OAuth2":
+                Server MUST support the
+                "Open Client OAuth2 profile".
+                Clients SHOULD skip OAuth2 and fall back to
+                other auth mechanisms, if they support
+                OAuth2 in general, but cannot find a valid
+                OAuth2 config for this server.
+              "none":
+                No authentication
+
+              Multiple <authentication> elements per server
+              config are valid. Clients will pick the first
+              one that they support.
+              -->
             <authentication>password-cleartext</authentication>
             <password>optional: the user's password</password>
           </incomingServer>
@@ -150,11 +164,6 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <socketType>SSL</socketType>
             <username>%EMAILADDRESS%</username>
             <authentication>password-cleartext</authentication>
-            <pop3>
-                <!-- optional -->
-                <leaveMessagesOnServer>true</leaveMessagesOnServer>
-                <daysToLeaveMessagesOnServer>14</daysToLeaveMessagesOnServer>
-            </pop3>
           </incomingServer>
 
           <!-- Needed only for IMAP or POP3 -->
@@ -162,14 +171,19 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <hostname>smtp.googlemail.com</hostname>
             <port>587</port>
             <socketType>STARTTLS</socketType>
-            <username>%EMAILADDRESS%</username> <!-- if smtp-auth -->
-                <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
-                    For values, see incoming.
-                    Additional options here:
-                    "client-IP-address":
-                              The server recognizes this user based on the IP address.
-                              No authentication needed, the server will require no username nor password.
-                -->
+            <username>%EMAILADDRESS%</username>
+            <!-- smtp-auth (RFC 2554, 4954) or other
+              auth mechanism.
+              For values, see incoming.
+              Additional options here:
+              "client-IP-address":
+                The server recognizes this user based on
+                the IP address.
+                No authentication needed, the server will
+                require no username nor password.
+                This is strongly discouraged, because it
+                will not work for remote workers.
+              -->
             <authentication>password-cleartext</authentication>
             <password>optional: the user's password</password>
           </outgoingServer>
@@ -193,14 +207,16 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           </incomingServer>
 
           <!-- A page where the ISP describes the configuration.
-              This is purely informational and currently mainly for
-              maintenance of the files and not used by the client at all.
-              Note that we do not necessarily use exactly the config suggested
-              by the ISP, e.g. when they don't recommend SSL, but it's available,
-              we will configure SSL.
-              The text content should contains a description in the native
-              language of the ISP (customers), and a short English description,
-              mostly for us.
+            This is purely informational and currently mainly for
+            maintenance of the files and not used by the client
+            at all.
+            Note that we do not necessarily use exactly the
+            config suggested by the ISP. E.g. when they don't
+            recommend TLS, but it's available, we will configure
+            TLS.
+            The text content should contains a description in the
+            native language of the ISP (customers), and a short
+            English description, mostly for us.
           -->
           <documentation url="http://www.example.com/help/mail/">
             <descr lang="en">Configure mail app for IMAP</descr>
@@ -212,17 +228,18 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
         <!-- Syncronize the user's address book / contacts. -->
         <addressBook type="carddav">
           <username>%EMAILADDRESS%</username>
-            <!-- Authentication methods. See also <incomingServer>.
-                  "http-basic":
-                            Authenticate to the HTTP server using
-                            WWW-Authenticate: Basic
-                  "http-digest":
-                            Authenticate to the HTTP server using
-                            WWW-Authenticate: Digest
-                  "OAuth2":
-                            mAuth. Uses the same token as for email. <scope> needs to include
-                             addressbook/calendar.
-                  -->
+          <!-- Authentication methods. See also <incomingServer>.
+            "http-basic":
+              Authenticate to the HTTP server using
+              WWW-Authenticate: Basic
+            "http-digest":
+              Authenticate to the HTTP server using
+              WWW-Authenticate: Digest
+            "OAuth2":
+              The "Open Client OAuth profile".
+              Uses the same token as for email.
+              <scope> needs to include addressbook/calendar.
+            -->
           <authentication>http-basic</authentication>
           <url>https://jmap.example.com/remote.php/dav</url>
         </addressBook>
@@ -230,16 +247,19 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
         <!-- Syncronize the user's calendar. -->
         <calendar type="caldav">
           <username>%EMAILADDRESS%</username>
-          <authentication>http-basic</authentication> <!-- see <addressBook> -->
+          <!-- see <addressBook> -->
+          <authentication>http-basic</authentication>
           <url>https://calendar.example.com/remote.php/dav</url>
         </calendar>
 
         <!-- Upload files, allowing the user to share them.
-            This can be used for Thunderbird's FileLink feature,
-            or to set up a file sync folder on the user's desktop. -->
+          This can be used for Thunderbird's FileLink feature,
+          or to set up a file sync folder on the user's desktop.
+          -->
         <fileShare type="webdav">
           <username>%EMAILADDRESS%</username>
-          <authentication>http-basic</authentication> <!-- see <addressBook> -->
+          <!-- see <addressBook> -->
+          <authentication>http-basic</authentication>
           <url>https://share.example.com/remote.php/dav</url>
         </fileShare>
 
@@ -286,31 +306,34 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
         </webMail>
 
         <!-- Ask user for custom input,
-           and use them as placeholders in the values.
-           Optional. -->
+          and use them as placeholders in the values.
+          Optional. -->
         <inputField key="USERNAME" label="Screen name"></inputField>
         <inputField key="GRANDMA" label="Grandma">Elise Bauer</inputField>
 
-        <!-- oAuth2 specced for mail apps,
-            e.g. clientID, expiry, and login page
-            MUST adhere to mAuth <https://benbucksch.github.io/mauth-spec/draft-mauth.html>
-            -->
-        <mAuth>
-          <authURL>https://login.example.com/common/oauth2/v2.0/authorize</authURL>
-          <tokenURL>https://login.example.com/common/oauth2/v2.0/token</tokenURL>
+        <!-- OAuth2 config for mail and other native and
+          public client apps.
+          Gives e.g. clientID, expiry, and login page
+          MUST adhere to "Open Client OAuth2 profile".
+          -->
+        <oAuth2>
+          <authURL>https://login.example.com/auth</authURL>
+          <tokenURL>https://login.example.com/token</tokenURL>
           <issuer>login.example.com</issuer>
           <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
           <clientID>open</clientID>
           <!-- optional -->
-          <clientSecret>give-me-your-pass-word</clientSecret>
-        </mAuth>
+          <clientSecret>give-me-your-password</clientSecret>
+        </oAuth2>
 
-        <!-- Add this only when users (who already have an account) have to
-            do something manually before the account can work with IMAP/POP or SSL.
-            Mandatory only if the ISP requires such settings
-            before the configs above work.
-            Note: Per XML, & (ampersand) needs to be escaped to
-            & a m p ; (without spaces). -->
+        <!-- Add this only when users
+          (who already have an account) have to do something
+          manually before the account can work with
+          IMAP/POP or SSL.
+          Mandatory only if the ISP requires such settings
+          before the configs above work.
+          Note: Per XML, & (ampersand) needs to be escaped to
+          & a m p ; (without spaces). -->
         <enable
           visiturl="https://mail.google.com/mail/?ui=2&amp;shva=1#settings/fwdandpop">
           <instruction>Check 'Enable IMAP and POP' in Google settings page</instruction>
