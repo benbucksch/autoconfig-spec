@@ -438,13 +438,24 @@ Independent of the mechanisms used to find the configuration, before using that 
 * The client MUST NOT cut off parts of long second-level domains, to avoid spoofing. At least 63 characters MUST be displayed.
 * Care SHOULD be taken with international characters that look like ASCII characters, but have a different code.
 
-## Login testing
+## Login test
 
 After the user confirmed the configuration, you SHOULD test the configuration, by attempting a login to each server configured. Only if the login succeeded, and the server is working, should the configuration be saved and retrieving and sending mail be started.
 
 ## OAuth2 windows
 
-If the configuration contains OAuth2 authentication, or any other authentication that uses a web browser with URL redirects, you MUST show the full URL or the second-level domain of the current page to the end user, at all times, including after page changes, URL changes or redirects. This allows the end user to verify that he is logging in at the expected page, e.g. the login server of their company.
+If the configuration contains OAuth2 authentication, or any other kind of
+authentication that uses a web browser with URL redirects,
+you MUST show the full URL or the second-level domain of the current page
+to the end user, at all times, including after page changes, URL changes,
+or redirects. The authentication start URL may be the email hoster, but
+it redirects to a corporate server for login, and then back to the hoster.
+This allows for setups where the hoster is not allowed to see the
+plaintext passwords.
+
+Showing the URL or hostname allows the end user to verify that he is
+logging in at the expected page, e.g. the login server of their company,
+instead of the email hoster's page.
 
 (Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)
 
