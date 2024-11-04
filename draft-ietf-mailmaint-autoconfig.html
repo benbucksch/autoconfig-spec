@@ -9,24 +9,25 @@
 <meta content="
        Set up a mail account with only email address and password. 
     " name="description">
-<meta content="xml2rfc 3.23.1" name="generator">
+<meta content="xml2rfc 3.24.0" name="generator">
 <meta content="config" name="keyword">
 <meta content="autoconfig" name="keyword">
 <meta content="autodiscover" name="keyword">
 <meta content="mail" name="keyword">
+<meta content="email" name="keyword">
 <meta content="IMAP" name="keyword">
 <meta content="POP3" name="keyword">
 <meta content="SMTP" name="keyword">
 <meta content="JMAP" name="keyword">
 <meta content="draft-ietf-mailmaint-autoconfig-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.23.1
-    Python 3.12.6
+  xml2rfc 3.24.0
+    Python 3.12.7
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.4
-    lxml 4.9.4
+    lxml 5.3.0
     platformdirs 4.3.6
     pycountry 22.3.5
     PyYAML 6.0.1
@@ -168,31 +169,6 @@
 }
 
 @font-face {
-  font-family: 'Cabin Condensed';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
-  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
-}
-@font-face {
-  font-family: 'Cabin Condensed';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Cabin Condensed';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
   font-family: 'Oxygen Mono';
   font-style: normal;
   font-weight: 400;
@@ -209,6 +185,77 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   color-scheme: light dark;
   --background-color: #fff;
@@ -221,6 +268,7 @@
   --pilcrow-strong: #bbb;
   --small-font-size: 14.5px;
   --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
   scrollbar-color: #bbb #eee;
 }
 body {
@@ -239,8 +287,8 @@ body {
 
 /* headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Cabin Condensed", sans-serif;
-  font-weight: 600;
+  font-family: var(--font-title);
+  font-weight: 680;
   margin: 0.8em 0 0.3em;
   font-size-adjust: 0.5;
   color: var(--title-color);
@@ -648,6 +696,12 @@ sub, sup {
   padding: 0.75em 0 2em 0;
   margin-bottom: 1em;
 }
+@media screen {
+  #toc nav {
+    font-family: var(--font-title);
+    font-weight: 360;
+  }
+}
 #toc nav ul {
   margin: 0 0.5em 0 0;
   padding: 0;
@@ -1031,11 +1085,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">autoconfig</td>
-<td class="right">September 2024</td>
+<td class="right">November 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bucksch</td>
-<td class="center">Expires 28 March 2025</td>
+<td class="center">Expires 8 May 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1048,12 +1102,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mailmaint-autoconfig-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-09-24" class="published">24 September 2024</time>
+<time datetime="2024-11-04" class="published">4 November 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-03-28">28 March 2025</time></dd>
+<dd class="expires"><time datetime="2025-05-08">8 May 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1103,7 +1157,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1187,7 +1241,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-user-approval" class="internal xref">User approval</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-login-testing" class="internal xref">Login testing</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-login-test" class="internal xref">Login test</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-oauth2-windows" class="internal xref">OAuth2 windows</a></p>
@@ -1294,30 +1348,35 @@ config database (used as fallback) contains configurations for over 50% of all e
           <p id="section-2-3.1.1"><a href="https://thunderbird.net">Thunderbird</a><a href="#section-2-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.2">
-          <p id="section-2-3.2.1"><a href="https://projects.gnome.org/evolution/">Evolution</a><a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.2.1"><a href="https://mustang.im/">Mustang</a><a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.3">
-          <p id="section-2-3.3.1"><a href="https://userbase.kde.org/KMail">KMail</a><a href="#section-2-3.3.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.3.1"><a href="https://www.beonex.com/parula/">Parula</a><a href="#section-2-3.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.4">
-          <p id="section-2-3.4.1"><a href="https://www.kontact.org">Kontact</a><a href="#section-2-3.4.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.4.1"><a href="https://projects.gnome.org/evolution/">Evolution</a><a href="#section-2-3.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.5">
-          <p id="section-2-3.5.1"><a href="https://k9mail.app">K9 Mail</a><a href="#section-2-3.5.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.5.1"><a href="https://userbase.kde.org/KMail">KMail</a><a href="#section-2-3.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.6">
-          <p id="section-2-3.6.1"><a href="https://email.faircode.eu">FairEmail</a><a href="#section-2-3.6.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.6.1"><a href="https://www.kontact.org">Kontact</a><a href="#section-2-3.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.7">
-          <p id="section-2-3.7.1"><a href="https://apps.nextcloud.com/apps/mail">NextCloud email</a><a href="#section-2-3.7.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.7.1"><a href="https://k9mail.app">K9 Mail</a><a href="#section-2-3.7.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.8">
-          <p id="section-2-3.8.1"><a href="https://delta.chat/">Delta Chat</a><a href="#section-2-3.8.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.8.1"><a href="https://email.faircode.eu">FairEmail</a><a href="#section-2-3.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-3.9">
+          <p id="section-2-3.9.1"><a href="https://apps.nextcloud.com/apps/mail">NextCloud email</a><a href="#section-2-3.9.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-3.10">
+          <p id="section-2-3.10.1"><a href="https://delta.chat/">Delta Chat</a><a href="#section-2-3.10.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-2-4">and likely other mail clients.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">The purpose of this paper is to document and specify what is deployed in the wild. A later version 2 of the protocol might be based on JSON.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">Additionally, there are known problems with OAuth2 in combination with mail clients, which would need to be solved by another specification.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-5">The purpose of this paper is to document and specify what is deployed and used in the wild. A later version 2 of the protocol might be based on JSON.<a href="#section-2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="data-format">
@@ -1356,33 +1415,45 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
         &lt;port&gt;993&lt;/port&gt;
           &lt;!-- "plain": no encryption
                 "SSL": SSL 3 or TLS 1 on SSL-specific port
-                "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
+                "STARTTLS": listening on normal plain port
+                  and mandatory upgrade to TLS via STARTTLS
                 --&gt;
         &lt;socketType&gt;SSL&lt;/socketType&gt;
         &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-            &lt;!-- Authentication methods:
-                "password-cleartext",
-                          Send password in the clear
-                          (dangerous, if SSL isn't used either).
-                          AUTH PLAIN, LOGIN or protocol-native login.
-                "password-encrypted",
-                          A secure encrypted password mechanism.
-                          Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
-                "NTLM":
-                          Use NTLM (or NTLMv2 or successors),
-                          the Windows login mechanism.
-                "GSSAPI":
-                          Use Kerberos / GSSAPI,
-                          a single-signon mechanism used for big sites.
-                "TLS-client-cert":
-                          On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
-                "OAuth2":
-                          mAuth. Should be added only as second alternative.
-                "none":
-                          No authentication
-                --&gt;
+        &lt;!-- Authentication methods:
+          "password-cleartext",
+            Send password in the clear
+            (dangerous, if SSL isn't used either).
+            AUTH PLAIN, LOGIN or protocol-native login.
+          "password-encrypted",
+            A secure encrypted password mechanism.
+            Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
+          "NTLM":
+            Use NTLM (or NTLMv2 or successors),
+            the Windows login mechanism.
+          "GSSAPI":
+            Use Kerberos / GSSAPI,
+            a single-signon mechanism used for big sites.
+          "TLS-client-cert":
+            On the SSL/TLS layer, the server requests a
+            client certificate and the client sends one
+            (possibly after letting the user select/confirm
+            one), if available.
+          "OAuth2":
+            Server MUST support the
+            "Open Client OAuth2 profile".
+            Clients SHOULD skip OAuth2 and fall back to
+            other auth mechanisms, if they support
+            OAuth2 in general, but cannot find a valid
+            OAuth2 config for this server.
+          "none":
+            No authentication
+
+          Multiple &lt;authentication&gt; elements per server
+          config are valid. Clients will pick the first
+          one that they support.
+          --&gt;
         &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
-        &lt;password&gt;optional: the user's password&lt;/password&gt;
       &lt;/incomingServer&gt;
 
       &lt;!-- You can have multiple incoming servers,
@@ -1395,11 +1466,6 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
         &lt;socketType&gt;SSL&lt;/socketType&gt;
         &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
         &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
-        &lt;pop3&gt;
-            &lt;!-- optional --&gt;
-            &lt;leaveMessagesOnServer&gt;true&lt;/leaveMessagesOnServer&gt;
-            &lt;daysToLeaveMessagesOnServer&gt;14&lt;/daysToLeaveMessagesOnServer&gt;
-        &lt;/pop3&gt;
       &lt;/incomingServer&gt;
 
       &lt;!-- Needed only for IMAP or POP3 --&gt;
@@ -1407,16 +1473,20 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
         &lt;hostname&gt;smtp.googlemail.com&lt;/hostname&gt;
         &lt;port&gt;587&lt;/port&gt;
         &lt;socketType&gt;STARTTLS&lt;/socketType&gt;
-        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt; &lt;!-- if smtp-auth --&gt;
-            &lt;!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
-                For values, see incoming.
-                Additional options here:
-                "client-IP-address":
-                          The server recognizes this user based on the IP address.
-                          No authentication needed, the server will require no username nor password.
-            --&gt;
+        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+        &lt;!-- smtp-auth (RFC 2554, 4954) or other
+          auth mechanism.
+          For values, see incoming.
+          Additional options here:
+          "client-IP-address":
+            The server recognizes this user based on
+            the IP address.
+            No authentication needed, the server will
+            require no username nor password.
+            This is strongly discouraged, because it
+            will not work for remote workers.
+          --&gt;
         &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
-        &lt;password&gt;optional: the user's password&lt;/password&gt;
       &lt;/outgoingServer&gt;
 
       &lt;incomingServer type="jmap"&gt;
@@ -1438,14 +1508,16 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
       &lt;/incomingServer&gt;
 
       &lt;!-- A page where the ISP describes the configuration.
-          This is purely informational and currently mainly for
-          maintenance of the files and not used by the client at all.
-          Note that we do not necessarily use exactly the config suggested
-          by the ISP, e.g. when they don't recommend SSL, but it's available,
-          we will configure SSL.
-          The text content should contains a description in the native
-          language of the ISP (customers), and a short English description,
-          mostly for us.
+        This is purely informational and currently mainly for
+        maintenance of the files and not used by the client
+        at all.
+        Note that we do not necessarily use exactly the
+        config suggested by the ISP. E.g. when they don't
+        recommend TLS, but it's available, we will configure
+        TLS.
+        The text content should contains a description in the
+        native language of the ISP (customers), and a short
+        English description, mostly for us.
       --&gt;
       &lt;documentation url="http://www.example.com/help/mail/"&gt;
         &lt;descr lang="en"&gt;Configure mail app for IMAP&lt;/descr&gt;
@@ -1457,17 +1529,18 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
     &lt;!-- Syncronize the user's address book / contacts. --&gt;
     &lt;addressBook type="carddav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;!-- Authentication methods. See also &lt;incomingServer&gt;.
-              "http-basic":
-                        Authenticate to the HTTP server using
-                        WWW-Authenticate: Basic
-              "http-digest":
-                        Authenticate to the HTTP server using
-                        WWW-Authenticate: Digest
-              "OAuth2":
-                        mAuth. Uses the same token as for email. &lt;scope&gt; needs to include
-                         addressbook/calendar.
-              --&gt;
+      &lt;!-- Authentication methods. See also &lt;incomingServer&gt;.
+        "http-basic":
+          Authenticate to the HTTP server using
+          WWW-Authenticate: Basic
+        "http-digest":
+          Authenticate to the HTTP server using
+          WWW-Authenticate: Digest
+        "OAuth2":
+          The "Open Client OAuth profile".
+          Uses the same token as for email.
+          &lt;scope&gt; needs to include addressbook/calendar.
+        --&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt;
       &lt;url&gt;https://jmap.example.com/remote.php/dav&lt;/url&gt;
     &lt;/addressBook&gt;
@@ -1475,92 +1548,36 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
     &lt;!-- Syncronize the user's calendar. --&gt;
     &lt;calendar type="caldav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
+      &lt;!-- see &lt;addressBook&gt; --&gt;
+      &lt;authentication&gt;http-basic&lt;/authentication&gt;
       &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;/url&gt;
     &lt;/calendar&gt;
 
     &lt;!-- Upload files, allowing the user to share them.
-        This can be used for Thunderbird's FileLink feature,
-        or to set up a file sync folder on the user's desktop. --&gt;
+      This can be used for Thunderbird's FileLink feature,
+      or to set up a file sync folder on the user's desktop.
+      --&gt;
     &lt;fileShare type="webdav"&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;authentication&gt;http-basic&lt;/authentication&gt; &lt;!-- see &lt;addressBook&gt; --&gt;
+      &lt;!-- see &lt;addressBook&gt; --&gt;
+      &lt;authentication&gt;http-basic&lt;/authentication&gt;
       &lt;url&gt;https://share.example.com/remote.php/dav&lt;/url&gt;
     &lt;/fileShare&gt;
 
-    &lt;!-- This allows to login in to the webmail service of the provider.
-        The URLs are loaded into a standard webbrowser for the user.
-        This is optional. --&gt;
-    &lt;webMail&gt;
-      &lt;!-- Webpage where the user has to log in manually by entering username
-          and password himself.
-          HTTPS required. --&gt;
-      &lt;loginPage url="https://mail.example.com/login/" /&gt;
-
-      &lt;!-- Same as loginAutomaticDOM, but the website makes checks that
-          the user comes from the login page. So, open the login page
-          in the browser, get the page's DOM, fill out name and password
-          fields for the user, and trigger the login button.
-          The login button might not be an HTML button, just a div, so
-          to trigger it, send a click event to it.
-          HTTPS is required for the URL. --&gt;
-      &lt;loginPageInfo url="https://mail.example.com/login/"&gt;
-        &lt;!-- What to fill into the usernameField.
-            Format is the same as for &lt;username&gt; within &lt;incomingServer&gt;,
-            including placeholders. See below for valid placeholders. --&gt;
-        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;!-- Allows to find the textfield on the page, to fill it out.
-            The id attribute give the DOM ID,
-            The name attribute give the DOM name attribute.
-            One or both of id and name attributes must exist.
-            Try the ID first (e.g. using getElementById()), if existing.
-            Otherwise, try finding the element by name.
-            Don't treat the IDs given in this XML file as trusted,
-            but before using them, verify the format
-            (e.g. only characters and digits for IDs).
-            If you use powerful functions like jQuery, and the XML returns
-            you code in the username ID, and you feed it unchecked to jQuery,
-            it may be executed. --&gt;
-        &lt;usernameField id="email_field" name="email" /&gt;
-        &lt;passwordField name="password" /&gt;
-        &lt;!-- The submit button to trigger the server submit
-            after filling in the fields.
-            id and name attributes: See &lt;usernameField&gt; --&gt;
-        &lt;loginButton id="submit_button" name="login"/&gt;
-      &lt;/loginPageInfo&gt;
-    &lt;/webMail&gt;
-
-    &lt;!-- Ask user for custom input,
-       and use them as placeholders in the values.
-       Optional. --&gt;
-    &lt;inputField key="USERNAME" label="Screen name"&gt;&lt;/inputField&gt;
-    &lt;inputField key="GRANDMA" label="Grandma"&gt;Elise Bauer&lt;/inputField&gt;
-
-    &lt;!-- oAuth2 specced for mail apps,
-        e.g. clientID, expiry, and login page
-        MUST adhere to mAuth &lt;https://benbucksch.github.io/mauth-spec/draft-mauth.html&gt;
-        --&gt;
-    &lt;mAuth&gt;
-      &lt;authURL&gt;https://login.example.com/common/oauth2/v2.0/authorize&lt;/authURL&gt;
-      &lt;tokenURL&gt;https://login.example.com/common/oauth2/v2.0/token&lt;/tokenURL&gt;
+    &lt;!-- OAuth2 config for mail and other native and
+      public client apps.
+      Gives e.g. clientID, expiry, and login page
+      MUST adhere to "Open Client OAuth2 profile".
+      --&gt;
+    &lt;oAuth2&gt;
+      &lt;authURL&gt;https://login.example.com/auth&lt;/authURL&gt;
+      &lt;tokenURL&gt;https://login.example.com/token&lt;/tokenURL&gt;
       &lt;issuer&gt;login.example.com&lt;/issuer&gt;
       &lt;scope&gt;IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access&lt;/scope&gt;
       &lt;clientID&gt;open&lt;/clientID&gt;
       &lt;!-- optional --&gt;
-      &lt;clientSecret&gt;give-me-your-pass-word&lt;/clientSecret&gt;
-    &lt;/mAuth&gt;
-
-    &lt;!-- Add this only when users (who already have an account) have to
-        do something manually before the account can work with IMAP/POP or SSL.
-        Mandatory only if the ISP requires such settings
-        before the configs above work.
-        Note: Per XML, &amp; (ampersand) needs to be escaped to
-        &amp; a m p ; (without spaces). --&gt;
-    &lt;enable
-      visiturl="https://mail.google.com/mail/?ui=2&amp;amp;shva=1#settings/fwdandpop"&gt;
-      &lt;instruction&gt;Check 'Enable IMAP and POP' in Google settings page&lt;/instruction&gt;
-      &lt;instruction lang="de"&gt;Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an&lt;/instruction&gt;
-    &lt;/enable&gt;
+      &lt;clientSecret&gt;give-me-your-password&lt;/clientSecret&gt;
+    &lt;/oAuth2&gt;
 
     &lt;clientConfigUpdate url="https://www.example.com/config/mail.xml" /&gt;
 
@@ -1582,13 +1599,15 @@ document has the following data format.<a href="#section-3-1" class="pilcrow">¶
         <h3 id="name-placeholders">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-placeholders" class="section-name selfRef">Placeholders</a>
         </h3>
-<p id="section-3.3-1">The fields for <code>&lt;username&gt;</code>, <code>&lt;hostname&gt;</code>, <code>&lt;serverURL&gt;</code>,
-<code>&lt;displayName&gt;</code>, <code>&lt;displayShortName&gt;</code> (*1) support placeholders.
-The config returned by the autoconfig server may contain these placeholders,
-which are to be replaced by the client.
-The following special strings (or substrings/parts) of the value should be replaced
-by the client, after the config was retrieved and before its values are actually
-used.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-1">The fields for <code>&lt;username&gt;</code> support placeholders.
+The config returned by the autoconfig server may contain these
+placeholders, which are to be replaced by the client.
+The following special strings (or substrings/parts) of the value
+should be replaced by the client, after the config was retrieved
+and before its values are actually used.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">Some clients <span class="bcp14">MAY</span> also support the same placeholders for the fields
+<code>&lt;hostname&gt;</code>, <code>&lt;serverURL&gt;</code>, <code>&lt;authURL&gt;</code>, <code>&lt;tokenURL&gt;</code>, <code>&lt;issuer&gt;</code>,
+<code>&lt;displayName&gt;</code> and <code>&lt;displayShortName&gt;</code>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
           <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -1626,18 +1645,8 @@ used.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
                 <code>example.com</code>
 </td>
             </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">
-                <code>%REALNAME%</code>
-</td>
-              <td class="text-left" rowspan="1" colspan="1">Real-world name of the user</td>
-              <td class="text-left" rowspan="1" colspan="1">
-                <code>Fred Flintstone</code>
-</td>
-            </tr>
           </tbody>
         </table>
-<p id="section-3.3-3">*1 and possibly <code>&lt;inputField&gt;</code> value, <code>&lt;authURL&gt;</code>, <code>&lt;tokenURL&gt;</code>, <code>&lt;issuer&gt;</code><a href="#section-3.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1651,7 +1660,7 @@ used.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 will perform several steps to retrieve the configuration from various sources.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">The steps are ordered by priority. They may all be requested at the same time, but a higher priorty
 result that is available <span class="bcp14">MUST</span> be preferred over a lower priority one, even if the lower priority one is available earlier. Lower priority requests <span class="bcp14">MAY</span> be cancelled, if a valid higher priority result has been successfully received. The priority is expressed below with the number before the URL or location, with lower numbers meaning higher priority, e.g. 1.2 has higher priority than 4.1.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">In the URLs below,<code>%EMAILADDRESS%</code> shall be replaced with the email address that the user entered and wishes to use, and <code>%EMAILDOMAIN%</code> shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-3">In the URLs below, <code>%EMAILADDRESS%</code> shall be replaced with the email address that the user entered and wishes to use, and <code>%EMAILDOMAIN%</code> shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4">For full support of this specification, all "Required" and "Recommended" mechanisms <span class="bcp14">MUST</span> be implemented and working. For partial support of this specification, all "Required" mechanisms <span class="bcp14">MUST</span> be implemented and working, and in this case, you shall make explicit when advertizing or referring to auto config that there is only partial support of this specification.<a href="#section-4-4" class="pilcrow">¶</a></p>
 <div id="mail-provider">
 <section id="section-4.1">
@@ -1661,7 +1670,7 @@ result that is available <span class="bcp14">MUST</span> be preferred over a low
 <p id="section-4.1-1">First step is to directly ask the mail provider and allow it to return the configuration. This step ensures that the protocol is decentralized and the mail provider is in control of the configuration issued to mail clients.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1-2.1">
-            <p id="section-4.1-2.1.1">1.1. <code>https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%</code> (Required)<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.1.1">1.1. <code>https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%</code> (Required. <code>emailaddress</code> is Optional)<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.1-2.2">
             <p id="section-4.1-2.2.1">1.2. <code>https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml</code> (Optional)<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
@@ -1860,10 +1869,10 @@ same length as <code>%MXBASEDOMAIN%</code>, then skip it.<a href="#section-4.3-3
         </ul>
 </section>
 </div>
-<div id="login-testing">
+<div id="login-test">
 <section id="section-5.2">
-        <h3 id="name-login-testing">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-login-testing" class="section-name selfRef">Login testing</a>
+        <h3 id="name-login-test">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-login-test" class="section-name selfRef">Login test</a>
         </h3>
 <p id="section-5.2-1">After the user confirmed the configuration, you <span class="bcp14">SHOULD</span> test the configuration, by attempting a login to each server configured. Only if the login succeeded, and the server is working, should the configuration be saved and retrieving and sending mail be started.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 </section>
@@ -1873,8 +1882,18 @@ same length as <code>%MXBASEDOMAIN%</code>, then skip it.<a href="#section-4.3-3
         <h3 id="name-oauth2-windows">
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-oauth2-windows" class="section-name selfRef">OAuth2 windows</a>
         </h3>
-<p id="section-5.3-1">If the configuration contains OAuth2 authentication, or any other authentication that uses a web browser with URL redirects, you <span class="bcp14">MUST</span> show the full URL or the second-level domain of the current page to the end user, at all times, including after page changes, URL changes or redirects. This allows the end user to verify that he is logging in at the expected page, e.g. the login server of their company.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.3-2">(Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3-1">If the configuration contains OAuth2 authentication, or any other kind of
+authentication that uses a web browser with URL redirects,
+you <span class="bcp14">MUST</span> show the full URL or the second-level domain of the current page
+to the end user, at all times, including after page changes, URL changes,
+or redirects. The authentication start URL may be the email hoster, but
+it redirects to a corporate server for login, and then back to the hoster.
+This allows for setups where the hoster is not allowed to see the
+plaintext passwords.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">Showing the URL or hostname allows the end user to verify that he is
+logging in at the expected page, e.g. the login server of their company,
+instead of the email hoster's page.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">(Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

@@ -4,8 +4,8 @@
 
 mailmaint                                                     B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                         24 September 2024
-Expires: 28 March 2025
+Intended status: Informational                           4 November 2024
+Expires: 8 May 2025
 
 
                             Mail Autoconfig
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 March 2025.
+   This Internet-Draft will expire on 8 May 2025.
 
 Copyright Notice
 
@@ -81,7 +81,7 @@ Table of Contents
      4.6.  Manual configuration
    5.  Config validation
      5.1.  User approval
-     5.2.  Login testing
+     5.2.  Login test
      5.3.  OAuth2 windows
    6.  Config publishing for mail providers
      6.1.  Config location for single domain
@@ -133,6 +133,10 @@ Table of Contents
 
    *  Thunderbird (https://thunderbird.net)
 
+   *  Mustang (https://mustang.im/)
+
+   *  Parula (https://www.beonex.com/parula/)
+
    *  Evolution (https://projects.gnome.org/evolution/)
 
    *  KMail (https://userbase.kde.org/KMail)
@@ -150,12 +154,8 @@ Table of Contents
    and likely other mail clients.
 
    The purpose of this paper is to document and specify what is deployed
-   in the wild.  A later version 2 of the protocol might be based on
-   JSON.
-
-   Additionally, there are known problems with OAuth2 in combination
-   with mail clients, which would need to be solved by another
-   specification.
+   and used in the wild.  A later version 2 of the protocol might be
+   based on JSON.
 
 3.  Data format
 
@@ -187,33 +187,45 @@ Table of Contents
         <port>993</port>
           <!-- "plain": no encryption
                 "SSL": SSL 3 or TLS 1 on SSL-specific port
-                "STARTTLS": on normal plain port and mandatory upgrade to TLS via STARTTLS
+                "STARTTLS": listening on normal plain port
+                  and mandatory upgrade to TLS via STARTTLS
                 -->
         <socketType>SSL</socketType>
         <username>%EMAILADDRESS%</username>
-            <!-- Authentication methods:
-                "password-cleartext",
-                          Send password in the clear
-                          (dangerous, if SSL isn't used either).
-                          AUTH PLAIN, LOGIN or protocol-native login.
-                "password-encrypted",
-                          A secure encrypted password mechanism.
-                          Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
-                "NTLM":
-                          Use NTLM (or NTLMv2 or successors),
-                          the Windows login mechanism.
-                "GSSAPI":
-                          Use Kerberos / GSSAPI,
-                          a single-signon mechanism used for big sites.
-                "TLS-client-cert":
-                          On the SSL/TLS layer, the server requests a client certificate and the client sends one (possibly after letting the user select/confirm one), if available.
-                "OAuth2":
-                          mAuth. Should be added only as second alternative.
-                "none":
-                          No authentication
-                -->
+        <!-- Authentication methods:
+          "password-cleartext",
+            Send password in the clear
+            (dangerous, if SSL isn't used either).
+            AUTH PLAIN, LOGIN or protocol-native login.
+          "password-encrypted",
+            A secure encrypted password mechanism.
+            Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
+          "NTLM":
+            Use NTLM (or NTLMv2 or successors),
+            the Windows login mechanism.
+          "GSSAPI":
+            Use Kerberos / GSSAPI,
+            a single-signon mechanism used for big sites.
+          "TLS-client-cert":
+            On the SSL/TLS layer, the server requests a
+            client certificate and the client sends one
+            (possibly after letting the user select/confirm
+            one), if available.
+          "OAuth2":
+            Server MUST support the
+            "Open Client OAuth2 profile".
+            Clients SHOULD skip OAuth2 and fall back to
+            other auth mechanisms, if they support
+            OAuth2 in general, but cannot find a valid
+            OAuth2 config for this server.
+          "none":
+            No authentication
+
+          Multiple <authentication> elements per server
+          config are valid. Clients will pick the first
+          one that they support.
+          -->
         <authentication>password-cleartext</authentication>
-        <password>optional: the user's password</password>
       </incomingServer>
 
       <!-- You can have multiple incoming servers,
@@ -226,11 +238,6 @@ Table of Contents
         <socketType>SSL</socketType>
         <username>%EMAILADDRESS%</username>
         <authentication>password-cleartext</authentication>
-        <pop3>
-            <!-- optional -->
-            <leaveMessagesOnServer>true</leaveMessagesOnServer>
-            <daysToLeaveMessagesOnServer>14</daysToLeaveMessagesOnServer>
-        </pop3>
       </incomingServer>
 
       <!-- Needed only for IMAP or POP3 -->
@@ -238,16 +245,20 @@ Table of Contents
         <hostname>smtp.googlemail.com</hostname>
         <port>587</port>
         <socketType>STARTTLS</socketType>
-        <username>%EMAILADDRESS%</username> <!-- if smtp-auth -->
-            <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
-                For values, see incoming.
-                Additional options here:
-                "client-IP-address":
-                          The server recognizes this user based on the IP address.
-                          No authentication needed, the server will require no username nor password.
-            -->
+        <username>%EMAILADDRESS%</username>
+        <!-- smtp-auth (RFC 2554, 4954) or other
+          auth mechanism.
+          For values, see incoming.
+          Additional options here:
+          "client-IP-address":
+            The server recognizes this user based on
+            the IP address.
+            No authentication needed, the server will
+            require no username nor password.
+            This is strongly discouraged, because it
+            will not work for remote workers.
+          -->
         <authentication>password-cleartext</authentication>
-        <password>optional: the user's password</password>
       </outgoingServer>
 
       <incomingServer type="jmap">
@@ -269,14 +280,16 @@ Table of Contents
       </incomingServer>
 
       <!-- A page where the ISP describes the configuration.
-          This is purely informational and currently mainly for
-          maintenance of the files and not used by the client at all.
-          Note that we do not necessarily use exactly the config suggested
-          by the ISP, e.g. when they don't recommend SSL, but it's available,
-          we will configure SSL.
-          The text content should contains a description in the native
-          language of the ISP (customers), and a short English description,
-          mostly for us.
+        This is purely informational and currently mainly for
+        maintenance of the files and not used by the client
+        at all.
+        Note that we do not necessarily use exactly the
+        config suggested by the ISP. E.g. when they don't
+        recommend TLS, but it's available, we will configure
+        TLS.
+        The text content should contains a description in the
+        native language of the ISP (customers), and a short
+        English description, mostly for us.
       -->
       <documentation url="http://www.example.com/help/mail/">
         <descr lang="en">Configure mail app for IMAP</descr>
@@ -288,17 +301,18 @@ Table of Contents
     <!-- Syncronize the user's address book / contacts. -->
     <addressBook type="carddav">
       <username>%EMAILADDRESS%</username>
-        <!-- Authentication methods. See also <incomingServer>.
-              "http-basic":
-                        Authenticate to the HTTP server using
-                        WWW-Authenticate: Basic
-              "http-digest":
-                        Authenticate to the HTTP server using
-                        WWW-Authenticate: Digest
-              "OAuth2":
-                        mAuth. Uses the same token as for email. <scope> needs to include
-                         addressbook/calendar.
-              -->
+      <!-- Authentication methods. See also <incomingServer>.
+        "http-basic":
+          Authenticate to the HTTP server using
+          WWW-Authenticate: Basic
+        "http-digest":
+          Authenticate to the HTTP server using
+          WWW-Authenticate: Digest
+        "OAuth2":
+          The "Open Client OAuth profile".
+          Uses the same token as for email.
+          <scope> needs to include addressbook/calendar.
+        -->
       <authentication>http-basic</authentication>
       <url>https://jmap.example.com/remote.php/dav</url>
     </addressBook>
@@ -306,92 +320,36 @@ Table of Contents
     <!-- Syncronize the user's calendar. -->
     <calendar type="caldav">
       <username>%EMAILADDRESS%</username>
-      <authentication>http-basic</authentication> <!-- see <addressBook> -->
+      <!-- see <addressBook> -->
+      <authentication>http-basic</authentication>
       <url>https://calendar.example.com/remote.php/dav</url>
     </calendar>
 
     <!-- Upload files, allowing the user to share them.
-        This can be used for Thunderbird's FileLink feature,
-        or to set up a file sync folder on the user's desktop. -->
+      This can be used for Thunderbird's FileLink feature,
+      or to set up a file sync folder on the user's desktop.
+      -->
     <fileShare type="webdav">
       <username>%EMAILADDRESS%</username>
-      <authentication>http-basic</authentication> <!-- see <addressBook> -->
+      <!-- see <addressBook> -->
+      <authentication>http-basic</authentication>
       <url>https://share.example.com/remote.php/dav</url>
     </fileShare>
 
-    <!-- This allows to login in to the webmail service of the provider.
-        The URLs are loaded into a standard webbrowser for the user.
-        This is optional. -->
-    <webMail>
-      <!-- Webpage where the user has to log in manually by entering username
-          and password himself.
-          HTTPS required. -->
-      <loginPage url="https://mail.example.com/login/" />
-
-      <!-- Same as loginAutomaticDOM, but the website makes checks that
-          the user comes from the login page. So, open the login page
-          in the browser, get the page's DOM, fill out name and password
-          fields for the user, and trigger the login button.
-          The login button might not be an HTML button, just a div, so
-          to trigger it, send a click event to it.
-          HTTPS is required for the URL. -->
-      <loginPageInfo url="https://mail.example.com/login/">
-        <!-- What to fill into the usernameField.
-            Format is the same as for <username> within <incomingServer>,
-            including placeholders. See below for valid placeholders. -->
-        <username>%EMAILADDRESS%</username>
-        <!-- Allows to find the textfield on the page, to fill it out.
-            The id attribute give the DOM ID,
-            The name attribute give the DOM name attribute.
-            One or both of id and name attributes must exist.
-            Try the ID first (e.g. using getElementById()), if existing.
-            Otherwise, try finding the element by name.
-            Don't treat the IDs given in this XML file as trusted,
-            but before using them, verify the format
-            (e.g. only characters and digits for IDs).
-            If you use powerful functions like jQuery, and the XML returns
-            you code in the username ID, and you feed it unchecked to jQuery,
-            it may be executed. -->
-        <usernameField id="email_field" name="email" />
-        <passwordField name="password" />
-        <!-- The submit button to trigger the server submit
-            after filling in the fields.
-            id and name attributes: See <usernameField> -->
-        <loginButton id="submit_button" name="login"/>
-      </loginPageInfo>
-    </webMail>
-
-    <!-- Ask user for custom input,
-       and use them as placeholders in the values.
-       Optional. -->
-    <inputField key="USERNAME" label="Screen name"></inputField>
-    <inputField key="GRANDMA" label="Grandma">Elise Bauer</inputField>
-
-    <!-- oAuth2 specced for mail apps,
-        e.g. clientID, expiry, and login page
-        MUST adhere to mAuth <https://benbucksch.github.io/mauth-spec/draft-mauth.html>
-        -->
-    <mAuth>
-      <authURL>https://login.example.com/common/oauth2/v2.0/authorize</authURL>
-      <tokenURL>https://login.example.com/common/oauth2/v2.0/token</tokenURL>
+    <!-- OAuth2 config for mail and other native and
+      public client apps.
+      Gives e.g. clientID, expiry, and login page
+      MUST adhere to "Open Client OAuth2 profile".
+      -->
+    <oAuth2>
+      <authURL>https://login.example.com/auth</authURL>
+      <tokenURL>https://login.example.com/token</tokenURL>
       <issuer>login.example.com</issuer>
       <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
       <clientID>open</clientID>
       <!-- optional -->
-      <clientSecret>give-me-your-pass-word</clientSecret>
-    </mAuth>
-
-    <!-- Add this only when users (who already have an account) have to
-        do something manually before the account can work with IMAP/POP or SSL.
-        Mandatory only if the ISP requires such settings
-        before the configs above work.
-        Note: Per XML, & (ampersand) needs to be escaped to
-        & a m p ; (without spaces). -->
-    <enable
-      visiturl="https://mail.google.com/mail/?ui=2&amp;shva=1#settings/fwdandpop">
-      <instruction>Check 'Enable IMAP and POP' in Google settings page</instruction>
-      <instruction lang="de">Schalten Sie 'IMAP und POP aktivieren' auf der Google Einstellungs-Seite an</instruction>
-    </enable>
+      <clientSecret>give-me-your-password</clientSecret>
+    </oAuth2>
 
     <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
 
@@ -403,13 +361,16 @@ Table of Contents
 
 3.3.  Placeholders
 
-   The fields for <username>, <hostname>, <serverURL>, <displayName>,
-   <displayShortName> (*1) support placeholders.  The config returned by
-   the autoconfig server may contain these placeholders, which are to be
-   replaced by the client.  The following special strings (or
+   The fields for <username> support placeholders.  The config returned
+   by the autoconfig server may contain these placeholders, which are to
+   be replaced by the client.  The following special strings (or
    substrings/parts) of the value should be replaced by the client,
    after the config was retrieved and before its values are actually
    used.
+
+   Some clients MAY also support the same placeholders for the fields
+   <hostname>, <serverURL>, <authURL>, <tokenURL>, <issuer>,
+   <displayName> and <displayShortName>.
 
    +==================+============================+==================+
    | Placeholder      | Replace with               | Example          |
@@ -422,13 +383,8 @@ Table of Contents
    | %EMAILDOMAIN%    | Part after @ in the E-     | example.com      |
    |                  | Mail-Address               |                  |
    +------------------+----------------------------+------------------+
-   | %REALNAME%       | Real-world name of the     | Fred Flintstone  |
-   |                  | user                       |                  |
-   +------------------+----------------------------+------------------+
 
                                  Table 1
-
-   *1 and possibly <inputField> value, <authURL>, <tokenURL>, <issuer>
 
 4.  Config retrieval for mail clients
 
@@ -445,7 +401,7 @@ Table of Contents
    location, with lower numbers meaning higher priority, e.g. 1.2 has
    higher priority than 4.1.
 
-   In the URLs below,%EMAILADDRESS% shall be replaced with the email
+   In the URLs below, %EMAILADDRESS% shall be replaced with the email
    address that the user entered and wishes to use, and %EMAILDOMAIN%
    shall be replaced with the email domain extracted from the email
    address.  For example, for "fred@example.com", the email domain is
@@ -467,7 +423,8 @@ Table of Contents
    configuration issued to mail clients.
 
    *  1.1. https://autoconfig.%EMAILDOMAIN%/mail/config-
-      v1.1.xml?emailaddress=%EMAILADDRESS% (Required)
+      v1.1.xml?emailaddress=%EMAILADDRESS% (Required. emailaddress is
+      Optional)
 
    *  1.2. https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-
       v1.1.xml (Optional)
@@ -660,7 +617,7 @@ Table of Contents
    *  Care SHOULD be taken with international characters that look like
       ASCII characters, but have a different code.
 
-5.2.  Login testing
+5.2.  Login test
 
    After the user confirmed the configuration, you SHOULD test the
    configuration, by attempting a login to each server configured.  Only
@@ -670,11 +627,17 @@ Table of Contents
 5.3.  OAuth2 windows
 
    If the configuration contains OAuth2 authentication, or any other
-   authentication that uses a web browser with URL redirects, you MUST
-   show the full URL or the second-level domain of the current page to
-   the end user, at all times, including after page changes, URL changes
-   or redirects.  This allows the end user to verify that he is logging
-   in at the expected page, e.g. the login server of their company.
+   kind of authentication that uses a web browser with URL redirects,
+   you MUST show the full URL or the second-level domain of the current
+   page to the end user, at all times, including after page changes, URL
+   changes, or redirects.  The authentication start URL may be the email
+   hoster, but it redirects to a corporate server for login, and then
+   back to the hoster.  This allows for setups where the hoster is not
+   allowed to see the plaintext passwords.
+
+   Showing the URL or hostname allows the end user to verify that he is
+   logging in at the expected page, e.g. the login server of their
+   company, instead of the email hoster's page.
 
    (Editor's note: Not really part of autoconfig, but autoconfig can
    enable OAuth2, and it's important that this is implemented correctly
