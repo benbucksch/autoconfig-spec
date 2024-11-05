@@ -68,12 +68,11 @@ config database (used as fallback) contains configurations for over 50% of all e
 Currently, this protocol or parts of it has been implemented by:
 
 * [Thunderbird](https://thunderbird.net)
-* [Mustang](https://mustang.im/)
-* [Parula](https://www.beonex.com/parula/)
+* [Mustang](https://mustang.im/) and [Parula](https://www.beonex.com/parula/)
 * [Evolution](https://projects.gnome.org/evolution/)
 * [KMail](https://userbase.kde.org/KMail)
 * [Kontact](https://www.kontact.org)
-* [K9 Mail](https://k9mail.app)
+* [K9 Mail](https://k9mail.app) and [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
 * [FairEmail](https://email.faircode.eu)
 * [NextCloud email](https://apps.nextcloud.com/apps/mail)
 * [Delta Chat](https://delta.chat/)
