@@ -4,8 +4,8 @@
 
 mailmaint                                                     B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                           4 November 2024
-Expires: 8 May 2025
+Intended status: Informational                           5 November 2024
+Expires: 9 May 2025
 
 
                             Mail Autoconfig
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 May 2025.
+   This Internet-Draft will expire on 9 May 2025.
 
 Copyright Notice
 
@@ -133,9 +133,8 @@ Table of Contents
 
    *  Thunderbird (https://thunderbird.net)
 
-   *  Mustang (https://mustang.im/)
-
-   *  Parula (https://www.beonex.com/parula/)
+   *  Mustang (https://mustang.im/) and Parula (https://www.beonex.com/
+      parula/)
 
    *  Evolution (https://projects.gnome.org/evolution/)
 
@@ -143,7 +142,8 @@ Table of Contents
 
    *  Kontact (https://www.kontact.org)
 
-   *  K9 Mail (https://k9mail.app)
+   *  K9 Mail (https://k9mail.app) and Thunderbird Mobile
+      (https://www.thunderbird.net/mobile/)
 
    *  FairEmail (https://email.faircode.eu)
 
@@ -393,13 +393,14 @@ Table of Contents
    configuration from various sources.
 
    The steps are ordered by priority.  They may all be requested at the
-   same time, but a higher priorty result that is available MUST be
+   same time, but a higher priorty result that is available SHOULD be
    preferred over a lower priority one, even if the lower priority one
-   is available earlier.  Lower priority requests MAY be cancelled, if a
-   valid higher priority result has been successfully received.  The
-   priority is expressed below with the number before the URL or
-   location, with lower numbers meaning higher priority, e.g. 1.2 has
-   higher priority than 4.1.
+   is available earlier.  Exceptions apply when a higher priority result
+   is either invalid or outdated, or the fetch method is less secure.
+   Lower priority requests MAY be cancelled, if a valid higher priority
+   result has been successfully received.  The priority is expressed
+   below with the number before the URL or location, with lower numbers
+   meaning higher priority, e.g. 1.2 has higher priority than 4.1.
 
    In the URLs below, %EMAILADDRESS% shall be replaced with the email
    address that the user entered and wishes to use, and %EMAILDOMAIN%
