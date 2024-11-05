@@ -308,7 +308,15 @@ The mail client application, when it needs the configuration for a given email a
 will perform several steps to retrieve the configuration from various sources.
 
 The steps are ordered by priority. They may all be requested at the same time, but a higher priorty
-result that is available MUST be preferred over a lower priority one, even if the lower priority one is available earlier. Lower priority requests MAY be cancelled, if a valid higher priority result has been successfully received. The priority is expressed below with the number before the URL or location, with lower numbers meaning higher priority, e.g. 1.2 has higher priority than 4.1.
+result that is available SHOULD be preferred over a lower
+priority one, even if the lower priority one is available
+earlier. Exceptions apply when a higher priority result is either
+invalid or outdated, or the fetch method is less secure. Lower
+priority requests MAY be cancelled, if a valid higher priority
+result has been successfully received. The priority is expressed
+below with the number before the URL or location, with lower
+numbers meaning higher priority, e.g. 1.2 has higher priority
+than 4.1.
 
 In the URLs below, `%EMAILADDRESS%` shall be replaced with the email address that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".
 
