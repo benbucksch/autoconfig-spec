@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-05T00:16:54.883828+00:00",
+  "timestamp": "2025-01-07T00:16:30.549807+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -778,6 +778,22 @@
           "updatedAt": "2024-10-04T14:27:00Z"
         }
       ]
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOKo_bRc6lD0Va",
+      "title": "Suggestion: Add possibility to specify ManageSieve config",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/16",
+      "state": "OPEN",
+      "author": "mimi89999",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "[RFC 5804](https://datatracker.ietf.org/doc/html/rfc5804) defines a protocol for managing sieve filters. It would be nice to make it possible to automatically discover the endpoint for it.",
+      "createdAt": "2025-01-05T12:01:45Z",
+      "updatedAt": "2025-01-05T12:01:45Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
