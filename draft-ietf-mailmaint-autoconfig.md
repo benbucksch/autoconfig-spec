@@ -3,7 +3,7 @@ title: "Mail Autoconfig"
 abbrev: "autoconfig"
 category: info
 
-docname: draft-ietf-mailmaint-autoconfig-latest
+docname: draft-ietf-mailmaint-autoconfig
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -27,7 +27,7 @@ venue:
   mail: mailmaint@ietf.org
   arch: https://mailarchive.ietf.org/arch/browse/mailmaint/
   github: "benbucksch/autoconfig-spec"
-  latest: "https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html"
+  latest: "https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html"
 
 author:
  -
@@ -199,22 +199,20 @@ The following example shows the syntax of the XML config file returned.
 
       </emailProvider>
 
-      <!-- Syncronize the user's address book / contacts. -->
-      <addressBook type="carddav">
+      <addressbook type="carddav">
         <url>https://contacts.example.com/remote.php/dav</url>
         <authentication>http-basic</authentication>
         <username>%EMAILADDRESS%</username>
-      </addressBook>
+      </addressbook>
 
-      <!-- Syncronize the user's calendar. -->
       <calendar type="caldav">
         <url>https://calendar.example.com/remote.php/dav</url>
         <authentication>http-basic</authentication>
         <username>%EMAILADDRESS%</username>
       </calendar>
 
-      <!-- Upload files, allowing the user to share them.
-        This can be used for Thunderbird's FileLink feature,
+        <!-- Upload files, allowing the user to share them.
+        This can be used to send links instead of attachments,
         or to set up a file sync folder on the user's desktop.
         -->
       <fileShare type="webdav">
@@ -243,8 +241,7 @@ The following example shows the syntax of the XML config file returned.
         <username>%EMAILADDRESS%</username>
       </videoConference>
 
-      <!-- OAuth2 config for mail and other native and
-        public client apps.
+        <!-- OAuth2 config for native public client apps.
         Gives e.g. clientID, expiry, and login page
         MUST adhere to "Open Client OAuth2 profile".
         -->
