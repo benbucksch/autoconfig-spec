@@ -98,7 +98,7 @@ wild.
 Whether the ISP or a common central database returns the configuration, the
 resulting document has the following data format.
 
-The MIME type is `text/xml` or `text/xml+autoconfig`.
+The MIME type is `text/xml`.
 
 ## XML config file
 
