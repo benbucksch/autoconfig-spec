@@ -674,9 +674,6 @@ drop or ignore a configuration that contains unknown elements and
 properties. This is needed to allow future extensions of the format 
 without breaking existing clients.
 
-See appendix X for a sample encoded XSD definition of the format. The 
-XSD is non-normative.
-
 # Config retrieval for mail clients
 
 The mail client application, when it needs the configuration for a given email
