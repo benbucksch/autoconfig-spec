@@ -156,15 +156,9 @@ The following example shows the syntax of the XML config file returned.
           <hostname>smtp.googlemail.com</hostname>
           <port>587</port>
           <socketType>STARTTLS</socketType>
+            <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism. -->
           <authentication>password-cleartext</authentication>
           <username>%EMAILADDRESS%</username>
-            <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
-            For values, see incoming.
-            Additional options here:
-            "client-IP-address":
-              The server recognizes this user based on the IP address.
-              No authentication needed, the server will require no username nor password.
-            -->
         </outgoingServer>
 
         <incomingServer type="jmap">
@@ -275,14 +269,13 @@ The `version` is `1.2` for the version defined in this specification. `1.1` is a
 ### emailProvider
 
 Element `<emailProvider id="example.com">` is within the root element.
+This element has no semantic purpose and exists for legacy reasons only.
+If all of its child elements were within the root element, their meaning
+would still be the same.
 
 The `id` is a unique string that typically matches the primary domain of the provider.
 
 Within `<emailProvider>` are `<domain>`, `<displayName>` and `<displayShortName>`, `<documentation>`, `<incomingServer>` and `<outgoingServer>`.
-
-This element has no semantic purpose and exists for legacy reasons only.
-If all of its child elements were within the root element, their meaning
-would still be the same.
 
 ### domain
 
@@ -299,7 +292,7 @@ Multiple `<domain>` elements may be included, which means that the config is
 valid for all of these domains. Their order has no meaning - you may sort them by number of users, importance to the provider, or alphabethically.
 
 A `<domain purpose="mx">` specifies the domain name of the MX server of
-the email address domain, and is used config file lookup using MX
+the email address, and is used config file lookup using MX
 server names, as specified in section MX. The `purpose` property is
 mainly informational and may be ignored.
 
@@ -354,20 +347,19 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
   `<calendar>`, `<addressbook>`, `<fileShare>`, `<chatServer>` and `<videoConference>` are within the
   root element `<clientConfig>`, i.e. one level higher. Other than that, they work the same.
 * In some protocols, the `<incomingServer>` server additionally provides
-  contacts, calendars and other data. For such protocols, the same server is
+  calendars, addressbooks, and other data. For such protocols, the same server is
   not repeated in other specific server sections like `<calendar>`.
   Calendar-only clients supporting such multi-purpose protocols MUST read the
   `<incomingServer>` (nonewithstanding that it's within legacy element `<emailProvider>`)
-  and test and use only the parts of the protocol needed for their
+  and test and use the parts of the protocol needed for their
   functionality.
 
 ### Multiple server sections
 
-* Server sections (like `<incomingServer>` or `<calendar>`) of the
-  same type may appear multiple times in the same config file.
-  In this case, the one listed first is the preferred one, from the
-  perspective of the config provider. Unless the client has specific 
-  other requirements, it SHOULD pick the first config.
+* Server sections of the same type (like `<incomingServer>` or `<calendar>`)
+  may appear multiple times in the same config file.
+  In this case, the one listed first is preferred by the config provider.
+  Unless the client has specific other requirements, it SHOULD pick the first config.
 
 * The client may derivate from this recommendation, because
   * the client doesn't support a higher-priority protocol, e.g. a JMAP 
@@ -375,9 +367,8 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
     client does not support JMAP yet, or
   * the client doesn't support a configuration setting, e.g. it
     doesn't support STARTTLS, or the config specifies only an OAuth2 
-    configuration and the client either doesn't implement OAuth2, or
-    it doesn't have a client ID for this provider, or the
-    authentication is unsupported for other reasons, or
+    authentication and the client either doesn't implement OAuth2, or
+    it doesn't have a client ID for this provider, or
   * the client has a specific policy to prefer another configuration,
     e.g. a STARTTLS config is listed before a direct TLS config, and
     the client has a policy of preferring direct TLS, or likewise
@@ -394,27 +385,27 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
 The `type` property on the server section element specifies the
 wire protocol that this server uses.
 
-| type          | Base    | Specification
-| ------------- | ------- | ---------------------------------------------
-| `jmap`        | URL     | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
-| `imap`        | TCP     | RFC 9051 or RFC 3501, et al
-| `pop3`        | TCP     | RFC 1939, RFC 5034
-| `smtp`        | TCP     | RFC 5321, RFC 2822
-| `caldav`      | URL     | RFC 4791
-| `carddav`     | URL     | RFC 6352
-| `webdav`      | URL     | RFC 4918
-| `xmpp`        | URL/TCP | RFC 6120, RFC 6121, RFC 7395
-| `managesieve` | TCP     | RFC 5804, RFC 5228
-| `ews`         | URL     | Exchange Web Services
-| `activesync`  | URL     | ActiveSync
-| `graph`       | URL     | Microsoft Graph
+| type          | Base    | Name         | Specification
+| ------------- | ------- | ------------ | ----------------------------------
+| `jmap`        | URL     | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
+| `imap`        | TCP     | IMAP         | RFC 9051 or RFC 3501, et al
+| `pop3`        | TCP     | POP3         | RFC 1939, RFC 5034
+| `smtp`        | TCP     | SMTP         | RFC 5321, RFC 2822
+| `caldav`      | URL     | CalDAV       | RFC 4791
+| `carddav`     | URL     | CardDav      | RFC 6352
+| `webdav`      | URL     | WebDAV       | RFC 4918
+| `xmpp`        | URL/TCP | XMPP         | RFC 6120, RFC 6121, RFC 7395
+| `managesieve` | TCP     | ManageSieve  | RFC 5804, RFC 5228
+| `ews`         | URL     | Exchange Web Services |
+| `activesync`  | URL     | ActiveSync            |
+| `graph`       | URL     | Microsoft Graph       |
 
 Other protocol names can be added using an IANA registry. Their 
 respective registrations need to define
 * the `type` name, as appearing in the `type` property
 * whether the protocol is URL-based or TCP-based,
 * which RFCs or document specifies the protocol, and
-* may define additional protocol-specific properties and their meaning.
+* may define additional protocol-specific XML elements within the section and their meaning.
 
 ## URL-based protocols
 
@@ -482,7 +473,7 @@ server.
 
 E.g. `<port>993</port>`
 
-The content of the `<port>` element is an integer and contains the TCP port number at the hostname. The port is typically specific to the combination of protocol and the socketType.
+The content of the `<port>` element is an integer and contains the TCP port number at the hostname. The port is typically specific to the combination of the wire protocol and socketType.
 
 ### socketType
 
@@ -496,7 +487,7 @@ The content of the `<socketType>` element specifies whether to use direct TLS, S
   using the protocol-specific STARTTLS specification. With this configuration, STARTTLS MUST be used and TLS MUST be used after the STARTTLS upgrade. If the upgrade to TLS fails for whatever reason, the client MUST
   disconnect and MUST NOT try to authenticate. This prevents downgrade attacks that could otherwise steal passwords,
   user data, and impersonate users.
-* `plain`: Unencrypted connection, with neither TLS nor STARTTLS. Deprecated.
+* `plain`: Unencrypted connection, with neither TLS nor STARTTLS. May be needed for local servers. Deprecated.
 
 #### TLS validation
 
@@ -526,25 +517,29 @@ The can be either an authentication defined by the wire protocol, or a SASL sche
 or a successor to SASL.
 
 * `password-cleartext`: Send password in the clear.
-  Uses either the native authentication format defined by the wire protocol
+  Uses either the native authentication method defined by the wire protocol
   (if that is based on plaintext passwords), or a SASL authentication scheme
-  like SASL `PLAIN` or SASL `LOGIN`.
+  like SASL `PLAIN` or SASL `LOGIN`, or a successor.
 * `password-encrypted`: An encrypted or hashed password mechanism.
-  Includes `CRAM-MD5`, `DIGEST-MD5` and `SCRAM-SHA-256-PLUS`.
-* `NTLM`: NTLM, NTLMv2, or successors. This is a legacy Windows login mechanism.
+  Includes SASL `CRAM-MD5`, `DIGEST-MD5` and `SCRAM-SHA-256-PLUS`.
+  TLS alone by itself does not qualify as "password-encrypted".
+* `NTLM`: Legacy Windows login mechanisms NTLM or NTLMv2.
 * `GSSAPI`: Kerberos or GSSAPI, a single-signon mechanism based on TCP.
-* `TLS-client-cert`: On the SSL/TLS layer, the server requests a client certificate
-  and the client sends one, possibly after letting the user select/confirm it, if available.
-  SASL `EXTERNAL` scheme.
-* `OAuth`: OAuth. SASL `OAUTHBEARER` or (deprecated) `XOAUTH2` or successors. It MUST adhere to the requirements defined in section OAuth2 in this specification.
-* `none`: Server can be used without any explicit authentication. This may be the case for some
-  SMTP servers on local networks, where the clients are admitted based on their IP address.
+* `TLS-client-cert`: On the SSL/TLS layer, after server request, the client sends a
+  TLS client certificate for the user, possibly after letting the user select/confirm it.
+  Uses SASL `EXTERNAL` scheme.
+* `OAuth`: OAuth. SASL `OAUTHBEARER` (current) or `XOAUTH2` (deprecated) or successors. It MUST adhere to the requirements defined in section OAuth2 in this specification.
+* `client-IP-address`: Server can be used without any explicit authentication, and the client is admitted based on its IP address.
+  This may be the case for some SMTP servers on local networks.
   Not supported on the Internet. Deprecated, because it breaks mobile devices.
 
+#### Recommending specific SASL schemes
+
 Additionally, a specific SASL scheme may be specified using `SASL`, a space, and the specific
-SASL authentication scheme name, e.g. `SASL SCRAM-SHA-256-PLUS`. In such a case, it is recommended
-to also specify a more generic authentication mechanism defined above as a lower priority alternative.
-That would make clients use the specific authentication mechanism, if they support it, and other clients will use the more generic authentication mechanism.
+SASL authentication scheme name, e.g. `SASL SCRAM-SHA-256-PLUS`. In such a case, the
+server config SHOULD also specify a more generic authentication mechanism
+as a lower priority alternative. That would make clients use the specific authentication mechanism,
+if they support it, and other clients will use the more generic authentication mechanism.
 
 #### Multiple authentication alternatives
 
@@ -566,7 +561,7 @@ method itself failed, or the error code indicates a systemic failure,
 the client SHOULD use a lower-priority authentication method from the 
 list.
 If the authentication method is working, but the error code indicated 
-that the username or password was wrong, then the client may ask the 
+that the username or password was wrong, then the client MAY ask the
 user to correct the password. 
 
 For that reason, the server SHOULD be specific in the error codes and 
@@ -582,8 +577,8 @@ If the server were to return the same error code for all these cases, the client
 
 If the authentification succeeded, the client SHOULD take note of the 
 working configutation and use that for all subsequent connections, 
-until an explicit reconfiguration occurs. The client SHOULD NOT
-fallback nor attempt multiple authentication methods at every login.
+until an explicit reconfiguration occurs. During normal everyday operation,
+the client SHOULD NOT fallback nor attempt multiple different authentication methods.
 
 ### username
 
@@ -595,7 +590,7 @@ Placeholders MUST be replaced before using the actual value. See section Placeho
 
 ## Placeholders
 
-The `<username>` element may contain placeholders.
+The `<username>` value may contain placeholders.
 
 The following special substrings in the value MUST be
 replaced by the client, before the value is actually used.
