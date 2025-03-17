@@ -99,165 +99,165 @@ The following example shows the syntax of the XML config file returned.
 
     <?xml version="1.0"?>
     <clientConfig version="1.2">
-        <emailProvider id="example.com">
-          <domain>example.com</domain>
-          <domain>example.net</domain>
+      <emailProvider id="example.com">
+        <domain>example.com</domain>
+        <domain>example.net</domain>
 
-          <displayName>Google Workspace</displayName>
-          <displayShortName>GMail</displayShortName>
+        <displayName>Google Workspace</displayName>
+        <displayShortName>GMail</displayShortName>
 
           <!-- type=
-              "imap": IMAP
-              "pop3": POP3
-              "jmap": JMAP
-              "ews": Microsoft Exchange Web Services
-              "activesync": Microsoft ActiveSync
-              -->
-          <incomingServer type="imap">
-            <hostname>imap.example.com</hostname>
-            <port>993</port>
-              <!--
-              "plain": no encryption
-              "SSL": TLS on TLS-specific port
-              "STARTTLS": mandatory upgrade to TLS via STARTTLS
-              -->
-            <socketType>SSL</socketType>
-              <!-- Authentication methods:
-              "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
-              "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
-              "NTLM": Deprecated Windows login mechanism
-              "GSSAPI": Kerberos or Windows GSSAPI
-              "TLS-client-cert": TLS client certificate on TLS layer
-              "OAuth2": Must adhere to section "OAuth2 requirements".
-              "none": No authentication
-
-              Multiple <authentication> elements per server
-              config are valid. Clients will pick the first
-              one that they support.
-              -->
-            <authentication>password-cleartext</authentication>
-            <username>%EMAILADDRESS%</username>
-          </incomingServer>
-
-          <!-- You can have multiple incoming servers,
-            and even multiple IMAP server configs.
-            The first config is the preferred one, but the user or
-            or client can choose the alternative configs. -->
-          <incomingServer type="pop3">
-            <hostname>pop.example.com</hostname>
-            <port>995</port>
-            <socketType>SSL</socketType>
-            <authentication>password-cleartext</authentication>
-            <username>%EMAILADDRESS%</username>
-          </incomingServer>
-
-          <!-- Needed only for IMAP or POP3 -->
-          <outgoingServer type="smtp">
-            <hostname>smtp.googlemail.com</hostname>
-            <port>587</port>
-            <socketType>STARTTLS</socketType>
-            <authentication>password-cleartext</authentication>
-            <username>%EMAILADDRESS%</username>
-              <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
-              For values, see incoming.
-              Additional options here:
-              "client-IP-address":
-                The server recognizes this user based on the IP address.
-                No authentication needed, the server will require no username nor password.
-              -->
-          </outgoingServer>
-
-          <incomingServer type="jmap">
-            <url>https://jmap.example.com</url>
-              <!-- Authentication methods
-              "http-basic": RRFC 7661
-              "http-digest"
-              "OAuth2": Must adhere to section "OAuth2 requirements".
-              -->
-            <authentication>OAuth2</authentication>
-            <authentication>http-basic</authentication>
-            <username>%EMAILADDRESS%</username>
-          </incomingServer>
-
-          <incomingServer type="ews">
-            <url>https://mail.example.com/EWS/Exchange.asmx</url>
-            <username>%EMAILADDRESS%</username>
-            <authentication>http-basic</authentication>
-          </incomingServer>
-
-          <incomingServer type="activesync">
-            <url>https://mail.example.com/Microsoft-Server-ActiveSync</url>
-            <username>%EMAILADDRESS%</username>
-            <authentication>OAuth2</authentication>
-          </incomingServer>
-
-          <documentation url="http://www.example.com/help/mail/">
-            <descr lang="en">Configure mail app for IMAP</descr>
-            <descr lang="de">Email mit IMAP konfigurieren</descr>
-          </documentation>
-
-        </emailProvider>
-
-        <!-- Syncronize the user's address book / contacts. -->
-        <addressBook type="carddav">
-          <url>https://contacts.example.com/remote.php/dav</url>
-          <authentication>http-basic</authentication>
-          <username>%EMAILADDRESS%</username>
-        </addressBook>
-
-        <!-- Syncronize the user's calendar. -->
-        <calendar type="caldav">
-          <url>https://calendar.example.com/remote.php/dav</url>
-          <authentication>http-basic</authentication>
-          <username>%EMAILADDRESS%</username>
-        </calendar>
-
-        <!-- Upload files, allowing the user to share them.
-          This can be used for Thunderbird's FileLink feature,
-          or to set up a file sync folder on the user's desktop.
+          "imap": IMAP
+          "pop3": POP3
+          "jmap": JMAP
+          "ews": Microsoft Exchange Web Services
+          "activesync": Microsoft ActiveSync
           -->
-        <fileShare type="webdav">
-          <url>https://share.example.com/remote.php/dav</url>
-          <authentication>http-basic</authentication>
-          <username>%EMAILADDRESS%</username>
-        </fileShare>
+        <incomingServer type="imap">
+          <hostname>imap.example.com</hostname>
+          <port>993</port>
+            <!--
+            "plain": no encryption
+            "SSL": TLS on TLS-specific port
+            "STARTTLS": mandatory upgrade to TLS via STARTTLS
+            -->
+          <socketType>SSL</socketType>
+            <!-- Authentication methods:
+            "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
+            "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
+            "NTLM": Deprecated Windows login mechanism
+            "GSSAPI": Kerberos or Windows GSSAPI
+            "TLS-client-cert": TLS client certificate on TLS layer
+            "OAuth2": Must adhere to section "OAuth2 requirements".
+            "none": No authentication
 
-        <chatServer type="xmpp">
-          <url>wss://example.com:5281/xmpp-websocket</url>
-          <authentication>http-basic</authentication>
-          <username>%EMAILADDRESS%</username>
-        </chatServer>
-
-        <chatServer type="xmpp">
-          <hostname>xmpp.example.com</hostname>
-          <port>5223</port>
-          <socketType>TLS</socketType>
+            Multiple <authentication> elements per server
+            config are valid. Clients will pick the first
+            one that they support.
+            -->
           <authentication>password-cleartext</authentication>
           <username>%EMAILADDRESS%</username>
-        </chatServer>
+        </incomingServer>
 
-        <videoConference type="opentalk">
-          <url>https://talk.example.com/login</url>
-          <authentication>OAuth2</authentication>
+        <!-- You can have multiple incoming servers,
+          and even multiple IMAP server configs.
+          The first config is the preferred one, but the user or
+          or client can choose the alternative configs. -->
+        <incomingServer type="pop3">
+          <hostname>pop.example.com</hostname>
+          <port>995</port>
+          <socketType>SSL</socketType>
+          <authentication>password-cleartext</authentication>
           <username>%EMAILADDRESS%</username>
-        </videoConference>
+        </incomingServer>
 
-        <!-- OAuth2 config for mail and other native and
-          public client apps.
-          Gives e.g. clientID, expiry, and login page
-          MUST adhere to "Open Client OAuth2 profile".
-          -->
-        <oAuth2>
-          <authURL>https://login.example.com/auth</authURL>
-          <tokenURL>https://login.example.com/token</tokenURL>
-          <issuer>login.example.com</issuer>
-          <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
-          <clientID>open</clientID>
-          <!-- optional -->
-          <clientSecret>give-me-your-password</clientSecret>
-        </oAuth2>
+        <!-- Needed only for IMAP or POP3 -->
+        <outgoingServer type="smtp">
+          <hostname>smtp.googlemail.com</hostname>
+          <port>587</port>
+          <socketType>STARTTLS</socketType>
+          <authentication>password-cleartext</authentication>
+          <username>%EMAILADDRESS%</username>
+            <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
+            For values, see incoming.
+            Additional options here:
+            "client-IP-address":
+              The server recognizes this user based on the IP address.
+              No authentication needed, the server will require no username nor password.
+            -->
+        </outgoingServer>
 
-        <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
+        <incomingServer type="jmap">
+          <url>https://jmap.example.com</url>
+            <!-- Authentication methods
+            "http-basic": RRFC 7661
+            "http-digest"
+            "OAuth2": Must adhere to section "OAuth2 requirements".
+            -->
+          <authentication>OAuth2</authentication>
+          <authentication>http-basic</authentication>
+          <username>%EMAILADDRESS%</username>
+        </incomingServer>
+
+        <incomingServer type="ews">
+          <url>https://mail.example.com/EWS/Exchange.asmx</url>
+          <username>%EMAILADDRESS%</username>
+          <authentication>http-basic</authentication>
+        </incomingServer>
+
+        <incomingServer type="activesync">
+          <url>https://mail.example.com/Microsoft-Server-ActiveSync</url>
+          <username>%EMAILADDRESS%</username>
+          <authentication>OAuth2</authentication>
+        </incomingServer>
+
+        <documentation url="http://www.example.com/help/mail/">
+          <descr lang="en">Configure mail app for IMAP</descr>
+          <descr lang="de">Email mit IMAP konfigurieren</descr>
+        </documentation>
+
+      </emailProvider>
+
+      <!-- Syncronize the user's address book / contacts. -->
+      <addressBook type="carddav">
+        <url>https://contacts.example.com/remote.php/dav</url>
+        <authentication>http-basic</authentication>
+        <username>%EMAILADDRESS%</username>
+      </addressBook>
+
+      <!-- Syncronize the user's calendar. -->
+      <calendar type="caldav">
+        <url>https://calendar.example.com/remote.php/dav</url>
+        <authentication>http-basic</authentication>
+        <username>%EMAILADDRESS%</username>
+      </calendar>
+
+      <!-- Upload files, allowing the user to share them.
+        This can be used for Thunderbird's FileLink feature,
+        or to set up a file sync folder on the user's desktop.
+        -->
+      <fileShare type="webdav">
+        <url>https://share.example.com/remote.php/dav</url>
+        <authentication>http-basic</authentication>
+        <username>%EMAILADDRESS%</username>
+      </fileShare>
+
+      <chatServer type="xmpp">
+        <url>wss://example.com:5281/xmpp-websocket</url>
+        <authentication>http-basic</authentication>
+        <username>%EMAILADDRESS%</username>
+      </chatServer>
+
+      <chatServer type="xmpp">
+        <hostname>xmpp.example.com</hostname>
+        <port>5223</port>
+        <socketType>TLS</socketType>
+        <authentication>password-cleartext</authentication>
+        <username>%EMAILADDRESS%</username>
+      </chatServer>
+
+      <videoConference type="opentalk">
+        <url>https://talk.example.com/login</url>
+        <authentication>OAuth2</authentication>
+        <username>%EMAILADDRESS%</username>
+      </videoConference>
+
+      <!-- OAuth2 config for mail and other native and
+        public client apps.
+        Gives e.g. clientID, expiry, and login page
+        MUST adhere to "Open Client OAuth2 profile".
+        -->
+      <oAuth2>
+        <authURL>https://login.example.com/auth</authURL>
+        <tokenURL>https://login.example.com/token</tokenURL>
+        <issuer>login.example.com</issuer>
+        <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
+        <clientID>open</clientID>
+        <!-- optional -->
+        <clientSecret>give-me-your-password</clientSecret>
+      </oAuth2>
+
+      <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
 
     </clientConfig>
 
