@@ -689,8 +689,8 @@ meaning higher priority, e.g. 1.2 has higher priority than 4.1.
 In the URLs below, `%EMAILADDRESS%` shall be replaced with the email address
 that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced
 with the email domain extracted from the email address. For example, for
-"fred@example.com", the email domain is "example.com", and for "fred@test.cs
-example.net", the email domain is "test.cs.example.net".
+"fred@example.com", the email domain is "example.com", and for
+"fred@test.cs.example.net", the email domain is "test.cs.example.net".
 
 For full support of this specification, all "Required" and "Recommended"
 mechanisms MUST be implemented and working. For partial support of this
