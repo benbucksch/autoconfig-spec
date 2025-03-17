@@ -60,6 +60,11 @@ well-known URLs at the email provider, which return the configuration parameters
 configurations for large email providers who do not directly support this protocol,
 or other mechanisms to determine the configuration.
 
+While this AutoConfig protocol was conceived for configuring mail clients,
+it can also be used for accounts of other types, like contacts and calendar sync,
+chat, video conference, or online publishing. The primary concept and limitation here is that
+these accounts need to be hosted by the same provider as the email address.
+
 # Implementations
 
 This protocol is in production use since 15 years by major email clients, and the
@@ -79,7 +84,7 @@ Currently, this protocol or parts of it has been implemented by:
 
 and likely other mail clients.
 
-The purpose of this paper is to document and specify what is deployed and used in the wild. A later version 2 of the protocol might be based on JSON.
+The purpose of this paper is to document and specify what is deployed in the wild.
 
 # Data format
 
@@ -88,7 +93,9 @@ document has the following data format.
 
 The MIME type is `text/xml` or `text/xml+autoconfig`.
 
-## Sample config file
+## XML config file
+
+The following example shows the syntax of the XML config file returned.
 
     <?xml version="1.0"?>
     <clientConfig version="1.2">
@@ -96,7 +103,7 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           <domain>example.com</domain>
           <domain>example.net</domain>
 
-          <displayName>Google Mail</displayName>
+          <displayName>Google Workspace</displayName>
           <displayShortName>GMail</displayShortName>
 
           <!-- type=
@@ -109,47 +116,27 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           <incomingServer type="imap">
             <hostname>imap.example.com</hostname>
             <port>993</port>
-              <!-- "plain": no encryption
-                    "SSL": SSL 3 or TLS 1 on SSL-specific port
-                    "STARTTLS": listening on normal plain port
-                      and mandatory upgrade to TLS via STARTTLS
-                    -->
+              <!--
+              "plain": no encryption
+              "SSL": TLS on TLS-specific port
+              "STARTTLS": mandatory upgrade to TLS via STARTTLS
+              -->
             <socketType>SSL</socketType>
-            <username>%EMAILADDRESS%</username>
-            <!-- Authentication methods:
-              "password-cleartext",
-                Send password in the clear
-                (dangerous, if SSL isn't used either).
-                AUTH PLAIN, LOGIN or protocol-native login.
-              "password-encrypted",
-                A secure encrypted password mechanism.
-                Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
-              "NTLM":
-                Use NTLM (or NTLMv2 or successors),
-                the Windows login mechanism.
-              "GSSAPI":
-                Use Kerberos / GSSAPI,
-                a single-signon mechanism used for big sites.
-              "TLS-client-cert":
-                On the SSL/TLS layer, the server requests a
-                client certificate and the client sends one
-                (possibly after letting the user select/confirm
-                one), if available.
-              "OAuth2":
-                Server MUST support the
-                "Open Client OAuth2 profile".
-                Clients SHOULD skip OAuth2 and fall back to
-                other auth mechanisms, if they support
-                OAuth2 in general, but cannot find a valid
-                OAuth2 config for this server.
-              "none":
-                No authentication
+              <!-- Authentication methods:
+              "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
+              "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
+              "NTLM": Deprecated Windows login mechanism
+              "GSSAPI": Kerberos or Windows GSSAPI
+              "TLS-client-cert": TLS client certificate on TLS layer
+              "OAuth2": Must adhere to section "OAuth2 requirements".
+              "none": No authentication
 
               Multiple <authentication> elements per server
               config are valid. Clients will pick the first
               one that they support.
               -->
             <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
           </incomingServer>
 
           <!-- You can have multiple incoming servers,
@@ -160,8 +147,8 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <hostname>pop.example.com</hostname>
             <port>995</port>
             <socketType>SSL</socketType>
-            <username>%EMAILADDRESS%</username>
             <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
           </incomingServer>
 
           <!-- Needed only for IMAP or POP3 -->
@@ -169,26 +156,27 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <hostname>smtp.googlemail.com</hostname>
             <port>587</port>
             <socketType>STARTTLS</socketType>
+            <authentication>password-cleartext</authentication>
             <username>%EMAILADDRESS%</username>
-            <!-- smtp-auth (RFC 2554, 4954) or other
-              auth mechanism.
+              <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism.
               For values, see incoming.
               Additional options here:
               "client-IP-address":
-                The server recognizes this user based on
-                the IP address.
-                No authentication needed, the server will
-                require no username nor password.
-                This is strongly discouraged, because it
-                will not work for remote workers.
+                The server recognizes this user based on the IP address.
+                No authentication needed, the server will require no username nor password.
               -->
-            <authentication>password-cleartext</authentication>
           </outgoingServer>
 
           <incomingServer type="jmap">
             <url>https://jmap.example.com</url>
-            <username>%EMAILADDRESS%</username>
+              <!-- Authentication methods
+              "http-basic": RRFC 7661
+              "http-digest"
+              "OAuth2": Must adhere to section "OAuth2 requirements".
+              -->
+            <authentication>OAuth2</authentication>
             <authentication>http-basic</authentication>
+            <username>%EMAILADDRESS%</username>
           </incomingServer>
 
           <incomingServer type="ews">
@@ -203,18 +191,6 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
             <authentication>OAuth2</authentication>
           </incomingServer>
 
-          <!-- A page where the ISP describes the configuration.
-            This is purely informational and currently mainly for
-            maintenance of the files and not used by the client
-            at all.
-            Note that we do not necessarily use exactly the
-            config suggested by the ISP. E.g. when they don't
-            recommend TLS, but it's available, we will configure
-            TLS.
-            The text content should contains a description in the
-            native language of the ISP (customers), and a short
-            English description, mostly for us.
-          -->
           <documentation url="http://www.example.com/help/mail/">
             <descr lang="en">Configure mail app for IMAP</descr>
             <descr lang="de">Email mit IMAP konfigurieren</descr>
@@ -224,29 +200,16 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
 
         <!-- Syncronize the user's address book / contacts. -->
         <addressBook type="carddav">
-          <username>%EMAILADDRESS%</username>
-          <!-- Authentication methods. See also <incomingServer>.
-            "http-basic":
-              Authenticate to the HTTP server using
-              WWW-Authenticate: Basic
-            "http-digest":
-              Authenticate to the HTTP server using
-              WWW-Authenticate: Digest
-            "OAuth2":
-              The "Open Client OAuth profile".
-              Uses the same token as for email.
-              <scope> needs to include addressbook/calendar.
-            -->
+          <url>https://contacts.example.com/remote.php/dav</url>
           <authentication>http-basic</authentication>
-          <url>https://jmap.example.com/remote.php/dav</url>
+          <username>%EMAILADDRESS%</username>
         </addressBook>
 
         <!-- Syncronize the user's calendar. -->
         <calendar type="caldav">
-          <username>%EMAILADDRESS%</username>
-          <!-- see <addressBook> -->
-          <authentication>http-basic</authentication>
           <url>https://calendar.example.com/remote.php/dav</url>
+          <authentication>http-basic</authentication>
+          <username>%EMAILADDRESS%</username>
         </calendar>
 
         <!-- Upload files, allowing the user to share them.
@@ -254,10 +217,9 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
           or to set up a file sync folder on the user's desktop.
           -->
         <fileShare type="webdav">
-          <username>%EMAILADDRESS%</username>
-          <!-- see <addressBook> -->
-          <authentication>http-basic</authentication>
           <url>https://share.example.com/remote.php/dav</url>
+          <authentication>http-basic</authentication>
+          <username>%EMAILADDRESS%</username>
         </fileShare>
 
         <!-- OAuth2 config for mail and other native and
@@ -279,28 +241,375 @@ The MIME type is `text/xml` or `text/xml+autoconfig`.
 
     </clientConfig>
 
-## Formal definition
+## Global elements
 
-TODO Schema for XML
+The file starts with an XML header, e.g. `<?xml version="1.0"?>`,
+and is encoded in UTF-8 without BOM.
+
+### clientConfig
+
+The root element of the XML file is `<clientConfig version="1.2">`.
+
+The `version` is `1.2` for the version defined in this specification. `1.1` is a compatible previous version. Higher versions are for future specifications. The client MUST NOT reject a config file solely based on the version number.
+
+### emailProvider
+
+Element `<emailProvider id="example.com">` is within the root element.
+
+The `id` is a unique string that typically matches the primary domain of the provider.
+
+Within `<emailProvider>` are `<domain>`, `<displayName>` and `<displayShortName>`, `<documentation>`, `<incomingServer>` and `<outgoingServer>`.
+
+This element has no semantic purpose and exists for legacy reasons only.
+If all of its child elements were within the root element, their meaning
+would still be the same.
+
+### domain
+
+E.g.
+
+    <domain>example.com</domain>
+    <domain>example.net</domain>
+    <domain purpose="mx">example-hosting.com</domain>
+
+The content of the `<domain>` element defines which email addresses this config
+is valid for. E.g. a config with `<domain>example.com</domain>` is valid for email address `fred@example.com`.
+
+Multiple `<domain>` elements may be included, which means that the config is
+valid for all of these domains. Their order has no meaning - you may sort them by number of users, importance to the provider, or alphabethically.
+
+A `<domain purpose="mx">` specifies the domain name of the MX server of
+the email address domain, and is used config file lookup using MX
+server names, as specified in section MX. The `purpose` property is
+mainly informational and may be ignored.
+
+### displayName and displayShortName
+
+E.g.
+
+    <displayName>Google Workspace</displayName>
+    <displayShortName>GMail</displayShortName>
+
+The `<displayName>` element contains the name of the provider, e.g.
+as preferred by the marketing of the provider itself. It SHOULD be no 
+longer than 30 characters, but MUST be no longer than 60 characters.
+
+The `<displayShortName>` element contains the name of the provider, as 
+typically used by end users. It SHOULD be no longer than 12
+characters, and it MUST NOT be longer than 20 characters.
+
+## documentation
+
+E.g.
+
+    <documentation url="http://www.example.com/help/mail/">
+      <descr lang="en">Configure mail app for IMAP</descr>
+      <descr lang="de">Email mit IMAP konfigurieren</descr>
+    </documentation>
+
+This is purely informational and not required for the automatic setup.
+
+Records the user help webpage at the provider that describes the mail 
+server settings. The config may be based on that page, but does not 
+necessarily have to match it, e.g. when a better config is available 
+than the one described on the webpage.
+
+The `url` property contains the URL of the webpage. The `<descr>` 
+content describes the content and purpose of the page and why it's 
+referenced here.
+Multiple `<descr>` elements with different `lang` properties are 
+allowed, whereby the `lang` property contains the 2-letter ISO language
+code, like the HTML `lang` attribute.
+
+## Server sections
+
+E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
+
+* The `type` property specifies the wire protocol that this server uses. See section type below.
+* `<incomingServer>` specifies the server that the mail client retrieves email from and
+  submits changes to. In many protocols, this server is also used for sending email.
+* `<outgoingServer>` is used for sending, if `<incomingServer>` does not support that directly.
+  This is currently used only for SMTP in combination with IMAP and POP3.
+* `<incomingServer>` and `<outgoingServer>` are within element `<emailProvider>`, whereas
+  `<calendar>`, `<addressbook>`, `<fileShare>`, `<chatServer>` and `<videoConference>` are within the
+  root element `<clientConfig>`, i.e. one level higher. Other than that, they work the same.
+* In some protocols, the `<incomingServer>` server additionally provides
+  contacts, calendars and other data. For such protocols, the same server is
+  not repeated in other specific server sections like `<calendar>`.
+  Calendar-only clients supporting such multi-purpose protocols MUST read the
+  `<incomingServer>` (nonewithstanding that it's within legacy element `<emailProvider>`)
+  and test and use only the parts of the protocol needed for their
+  functionality.
+
+### Multiple server sections
+
+* Server sections (like `<incomingServer>` or `<calendar>`) of the
+  same type may appear multiple times in the same config file.
+  In this case, the one listed first is the preferred one, from the
+  perspective of the config provider. Unless the client has specific 
+  other requirements, it SHOULD pick the first config.
+
+* The client may derivate from this recommendation, because
+  * the client doesn't support a higher-priority protocol, e.g. a JMAP 
+    configuraion is listed first and is the most preferred, but the 
+    client does not support JMAP yet, or
+  * the client doesn't support a configuration setting, e.g. it
+    doesn't support STARTTLS, or the config specifies only an OAuth2 
+    configuration and the client either doesn't implement OAuth2, or
+    it doesn't have a client ID for this provider, or the
+    authentication is unsupported for other reasons, or
+  * the client has a specific policy to prefer another configuration,
+    e.g. a STARTTLS config is listed before a direct TLS config, and
+    the client has a policy of preferring direct TLS, or likewise
+    the client prefers IMAP over POP3.
+
+* Server types, elements and protocols that the client does not support 
+  MUST be ignored and the client MUST continue to parse the other 
+  server sections, which may contain configs that the client
+  understands and supports. The client ignores the file only if there 
+  is no supported and working config found.
+
+## type
+
+The `type` property on the server section element specifies the
+wire protocol that this server uses.
+
+| type          | Base    | Specification
+| ------------- | ------- | ---------------------------------------------
+| `jmap`        | URL     | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
+| `imap`        | TCP     | RFC 9051 or RFC 3501, et al
+| `pop3`        | TCP     | RFC 1939, RFC 5034
+| `smtp`        | TCP     | RFC 5321, RFC 2822
+| `caldav`      | URL     | RFC 4791
+| `carddav`     | URL     | RFC 6352
+| `webdav`      | URL     | RFC 4918
+| `xmpp`        | URL/TCP | RFC 6120, RFC 6121, RFC 7395
+| `managesieve` | TCP     | RFC 5804, RFC 5228
+| `ews`         | URL     | Exchange Web Services
+| `activesync`  | URL     | ActiveSync
+| `graph`       | URL     | Microsoft Graph
+
+Other protocol names can be added using an IANA registry. Their 
+respective registrations need to define
+* the `type` name, as appearing in the `type` property
+* whether the protocol is URL-based or TCP-based,
+* which RFCs or document specifies the protocol, and
+* may define additional protocol-specific properties and their meaning.
+
+## URL-based protocols
+
+E.g.
+
+    <incomingServer type="jmap">
+      <url>https://jmap.example.com/session</url>
+      <authentication>http-basic</authentication>
+      <username>%EMAILADDRESS%</username>
+    </incomingServer>
+
+For server sections with protocols that are based on HTTPS or other 
+URLs, the following elements are supported:
+
+### url
+
+E.g. `<url>https://jmap.example.com/session</url>`
+
+The content of the `<url>` element contains the URL where to contact the server.
+
+The URL scheme will normally be HTTPS and the URL start with `https://`.
+Some protocols may use other schemes, e.g. WebSockets `wss://`.
+
+### authentication
+
+E.g. `<authentication>http-basic</authentication>`
+
+The content of the `<authentication>` element defines which HTTP authentication method to use.
+* `http-basic`: Authenticate to the HTTP server using `WWW-Authenticate: Basic`. See RFC 7617.
+* `http-digest`: Authenticate to the HTTP server using `WWW-Authenticate: Digest`. See RFC 7616
+* `OAuth`: Authenticate to the HTTP server using `WWW-Authenticate: Bearer`. See RFC 6750 Section 3.
+  It MUST adhere to the requirements defined in section OAuth2 in this specification.
+
+The rules as specified in sections "Multiple authentication alternatives" and "Authentication verification and fallback" apply here as well.
+
+### username
+
+E.g. `<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
+
+The username to use for the authentication method.
+
+Placeholders MUST be replaced before using the actual value. See section Placeholders.
+
+## TCP-based protocols
+
+For server sections with protocols that are based on TCP,
+the following elements are supported:
+
+    <incomingServer type="imap">
+      <hostname>imap.example.com</hostname>
+      <port>993</port>
+      <socketType>SSL</socketType>
+      <authentication>password-cleartext</authentication>
+      <username>%EMAILADDRESS%</username>
+    </incomingServer>
+
+### hostname
+
+E.g. `<hostname>imap.example.com</hostname>`
+
+The content of the `<hostname>` element contains the fully qualified hostname of the
+server.
+
+### port
+
+E.g. `<port>993</port>`
+
+The content of the `<port>` element is an integer and contains the TCP port number at the hostname. The port is typically specific to the combination of protocol and the socketType.
+
+### socketType
+
+E.g. `<socketType>SSL</socketType>`
+
+The content of the `<socketType>` element specifies whether to use direct TLS, STARTTLS, or none of these.
+
+* `SSL`: Directly contact the TCP port using TLS. TLS version 1.2 or higher SHOULD be used. Higher versions
+  may be required based on security situation, server support, and client policy decisions.
+* `STARTTLS`: Contact the TCP port first using an unencrypted plain socket, then upgrade to TLS
+  using the protocol-specific STARTTLS specification. With this configuration, STARTTLS MUST be used and TLS MUST be used after the STARTTLS upgrade. If the upgrade to TLS fails for whatever reason, the client MUST
+  disconnect and MUST NOT try to authenticate. This prevents downgrade attacks that could otherwise steal passwords,
+  user data, and impersonate users.
+* `plain`: Unencrypted connection, with neither TLS nor STARTTLS. Deprecated.
+
+#### TLS validation
+
+In all cases where TLS is used, either directly or using STARTTLS,
+the client MUST validate the TLS certificate and ensure that the
+certificate is valid for the hostname given in this config. If not,
+or if the TLS certificate is otherwise invalid, the client MUST
+either disconnect or MAY warn the user of the
+dangers and ask for user confirmation. Such warning and confirmation 
+MAY only be allowed at original configuration and MUST NOT be allowed 
+during normal everyday connection.
+
+If the server had a valid TLS certificate during original configuration
+and the TLS certificate is invalid during normal connection, the
+client MUST disconnect.
+
+If the problem is that the TLS certificate expired recently,
+the client MAY not consider that a failure during normal connection
+and use other recovery mechanisms.
+
+### authentication
+
+E.g. `<authentication>password-cleartext</authentication>`
+
+The content of the `<authentication>` element defines which authentication method to use.
+The can be either an authentication defined by the wire protocol, or a SASL scheme,
+or a successor to SASL.
+
+* `password-cleartext`: Send password in the clear.
+  Uses either the native authentication format defined by the wire protocol
+  (if that is based on plaintext passwords), or a SASL authentication scheme
+  like SASL `PLAIN` or SASL `LOGIN`.
+* `password-encrypted`: An encrypted or hashed password mechanism.
+  Includes `CRAM-MD5`, `DIGEST-MD5` and `SCRAM-SHA-256-PLUS`.
+* `NTLM`: NTLM, NTLMv2, or successors. This is a legacy Windows login mechanism.
+* `GSSAPI`: Kerberos or GSSAPI, a single-signon mechanism based on TCP.
+* `TLS-client-cert`: On the SSL/TLS layer, the server requests a client certificate
+  and the client sends one, possibly after letting the user select/confirm it, if available.
+  SASL `EXTERNAL` scheme.
+* `OAuth`: OAuth. SASL `OAUTHBEARER` or (deprecated) `XOAUTH2` or successors. It MUST adhere to the requirements defined in section OAuth2 in this specification.
+* `none`: Server can be used without any explicit authentication. This may be the case for some
+  SMTP servers on local networks, where the clients are admitted based on their IP address.
+  Not supported on the Internet. Deprecated, because it breaks mobile devices.
+
+Additionally, a specific SASL scheme may be specified using `SASL`, a space, and the specific
+SASL authentication scheme name, e.g. `SASL SCRAM-SHA-256-PLUS`. In such a case, it is recommended
+to also specify a more generic authentication mechanism defined above as a lower priority alternative.
+That would make clients use the specific authentication mechanism, if they support it, and other clients will use the more generic authentication mechanism.
+
+#### Multiple authentication alternatives
+
+The `<authentication>` element may appear multiple times within a server section. In this case, they are ordered from the most to the least preferred method,
+based on the policy of the provider. If a client does not support a specific
+authentication scheme, or does not have the conditions to use it, e.g.
+the client does not have a Client ID for this OAuth2 server, then the client MUST
+skip this `<authentication>` element and use the next in the list instead.
+If none of the authentication methods are supported by the client, the client MUST
+ignore that server section and use the remaining server sections.
+
+#### Authentication verification and fallback
+
+The client SHOULD test the configuration during setup, with an actual 
+authentication attempt.
+If the authentication fails, the client decides based on the 
+authentication error code how to proceed. E.g. if the authentiocation
+method itself failed, or the error code indicates a systemic failure, 
+the client SHOULD use a lower-priority authentication method from the 
+list.
+If the authentication method is working, but the error code indicated 
+that the username or password was wrong, then the client may ask the 
+user to correct the password. 
+
+For that reason, the server SHOULD be specific in the error codes and 
+allow the client to distinguish between
+* an unsupported or non-working authentication method or other
+  systemic failures
+* the client being rejected by the server
+* the user being blocked from login
+* the user authentication failing due to wrong password or username
+* other reasons
+
+If the server were to return the same error code for all these cases, the client might tell the user that the password is wrong, and the user starts attempting other passwords, potentially revealing passwords to other higher-value assets, which is highly dangerous.
+
+If the authentification succeeded, the client SHOULD take note of the 
+working configutation and use that for all subsequent connections, 
+until an explicit reconfiguration occurs. The client SHOULD NOT
+fallback nor attempt multiple authentication methods at every login.
+
+### username
+
+E.g. `<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
+
+The username to use for the authentication method.
+
+Placeholders MUST be replaced before using the actual value. See section Placeholders.
 
 ## Placeholders
 
-The fields for `<username>` support placeholders.
-The config returned by the autoconfig server may contain these
-placeholders, which are to be replaced by the client.
-The following special strings (or substrings/parts) of the value
-should be replaced by the client, after the config was retrieved
-and before its values are actually used.
+The `<username>` element may contain placeholders.
+
+The following special substrings in the value MUST be
+replaced by the client, before the value is actually used.
+
+| Placeholder        | Replace with                          | Example            |
+| ------------------ | ------------------------------------- | ------------------ |
+| `%EMAILADDRESS%`   | E-Mail-Address of the user            | `fred@example.com` |
+| `%EMAILLOCALPART%` | Part before `@` in the E-Mail-Address | `fred`             |
+| `%EMAILDOMAIN%`    | Part after `@` in the E-Mail-Address  | `example.com`      |
 
 Some clients MAY also support the same placeholders for the fields
-`<hostname>`, `<serverURL>`, `<authURL>`, `<tokenURL>`, `<issuer>`,
+`<hostname>`, `<url>`, `<authURL>`, `<tokenURL>`, `<issuer>`,
 `<displayName>` and `<displayShortName>`.
 
-| Placeholder               | Replace with | Example |
-| - | - | - |
-| `%EMAILADDRESS%` | E-Mail-Address of the user | `fred@example.com` |
-| `%EMAILLOCALPART%` | Part before `@` in the E-Mail-Address | `fred` |
-| `%EMAILDOMAIN%` | Part after `@` in the E-Mail-Address | `example.com` |
+## XML validation
+
+The client SHOULD validate that the config file is valid XML, and if 
+the XML syntax is invalid, the client SHOULD ignore the entire file. In 
+contrast, if there are syntactically valid, but unknown elements or 
+properties, the client MUST NOT ignore the file.
+
+The client SHOULD take only the elements and attributes that are
+supported by the client, and MUST ignore the others that are unknown
+to the client.
+
+The client may optionally want to validate the XML before parsing it. 
+This is not required. If the client choses to validate, the validation 
+MUST ignore unknown elements and properties and MUST NOT
+drop or ignore a configuration that contains unknown elements and 
+properties. This is needed to allow future extensions of the format 
+without breaking existing clients.
+
+See appendix X for a sample encoded XSD definition of the format. The 
+XSD is non-normative.
 
 # Config retrieval for mail clients
 
@@ -539,15 +848,23 @@ are indistiguishable.
 ## OAuth2 requirements
 
 If OAuth2 is used, the OAuth2 server MUST adhere to the
+"Open Profile for Public Clients" or
 [mAuth](https://benbucksch.github.io/mauth-spec/draft-mauth.html)
 specification.
 
 The OAuth2 server MUST either accept the public client ID
 as given in the config file, without secret, or MUST allow the
-string `open` as client ID, or both.
+string `open` as client ID, or both. The server MUST NOT
+employ any other methods to block clients that are acting on
+behalf of users.
 
-There are also specific requirements for expiry times and
+The specifications also contain requirements for expiry times and
 the login page, which are needed for mail client applications to work.
+
+The OAuth2 scope MUST include all services defined in this config file.
+The same refresh and access token MUST be valid for all services defined
+in the same config file, including for all URL-based protocols like CalDAV
+and all TCP-based protocols like IMAP.
 
 # Conventions and Definitions
 
