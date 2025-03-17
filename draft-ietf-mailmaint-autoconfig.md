@@ -73,7 +73,7 @@ config database (used as fallback) contains configurations for over 50% of all e
 Currently, this protocol or parts of it has been implemented by:
 
 * [Thunderbird](https://thunderbird.net)
-* [Mustang](https://mustang.im/) and [Parula](https://www.beonex.com/parula/)
+* [Parula](https://parula.beonex.com)
 * [Evolution](https://projects.gnome.org/evolution/)
 * [KMail](https://userbase.kde.org/KMail)
 * [Kontact](https://www.kontact.org)
