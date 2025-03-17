@@ -48,27 +48,32 @@ Set up a mail account with only email address and password.
 
 # Introduction
 
-This protocol allows users to set up their existing email account in a new mail client application,
-by entering only their name, email address, and password.
-The mail application, by means of mail autoconfig specified here, will determine all the other
-parameters that are required, including IMAP or POP3 hostname, TLS configuration,
-form of username, authentication method, and other settings, and likewise for SMTP.
-Contact sync and calendar, file sharing and other services can also be set up automatically.
+This protocol allows users to set up their existing email account in a new
+mail client application, by entering only their name, email address, and
+password. The mail application, by means of mail autoconfig specified here,
+will determine all the other parameters that are required, including IMAP or
+POP3 hostname, TLS configuration, form of username, authentication method, and
+other settings, and likewise for SMTP. Contact sync and calendar, file sharing
+and other services can also be set up automatically.
 
-The protocol works by first determining the domain from the email address, and the querying
-well-known URLs at the email provider, which return the configuration parameters in computer-readable form. Failing that, various fallback sources can be applied, like a common database of
-configurations for large email providers who do not directly support this protocol,
-or other mechanisms to determine the configuration.
+The protocol works by first determining the domain from the email address, and
+the querying well-known URLs at the email provider, which return the
+configuration parameters in computer-readable form. Failing that, various
+fallback sources can be applied, like a common database of configurations for
+large email providers who do not directly support this protocol, or other
+mechanisms to determine the configuration.
 
 While this AutoConfig protocol was conceived for configuring mail clients,
-it can also be used for accounts of other types, like contacts and calendar sync,
-chat, video conference, or online publishing. The primary concept and limitation here is that
-these accounts need to be hosted by the same provider as the email address.
+it can also be used for accounts of other types, like contacts and calendar
+sync, chat, video conference, or online publishing. The primary concept and
+limitation here is that these accounts need to be hosted by the same provider
+as the email address.
 
 # Implementations
 
-This protocol is in production use since 15 years by major email clients, and the
-config database (used as fallback) contains configurations for over 50% of all email accounts.
+This protocol is in production use since 15 years by major email clients, and
+the config database (used as fallback) contains configurations for over 50% of 
+all email accounts.
 
 Currently, this protocol or parts of it has been implemented by:
 
@@ -77,19 +82,21 @@ Currently, this protocol or parts of it has been implemented by:
 * [Evolution](https://projects.gnome.org/evolution/)
 * [KMail](https://userbase.kde.org/KMail)
 * [Kontact](https://www.kontact.org)
-* [K9 Mail](https://k9mail.app) and [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
+* [K9 Mail](https://k9mail.app) and
+  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
 * [FairEmail](https://email.faircode.eu)
 * [NextCloud email](https://apps.nextcloud.com/apps/mail)
 * [Delta Chat](https://delta.chat/)
 
 and likely other mail clients.
 
-The purpose of this paper is to document and specify what is deployed in the wild.
+The purpose of this paper is to document and specify what is deployed in the
+wild.
 
 # Data format
 
-Whether the ISP or a common central database returns the configuration, the resulting
-document has the following data format.
+Whether the ISP or a common central database returns the configuration, the
+resulting document has the following data format.
 
 The MIME type is `text/xml` or `text/xml+autoconfig`.
 
@@ -264,7 +271,9 @@ and is encoded in UTF-8 without BOM.
 
 The root element of the XML file is `<clientConfig version="1.2">`.
 
-The `version` is `1.2` for the version defined in this specification. `1.1` is a compatible previous version. Higher versions are for future specifications. The client MUST NOT reject a config file solely based on the version number.
+The `version` is `1.2` for the version defined in this specification. `1.1` is
+a compatible previous version. Higher versions are for future specifications.
+The client MUST NOT reject a config file solely based on the version number.
 
 ### emailProvider
 
@@ -273,9 +282,12 @@ This element has no semantic purpose and exists for legacy reasons only.
 If all of its child elements were within the root element, their meaning
 would still be the same.
 
-The `id` is a unique string that typically matches the primary domain of the provider.
+The `id` is a unique string that typically matches the primary domain of the
+provider.
 
-Within `<emailProvider>` are `<domain>`, `<displayName>` and `<displayShortName>`, `<documentation>`, `<incomingServer>` and `<outgoingServer>`.
+Within `<emailProvider>` are `<domain>`, `<displayName>` and
+`<displayShortName>`, `<documentation>`, `<incomingServer>` and
+`<outgoingServer>`.
 
 ### domain
 
@@ -286,10 +298,12 @@ E.g.
     <domain purpose="mx">example-hosting.com</domain>
 
 The content of the `<domain>` element defines which email addresses this config
-is valid for. E.g. a config with `<domain>example.com</domain>` is valid for email address `fred@example.com`.
+is valid for. E.g. a config with `<domain>example.com</domain>` is valid for
+email address `fred@example.com`.
 
 Multiple `<domain>` elements may be included, which means that the config is
-valid for all of these domains. Their order has no meaning - you may sort them by number of users, importance to the provider, or alphabethically.
+valid for all of these domains. Their order has no meaning - you may sort them
+by number of users, importance to the provider, or alphabethically.
 
 A `<domain purpose="mx">` specifies the domain name of the MX server of
 the email address, and is used config file lookup using MX
@@ -338,19 +352,25 @@ code, like the HTML `lang` attribute.
 
 E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
 
-* The `type` property specifies the wire protocol that this server uses. See section type below.
-* `<incomingServer>` specifies the server that the mail client retrieves email from and
-  submits changes to. In many protocols, this server is also used for sending email.
-* `<outgoingServer>` is used for sending, if `<incomingServer>` does not support that directly.
+* The `type` property specifies the wire protocol that this server uses. See
+  section type below.
+* `<incomingServer>` specifies the server that the mail client retrieves email
+  from and submits changes to. In many protocols, this server is also used for
+  sending email.
+* `<outgoingServer>` is used for sending, if `<incomingServer>` does not
+  support that directly.
   This is currently used only for SMTP in combination with IMAP and POP3.
-* `<incomingServer>` and `<outgoingServer>` are within element `<emailProvider>`, whereas
-  `<calendar>`, `<addressbook>`, `<fileShare>`, `<chatServer>` and `<videoConference>` are within the
-  root element `<clientConfig>`, i.e. one level higher. Other than that, they work the same.
+* `<incomingServer>` and `<outgoingServer>` are within element
+  `<emailProvider>`, whereas `<calendar>`, `<addressbook>`, `<fileShare>`,
+  `<chatServer>` and `<videoConference>` are within the
+  root element `<clientConfig>`, i.e. one level higher.
+  Other than that, they work the same.
 * In some protocols, the `<incomingServer>` server additionally provides
-  calendars, addressbooks, and other data. For such protocols, the same server is
-  not repeated in other specific server sections like `<calendar>`.
+  calendars, addressbooks, and other data. For such protocols, the same server
+  is not repeated in other specific server sections like `<calendar>`.
   Calendar-only clients supporting such multi-purpose protocols MUST read the
-  `<incomingServer>` (nonewithstanding that it's within legacy element `<emailProvider>`)
+  `<incomingServer>` (nonewithstanding that it's within legacy element
+  `<emailProvider>`)
   and test and use the parts of the protocol needed for their
   functionality.
 
@@ -359,7 +379,8 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
 * Server sections of the same type (like `<incomingServer>` or `<calendar>`)
   may appear multiple times in the same config file.
   In this case, the one listed first is preferred by the config provider.
-  Unless the client has specific other requirements, it SHOULD pick the first config.
+  Unless the client has specific other requirements, it SHOULD pick the first
+  config.
 
 * The client may derivate from this recommendation, because
   * the client doesn't support a higher-priority protocol, e.g. a JMAP 
@@ -405,7 +426,8 @@ respective registrations need to define
 * the `type` name, as appearing in the `type` property
 * whether the protocol is URL-based or TCP-based,
 * which RFCs or document specifies the protocol, and
-* may define additional protocol-specific XML elements within the section and their meaning.
+* may define additional protocol-specific XML elements within the section and
+  their meaning.
 
 ## URL-based protocols
 
@@ -424,7 +446,8 @@ URLs, the following elements are supported:
 
 E.g. `<url>https://jmap.example.com/session</url>`
 
-The content of the `<url>` element contains the URL where to contact the server.
+The content of the `<url>` element contains the URL where to contact the
+server.
 
 The URL scheme will normally be HTTPS and the URL start with `https://`.
 Some protocols may use other schemes, e.g. WebSockets `wss://`.
@@ -433,13 +456,20 @@ Some protocols may use other schemes, e.g. WebSockets `wss://`.
 
 E.g. `<authentication>http-basic</authentication>`
 
-The content of the `<authentication>` element defines which HTTP authentication method to use.
-* `http-basic`: Authenticate to the HTTP server using `WWW-Authenticate: Basic`. See RFC 7617.
-* `http-digest`: Authenticate to the HTTP server using `WWW-Authenticate: Digest`. See RFC 7616
-* `OAuth`: Authenticate to the HTTP server using `WWW-Authenticate: Bearer`. See RFC 6750 Section 3.
-  It MUST adhere to the requirements defined in section OAuth2 in this specification.
+The content of the `<authentication>` element defines which HTTP
+authentication method to use.
 
-The rules as specified in sections "Multiple authentication alternatives" and "Authentication verification and fallback" apply here as well.
+* `http-basic`: Authenticate to the HTTP server using
+  `WWW-Authenticate: Basic`. See RFC 7617.
+* `http-digest`: Authenticate to the HTTP server using
+  `WWW-Authenticate: Digest`. See RFC 7616
+* `OAuth`: Authenticate to the HTTP server using
+  `WWW-Authenticate: Bearer`. See RFC 6750 Section 3.
+  It MUST adhere to the requirements defined in section OAuth2 in this
+  specification.
+
+The rules as specified in sections "Multiple authentication alternatives" and
+"Authentication verification and fallback" apply here as well.
 
 ### username
 
@@ -447,7 +477,8 @@ E.g. `<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See section Placeholders.
+Placeholders MUST be replaced before using the actual value. See section
+"Placeholders".
 
 ## TCP-based protocols
 
@@ -466,28 +497,36 @@ the following elements are supported:
 
 E.g. `<hostname>imap.example.com</hostname>`
 
-The content of the `<hostname>` element contains the fully qualified hostname of the
-server.
+The content of the `<hostname>` element contains the fully qualified hostname
+of the server.
 
 ### port
 
 E.g. `<port>993</port>`
 
-The content of the `<port>` element is an integer and contains the TCP port number at the hostname. The port is typically specific to the combination of the wire protocol and socketType.
+The content of the `<port>` element is an integer and contains the TCP port
+number at the hostname. The port is typically specific to the combination of
+the wire protocol and socketType.
 
 ### socketType
 
 E.g. `<socketType>SSL</socketType>`
 
-The content of the `<socketType>` element specifies whether to use direct TLS, STARTTLS, or none of these.
+The content of the `<socketType>` element specifies whether to use direct TLS,
+STARTTLS, or none of these.
 
-* `SSL`: Directly contact the TCP port using TLS. TLS version 1.2 or higher SHOULD be used. Higher versions
-  may be required based on security situation, server support, and client policy decisions.
-* `STARTTLS`: Contact the TCP port first using an unencrypted plain socket, then upgrade to TLS
-  using the protocol-specific STARTTLS specification. With this configuration, STARTTLS MUST be used and TLS MUST be used after the STARTTLS upgrade. If the upgrade to TLS fails for whatever reason, the client MUST
-  disconnect and MUST NOT try to authenticate. This prevents downgrade attacks that could otherwise steal passwords,
-  user data, and impersonate users.
-* `plain`: Unencrypted connection, with neither TLS nor STARTTLS. May be needed for local servers. Deprecated.
+* `SSL`: Directly contact the TCP port using TLS. TLS version 1.2 or higher
+  SHOULD be used. Higher versions may be required based on security situation,
+  server support, and client policy decisions.
+* `STARTTLS`: Contact the TCP port first using an unencrypted plain socket,
+  then upgrade to TLS
+  using the protocol-specific STARTTLS specification. With this configuration,
+  STARTTLS MUST be used and TLS MUST be used after the STARTTLS upgrade. If
+  the upgrade to TLS fails for whatever reason, the client MUST
+  disconnect and MUST NOT try to authenticate. This prevents downgrade attacks
+  that could otherwise steal passwords, user data, and impersonate users.
+* `plain`: Unencrypted connection, with neither TLS nor STARTTLS. May be
+  needed for local servers. Deprecated.
 
 #### TLS validation
 
@@ -512,9 +551,9 @@ and use other recovery mechanisms.
 
 E.g. `<authentication>password-cleartext</authentication>`
 
-The content of the `<authentication>` element defines which authentication method to use.
-The can be either an authentication defined by the wire protocol, or a SASL scheme,
-or a successor to SASL.
+The content of the `<authentication>` element defines which authentication
+method to use. The can be either an authentication defined by the wire
+protocol, or a SASL scheme, or a successor to SASL.
 
 * `password-cleartext`: Send password in the clear.
   Uses either the native authentication method defined by the wire protocol
@@ -525,31 +564,38 @@ or a successor to SASL.
   TLS alone by itself does not qualify as "password-encrypted".
 * `NTLM`: Legacy Windows login mechanisms NTLM or NTLMv2.
 * `GSSAPI`: Kerberos or GSSAPI, a single-signon mechanism based on TCP.
-* `TLS-client-cert`: On the SSL/TLS layer, after server request, the client sends a
-  TLS client certificate for the user, possibly after letting the user select/confirm it.
-  Uses SASL `EXTERNAL` scheme.
-* `OAuth`: OAuth. SASL `OAUTHBEARER` (current) or `XOAUTH2` (deprecated) or successors. It MUST adhere to the requirements defined in section OAuth2 in this specification.
-* `client-IP-address`: Server can be used without any explicit authentication, and the client is admitted based on its IP address.
+* `TLS-client-cert`: On the SSL/TLS layer, after server request, the client
+  sends a TLS client certificate for the user, possibly after letting the user
+  select confirm it. Uses SASL `EXTERNAL` scheme.
+* `OAuth`: OAuth. SASL `OAUTHBEARER` (current) or `XOAUTH2` (deprecated) or
+  successors. It MUST adhere to the requirements defined in section OAuth2 in
+  this specification.
+* `client-IP-address`: Server can be used without any explicit authentication,
+  and the client is admitted based on its IP address.
   This may be the case for some SMTP servers on local networks.
   Not supported on the Internet. Deprecated, because it breaks mobile devices.
 
 #### Recommending specific SASL schemes
 
-Additionally, a specific SASL scheme may be specified using `SASL`, a space, and the specific
-SASL authentication scheme name, e.g. `SASL SCRAM-SHA-256-PLUS`. In such a case, the
-server config SHOULD also specify a more generic authentication mechanism
-as a lower priority alternative. That would make clients use the specific authentication mechanism,
-if they support it, and other clients will use the more generic authentication mechanism.
+Additionally, a specific SASL scheme may be specified using `SASL`, a space,
+and the specific SASL authentication scheme name, e.g.
+`SASL SCRAM-SHA-256-PLUS`. In such a case, the server config SHOULD also
+specify a more generic authentication mechanism as a lower priority
+alternative. That would make clients use the specific authentication
+mechanism, if they support it, and other clients will use the more generic
+authentication mechanism.
 
 #### Multiple authentication alternatives
 
-The `<authentication>` element may appear multiple times within a server section. In this case, they are ordered from the most to the least preferred method,
-based on the policy of the provider. If a client does not support a specific
-authentication scheme, or does not have the conditions to use it, e.g.
-the client does not have a Client ID for this OAuth2 server, then the client MUST
-skip this `<authentication>` element and use the next in the list instead.
-If none of the authentication methods are supported by the client, the client MUST
-ignore that server section and use the remaining server sections.
+The `<authentication>` element may appear multiple times within a server
+section. In this case, they are ordered from the most to the least preferred
+method, based on the policy of the provider. If a client does not support a
+specific authentication scheme, or does not have the conditions to use it,
+e.g. the client does not have a Client ID for this OAuth2 server, then the
+client MUST skip this `<authentication>` element and use the next in the list
+instead. If none of the authentication methods are supported by the client,
+the client MUST ignore that server section and use the remaining server
+sections.
 
 #### Authentication verification and fallback
 
@@ -573,12 +619,16 @@ allow the client to distinguish between
 * the user authentication failing due to wrong password or username
 * other reasons
 
-If the server were to return the same error code for all these cases, the client might tell the user that the password is wrong, and the user starts attempting other passwords, potentially revealing passwords to other higher-value assets, which is highly dangerous.
+If the server were to return the same error code for all these cases, the
+client might tell the user that the password is wrong, and the user starts
+attempting other passwords, potentially revealing passwords to other
+higher-value assets, which is highly dangerous.
 
 If the authentification succeeded, the client SHOULD take note of the 
 working configutation and use that for all subsequent connections, 
 until an explicit reconfiguration occurs. During normal everyday operation,
-the client SHOULD NOT fallback nor attempt multiple different authentication methods.
+the client SHOULD NOT fallback nor attempt multiple different authentication
+methods.
 
 ### username
 
@@ -586,7 +636,8 @@ E.g. `<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See section Placeholders.
+Placeholders MUST be replaced before using the actual value. See section
+"Placeholders".
 
 ## Placeholders
 
@@ -628,28 +679,37 @@ XSD is non-normative.
 
 # Config retrieval for mail clients
 
-The mail client application, when it needs the configuration for a given email address,
-will perform several steps to retrieve the configuration from various sources.
+The mail client application, when it needs the configuration for a given email
+address, will perform several steps to retrieve the configuration from various
+sources.
 
-The steps are ordered by priority. They may all be requested at the same time, but a higher priorty
-result that is available SHOULD be preferred over a lower
-priority one, even if the lower priority one is available
-earlier. Exceptions apply when a higher priority result is either
-invalid or outdated, or the fetch method is less secure. Lower
-priority requests MAY be cancelled, if a valid higher priority
-result has been successfully received. The priority is expressed
-below with the number before the URL or location, with lower
-numbers meaning higher priority, e.g. 1.2 has higher priority
-than 4.1.
+The steps are ordered by priority. They may all be requested at the same time,
+but a higher priorty result that is available SHOULD be preferred over a lower
+priority one, even if the lower priority one is available earlier. Exceptions
+apply when a higher priority result is either invalid or outdated, or the
+fetch method is less secure. Lower priority requests MAY be cancelled, if a
+valid higher priority result has been successfully received. The priority is
+expressed below with the number before the URL or location, with lower numbers
+meaning higher priority, e.g. 1.2 has higher priority than 4.1.
 
-In the URLs below, `%EMAILADDRESS%` shall be replaced with the email address that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".
+In the URLs below, `%EMAILADDRESS%` shall be replaced with the email address
+that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced
+with the email domain extracted from the email address. For example, for
+"fred@example.com", the email domain is "example.com", and for "fred@test.cs
+example.net", the email domain is "test.cs.example.net".
 
-For full support of this specification, all "Required" and "Recommended" mechanisms MUST be implemented and working. For partial support of this specification, all "Required" mechanisms MUST be implemented and working, and in this case, you shall make explicit when advertizing or referring to auto config that there is only partial support of this specification.
+For full support of this specification, all "Required" and "Recommended"
+mechanisms MUST be implemented and working. For partial support of this
+specification, all "Required" mechanisms MUST be implemented and working, and
+in this case, you shall make explicit when advertizing or referring to auto
+config that there is only partial support of this specification.
 
 
 ## Mail provider
 
-First step is to directly ask the mail provider and allow it to return the configuration. This step ensures that the protocol is decentralized and the mail provider is in control of the configuration issued to mail clients.
+First step is to directly ask the mail provider and allow it to return the
+configuration. This step ensures that the protocol is decentralized and the
+mail provider is in control of the configuration issued to mail clients.
 
 * 1.1. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Required. `emailaddress` is Optional)
 * 1.2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Optional)
@@ -666,35 +726,44 @@ use this HTTP URL.
 
 ### Customzing the config for a specific user
 
-To allow the mail provider to return a configuration adjusted for that mailbox, the
-client sends the email address as query parameter in URL 1.1. This allows the mail
-provider to e.g. separate mailboxes on geographically local mail servers, e.g. a
-mail server located in the same office building where an employee works.
+To allow the mail provider to return a configuration adjusted for that mailbox,
+the client sends the email address as query parameter in URL 1.1. This allows
+the mail provider to e.g. separate mailboxes on geographically local mail
+servers, e.g. a mail server located in the same office building where an
+employee works.
 
 However, while the protocol allows for such heterogenous configurations, mail
-providers are discouraged from doing so, and are instead encouraged to provide one
-single configuration for all their users. For example, DNS resolution based on
-location, mail proxy servers, or other techniques as necessary, can be used to
-route the traffic and host the mail efficiently.
+providers are discouraged from doing so, and are instead encouraged to provide
+one single configuration for all their users. For example, DNS resolution
+based on location, mail proxy servers, or other techniques as necessary, can
+be used to route the traffic and host the mail efficiently.
 
 This mechanism also allows the autoconfig server to map the email address to
 a username that cannot be expressed using the Placeholders (see section).
-However, this method is discouraged. Instead, the email server login should accept
-email addresses as username, and doing the mapping to internal usernames at login
-time, which avoids the need for the client to know a different username.
+However, this method is discouraged. Instead, the email server login should
+accept email addresses as username, and doing the mapping to internal
+usernames at login time, which avoids the need for the client to know a
+different username.
 
 To avoid that email addresses can be tested for validity, whenever customized
-configs are returned, the autoconfig server should respond to non-existing email
-addresses with a configuation that appears to be real and is similar in structure
-to real configurations, e.g. a random host out of the pool of actual hosts.
+configs are returned, the autoconfig server should respond to non-existing
+email addresses with a configuation that appears to be real and is similar in
+structure to real configurations, e.g. a random host out of the pool of actual
+hosts.
 
 ## Central database
 
-The ISPDB contains the configurations for most mail providers with a market share larger than 0.1%, and contains configurations for half of the email accounts in the world.
+The ISPDB contains the configurations for most mail providers with a market
+share larger than 0.1%, and contains configurations for half of the email
+accounts in the world.
 
-This is a useful fallback for mail providers which do not host a config server described in the previous step. Using a central database (ISPDB) of mail configurations for the large mail providers will increase the success rate of finding a valid configuration drastically, up to 10-fold.
+This is a useful fallback for mail providers which do not host a config server
+described in the previous step. Using a central database (ISPDB) of mail
+configurations for the large mail providers will increase the success rate of
+finding a valid configuration drastically, up to 10-fold.
 
-The mail client application may choose the mail config database provider. A public mail config database is available at base URL `https://v1.ispdb.net/`.
+The mail client application may choose the mail config database provider. A
+public mail config database is available at base URL `https://v1.ispdb.net/`.
 
 `%ISPDB%` below is the base URL of that database.
 
@@ -707,20 +776,39 @@ For example:
 
 ## MX
 
-Many companies do not maintain their own mail server, but let their email be hosted by a hosting company, which is then responsible for the email of dozens or thousands of domains. For these hosters, it may be difficult to set up the configuration server (step 1.1.) with valid TLS certificate for each of their customers, and to convince their customers to modify their root DNS specifically for autoconfig. On the other side, the ISPDB can only contain the hosting company and cannot know all their customers. To handle such domains, the protocol first needs to find the server hosting the email.
+Many companies do not maintain their own mail server, but let their email be
+hosted by a hosting company, which is then responsible for the email of dozens
+or thousands of domains. For these hosters, it may be difficult to set up the
+configuration server (step 1.1.) with valid TLS certificate for each of their
+customers, and to convince their customers to modify their root DNS
+specifically for autoconfig. On the other side, the ISPDB can only contain the
+hosting company and cannot know all their customers. To handle such domains,
+the protocol first needs to find the server hosting the email.
 
-If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain. Only the highest priority MX hostname is considered. From that MX hostname, 2 values are extracted:
+If the previous mechanisms yield no result, the client may perform a DNS MX
+lookup on the email domain, and retrieve the MX server (incoming email server)
+for that domain. Only the highest priority MX hostname is considered. From
+that MX hostname, 2 values are extracted:
 
-* Extract only the second-level domain from the MX hostname, and use that as value for `%MXBASEDOMAIN%`. To determine the second-level domain, use the [Public Suffic List](https://publicsuffix.org) or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".
-* Remove the first component from the MX hostname, i.e. everything up to and including the first `.`, and use that as value for `%MXFULLDOMAIN%`. Use it only if it is longer than `%MXBASEDOMAIN%`.
+* Extract only the second-level domain from the MX hostname, and use that as
+  value for `%MXBASEDOMAIN%`. To determine the second-level domain, use the
+  [Public Suffic List](https://publicsuffix.org) or a similarly suited method,
+  to correctly handle domains like ".co.uk" and ".com.au".
+* Remove the first component from the MX hostname, i.e. everything up to and
+  including the first `.`, and use that as value for `%MXFULLDOMAIN%`. Use it
+  only if it is longer than `%MXBASEDOMAIN%`.
 
 For example:
 
- * For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both "example.com".
- * For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both "example.co.uk".
- * For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXBASEDOMAIN is "example.com".
+ * For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both
+   "example.com".
+ * For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both
+   "example.co.uk".
+ * For "mx.premium.europe.example.com", the MXFULLDOMAIN is
+   "premium.europe.example.com" and the MXBASEDOMAIN is "example.com".
 
-Then, attempt to retrieve the config for these MX domains, using the previous methods:
+Then, attempt to retrieve the config for these MX domains, using the previous
+methods:
 
 * 3.1. `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Required)
 * 3.2. `https://autoconfig.%MXBASEDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
@@ -737,7 +825,10 @@ For example:
 
 ## Local disk
 
-For testing purposes, you may want to define a location on the disk, relative to the application installation directory, or relative to the user configuration directory, which may contain a configuration file for a specific domain, and which your application will use, if the above methods fail.
+For testing purposes, you may want to define a location on the disk, relative
+to the application installation directory, or relative to the user
+configuration directory, which may contain a configuration file for a specific
+domain, and which your application will use, if the above methods fail.
 
 * 4.1. `%USER_CONFIGURATION_DIR%/isp/%EMAILDOMAIN%.xml` (Optional)
 * 4.2. `%APP_INSTALL_DIR%/isp/%EMAILDOMAIN%.xml` (Optional)
@@ -750,27 +841,44 @@ For example:
 
 ## Other mechanisms
 
-You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods SHOULD be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section "Security considerations".
+You may want to implement other mechanisms to find a configuration, for
+example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you
+implement such alternative methods, and if they are less secure than some of
+the mechanisms provided here, the alternative methods SHOULD be considered
+only with lower priority (as defined above) than the more secure mechanisms
+defined here. For evaluating other mechanisms, use similar criteria as
+outlined in section "Security considerations".
 
 
 ## Manual configuration
 
-If the above mechanisms fail to provide a working configuration, or if the user explicitly chooses so, you SHOULD give the end user the ability to manually enter a configuration, and use that configuration to configure the account.
+If the above mechanisms fail to provide a working configuration, or if the
+user explicitly chooses so, you SHOULD give the end user the ability to
+manually enter a configuration, and use that configuration to configure the
+account.
 
 
 # Config validation
 
 ## User approval
 
-Independent of the mechanisms used to find the configuration, before using that configuration, you SHOULD display that configuration to the end user and let him confirm it. While doing so:
+Independent of the mechanisms used to find the configuration, before using
+that configuration, you SHOULD display that configuration to the end user and
+let him confirm it. While doing so:
 
-* At least the second-level domain name(s) of the hostnames involved MUST be shown clearly and with high prominence.
-* The client MUST NOT cut off parts of long second-level domains, to avoid spoofing. At least 63 characters MUST be displayed.
-* Care SHOULD be taken with international characters that look like ASCII characters, but have a different code.
+* At least the second-level domain name(s) of the hostnames involved MUST be
+  shown clearly and with high prominence.
+* The client MUST NOT cut off parts of long second-level domains, to avoid
+  spoofing. At least 63 characters MUST be displayed.
+* Care SHOULD be taken with international characters that look like ASCII
+  characters, but have a different code.
 
 ## Login test
 
-After the user confirmed the configuration, you SHOULD test the configuration, by attempting a login to each server configured. Only if the login succeeded, and the server is working, should the configuration be saved and retrieving and sending mail be started.
+After the user confirmed the configuration, you SHOULD test the configuration,
+by attempting a login to each server configured. Only if the login succeeded,
+and the server is working, should the configuration be saved and retrieving
+and sending mail be started.
 
 ## OAuth2 windows
 
@@ -786,8 +894,6 @@ plaintext passwords.
 Showing the URL or hostname allows the end user to verify that he is
 logging in at the expected page, e.g. the login server of their company,
 instead of the email hoster's page.
-
-(Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)
 
 # Config publishing for mail providers
 
@@ -829,7 +935,8 @@ the location for step 3.1., i.e.
 
 * `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
 
-E.g. if the MX server for customer domain example.net is "mx.premium.europe.example.com", then the config file should be at
+E.g. if the MX server for customer domain example.net is
+"mx.premium.europe.example.com", then the config file should be at
 
 * https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
 
@@ -890,100 +997,170 @@ and all TCP-based protocols like IMAP.
 
 ## DNSSEC
 
-Due to their top-level domain, some domains do not have DNSSEC available to them, even if they would like to deploy it.
+Due to their top-level domain, some domains do not have DNSSEC available to
+them, even if they would like to deploy it.
 
-Even where the top-level domain supports it, DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.
+Even where the top-level domain supports it, DNSSEC is currently deployed in
+only 1% of domains, with adoption rates falling instead of rising, due to the
+difficulties of administrating it correctly.
 
-Therefore, DNSSEC cannot be relied on in this specification, and DNS must be considered insecure for the purposes of this specification.
+Therefore, DNSSEC cannot be relied on in this specification, and DNS must be
+considered insecure for the purposes of this specification.
 
 ## DNS SRV
 
 DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2 reasons:
 
-1. DNS SRV relies on insecure DNS and the config can therefore be trivially spoofed by an attacker. See also DNSSEC above.
-2. DNS SRV does not provide all the necessary configuration parameters. For example, we need all of:
+1. DNS SRV relies on insecure DNS and the config can therefore be trivially
+   spoofed by an attacker. See also DNSSEC above.
+2. DNS SRV does not provide all the necessary configuration parameters. For
+   example, we need all of:
 
-* the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even a username with no relation to the email address)
+* the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even
+  a username with no relation to the email address)
 * authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)
 * authentication method parameters (e.g. OAuth parameters)
 
-and other parameters. If any of these parameters are not configured right, the configuration won't work. While these parameters could theoretically be added to DNS SRV, that would mean a new specification and render the idea void that this is a protocol that already exists, is standardized and deployed. It is unlikely that all DNS SRV records would be updated with the new values. Therefore, it does not solve the problem.
+and other parameters. If any of these parameters are not configured right, the
+configuration won't work. While these parameters could theoretically be added
+to DNS SRV, that would mean a new specification and render the idea void that
+this is a protocol that already exists, is standardized and deployed. It is
+unlikely that all DNS SRV records would be updated with the new values.
+Therefore, it does not solve the problem.
 
-This specification was created as an answer to these deficiencies and provides an alternative to DNS SRV.
+This specification was created as an answer to these deficiencies and provides
+an alternative to DNS SRV.
 
 ## CAPABILITIES
 
-In the wild deployments from actual ISPs show that protocol-specific commands to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3 `CAPA`, are not reliable. Many email servers advertize authentication methods that do not work.
+In the wild deployments from actual ISPs show that protocol-specific commands
+to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3
+`CAPA`, are not reliable. Many email servers advertize authentication methods
+that do not work.
 
-Some IMAP servers are default configured to list all SASL authentication methods that have corresponding libraries installed on the system, independent on whether they are actually configured to work. The client receives a long list of authentication methods, and many of them do not work. Additionally, the server response may be only "authentication failed" and may not indicate whether the method failed due to lack of configuration, or because the password was wrong. Because some authentication servers lock the account after 3 failed login attempts, and it may also fail due to unrelated reasons (e.g. username form, wrong password, etc.), the client cannot blindly issue countless login attempts. Locking the account must be avoided. So, simply attempting all methods and seeing which one works is not an option for the email client.
+Some IMAP servers are default configured to list all SASL authentication
+methods that have corresponding libraries installed on the system, independent
+on whether they are actually configured to work. The client receives a long
+list of authentication methods, and many of them do not work. Additionally,
+the server response may be only "authentication failed" and may not indicate
+whether the method failed due to lack of configuration, or because the
+password was wrong. Because some authentication servers lock the account after
+3 failed login attempts, and it may also fail due to unrelated reasons (e.g.
+username form, wrong password, etc.), the client cannot blindly issue
+countless login attempts. Locking the account must be avoided. So, simply
+attempting all methods and seeing which one works is not an option for the
+email client.
 
-Additionally, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method fails, and also runs into a long 2 minute timeout in some cases. End users consider that to be a broken app.
+Additionally, some email servers advertize Kerberos / GSSAPI, but when trying
+to use it, the method fails, and also runs into a long 2 minute timeout in
+some cases. End users consider that to be a broken app.
 
-Additionally, such commands are protocol specific and have to be implemented in multiple different ways.
+Additionally, such commands are protocol specific and have to be implemented
+in multiple different ways.
 
-Finally, some non-mail protocols may not support capabilties commands that include authentication methods.
+Finally, some non-mail protocols may not support capabilties commands that
+include authentication methods.
 
 
 # Security Considerations
 
 ## Risk
 
-If an attacker can provide a forged configuration, the provided mail hostname and authentication server can be controlled by the attacker, and the attacker can get access to the plain text password of the user. The attack can be implemented as man-in-the-middle, so the end user might receive mail as expected and never notice the attack.
+If an attacker can provide a forged configuration, the provided mail hostname
+and authentication server can be controlled by the attacker, and the attacker
+can get access to the plain text password of the user. The attack can be
+implemented as man-in-the-middle, so the end user might receive mail as
+expected and never notice the attack.
 
-An attacker gaining the plain text password of a real user is a very significant threat for the organization, not only because mail itself can contain sensitive information and can be used to issue orders within the organization that have wide-ranging impact, but given single-sign-on solutions, the same username and password may give access to other resources at the organization, including other computers or, in the case of admin users, even adminstrative access to the core of the entire organization.
+An attacker gaining the plain text password of a real user is a very
+significant threat for the organization, not only because mail itself can
+contain sensitive information and can be used to issue orders within the
+organization that have wide-ranging impact, but given single-sign-on
+solutions, the same username and password may give access to other resources
+at the organization, including other computers or, in the case of admin users,
+even adminstrative access to the core of the entire organization.
 
-Multi-factor authentication might not defend against such attacks, because the user may believe to be logging into his email and therefore comply with any multi-factor authentication steps required.
+Multi-factor authentication might not defend against such attacks, because the
+user may believe to be logging into his email and therefore comply with any
+multi-factor authentication steps required.
 
 ## DNS
 
-Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure.
-This also applies to the DNS MX lookup and the https calls that base on its results, as described in
-section "MX".
+Any protocol that relies on DNS without further validation, e.g. http, should
+be considered insecure.
+This also applies to the DNS MX lookup and the https calls that base on its
+results, as described in section "MX".
 
-One possible mitigation is to use multiple different DNS servers
-and verify that the results match, e.g. to use the native DNS
-resolver of the operating system, and additionally also query
-a hardcoded DoH (DNS over HTTPS) server.
+One possible mitigation is to use multiple different DNS servers and verify
+that the results match, e.g. to use the native DNS resolver of the operating
+system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.
 
-Nonetheless, the result should be used with care. If such configs are used, the end user MUST
-explicitly confirm the config, particularly the resulting second-level domains. See section
-"User approval".
+Nonetheless, the result should be used with care. If such configs are used,
+the end user MUST explicitly confirm the config, particularly the resulting
+second-level domains. See section "User approval".
 
 ## HTTP
 
-HTTP requests may be intercepted, redirected, or altered at the network level. See "Risk" above.
-Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated
-against the email domain, that is still insecure.
+HTTP requests may be intercepted, redirected, or altered at the network level.
+See "Risk" above.
+
+Even if an http URL redirects to a https URL, and the domain of the https URL
+cannot be validated against the email domain, that is still insecure.
 
 For that reason, clients MUST prefer HTTPS over HTTP during config retrieval,
 within the same retrieval method.
 
-If such configs from HTTP are used, the end user MUST explicitly confirm the config,
-particularly the resulting second-level domains. See section "User approval".
+If such configs from HTTP are used, the end user MUST explicitly confirm the
+config, particularly the resulting second-level domains. See section
+"User approval".
 
 ## Config updates
 
-Part of the security properties of this protocol assume that the timeframe of possible attack is limited to the moment when the user manually sets up a new mail client. This moment is triggered by the end user, and a rare action - e.g. maybe once per year or even less, for typical setups -, so an attacker has limited chances to run an attack. While not a complete protection on its own, this reduces the risk significantly.
+Part of the security properties of this protocol assume that the timeframe of
+possible attack is limited to the moment when the user manually sets up a new
+mail client. This moment is triggered by the end user, and a rare action -
+e.g. maybe once per year or even less, for typical setups -, so an attacker
+has limited chances to run an attack. While not a complete protection on its
+own, this reduces the risk significantly.
 
-However, if the mail client does regular configuration updates using this protocol, this security property is no longer given. For regular configuration updates, the mail client MUST use only mechanisms that are secure and cannot be tampered with by an active attacker. Furthermore, the user SHOULD still approve config changes.
+However, if the mail client does regular configuration updates using this
+protocol, this security property is no longer given. For regular configuration
+updates, the mail client MUST use only mechanisms that are secure and cannot
+be tampered with by an active attacker. Furthermore, the user SHOULD still
+approve config changes.
 
-But even with all these protections implemented, the mail client vendor should make a security assessment for the risks of making such regular updates. The mail client vendor should consider that servers can be hacked, and most users simply approve changes proposed by the app, so these give only a limited protection.
+But even with all these protections implemented, the mail client vendor should
+make a security assessment for the risks of making such regular updates. The
+mail client vendor should consider that servers can be hacked, and most users
+simply approve changes proposed by the app, so these give only a limited
+protection.
 
 ## Server security
 
-Given that mail clients will trust the configuration, the server delivering it needs to be secure. Even though we call it "database", static configuration files that are generated before deployment in combination with a static web server offer better security and significantly better performance than dynamic queries from a database and responses generated on-the-fly on request. If a custom server is used, it SHOULD be updated regularly and hosted on a dedicated secure server with all unnecessary services and server features turned off.
+Given that mail clients will trust the configuration, the server delivering it
+needs to be secure. Even though we call it "database", static configuration
+files that are generated before deployment in combination with a static web
+server offer better security and significantly better performance than dynamic
+queries from a database and responses generated on-the-fly on request. If a
+custom server is used, it SHOULD be updated regularly and hosted on a
+dedicated secure server with all unnecessary services and server features
+turned off.
 
-Additions and modifications to the configurations are applicable to all respective users and must be made with care. The authenticity of the configuration MUST be verified from authorative sources. Server hostnames MUST be compared with the email domain names they are serving, and if they differ, the ownership of the server hostnames MUST be validated.
+Additions and modifications to the configurations are applicable to all
+respective users and must be made with care. The authenticity of the
+configuration MUST be verified from authorative sources. Server hostnames MUST
+be compared with the email domain names they are serving, and if they differ,
+the ownership of the server hostnames MUST be validated.
 
-For these reasons, mail clients may use the public mail config database mentioned above.
+For these reasons, mail clients may use the public mail config database
+mentioned above.
 
 The risk is mitigated to some degree by section "User approval".
 
 
 # IANA Considerations
 
-This document has no IANA actions.
-
+TODO Create register for type
 
 --- back
 
