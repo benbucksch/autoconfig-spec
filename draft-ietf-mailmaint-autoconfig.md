@@ -1160,11 +1160,34 @@ The risk is mitigated to some degree by section "User approval".
 
 # IANA Considerations
 
-TODO Create register for type
+IANA will create the following registry in a new registry group called 
+"Mail Autoconfig":
+
+Registry Name: "Autoconfig Protocol Type Names"
+
+Registration Procedure: Specification Required, per RFC 8126, Section 4
+
+Designated Expert: The author of this document.
+
+Table, with fields Type (alphanumeric), Base (either URL or TCP), Name, Specification, and Additional Elements
+
+Initial registration:
+
+| Type          | Base    | Name         | Specification
+| ------------- | ------- | ------------ | ----------------------------------
+| `jmap`        | URL     | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
+| `imap`        | TCP     | IMAP         | RFC 9051 or RFC 3501, et al
+| `pop3`        | TCP     | POP3         | RFC 1939, RFC 5034
+| `smtp`        | TCP     | SMTP         | RFC 5321, RFC 2822
+| `caldav`      | URL     | CalDAV       | RFC 4791
+| `carddav`     | URL     | CardDav      | RFC 6352
+| `webdav`      | URL     | WebDAV       | RFC 4918
+| `xmpp`        | URL/TCP | XMPP         | RFC 6120, RFC 6121, RFC 7395
+| `managesieve` | TCP     | ManageSieve  | RFC 5804, RFC 5228
+| `ews`         | URL     | Exchange Web Services |
+| `activesync`  | URL     | ActiveSync            |
+| `graph`       | URL     | Microsoft Graph       |
+
+The Additional Elements field is empty in all of the initial values.
 
 --- back
-
-# Acknowledgments
-{:numbered="false"}
-
-TODO acknowledge.
