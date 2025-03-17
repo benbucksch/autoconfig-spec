@@ -936,15 +936,30 @@ Multi-factor authentication might not defend against such attacks, because the u
 
 ## DNS
 
-Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure. This also applies to the DNS MX lookup and the https calls that base on its results, as described in section "MX".
+Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure.
+This also applies to the DNS MX lookup and the https calls that base on its results, as described in
+section "MX".
 
 One possible mitigation is to use multiple different DNS servers
 and verify that the results match, e.g. to use the native DNS
 resolver of the operating system, and additionally also query
-a hardcoded DoH (DNS over HTTPS) server. Nonetheless,
-the result should be used with care.
+a hardcoded DoH (DNS over HTTPS) server.
 
-Such insecure configs may only be used, if the end user confirms the config, particularly the resulting second-level domains. See section "User approval".
+Nonetheless, the result should be used with care. If such configs are used, the end user MUST
+explicitly confirm the config, particularly the resulting second-level domains. See section
+"User approval".
+
+## HTTP
+
+HTTP requests may be intercepted, redirected, or altered at the network level. See "Risk" above.
+Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated
+against the email domain, that is still insecure.
+
+For that reason, clients MUST prefer HTTPS over HTTP during config retrieval,
+within the same retrieval method.
+
+If such configs from HTTP are used, the end user MUST explicitly confirm the config,
+particularly the resulting second-level domains. See section "User approval".
 
 ## Config updates
 
