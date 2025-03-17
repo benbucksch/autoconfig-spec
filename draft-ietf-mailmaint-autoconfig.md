@@ -222,6 +222,26 @@ The following example shows the syntax of the XML config file returned.
           <username>%EMAILADDRESS%</username>
         </fileShare>
 
+        <chatServer type="xmpp">
+          <url>wss://example.com:5281/xmpp-websocket</url>
+          <authentication>http-basic</authentication>
+          <username>%EMAILADDRESS%</username>
+        </chatServer>
+
+        <chatServer type="xmpp">
+          <hostname>xmpp.example.com</hostname>
+          <port>5223</port>
+          <socketType>TLS</socketType>
+          <authentication>password-cleartext</authentication>
+          <username>%EMAILADDRESS%</username>
+        </chatServer>
+
+        <videoConference type="opentalk">
+          <url>https://talk.example.com/login</url>
+          <authentication>OAuth2</authentication>
+          <username>%EMAILADDRESS%</username>
+        </videoConference>
+
         <!-- OAuth2 config for mail and other native and
           public client apps.
           Gives e.g. clientID, expiry, and login page
