@@ -403,20 +403,21 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
 The `type` property on the server section element specifies the
 wire protocol that this server uses.
 
-| type          | Base    | Name         | Specification
-| ------------- | ------- | ------------ | ----------------------------------
-| `jmap`        | URL     | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
-| `imap`        | TCP     | IMAP         | RFC 9051 or RFC 3501, et al
-| `pop3`        | TCP     | POP3         | RFC 1939, RFC 5034
-| `smtp`        | TCP     | SMTP         | RFC 5321, RFC 2822
-| `caldav`      | URL     | CalDAV       | RFC 4791
-| `carddav`     | URL     | CardDav      | RFC 6352
-| `webdav`      | URL     | WebDAV       | RFC 4918
-| `xmpp`        | URL/TCP | XMPP         | RFC 6120, RFC 6121, RFC 7395
-| `managesieve` | TCP     | ManageSieve  | RFC 5804, RFC 5228
-| `ews`         | URL     | Exchange Web Services |
-| `activesync`  | URL     | ActiveSync            |
-| `graph`       | URL     | Microsoft Graph       |
+| Element          | type          | Base    | Name         | Specification
+| ---------------- | ------------- | ------- | ------------ | ----------------------------------
+| <incomingServer> | `jmap`        | URL     | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
+| <incomingServer> | `imap`        | TCP     | IMAP         | RFC 9051 or RFC 3501, et al
+| <incomingServer> | `pop3`        | TCP     | POP3         | RFC 1939, RFC 5034
+| <outgoingServer> | `smtp`        | TCP     | SMTP         | RFC 5321, RFC 2822
+| <calendar>       | `caldav`      | URL     | CalDAV       | RFC 4791
+| <addressbook>    | `carddav`     | URL     | CardDav      | RFC 6352
+| <fileShare>      | `webdav`      | URL     | WebDAV       | RFC 4918
+| <chatServer>     | `xmpp`        | URL/TCP | XMPP         | RFC 6120, RFC 6121, RFC 7395
+| <chatServer>     | `matrix`      | URL     | Matrix       | <https://spec.matrix.org>
+| <setupServer>    | `managesieve` | TCP     | ManageSieve  | RFC 5804, RFC 5228
+| <incomingServer> | `ews`         | URL     | Exchange Web Services |
+| <incomingServer> | `activeSync`  | URL     | ActiveSync            |
+| <incomingServer> | `graph`       | URL     | Microsoft Graph       |
 
 Other protocol names can be added using an IANA registry. Their 
 respective registrations need to define
@@ -1163,24 +1164,25 @@ Registration Procedure: Specification Required, per RFC 8126, Section 4
 
 Designated Expert: The author of this document.
 
-Table, with fields Type (alphanumeric), Base (either URL or TCP), Name, Specification, and Additional Elements
+Table, with fields Element (alphanumeric), Type (alphanumeric), Base (URL or TCP or URL/TCP), Name, Specification, and Additional Elements
 
 Initial registration:
 
-| Type          | Base    | Name         | Specification
-| ------------- | ------- | ------------ | ----------------------------------
-| `jmap`        | URL     | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
-| `imap`        | TCP     | IMAP         | RFC 9051 or RFC 3501, et al
-| `pop3`        | TCP     | POP3         | RFC 1939, RFC 5034
-| `smtp`        | TCP     | SMTP         | RFC 5321, RFC 2822
-| `caldav`      | URL     | CalDAV       | RFC 4791
-| `carddav`     | URL     | CardDav      | RFC 6352
-| `webdav`      | URL     | WebDAV       | RFC 4918
-| `xmpp`        | URL/TCP | XMPP         | RFC 6120, RFC 6121, RFC 7395
-| `managesieve` | TCP     | ManageSieve  | RFC 5804, RFC 5228
-| `ews`         | URL     | Exchange Web Services |
-| `activesync`  | URL     | ActiveSync            |
-| `graph`       | URL     | Microsoft Graph       |
+| Element          | Type          | Base    | Name         | Specification
+| ---------------- | ------------- | ------- | ------------ | ---------------------------------- | Additional Elements
+| <incomingServer> | `jmap`        | URL     | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al |
+| <incomingServer> | `imap`        | TCP     | IMAP         | RFC 9051 or RFC 3501, et al |
+| <incomingServer> | `pop3`        | TCP     | POP3         | RFC 1939, RFC 5034 |
+| <outgoingServer> | `smtp`        | TCP     | SMTP         | RFC 5321, RFC 2822 |
+| <calendar>       | `caldav`      | URL     | CalDAV       | RFC 4791 |
+| <addressbook>    | `carddav`     | URL     | CardDav      | RFC 6352 |
+| <fileShare>      | `webdav`      | URL     | WebDAV       | RFC 4918 |
+| <chatServer>     | `xmpp`        | URL/TCP | XMPP         | RFC 6120, RFC 6121, RFC 7395 |
+| <chatServer>     | `matrix`      | URL     | Matrix       | <https://spec.matrix.org> |
+| <setupServer>    | `managesieve` | TCP     | ManageSieve  | RFC 5804, RFC 5228 |
+| <incomingServer> | `ews`         | URL     | Exchange Web Services | |
+| <incomingServer> | `activeSync`  | URL     | ActiveSync            | |
+| <incomingServer> | `graph`       | URL     | Microsoft Graph       | |
 
 The Additional Elements field is empty in all of the initial values.
 
