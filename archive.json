@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-30T00:14:48.274902+00:00",
+  "timestamp": "2025-03-18T00:16:05.814019+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -711,15 +711,15 @@
       "id": "I_kwDOKo_bRc6Yk1yQ",
       "title": "Breaking changes between version 1.1 and 1.2 (and the future of AutoConfig)",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/15",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ben221199",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "When comparing my schemas, this are the changes between 1.1 and 1.2:\r\n1. Add `<url>` inside `<incomingServer>`\r\n2. Make `<hostname>`, `<port>`, `<password>` and `<socketType>` inside `<incomingServer>` optional\r\n3. Add `http-basic` as value for `<authentication>` inside `<incomingServer>`\r\n4. Add `jmap`, `ews` and `activesync` to the enum for the `type` attribute on `<incomingServer>`\r\n5. Make `<password>` inside `<outgoingServer>` optional\r\n6. Add `<addressBook>`, `<calendar>`, `<fileShare>`, `<mAuth>`, `<enable>`, `<clientConfigUpdate>` on `<clientConfig>`\r\n7. Add `<inputField>` on `<clientConfig>`\r\n\r\nThere may be more changes that I missed, but I will go with these for now.\r\n\r\n---\r\n\r\nBy the way that ThunderBird is implemented, I assume that extended enums (change 3 and 4) will break the code. Also, in change 1, `<url>` is used instead of `<hostname>` and `<port>`, which likely breaks many clients that expect an hostname and port. Change 7 seems to me like a mistake, because `<inputField>` was inside `<emailProvider>` before. And last, I don't like change 6.\r\n\r\nIn my conclusion, we can minimalize the breaking changes problem to introduce a new 1.2 URL instead of building on the same URL. \r\n\r\n---\r\n\r\nAlso, I don't think we should add all those other types of services in this AutoConfig. Currently, the 1.1 URL is `http://autoconfig.$DOMAIN/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS` (or `http://$DOMAIN/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=$EMAILADDRESS`). Notice the `mail` part in the URL, so let this be AutoConfig Mail, and lets make an AutoConfig Calendar and AutoConfig Contacts seperately. We may link those URLs in some general AutoConfig file.\r\n\r\nFor now, XML is fine for 1.2, but when developing 2.0, the switch to JSON seems pretty straight forward.",
       "createdAt": "2024-10-01T17:17:04Z",
-      "updatedAt": "2024-10-04T14:27:01Z",
-      "closedAt": null,
+      "updatedAt": "2025-03-17T09:40:13Z",
+      "closedAt": "2025-03-17T01:37:51Z",
       "comments": [
         {
           "author": "ben221199",
@@ -776,6 +776,27 @@
           "body": "> I have no problems with the current spec being strict.\r\n\r\n1.0 was strict and made it impossible to add OAuth2 auth. So, we want to be able to add new properties, elements etc..",
           "createdAt": "2024-10-04T14:27:00Z",
           "updatedAt": "2024-10-04T14:27:00Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> You have a good point, though: The spec should mandate clients to ignore config parts that the client cannot understand, but process the rest. This is the only way that we can continue evolving the spec. Otherwise we're completely stuck.\n\nI've added explicit text that the client MUST ignore elements, properties and type/auth values that it doesn't understand.\n\nThe latest revision of the spec text is a major overhaul. Please have another read.\n\nFIXED",
+          "createdAt": "2025-03-17T01:37:51Z",
+          "updatedAt": "2025-03-17T01:37:51Z"
+        },
+        {
+          "author": "ben221199",
+          "authorAssociation": "NONE",
+          "body": "Okay, nice. I will take a look at this repository soon, because I haven't yet made/finished a XSD for 1.2 yet.",
+          "createdAt": "2025-03-17T09:33:52Z",
+          "updatedAt": "2025-03-17T09:33:52Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Current draft status is here: https://www.ietf.org/archive/id/draft-ietf-mailmaint-autoconfig-01.html",
+          "createdAt": "2025-03-17T09:40:12Z",
+          "updatedAt": "2025-03-17T09:40:12Z"
         }
       ]
     },
@@ -784,16 +805,26 @@
       "id": "I_kwDOKo_bRc6lD0Va",
       "title": "Suggestion: Add possibility to specify ManageSieve config",
       "url": "https://github.com/benbucksch/autoconfig-spec/issues/16",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mimi89999",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "benbucksch"
+      ],
       "labels": [],
       "body": "[RFC 5804](https://datatracker.ietf.org/doc/html/rfc5804) defines a protocol for managing sieve filters. It would be nice to make it possible to automatically discover the endpoint for it.",
       "createdAt": "2025-01-05T12:01:45Z",
-      "updatedAt": "2025-01-05T12:01:45Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-03-17T01:31:20Z",
+      "closedAt": "2025-03-17T01:31:19Z",
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "DONE",
+          "createdAt": "2025-03-17T01:31:19Z",
+          "updatedAt": "2025-03-17T01:31:19Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -813,7 +844,7 @@
       "baseRepository": "benbucksch/autoconfig-spec",
       "baseRefName": "main",
       "baseRefOid": "8988788f3a54cd5836cfaee1b2f2c8c147694ef1",
-      "headRepository": "deltachat/autoconfig-spec",
+      "headRepository": null,
       "headRefName": "link2xt/deltachat",
       "headRefOid": "04a7e0797c3f0a9145492bbcfd4762fc994f36de",
       "closedAt": "2024-01-31T19:06:55Z",
@@ -921,21 +952,21 @@
       "id": "PR_kwDOKo_bRc59PcKf",
       "title": "Add HTTP security considerations",
       "url": "https://github.com/benbucksch/autoconfig-spec/pull/14",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mimi89999",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-10-01T11:36:45Z",
-      "updatedAt": "2024-10-14T08:47:06Z",
+      "updatedAt": "2025-03-17T06:39:42Z",
       "baseRepository": "benbucksch/autoconfig-spec",
       "baseRefName": "main",
-      "baseRefOid": "d53b5beeb31c1524020a6105dba858014f941d8f",
+      "baseRefOid": "a79a8c1ec771266114bb04f2b2bab1c8a21c6c8a",
       "headRepository": "mimi89999/autoconfig-spec",
       "headRefName": "http_sc",
       "headRefOid": "cfba5ae98e35a4226bad6f371a19a429780e4672",
-      "closedAt": null,
+      "closedAt": "2025-03-17T01:48:28Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -946,6 +977,20 @@
           "body": "@benbucksch Could you please review this pull request?",
           "createdAt": "2024-10-14T08:47:05Z",
           "updatedAt": "2024-10-14T08:47:05Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "Hey @mimi89999 , I've added a section \"HTTP\", with different wording, but the same meaning. Thanks for your suggestion.",
+          "createdAt": "2025-03-17T01:49:21Z",
+          "updatedAt": "2025-03-17T01:49:21Z"
+        },
+        {
+          "author": "mimi89999",
+          "authorAssociation": "NONE",
+          "body": "Thanks!",
+          "createdAt": "2025-03-17T06:39:40Z",
+          "updatedAt": "2025-03-17T06:39:40Z"
         }
       ],
       "reviews": []
