@@ -72,7 +72,7 @@ as the email address.
 # Implementations
 
 This protocol is in production use since 15 years by major email clients, and
-the config database (used as fallback) contains configurations for over 50% of 
+the config database (used as fallback) contains configurations for over 50% of
 all email accounts.
 
 Currently, this protocol or parts of it has been implemented by:
@@ -315,10 +315,10 @@ E.g.
     <displayShortName>GMail</displayShortName>
 
 The `<displayName>` element contains the name of the provider, e.g.
-as preferred by the marketing of the provider itself. It SHOULD be no 
+as preferred by the marketing of the provider itself. It SHOULD be no
 longer than 30 characters, but MUST be no longer than 60 characters.
 
-The `<displayShortName>` element contains the name of the provider, as 
+The `<displayShortName>` element contains the name of the provider, as
 typically used by end users. It SHOULD be no longer than 12
 characters, and it MUST NOT be longer than 20 characters.
 
@@ -333,15 +333,15 @@ E.g.
 
 This is purely informational and not required for the automatic setup.
 
-Records the user help webpage at the provider that describes the mail 
-server settings. The config may be based on that page, but does not 
-necessarily have to match it, e.g. when a better config is available 
+Records the user help webpage at the provider that describes the mail
+server settings. The config may be based on that page, but does not
+necessarily have to match it, e.g. when a better config is available
 than the one described on the webpage.
 
-The `url` property contains the URL of the webpage. The `<descr>` 
-content describes the content and purpose of the page and why it's 
+The `url` property contains the URL of the webpage. The `<descr>`
+content describes the content and purpose of the page and why it's
 referenced here.
-Multiple `<descr>` elements with different `lang` properties are 
+Multiple `<descr>` elements with different `lang` properties are
 allowed, whereby the `lang` property contains the 2-letter ISO language
 code, like the HTML `lang` attribute.
 
@@ -380,11 +380,11 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
   config.
 
 * The client may derivate from this recommendation, because
-  * the client doesn't support a higher-priority protocol, e.g. a JMAP 
-    configuraion is listed first and is the most preferred, but the 
+  * the client doesn't support a higher-priority protocol, e.g. a JMAP
+    configuraion is listed first and is the most preferred, but the
     client does not support JMAP yet, or
   * the client doesn't support a configuration setting, e.g. it
-    doesn't support STARTTLS, or the config specifies only an OAuth2 
+    doesn't support STARTTLS, or the config specifies only an OAuth2
     authentication and the client either doesn't implement OAuth2, or
     it doesn't have a client ID for this provider, or
   * the client has a specific policy to prefer another configuration,
@@ -392,10 +392,10 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
     the client has a policy of preferring direct TLS, or likewise
     the client prefers IMAP over POP3.
 
-* Server types, elements and protocols that the client does not support 
-  MUST be ignored and the client MUST continue to parse the other 
+* Server types, elements and protocols that the client does not support
+  MUST be ignored and the client MUST continue to parse the other
   server sections, which may contain configs that the client
-  understands and supports. The client ignores the file only if there 
+  understands and supports. The client ignores the file only if there
   is no supported and working config found.
 
 ## type
@@ -420,8 +420,8 @@ wire protocol that this server uses.
 | incomingServer | `activeSync`  | URL  | ActiveSync            |
 | incomingServer | `graph`       | URL  | Microsoft Graph       |
 
-Other protocol names can be added using an IANA registry. Their 
-respective registrations need to define
+Other protocol names can be added using an IANA registry. Their
+respective registrations need to define:
 * Element: The XML element wrapping the server section.
 * Type: The `type` property value of the server section.
 * Base: Whether the protocol is URL-based or TCP-based,
@@ -440,7 +440,7 @@ E.g.
       <username>%EMAILADDRESS%</username>
     </incomingServer>
 
-For server sections with protocols that are based on HTTPS or other 
+For server sections with protocols that are based on HTTPS or other
 URLs, the following elements are supported:
 
 ### url
@@ -536,8 +536,8 @@ the client MUST validate the TLS certificate and ensure that the
 certificate is valid for the hostname given in this config. If not,
 or if the TLS certificate is otherwise invalid, the client MUST
 either disconnect or MAY warn the user of the
-dangers and ask for user confirmation. Such warning and confirmation 
-MAY only be allowed at original configuration and MUST NOT be allowed 
+dangers and ask for user confirmation. Such warning and confirmation
+MAY only be allowed at original configuration and MUST NOT be allowed
 during normal everyday connection.
 
 If the server had a valid TLS certificate during original configuration
@@ -604,20 +604,20 @@ sections.
 
 #### Authentication verification and fallback
 
-The client SHOULD test the configuration during setup, with an actual 
+The client SHOULD test the configuration during setup, with an actual
 authentication attempt.
 
-If the authentication fails, the client decides based on the 
+If the authentication fails, the client decides based on the
 authentication error code how to proceed. E.g. if the authentiocation
-method itself failed, or the error code indicates a systemic failure, 
-the client SHOULD use a lower-priority authentication method from the 
+method itself failed, or the error code indicates a systemic failure,
+the client SHOULD use a lower-priority authentication method from the
 list.
 
-If the authentication method is working, but the error code indicated 
+If the authentication method is working, but the error code indicated
 that the username or password was wrong, then the client MAY ask the
-user to correct the password. 
+user to correct the password.
 
-For that reason, the server SHOULD be specific in the error codes and 
+For that reason, the server SHOULD be specific in the error codes and
 allow the client to distinguish between
 * an unsupported or non-working authentication method or other
   systemic failures
@@ -631,8 +631,8 @@ client might tell the user that the password is wrong, and the user starts
 attempting other passwords, potentially revealing passwords to other
 higher-value assets, which is highly dangerous.
 
-If the authentification succeeded, the client SHOULD take note of the 
-working configutation and use that for all subsequent connections, 
+If the authentification succeeded, the client SHOULD take note of the
+working configutation and use that for all subsequent connections,
 until an explicit reconfiguration occurs. During normal everyday operation,
 the client SHOULD NOT fallback nor attempt multiple different authentication
 methods.
@@ -665,20 +665,20 @@ Some clients MAY also support the same placeholders for the fields
 
 ## XML validation
 
-The client SHOULD validate that the config file is valid XML, and if 
-the XML syntax is invalid, the client SHOULD ignore the entire file. In 
-contrast, if there are syntactically valid, but unknown elements or 
+The client SHOULD validate that the config file is valid XML, and if
+the XML syntax is invalid, the client SHOULD ignore the entire file. In
+contrast, if there are syntactically valid, but unknown elements or
 properties, the client MUST NOT ignore the file.
 
 The client SHOULD take only the elements and attributes that are
 supported by the client, and MUST ignore the others that are unknown
 to the client.
 
-The client may optionally want to validate the XML before parsing it. 
-This is not required. If the client choses to validate, the validation 
+The client may optionally want to validate the XML before parsing it.
+This is not required. If the client choses to validate, the validation
 MUST ignore unknown elements and properties and MUST NOT
-drop or ignore a configuration that contains unknown elements and 
-properties. This is needed to allow future extensions of the format 
+drop or ignore a configuration that contains unknown elements and
+properties. This is needed to allow future extensions of the format
 without breaking existing clients.
 
 # Config retrieval by mail clients
@@ -1158,7 +1158,7 @@ The risk is mitigated to some degree by section "User approval".
 
 ## Registration
 
-IANA will create the following registry in a new registry group called 
+IANA will create the following registry in a new registry group called
 "Mail Autoconfig":
 
 Registry Name: "Autoconfig Protocol Type Names"
