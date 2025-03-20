@@ -96,13 +96,13 @@ wild.
 # Data format
 
 Whether the ISP or a common central database returns the configuration, the
-resulting document has the following data format.
+resulting document MUST have the following data format and qualities.
 
 The MIME type is `text/xml`.
 
 ## XML config file
 
-The following example shows the syntax of the XML config file returned.
+The following example shows the syntax of the XML config file.
 
     <?xml version="1.0"?>
     <clientConfig version="1.2">
@@ -373,30 +373,30 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
 
 ### Multiple server sections
 
-* Server sections of the same type (like `<incomingServer>` or `<calendar>`)
-  may appear multiple times in the same config file.
-  In this case, the one listed first is preferred by the config provider.
-  Unless the client has specific other requirements, it SHOULD pick the first
-  config.
+Server sections of the same type (like `<incomingServer>` or `<calendar>`)
+may appear multiple times in the same config file.
+In this case, the one listed first is preferred by the config provider.
+Unless the client has specific other requirements, it SHOULD pick the first
+config.
 
-* The client may derivate from this recommendation, because
-  * the client doesn't support a higher-priority protocol, e.g. a JMAP
-    configuraion is listed first and is the most preferred, but the
-    client does not support JMAP yet, or
-  * the client doesn't support a configuration setting, e.g. it
-    doesn't support STARTTLS, or the config specifies only an OAuth2
-    authentication and the client either doesn't implement OAuth2, or
-    it doesn't have a client ID for this provider, or
-  * the client has a specific policy to prefer another configuration,
-    e.g. a STARTTLS config is listed before a direct TLS config, and
-    the client has a policy of preferring direct TLS, or likewise
-    the client prefers IMAP over POP3.
+The client may derivate from this recommendation, because
+* the client doesn't support a higher-priority protocol, e.g. a JMAP
+  configuraion is listed first and is the most preferred, but the
+  client does not support JMAP yet, or
+* the client doesn't support a configuration setting, e.g. it
+  doesn't support STARTTLS, or the config specifies only an OAuth2
+  authentication and the client either doesn't implement OAuth2, or
+  there is a problem in the OAuth2 flow with this provider, or
+* the client has a specific policy to prefer another configuration,
+  e.g. a STARTTLS config is listed before a direct TLS config, and
+  the client has a policy of preferring direct TLS, or likewise
+  the client prefers IMAP over POP3.
 
-* Server types, elements and protocols that the client does not support
-  MUST be ignored and the client MUST continue to parse the other
-  server sections, which may contain configs that the client
-  understands and supports. The client ignores the file only if there
-  is no supported and working config found.
+Server types, elements and protocols that the client does not support
+MUST be ignored and the client MUST continue to parse the other
+server sections, which may contain configs that the client
+understands and supports. The client ignores the file only if there
+is no supported and working config found.
 
 ## type
 
@@ -420,15 +420,8 @@ wire protocol that this server uses.
 | incomingServer | `activeSync`  | URL  | ActiveSync            |
 | incomingServer | `graph`       | URL  | Microsoft Graph       |
 
-Other protocol names can be added using an IANA registry. Their
-respective registrations need to define:
-* Element: The XML element wrapping the server section.
-* Type: The `type` property value of the server section.
-* Base: Whether the protocol is URL-based or TCP-based,
-* Name: The commonly used name of the protocol
-* Specification: Which RFCs or document specifies the protocol, and
-* Additional Elements: (Optional) Protocol-specific XML elements and
-  their meaning.
+Other protocol names can be added using an IANA registry. See the
+corresponding section below.
 
 ## URL-based protocols
 
@@ -536,17 +529,17 @@ the client MUST validate the TLS certificate and ensure that the
 certificate is valid for the hostname given in this config. If not,
 or if the TLS certificate is otherwise invalid, the client MUST
 either disconnect or MAY warn the user of the
-dangers and ask for user confirmation. Such warning and confirmation
-MAY only be allowed at original configuration and MUST NOT be allowed
-during normal everyday connection.
+dangers and ask for user confirmation. Such fallback with warning and
+confirmation is allowed only at original configuration and MUST NOT be
+allowed during normal everyday connection.
 
 If the server had a valid TLS certificate during original configuration
-and the TLS certificate is invalid during normal connection, the
+and the TLS certificate is later invalid during normal connection, the
 client MUST disconnect.
 
-If the problem is that the TLS certificate expired recently,
-the client MAY not consider that a failure during normal connection
-and use other recovery mechanisms.
+As an exception, if the problem is that the TLS certificate expired recently,
+the client MAY choose to not consider that a failure during normal connection
+and MAY use other recovery mechanisms.
 
 ### authentication
 
@@ -619,6 +612,7 @@ user to correct the password.
 
 For that reason, the server SHOULD be specific in the error codes and
 allow the client to distinguish between
+
 * an unsupported or non-working authentication method or other
   systemic failures
 * the client being rejected by the server
@@ -667,10 +661,10 @@ Some clients MAY also support the same placeholders for the fields
 
 The client SHOULD validate that the config file is valid XML, and if
 the XML syntax is invalid, the client SHOULD ignore the entire file. In
-contrast, if there are syntactically valid, but unknown elements or
+contrast, if there are merely unknown elements or
 properties, the client MUST NOT ignore the file.
 
-The client SHOULD take only the elements and attributes that are
+The client SHOULD read only the elements and attributes that are
 supported by the client, and MUST ignore the others that are unknown
 to the client.
 
@@ -678,7 +672,7 @@ The client may optionally want to validate the XML before parsing it.
 This is not required. If the client choses to validate, the validation
 MUST ignore unknown elements and properties and MUST NOT
 drop or ignore a configuration that contains unknown elements and
-properties. This is needed to allow future extensions of the format
+properties. This is required to allow future extensions of the format
 without breaking existing clients.
 
 # Config retrieval by mail clients
@@ -1171,7 +1165,8 @@ Designated Expert: The author of this document.
 
 Table, with fields Element (alphanumeric), Type (alphanumeric), Base (URL or TCP or URL/TCP), Name, Specification, and Additional Elements
 
-The registrations need to define
+The registrations need to define:
+
 * Element: The XML element wrapping the server section.
 * Type: The `type` property value of the server section.
 * Base: Whether the protocol is URL-based or TCP-based,
