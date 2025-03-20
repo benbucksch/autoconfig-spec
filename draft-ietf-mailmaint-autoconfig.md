@@ -135,7 +135,7 @@ The following example shows the syntax of the XML config file returned.
             "NTLM": Deprecated Windows login mechanism
             "GSSAPI": Kerberos or Windows GSSAPI
             "TLS-client-cert": TLS client certificate on TLS layer
-            "OAuth2": Must adhere to section "OAuth2 requirements".
+            "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
             "none": No authentication
 
             Multiple <authentication> elements per server
@@ -173,7 +173,7 @@ The following example shows the syntax of the XML config file returned.
             <!-- Authentication methods
             "http-basic": RRFC 7661
             "http-digest"
-            "OAuth2": Must adhere to section "OAuth2 requirements".
+            "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
             -->
           <authentication>OAuth2</authentication>
           <authentication>http-basic</authentication>
@@ -242,8 +242,8 @@ The following example shows the syntax of the XML config file returned.
       </videoConference>
 
         <!-- OAuth2 config for native public client apps.
-        Gives e.g. clientID, expiry, and login page
-        MUST adhere to "Open Client OAuth2 profile".
+        Gives e.g. clientID, expiry, and login page.
+        The provider MUST adhere to "Open Client OAuth2 profile".
         -->
       <oAuth2>
         <authURL>https://login.example.com/auth</authURL>
@@ -403,28 +403,31 @@ E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
 The `type` property on the server section element specifies the
 wire protocol that this server uses.
 
-| Element          | type          | Base    | Name         | Specification
-| ---------------- | ------------- | ------- | ------------ | ----------------------------------
-| <incomingServer> | `jmap`        | URL     | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
-| <incomingServer> | `imap`        | TCP     | IMAP         | RFC 9051 or RFC 3501, et al
-| <incomingServer> | `pop3`        | TCP     | POP3         | RFC 1939, RFC 5034
-| <outgoingServer> | `smtp`        | TCP     | SMTP         | RFC 5321, RFC 2822
-| <calendar>       | `caldav`      | URL     | CalDAV       | RFC 4791
-| <addressbook>    | `carddav`     | URL     | CardDav      | RFC 6352
-| <fileShare>      | `webdav`      | URL     | WebDAV       | RFC 4918
-| <chatServer>     | `xmpp`        | URL/TCP | XMPP         | RFC 6120, RFC 6121, RFC 7395
-| <chatServer>     | `matrix`      | URL     | Matrix       | <https://spec.matrix.org>
-| <setupServer>    | `managesieve` | TCP     | ManageSieve  | RFC 5804, RFC 5228
-| <incomingServer> | `ews`         | URL     | Exchange Web Services |
-| <incomingServer> | `activeSync`  | URL     | ActiveSync            |
-| <incomingServer> | `graph`       | URL     | Microsoft Graph       |
+| Element        | Type          | Base | Name         | Specification
+| -------------- | ------------- | ---- | ------------ | ------------------
+| incomingServer | `jmap`        | URL  | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
+| incomingServer | `imap`        | TCP  | IMAP         | RFC 9051 or RFC 3501, et al
+| incomingServer | `pop3`        | TCP  | POP3         | RFC 1939, RFC 5034
+| outgoingServer | `smtp`        | TCP  | SMTP         | RFC 5321, RFC 2822
+| calendar       | `caldav`      | URL  | CalDAV       | RFC 4791
+| addressbook    | `carddav`     | URL  | CardDav      | RFC 6352
+| fileShare      | `webdav`      | URL  | WebDAV       | RFC 4918
+| chatServer     | `xmpp`        | URL  | XMPP         | RFC 6120, RFC 6121, RFC 7395
+| chatServer     | `xmpptcp`     | TCP  | XMPP         | RFC 6120, RFC 6121
+| chatServer     | `matrix`      | URL  | Matrix       | <https://spec.matrix.org>
+| setupServer    | `managesieve` | TCP  | ManageSieve  | RFC 5804, RFC 5228
+| incomingServer | `ews`         | URL  | Exchange Web Services |
+| incomingServer | `activeSync`  | URL  | ActiveSync            |
+| incomingServer | `graph`       | URL  | Microsoft Graph       |
 
 Other protocol names can be added using an IANA registry. Their 
 respective registrations need to define
-* the `type` name, as appearing in the `type` property
-* whether the protocol is URL-based or TCP-based,
-* which RFCs or document specifies the protocol, and
-* may define additional protocol-specific XML elements within the section and
+* Element: The XML element wrapping the server section.
+* Type: The `type` property value of the server section.
+* Base: Whether the protocol is URL-based or TCP-based,
+* Name: The commonly used name of the protocol
+* Specification: Which RFCs or document specifies the protocol, and
+* Additional Elements: (Optional) Protocol-specific XML elements and
   their meaning.
 
 ## URL-based protocols
@@ -463,8 +466,8 @@ authentication method to use.
   `WWW-Authenticate: Digest`. See RFC 7616
 * `OAuth`: Authenticate to the HTTP server using
   `WWW-Authenticate: Bearer`. See RFC 6750 Section 3.
-  It MUST adhere to the requirements defined in section OAuth2 in this
-  specification.
+  The provider MUST adhere to the requirements defined in section OAuth2
+  in this specification.
 
 The rules as specified in sections "Multiple authentication alternatives" and
 "Authentication verification and fallback" apply here as well.
@@ -550,7 +553,7 @@ and use other recovery mechanisms.
 E.g. `<authentication>password-cleartext</authentication>`
 
 The content of the `<authentication>` element defines which authentication
-method to use. The can be either an authentication defined by the wire
+method to use. This can be either an authentication defined by the wire
 protocol, or a SASL scheme, or a successor to SASL.
 
 * `password-cleartext`: Send password in the clear.
@@ -566,8 +569,8 @@ protocol, or a SASL scheme, or a successor to SASL.
   sends a TLS client certificate for the user, possibly after letting the user
   select confirm it. Uses SASL `EXTERNAL` scheme.
 * `OAuth`: OAuth. SASL `OAUTHBEARER` (current) or `XOAUTH2` (deprecated) or
-  successors. It MUST adhere to the requirements defined in section OAuth2 in
-  this specification.
+  successors. The provider MUST adhere to the requirements defined in
+  section OAuth2 in this specification.
 * `client-IP-address`: Server can be used without any explicit authentication,
   and the client is admitted based on its IP address.
   This may be the case for some SMTP servers on local networks.
@@ -587,11 +590,15 @@ authentication mechanism.
 
 The `<authentication>` element may appear multiple times within a server
 section. In this case, they are ordered from the most to the least preferred
-method, based on the policy of the provider. If a client does not support a
+method, based on the policy of the provider.
+
+If a client does not support a
 specific authentication scheme, or does not have the conditions to use it,
 e.g. the client does not have a Client ID for this OAuth2 server, then the
 client MUST skip this `<authentication>` element and use the next in the list
-instead. If none of the authentication methods are supported by the client,
+instead.
+
+If none of the authentication methods are supported by the client,
 the client MUST ignore that server section and use the remaining server
 sections.
 
@@ -599,11 +606,13 @@ sections.
 
 The client SHOULD test the configuration during setup, with an actual 
 authentication attempt.
+
 If the authentication fails, the client decides based on the 
 authentication error code how to proceed. E.g. if the authentiocation
 method itself failed, or the error code indicates a systemic failure, 
 the client SHOULD use a lower-priority authentication method from the 
 list.
+
 If the authentication method is working, but the error code indicated 
 that the username or password was wrong, then the client MAY ask the
 user to correct the password. 
@@ -672,7 +681,7 @@ drop or ignore a configuration that contains unknown elements and
 properties. This is needed to allow future extensions of the format 
 without breaking existing clients.
 
-# Config retrieval for mail clients
+# Config retrieval by mail clients
 
 The mail client application, when it needs the configuration for a given email
 address, will perform several steps to retrieve the configuration from various
@@ -780,8 +789,8 @@ specifically for autoconfig. On the other side, the ISPDB can only contain the
 hosting company and cannot know all their customers. To handle such domains,
 the protocol first needs to find the server hosting the email.
 
-If the previous mechanisms yield no result, the client may perform a DNS MX
-lookup on the email domain, and retrieve the MX server (incoming email server)
+If the previous mechanisms yield no result, the client SHOULD perform a DNS MX
+lookup on the email domain, and retrieve the MX server (incoming SMTP server)
 for that domain. Only the highest priority MX hostname is considered. From
 that MX hostname, 2 values are extracted:
 
@@ -888,9 +897,10 @@ plaintext passwords.
 
 Showing the URL or hostname allows the end user to verify that he is
 logging in at the expected page, e.g. the login server of their company,
-instead of the email hoster's page.
+instead of the email hoster's page. It is important that the user verifies
+that he enters the passwords on the right domain.
 
-# Config publishing for mail providers
+# Config publishing by mail providers
 
 Mail service providers who want to support this specification
 and publish the mail configuration for their own mail service,
@@ -938,18 +948,6 @@ E.g. if the MX server for customer domain example.net is
 For backwards compatibility with older mail clients,
 step 3.2. should also be implemented.
 
-## No authentication for config
-
-Any of the above URLs for retrieving the config file MUST NOT
-require authentication, but MUST be public.
-
-This is because the config contains the authentication method.
-Without knowing the config, the client does not know which
-authentication method is required and which username form
-(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE")
-to use. Given that the config is required for authentication,
-the config itself cannot require authentication.
-
 ## Return config for non-existing email addresses
 
 Servers SHOULD return a valid config, even if the email address
@@ -962,9 +960,21 @@ email address, the config server SHOULD return one of the
 valid configuations, so that valid and invalid email addresses
 are indistiguishable.
 
+## No authentication for config
+
+Any of the above URLs for retrieving the config file MUST NOT
+require authentication, but MUST be public.
+
+This is because the config contains the authentication method.
+Without knowing the config, the client does not know which
+authentication method is required and which username form
+(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE")
+to use. Given that the config is required for authentication,
+the config itself cannot require authentication.
+
 ## OAuth2 requirements
 
-If OAuth2 is used, the OAuth2 server MUST adhere to the
+If OAuth2 is used, the provider MUST adhere to the
 "Open Profile for Public Clients" or
 [mAuth](https://benbucksch.github.io/mauth-spec/draft-mauth.html)
 specification.
@@ -982,10 +992,6 @@ The OAuth2 scope MUST include all services defined in this config file.
 The same refresh and access token MUST be valid for all services defined
 in the same config file, including for all URL-based protocols like CalDAV
 and all TCP-based protocols like IMAP.
-
-# Conventions and Definitions
-
-{::boilerplate bcp14-tagged}
 
 
 # Alternatives considered
@@ -1028,7 +1034,7 @@ an alternative to DNS SRV.
 
 ## CAPABILITIES
 
-In the wild deployments from actual ISPs show that protocol-specific commands
+Deployments in the wild from actual ISPs show that protocol-specific commands
 to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3
 `CAPA`, are not reliable. Many email servers advertize authentication methods
 that do not work.
@@ -1132,28 +1138,25 @@ protection.
 
 ## Server security
 
-Given that mail clients will trust the configuration, the server delivering it
-needs to be secure. Even though we call it "database", static configuration
-files that are generated before deployment in combination with a static web
-server offer better security and significantly better performance than dynamic
-queries from a database and responses generated on-the-fly on request. If a
-custom server is used, it SHOULD be updated regularly and hosted on a
+Given that mail clients will trust the configuration, the server delivering
+the configuration file needs to be secure. A static web server offers better
+security. The server software SHOULD be updated regularly and hosted on a
 dedicated secure server with all unnecessary services and server features
 turned off.
 
-Additions and modifications to the configurations are applicable to all
-respective users and must be made with care. The authenticity of the
-configuration MUST be verified from authorative sources. Server hostnames MUST
-be compared with the email domain names they are serving, and if they differ,
-the ownership of the server hostnames MUST be validated.
-
-For these reasons, mail clients may use the public mail config database
-mentioned above.
+For the ISPDB, additions and modifications to the configurations are
+applicable to all respective users and must be made with care. The
+authenticity of the configuration MUST be verified from authorative sources.
+Server hostnames MUST be compared with the email domain names they are
+serving, and if they differ, the ownership of the server hostnames MUST be
+validated.
 
 The risk is mitigated to some degree by section "User approval".
 
 
 # IANA Considerations
+
+## Registration
 
 IANA will create the following registry in a new registry group called 
 "Mail Autoconfig":
@@ -1164,26 +1167,43 @@ Registration Procedure: Specification Required, per RFC 8126, Section 4
 
 Designated Expert: The author of this document.
 
+## Contents
+
 Table, with fields Element (alphanumeric), Type (alphanumeric), Base (URL or TCP or URL/TCP), Name, Specification, and Additional Elements
 
-Initial registration:
+The registrations need to define
+* Element: The XML element wrapping the server section.
+* Type: The `type` property value of the server section.
+* Base: Whether the protocol is URL-based or TCP-based,
+* Name: The commonly used name of the protocol
+* Specification: Which RFCs or document specifies the protocol, and
+* Additional Elements: (Optional) Protocol-specific XML elements and
+  their meaning.
 
-| Element          | Type          | Base    | Name         | Specification
-| ---------------- | ------------- | ------- | ------------ | ---------------------------------- | Additional Elements
-| <incomingServer> | `jmap`        | URL     | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al |
-| <incomingServer> | `imap`        | TCP     | IMAP         | RFC 9051 or RFC 3501, et al |
-| <incomingServer> | `pop3`        | TCP     | POP3         | RFC 1939, RFC 5034 |
-| <outgoingServer> | `smtp`        | TCP     | SMTP         | RFC 5321, RFC 2822 |
-| <calendar>       | `caldav`      | URL     | CalDAV       | RFC 4791 |
-| <addressbook>    | `carddav`     | URL     | CardDav      | RFC 6352 |
-| <fileShare>      | `webdav`      | URL     | WebDAV       | RFC 4918 |
-| <chatServer>     | `xmpp`        | URL/TCP | XMPP         | RFC 6120, RFC 6121, RFC 7395 |
-| <chatServer>     | `matrix`      | URL     | Matrix       | <https://spec.matrix.org> |
-| <setupServer>    | `managesieve` | TCP     | ManageSieve  | RFC 5804, RFC 5228 |
-| <incomingServer> | `ews`         | URL     | Exchange Web Services | |
-| <incomingServer> | `activeSync`  | URL     | ActiveSync            | |
-| <incomingServer> | `graph`       | URL     | Microsoft Graph       | |
+## Initial registration
+
+| Element        | Type          | Base | Name         | Specification | Additional Elements
+| ------------- | -------------- | ---- | ------------ | ------------- | ---
+| incomingServer | `jmap`        | URL  | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al |
+| incomingServer | `imap`        | TCP  | IMAP         | RFC 9051 or RFC 3501, et al |
+| incomingServer | `pop3`        | TCP  | POP3         | RFC 1939, RFC 5034 |
+| outgoingServer | `smtp`        | TCP  | SMTP         | RFC 5321, RFC 2822 |
+| calendar       | `caldav`      | URL  | CalDAV       | RFC 4791 |
+| addressbook    | `carddav`     | URL  | CardDav      | RFC 6352 |
+| fileShare      | `webdav`      | URL  | WebDAV       | RFC 4918 |
+| chatServer     | `xmpp`        | URL  | XMPP         | RFC 6120, RFC 6121, RFC 7395 |
+| chatServer     | `xmpptcp`     | TCP  | XMPP         | RFC 6120, RFC 6121 |
+| chatServer     | `matrix`      | URL  | Matrix       | <https://spec.matrix.org> |
+| setupServer    | `managesieve` | TCP  | ManageSieve  | RFC 5804, RFC 5228 |
+| incomingServer | `ews`         | URL  | Exchange Web Services | |
+| incomingServer | `activeSync`  | URL  | ActiveSync            | |
+| incomingServer | `graph`       | URL  | Microsoft Graph       | |
 
 The Additional Elements field is empty in all of the initial values.
+
+
+# Conventions and Definitions
+
+{::boilerplate bcp14-tagged}
 
 --- back
