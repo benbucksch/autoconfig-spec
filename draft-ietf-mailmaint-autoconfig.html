@@ -9,7 +9,7 @@
 <meta content="
        Set up a mail account with only email address and password. 
     " name="description">
-<meta content="xml2rfc 3.24.0" name="generator">
+<meta content="xml2rfc 3.28.0" name="generator">
 <meta content="config" name="keyword">
 <meta content="autoconfig" name="keyword">
 <meta content="autodiscover" name="keyword">
@@ -21,16 +21,16 @@
 <meta content="JMAP" name="keyword">
 <meta content="draft-ietf-mailmaint-autoconfig-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.24.0
-    Python 3.12.7
+  xml2rfc 3.28.0
+    Python 3.12.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
-    Jinja2 3.1.4
+    Jinja2 3.1.6
     lxml 5.3.0
     platformdirs 4.3.6
-    pycountry 22.3.5
-    PyYAML 6.0.1
+    pycountry 24.6.1
+    PyYAML 6.0.2
     requests 2.32.3
     setuptools 70.3.0
     wcwidth 0.2.13
@@ -286,6 +286,12 @@ body {
 }
 
 /* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-title);
   font-weight: 680;
@@ -317,6 +323,7 @@ h4, h5, h6 {
 /* general structure */
 .author {
   padding-bottom: 0.3em;
+  vertical-align: top;
 }
 #abstract+p {
   font-size: 18px;
@@ -394,25 +401,26 @@ svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
 ol, ul {
   padding: 0;
   margin: 0 0 0.5em 2em;
-}
-:is(ol, ul) :is(ol, ul) {
-  margin-left: 1em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
 }
 li {
   margin: 0 0 0.25em 0;
 }
-.ulCompact li {
-  margin: 0;
-}
 ul.empty, .ulEmpty {
   list-style-type: none;
-}
-ul.empty li, .ulEmpty li {
-  margin-top: 0.5em;
+  & li {
+    margin-top: 0.5em;
+  }
 }
 :is(ul, ol).compact, .ulCompact, .olCompact {
-  line-height: 1;
   margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
 }
 
 /* definition lists */
@@ -420,38 +428,39 @@ dl {
   clear: left;
   --indent: 3ch;
   /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+    }
+  }
+  &.olPercent > dt {
+    float: none;
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
 }
-dl.olPercent {
-  --indent: 5ch;
-}
-dl > dt {
+dl:not(.dlNewline) > dt {
   float: left;
   margin-right: 2ch;
   min-width: 8ch;
-}
-dl.dlNewline > dt {
-  float: none;
 }
 dl > dd {
   margin-bottom: .8em;
   margin-left: var(--indent) !important; /* stupid element overrides */
   min-height: 2ex;
 }
-dl.olPercent > dt {
-  min-width: calc(var(--indent) - 2ch);
-}
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
-}
-:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
-  margin-top: 0;
-}
-:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
-  margin-bottom: 0;
-}
-dl > dd > dl {
-  margin-top: 0.5em;
-  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
 }
 :is(dd, span).break {
   display: none;
@@ -515,6 +524,7 @@ figcaption, caption {
   font-style: italic;
   margin: 0.5em 1.5em;
   text-align: left;
+  caption-side: bottom;
 }
 @media screen {
   /* Auto-collapse boilerplate. */
@@ -532,7 +542,11 @@ figcaption, caption {
   }
   pre, svg {
     display: inline-block;
-    overflow-x: auto;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
   }
   pre {
     max-width: 100%;
@@ -569,6 +583,7 @@ cite {
 
 /* tables */
 table {
+  width: auto;
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
@@ -583,6 +598,16 @@ table.center {
 table.left {
   margin-right: auto;
 }
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
 thead, tbody {
   border: 1px solid var(--line-color);
 }
@@ -613,9 +638,11 @@ a.pilcrow {
   margin-left: 3px;
   opacity: 0.2;
   user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
 }
-a.pilcrow[href] { color: var(--pilcrow-weak); }
-a.pilcrow[href]:hover { text-decoration: none; }
 @media not print {
   :hover > a.pilcrow {
     opacity: 1;
@@ -655,26 +682,28 @@ sub, sup {
   font-size: var(--small-font-size);
   line-height: 18px;
   --identifier-width: 15ch;
-}
-#identifiers dt {
-  width: var(--identifier-width);
-  min-width: var(--identifier-width);
-  clear: left;
-  float: left;
-  text-align: right;
-  margin-right: 1ch;
-}
-#identifiers dd {
-  margin: 0;
-  margin-left: calc(1em + var(--identifier-width)) !important;
-  min-width: 5em;
-}
-#identifiers .authors .author {
-  display: inline-block;
-  margin-right: 1.5em;
-}
-#identifiers .authors .org {
-  font-style: italic;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
 }
 
 /* The prepared/rendered info at the very bottom of the page */
@@ -685,9 +714,6 @@ sub, sup {
   margin-top: 2em;
 }
 .docInfo .prepared {
-  float: left;
-}
-.docInfo .prepared {
   float: right;
 }
 
@@ -695,53 +721,48 @@ sub, sup {
 #toc {
   padding: 0.75em 0 2em 0;
   margin-bottom: 1em;
-}
-@media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
   }
 }
-#toc nav ul {
-  margin: 0 0.5em 0 0;
-  padding: 0;
-  list-style: none;
-}
-#toc nav li {
-  line-height: 1.3em;
-  margin: 2px 0;
-  padding-left: 1.2em;
-  text-indent: -1.2em;
-}
-#toc a.xref {
-  white-space: normal;
-}
-/* references */
-.references dt {
-  text-align: right;
-  font-weight: bold;
-  min-width: 10ch;
-  margin-right: 1.5ch;
-}
-.references dt:target::before {
-  content: "⇒";
-  width: 15px;
-  margin: 0 10px 0 -25px;
-}
-.references dd {
-  margin-left: 12ch !important;
-  overflow: auto;
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
 }
 
-.refInstance {
-  margin-bottom: 1.25em;
-}
-
-.references .ascii {
-  margin-bottom: 0.25em;
-}
-
-/* index */
 #rfc\.index\.index + ul {
   margin-left: 0;
 }
@@ -749,21 +770,33 @@ sub, sup {
 /* authors */
 address.vcard {
   font-style: normal;
-  margin: 1em 0;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
 }
-address.vcard .nameRole {
-  font-weight: 700;
-  margin-left: 0;
-}
-address.vcard .label {
-  margin: 0.5em 0;
-}
-address.vcard .type {
-  display: none;
-}
-.alternative-contact {
-  margin: 1.5em 0 1em;
-}
+
 hr.addr {
   border-top: 1px dashed;
   margin: 0;
@@ -785,6 +818,7 @@ hr.addr {
   }
 }
 
+/* Comments */
 .rfcEditorRemove p:first-of-type {
   font-style: italic;
 }
@@ -795,7 +829,31 @@ hr.addr {
 .crefSource {
   font-style: italic;
 }
-/* alternative layout for smaller screens */
+
+@media screen {
+  #toc nav {
+    font-family: var(--font-title);
+    font-weight: 360;
+    & > ul { margin-bottom: 2em; }
+    & ul {
+      margin: 0 0 0 4px;
+      & :is(p, li) {
+        margin: 2px 0;
+      }
+    }
+  }
+  #toc a.toplink {
+    float: right;
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
 @media screen and (max-width: 929px) {
   #toc {
     position: fixed;
@@ -806,9 +864,6 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc.active {
-      opacity: 1;
   }
   #toc h2 {
     margin: 0;
@@ -821,17 +876,17 @@ hr.addr {
     background-color: #444;
     color: white;
     cursor: pointer;
-  }
-  #toc h2::before { /* css hamburger */
-    float: right;
-    position: relative;
-    width: 1em;
-    height: 1px;
-    left: -164px;
-    margin: 8px 0 0 0;
-    background: white none repeat scroll 0 0;
-    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-    content: "";
+    &::before { /* css hamburger */
+      float: right;
+      position: relative;
+      width: 1em;
+      height: 1px;
+      left: -164px;
+      margin: 8px 0 0 0;
+      background: white none repeat scroll 0 0;
+      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+      content: "";
+    }
   }
   #toc nav {
     display: none;
@@ -842,14 +897,13 @@ hr.addr {
     height: calc(100vh - 48px);
     border-left: 1px solid #ddd;
   }
-  #toc.active nav {
-    display: block;
+  #toc.active {
+    opacity: 1;
+    & nav { display: block; }
   }
   /* Make the collapsed ToC header render white on gray also when it's a link */
   #toc h2 a,
-  #toc h2 a:link,
-  #toc h2 a:focus,
-  #toc h2 a:hover,
+  #toc h2 a:is(:link, :focus, :hover),
   #toc a.toplink,
   #toc a.toplink:hover {
     color: white;
@@ -857,11 +911,11 @@ hr.addr {
     text-decoration: none;
   }
   #toc a.toplink {
-    margin-top: 2px;
+    margin: 2px 0.5em 0;
   }
 }
 
-/* alternative layout for wide screens */
+/* TOC layout for wide screens */
 @media screen and (min-width: 930px) {
   body {
     padding-right: 360px;
@@ -890,20 +944,12 @@ hr.addr {
     overscroll-behavior: contain;
     scrollbar-width: thin;
   }
-  #toc nav > ul  {
-    margin-bottom: 2em;
-  }
-  #toc ul {
-    margin: 0 0 0 4px;
-    font-size: var(--small-font-size);
-  }
-  #toc ul :is(p, li) {
-    margin: 2px 0;
-    line-height: 22px;
-  }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
+  }
+  #toc a.toplink {
+    margin: 8px 0.5em 0;
   }
 }
 
@@ -946,9 +992,6 @@ hr.addr {
   td {
     border-top: 1px solid #ddd;
   }
-  .toplink {
-    display: none;
-  }
 }
 
 @page :first {
@@ -971,82 +1014,6 @@ hr.addr {
   size: A4;
   margin-bottom: 45mm;
   padding-top: 20px;
-}
-
-/* Changes introduced to fix issues found during implementation */
-
-/* Separate body from document info even without intervening H1 */
-section {
-  clear: both;
-}
-
-/* Top align author divs, to avoid names without organization dropping level with org names */
-.author {
-  vertical-align: top;
-}
-
-/* Style section numbers with more space between number and title */
-.section-number {
-  padding-right: 0.5em;
-}
-
-/* Add styling for a link in the ToC that points to the top of the document */
-a.toplink {
-  float: right;
-  margin: 8px 0.5em 0;
-}
-
-/* Provide styling for table cell text alignment */
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
-}
-
-/* Make the alternative author contact information look less like just another
-   author, and group it closer with the primary author contact information */
-.alternative-contact {
-  margin: 0.5em 0 0.25em 0;
-}
-address .non-ascii {
-  margin: 0 0 0 2em;
-}
-
-/* With it being possible to set tables with alignment
-  left, center, and right, { width: 100%; } does not make sense */
-table {
-  width: auto;
-}
-
-/* Avoid reference text that sits in a block with very wide left margin,
-   because of a long floating dt label.*/
-.references dd {
-  overflow: visible;
-}
-
-/* Control caption placement */
-caption {
-  caption-side: bottom;
-}
-
-/* Limit the width of the author address vcard, so names in right-to-left
-   script don't end up on the other side of the page. */
-
-address.vcard {
-  max-width: 20em;
-  margin-right: auto;
-}
-
-/* For address alignment dependent on LTR or RTL scripts */
-address div.left {
-  text-align: left;
-}
-address div.right {
-  text-align: right;
 }
 
 /* Dark mode. */
@@ -1085,11 +1052,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">autoconfig</td>
-<td class="right">November 2024</td>
+<td class="right">March 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bucksch</td>
-<td class="center">Expires 9 May 2025</td>
+<td class="center">Expires 21 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1102,12 +1069,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mailmaint-autoconfig-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-11-05" class="published">5 November 2024</time>
+<time datetime="2025-03-20" class="published">20 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-05-09">9 May 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-21">21 September 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1128,7 +1095,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
 <p id="section-note.1-2">
-        The latest revision of this draft can be found at <span><a href="https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html">https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html</a></span>.
+        The latest revision of this draft can be found at <span><a href="https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html">https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html</a></span>.
         Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-mailmaint-autoconfig/">https://datatracker.ietf.org/doc/draft-ietf-mailmaint-autoconfig/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
 <p id="section-note.1-3">
         Discussion of this document takes place on the
@@ -1157,7 +1124,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1166,7 +1133,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2024 IETF Trust and the persons identified as the
+            Copyright (c) 2025 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1196,18 +1163,83 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-data-format" class="internal xref">Data format</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-sample-config-file" class="internal xref">Sample config file</a></p>
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-xml-config-file" class="internal xref">XML config file</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-formal-definition" class="internal xref">Formal definition</a></p>
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-global-elements" class="internal xref">Global elements</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-clientconfig" class="internal xref">clientConfig</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.2">
+                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-emailprovider" class="internal xref">emailProvider</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.3">
+                    <p id="section-toc.1-1.3.2.2.2.3.1"><a href="#section-3.2.3" class="auto internal xref">3.2.3</a>.  <a href="#name-domain" class="internal xref">domain</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.4">
+                    <p id="section-toc.1-1.3.2.2.2.4.1"><a href="#section-3.2.4" class="auto internal xref">3.2.4</a>.  <a href="#name-displayname-and-displayshor" class="internal xref">displayName and displayShortName</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-placeholders" class="internal xref">Placeholders</a></p>
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-documentation" class="internal xref">documentation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-server-sections" class="internal xref">Server sections</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4.2.1">
+                    <p id="section-toc.1-1.3.2.4.2.1.1"><a href="#section-3.4.1" class="auto internal xref">3.4.1</a>.  <a href="#name-multiple-server-sections" class="internal xref">Multiple server sections</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-type" class="internal xref">type</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-url-based-protocols" class="internal xref">URL-based protocols</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.1">
+                    <p id="section-toc.1-1.3.2.6.2.1.1"><a href="#section-3.6.1" class="auto internal xref">3.6.1</a>.  <a href="#name-url" class="internal xref">url</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.2">
+                    <p id="section-toc.1-1.3.2.6.2.2.1"><a href="#section-3.6.2" class="auto internal xref">3.6.2</a>.  <a href="#name-authentication" class="internal xref">authentication</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.3">
+                    <p id="section-toc.1-1.3.2.6.2.3.1"><a href="#section-3.6.3" class="auto internal xref">3.6.3</a>.  <a href="#name-username" class="internal xref">username</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-tcp-based-protocols" class="internal xref">TCP-based protocols</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.1">
+                    <p id="section-toc.1-1.3.2.7.2.1.1"><a href="#section-3.7.1" class="auto internal xref">3.7.1</a>.  <a href="#name-hostname" class="internal xref">hostname</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.2">
+                    <p id="section-toc.1-1.3.2.7.2.2.1"><a href="#section-3.7.2" class="auto internal xref">3.7.2</a>.  <a href="#name-port" class="internal xref">port</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.3">
+                    <p id="section-toc.1-1.3.2.7.2.3.1"><a href="#section-3.7.3" class="auto internal xref">3.7.3</a>.  <a href="#name-sockettype" class="internal xref">socketType</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.4">
+                    <p id="section-toc.1-1.3.2.7.2.4.1"><a href="#section-3.7.4" class="auto internal xref">3.7.4</a>.  <a href="#name-authentication-2" class="internal xref">authentication</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.5">
+                    <p id="section-toc.1-1.3.2.7.2.5.1"><a href="#section-3.7.5" class="auto internal xref">3.7.5</a>.  <a href="#name-username-2" class="internal xref">username</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8">
+                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-placeholders" class="internal xref">Placeholders</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.9">
+                <p id="section-toc.1-1.3.2.9.1"><a href="#section-3.9" class="auto internal xref">3.9</a>.  <a href="#name-xml-validation" class="internal xref">XML validation</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-config-retrieval-for-mail-c" class="internal xref">Config retrieval for mail clients</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-config-retrieval-by-mail-cl" class="internal xref">Config retrieval by mail clients</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-mail-provider" class="internal xref">Mail provider</a></p>
@@ -1249,7 +1281,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-config-publishing-for-mail-" class="internal xref">Config publishing for mail providers</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-config-publishing-by-mail-p" class="internal xref">Config publishing by mail providers</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-config-location-for-single-" class="internal xref">Config location for single domain</a></p>
@@ -1258,10 +1290,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-config-location-for-domain-" class="internal xref">Config location for domain hosters</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
-                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-no-authentication-for-confi" class="internal xref">No authentication for config</a></p>
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-return-config-for-non-exist" class="internal xref">Return config for non-existing email addresses</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
-                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-return-config-for-non-exist" class="internal xref">Return config for non-existing email addresses</a></p>
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-no-authentication-for-confi" class="internal xref">No authentication for config</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
                 <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-oauth2-requirements" class="internal xref">OAuth2 requirements</a></p>
@@ -1269,50 +1301,61 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-alternatives-considered" class="internal xref">Alternatives considered</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-dnssec" class="internal xref">DNSSEC</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-dns-srv" class="internal xref">DNS SRV</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-capabilities" class="internal xref">CAPABILITIES</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-alternatives-considered" class="internal xref">Alternatives considered</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-dnssec" class="internal xref">DNSSEC</a></p>
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-risk" class="internal xref">Risk</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-dns-srv" class="internal xref">DNS SRV</a></p>
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-dns" class="internal xref">DNS</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
-                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-capabilities" class="internal xref">CAPABILITIES</a></p>
+                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-http" class="internal xref">HTTP</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4">
+                <p id="section-toc.1-1.8.2.4.1"><a href="#section-8.4" class="auto internal xref">8.4</a>.  <a href="#name-config-updates" class="internal xref">Config updates</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.5">
+                <p id="section-toc.1-1.8.2.5.1"><a href="#section-8.5" class="auto internal xref">8.5</a>.  <a href="#name-server-security" class="internal xref">Server security</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
-                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-risk" class="internal xref">Risk</a></p>
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-registration" class="internal xref">Registration</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
-                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-dns" class="internal xref">DNS</a></p>
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-contents" class="internal xref">Contents</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
-                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-config-updates" class="internal xref">Config updates</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.4">
-                <p id="section-toc.1-1.9.2.4.1"><a href="#section-9.4" class="auto internal xref">9.4</a>.  <a href="#name-server-security" class="internal xref">Server security</a></p>
+                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-initial-registration" class="internal xref">Initial registration</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1323,16 +1366,24 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">This protocol allows users to set up their existing email account in a new mail client application,
-by entering only their name, email address, and password.
-The mail application, by means of mail autoconfig specified here, will determine all the other
-parameters that are required, including IMAP or POP3 hostname, TLS configuration,
-form of username, authentication method, and other settings, and likewise for SMTP.
-Contact sync and calendar, file sharing and other services can also be set up automatically.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">The protocol works by first determining the domain from the email address, and the querying
-well-known URLs at the email provider, which return the configuration parameters in computer-readable form. Failing that, various fallback sources can be applied, like a common database of
-configurations for large email providers who do not directly support this protocol,
-or other mechanisms to determine the configuration.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-1">This protocol allows users to set up their existing email account in a new
+mail client application, by entering only their name, email address, and
+password. The mail application, by means of mail autoconfig specified here,
+will determine all the other parameters that are required, including IMAP or
+POP3 hostname, TLS configuration, form of username, authentication method, and
+other settings, and likewise for SMTP. Contact sync and calendar, file sharing
+and other services can also be set up automatically.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The protocol works by first determining the domain from the email address, and
+the querying well-known URLs at the email provider, which return the
+configuration parameters in computer-readable form. Failing that, various
+fallback sources can be applied, like a common database of configurations for
+large email providers who do not directly support this protocol, or other
+mechanisms to determine the configuration.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">While this AutoConfig protocol was conceived for configuring mail clients,
+it can also be used for accounts of other types, like contacts and calendar
+sync, chat, video conference, or online publishing. The primary concept and
+limitation here is that these accounts need to be hosted by the same provider
+as the email address.<a href="#section-1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="implementations">
@@ -1340,15 +1391,16 @@ or other mechanisms to determine the configuration.<a href="#section-1-2" class=
       <h2 id="name-implementations">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-implementations" class="section-name selfRef">Implementations</a>
       </h2>
-<p id="section-2-1">This protocol is in production use since 15 years by major email clients, and the
-config database (used as fallback) contains configurations for over 50% of all email accounts.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-1">This protocol is in production use since 15 years by major email clients, and
+the config database (used as fallback) contains configurations for over 50% of
+all email accounts.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">Currently, this protocol or parts of it has been implemented by:<a href="#section-2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-3.1">
           <p id="section-2-3.1.1"><a href="https://thunderbird.net">Thunderbird</a><a href="#section-2-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.2">
-          <p id="section-2-3.2.1"><a href="https://mustang.im/">Mustang</a> and <a href="https://www.beonex.com/parula/">Parula</a><a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.2.1"><a href="https://parula.beonex.com">Parula</a><a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.3">
           <p id="section-2-3.3.1"><a href="https://projects.gnome.org/evolution/">Evolution</a><a href="#section-2-3.3.1" class="pilcrow">¶</a></p>
@@ -1360,7 +1412,8 @@ config database (used as fallback) contains configurations for over 50% of all e
           <p id="section-2-3.5.1"><a href="https://www.kontact.org">Kontact</a><a href="#section-2-3.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.6">
-          <p id="section-2-3.6.1"><a href="https://k9mail.app">K9 Mail</a> and <a href="https://www.thunderbird.net/mobile/">Thunderbird Mobile</a><a href="#section-2-3.6.1" class="pilcrow">¶</a></p>
+          <p id="section-2-3.6.1"><a href="https://k9mail.app">K9 Mail</a> and
+<a href="https://www.thunderbird.net/mobile/">Thunderbird Mobile</a><a href="#section-2-3.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-3.7">
           <p id="section-2-3.7.1"><a href="https://email.faircode.eu">FairEmail</a><a href="#section-2-3.7.1" class="pilcrow">¶</a></p>
@@ -1373,7 +1426,8 @@ config database (used as fallback) contains configurations for over 50% of all e
 </li>
       </ul>
 <p id="section-2-4">and likely other mail clients.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">The purpose of this paper is to document and specify what is deployed and used in the wild. A later version 2 of the protocol might be based on JSON.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-5">The purpose of this paper is to document and specify what is deployed in the
+wild.<a href="#section-2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="data-format">
@@ -1381,232 +1435,824 @@ config database (used as fallback) contains configurations for over 50% of all e
       <h2 id="name-data-format">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-data-format" class="section-name selfRef">Data format</a>
       </h2>
-<p id="section-3-1">Whether the ISP or a common central database returns the configuration, the resulting
-document has the following data format.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">The MIME type is <code>text/xml</code> or <code>text/xml+autoconfig</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<div id="sample-config-file">
+<p id="section-3-1">Whether the ISP or a common central database returns the configuration, the
+resulting document has the following data format.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">The MIME type is <code>text/xml</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<div id="xml-config-file">
 <section id="section-3.1">
-        <h3 id="name-sample-config-file">
-<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-sample-config-file" class="section-name selfRef">Sample config file</a>
+        <h3 id="name-xml-config-file">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-xml-config-file" class="section-name selfRef">XML config file</a>
         </h3>
-<div class="alignLeft art-text artwork" id="section-3.1-1">
+<p id="section-3.1-1">The following example shows the syntax of the XML config file returned.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-2">
 <pre>
 &lt;?xml version="1.0"?&gt;
 &lt;clientConfig version="1.2"&gt;
-    &lt;emailProvider id="example.com"&gt;
-      &lt;domain&gt;example.com&lt;/domain&gt;
-      &lt;domain&gt;example.net&lt;/domain&gt;
+  &lt;emailProvider id="example.com"&gt;
+    &lt;domain&gt;example.com&lt;/domain&gt;
+    &lt;domain&gt;example.net&lt;/domain&gt;
 
-      &lt;displayName&gt;Google Mail&lt;/displayName&gt;
-      &lt;displayShortName&gt;GMail&lt;/displayShortName&gt;
+    &lt;displayName&gt;Google Workspace&lt;/displayName&gt;
+    &lt;displayShortName&gt;GMail&lt;/displayShortName&gt;
 
       &lt;!-- type=
-          "imap": IMAP
-          "pop3": POP3
-          "jmap": JMAP
-          "ews": Microsoft Exchange Web Services
-          "activesync": Microsoft ActiveSync
-          --&gt;
-      &lt;incomingServer type="imap"&gt;
-        &lt;hostname&gt;imap.example.com&lt;/hostname&gt;
-        &lt;port&gt;993&lt;/port&gt;
-          &lt;!-- "plain": no encryption
-                "SSL": SSL 3 or TLS 1 on SSL-specific port
-                "STARTTLS": listening on normal plain port
-                  and mandatory upgrade to TLS via STARTTLS
-                --&gt;
-        &lt;socketType&gt;SSL&lt;/socketType&gt;
-        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;!-- Authentication methods:
-          "password-cleartext",
-            Send password in the clear
-            (dangerous, if SSL isn't used either).
-            AUTH PLAIN, LOGIN or protocol-native login.
-          "password-encrypted",
-            A secure encrypted password mechanism.
-            Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
-          "NTLM":
-            Use NTLM (or NTLMv2 or successors),
-            the Windows login mechanism.
-          "GSSAPI":
-            Use Kerberos / GSSAPI,
-            a single-signon mechanism used for big sites.
-          "TLS-client-cert":
-            On the SSL/TLS layer, the server requests a
-            client certificate and the client sends one
-            (possibly after letting the user select/confirm
-            one), if available.
-          "OAuth2":
-            Server MUST support the
-            "Open Client OAuth2 profile".
-            Clients SHOULD skip OAuth2 and fall back to
-            other auth mechanisms, if they support
-            OAuth2 in general, but cannot find a valid
-            OAuth2 config for this server.
-          "none":
-            No authentication
-
-          Multiple &lt;authentication&gt; elements per server
-          config are valid. Clients will pick the first
-          one that they support.
-          --&gt;
-        &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
-      &lt;/incomingServer&gt;
-
-      &lt;!-- You can have multiple incoming servers,
-        and even multiple IMAP server configs.
-        The first config is the preferred one, but the user or
-        or client can choose the alternative configs. --&gt;
-      &lt;incomingServer type="pop3"&gt;
-        &lt;hostname&gt;pop.example.com&lt;/hostname&gt;
-        &lt;port&gt;995&lt;/port&gt;
-        &lt;socketType&gt;SSL&lt;/socketType&gt;
-        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
-      &lt;/incomingServer&gt;
-
-      &lt;!-- Needed only for IMAP or POP3 --&gt;
-      &lt;outgoingServer type="smtp"&gt;
-        &lt;hostname&gt;smtp.googlemail.com&lt;/hostname&gt;
-        &lt;port&gt;587&lt;/port&gt;
-        &lt;socketType&gt;STARTTLS&lt;/socketType&gt;
-        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;!-- smtp-auth (RFC 2554, 4954) or other
-          auth mechanism.
-          For values, see incoming.
-          Additional options here:
-          "client-IP-address":
-            The server recognizes this user based on
-            the IP address.
-            No authentication needed, the server will
-            require no username nor password.
-            This is strongly discouraged, because it
-            will not work for remote workers.
-          --&gt;
-        &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
-      &lt;/outgoingServer&gt;
-
-      &lt;incomingServer type="jmap"&gt;
-        &lt;url&gt;https://jmap.example.com&lt;/url&gt;
-        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;/incomingServer&gt;
-
-      &lt;incomingServer type="ews"&gt;
-        &lt;url&gt;https://mail.example.com/EWS/Exchange.asmx&lt;/url&gt;
-        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;/incomingServer&gt;
-
-      &lt;incomingServer type="activesync"&gt;
-        &lt;url&gt;https://mail.example.com/Microsoft-Server-ActiveSync&lt;/url&gt;
-        &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-        &lt;authentication&gt;OAuth2&lt;/authentication&gt;
-      &lt;/incomingServer&gt;
-
-      &lt;!-- A page where the ISP describes the configuration.
-        This is purely informational and currently mainly for
-        maintenance of the files and not used by the client
-        at all.
-        Note that we do not necessarily use exactly the
-        config suggested by the ISP. E.g. when they don't
-        recommend TLS, but it's available, we will configure
-        TLS.
-        The text content should contains a description in the
-        native language of the ISP (customers), and a short
-        English description, mostly for us.
+      "imap": IMAP
+      "pop3": POP3
+      "jmap": JMAP
+      "ews": Microsoft Exchange Web Services
+      "activesync": Microsoft ActiveSync
       --&gt;
-      &lt;documentation url="http://www.example.com/help/mail/"&gt;
-        &lt;descr lang="en"&gt;Configure mail app for IMAP&lt;/descr&gt;
-        &lt;descr lang="de"&gt;Email mit IMAP konfigurieren&lt;/descr&gt;
-      &lt;/documentation&gt;
-
-    &lt;/emailProvider&gt;
-
-    &lt;!-- Syncronize the user's address book / contacts. --&gt;
-    &lt;addressBook type="carddav"&gt;
-      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;!-- Authentication methods. See also &lt;incomingServer&gt;.
-        "http-basic":
-          Authenticate to the HTTP server using
-          WWW-Authenticate: Basic
-        "http-digest":
-          Authenticate to the HTTP server using
-          WWW-Authenticate: Digest
-        "OAuth2":
-          The "Open Client OAuth profile".
-          Uses the same token as for email.
-          &lt;scope&gt; needs to include addressbook/calendar.
+    &lt;incomingServer type="imap"&gt;
+      &lt;hostname&gt;imap.example.com&lt;/hostname&gt;
+      &lt;port&gt;993&lt;/port&gt;
+        &lt;!--
+        "plain": no encryption
+        "SSL": TLS on TLS-specific port
+        "STARTTLS": mandatory upgrade to TLS via STARTTLS
         --&gt;
-      &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;url&gt;https://jmap.example.com/remote.php/dav&lt;/url&gt;
-    &lt;/addressBook&gt;
+      &lt;socketType&gt;SSL&lt;/socketType&gt;
+        &lt;!-- Authentication methods:
+        "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
+        "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
+        "NTLM": Deprecated Windows login mechanism
+        "GSSAPI": Kerberos or Windows GSSAPI
+        "TLS-client-cert": TLS client certificate on TLS layer
+        "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
+        "none": No authentication
 
-    &lt;!-- Syncronize the user's calendar. --&gt;
-    &lt;calendar type="caldav"&gt;
+        Multiple &lt;authentication&gt; elements per server
+        config are valid. Clients will pick the first
+        one that they support.
+        --&gt;
+      &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;!-- see &lt;addressBook&gt; --&gt;
+    &lt;/incomingServer&gt;
+
+    &lt;!-- You can have multiple incoming servers,
+      and even multiple IMAP server configs.
+      The first config is the preferred one, but the user or
+      or client can choose the alternative configs. --&gt;
+    &lt;incomingServer type="pop3"&gt;
+      &lt;hostname&gt;pop.example.com&lt;/hostname&gt;
+      &lt;port&gt;995&lt;/port&gt;
+      &lt;socketType&gt;SSL&lt;/socketType&gt;
+      &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
+      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+    &lt;/incomingServer&gt;
+
+    &lt;!-- Needed only for IMAP or POP3 --&gt;
+    &lt;outgoingServer type="smtp"&gt;
+      &lt;hostname&gt;smtp.googlemail.com&lt;/hostname&gt;
+      &lt;port&gt;587&lt;/port&gt;
+      &lt;socketType&gt;STARTTLS&lt;/socketType&gt;
+        &lt;!-- smtp-auth (RFC 2554, 4954) or other auth mechanism. --&gt;
+      &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
+      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+    &lt;/outgoingServer&gt;
+
+    &lt;incomingServer type="jmap"&gt;
+      &lt;url&gt;https://jmap.example.com&lt;/url&gt;
+        &lt;!-- Authentication methods
+        "http-basic": RRFC 7661
+        "http-digest"
+        "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
+        --&gt;
+      &lt;authentication&gt;OAuth2&lt;/authentication&gt;
       &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;/url&gt;
-    &lt;/calendar&gt;
+      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+    &lt;/incomingServer&gt;
+
+    &lt;incomingServer type="ews"&gt;
+      &lt;url&gt;https://mail.example.com/EWS/Exchange.asmx&lt;/url&gt;
+      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+      &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;/incomingServer&gt;
+
+    &lt;incomingServer type="activesync"&gt;
+      &lt;url&gt;https://mail.example.com/Microsoft-Server-ActiveSync&lt;/url&gt;
+      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+      &lt;authentication&gt;OAuth2&lt;/authentication&gt;
+    &lt;/incomingServer&gt;
+
+    &lt;documentation url="http://www.example.com/help/mail/"&gt;
+      &lt;descr lang="en"&gt;Configure mail app for IMAP&lt;/descr&gt;
+      &lt;descr lang="de"&gt;Email mit IMAP konfigurieren&lt;/descr&gt;
+    &lt;/documentation&gt;
+
+  &lt;/emailProvider&gt;
+
+  &lt;addressbook type="carddav"&gt;
+    &lt;url&gt;https://contacts.example.com/remote.php/dav&lt;/url&gt;
+    &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+  &lt;/addressbook&gt;
+
+  &lt;calendar type="caldav"&gt;
+    &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;/url&gt;
+    &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+  &lt;/calendar&gt;
 
     &lt;!-- Upload files, allowing the user to share them.
-      This can be used for Thunderbird's FileLink feature,
-      or to set up a file sync folder on the user's desktop.
-      --&gt;
-    &lt;fileShare type="webdav"&gt;
-      &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;!-- see &lt;addressBook&gt; --&gt;
-      &lt;authentication&gt;http-basic&lt;/authentication&gt;
-      &lt;url&gt;https://share.example.com/remote.php/dav&lt;/url&gt;
-    &lt;/fileShare&gt;
+    This can be used to send links instead of attachments,
+    or to set up a file sync folder on the user's desktop.
+    --&gt;
+  &lt;fileShare type="webdav"&gt;
+    &lt;url&gt;https://share.example.com/remote.php/dav&lt;/url&gt;
+    &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+  &lt;/fileShare&gt;
 
-    &lt;!-- OAuth2 config for mail and other native and
-      public client apps.
-      Gives e.g. clientID, expiry, and login page
-      MUST adhere to "Open Client OAuth2 profile".
-      --&gt;
-    &lt;oAuth2&gt;
-      &lt;authURL&gt;https://login.example.com/auth&lt;/authURL&gt;
-      &lt;tokenURL&gt;https://login.example.com/token&lt;/tokenURL&gt;
-      &lt;issuer&gt;login.example.com&lt;/issuer&gt;
-      &lt;scope&gt;IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access&lt;/scope&gt;
-      &lt;clientID&gt;open&lt;/clientID&gt;
-      &lt;!-- optional --&gt;
-      &lt;clientSecret&gt;give-me-your-password&lt;/clientSecret&gt;
-    &lt;/oAuth2&gt;
+  &lt;chatServer type="xmpp"&gt;
+    &lt;url&gt;wss://example.com:5281/xmpp-websocket&lt;/url&gt;
+    &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+  &lt;/chatServer&gt;
 
-    &lt;clientConfigUpdate url="https://www.example.com/config/mail.xml" /&gt;
+  &lt;chatServer type="xmpp"&gt;
+    &lt;hostname&gt;xmpp.example.com&lt;/hostname&gt;
+    &lt;port&gt;5223&lt;/port&gt;
+    &lt;socketType&gt;TLS&lt;/socketType&gt;
+    &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
+    &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+  &lt;/chatServer&gt;
+
+  &lt;videoConference type="opentalk"&gt;
+    &lt;url&gt;https://talk.example.com/login&lt;/url&gt;
+    &lt;authentication&gt;OAuth2&lt;/authentication&gt;
+    &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+  &lt;/videoConference&gt;
+
+    &lt;!-- OAuth2 config for native public client apps.
+    Gives e.g. clientID, expiry, and login page.
+    The provider MUST adhere to "Open Client OAuth2 profile".
+    --&gt;
+  &lt;oAuth2&gt;
+    &lt;authURL&gt;https://login.example.com/auth&lt;/authURL&gt;
+    &lt;tokenURL&gt;https://login.example.com/token&lt;/tokenURL&gt;
+    &lt;issuer&gt;login.example.com&lt;/issuer&gt;
+    &lt;scope&gt;IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access&lt;/scope&gt;
+    &lt;clientID&gt;open&lt;/clientID&gt;
+    &lt;!-- optional --&gt;
+    &lt;clientSecret&gt;give-me-your-password&lt;/clientSecret&gt;
+  &lt;/oAuth2&gt;
+
+  &lt;clientConfigUpdate url="https://www.example.com/config/mail.xml" /&gt;
 
 &lt;/clientConfig&gt;
-</pre><a href="#section-3.1-1" class="pilcrow">¶</a>
+</pre><a href="#section-3.1-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
-<div id="formal-definition">
+<div id="global-elements">
 <section id="section-3.2">
-        <h3 id="name-formal-definition">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-formal-definition" class="section-name selfRef">Formal definition</a>
+        <h3 id="name-global-elements">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-global-elements" class="section-name selfRef">Global elements</a>
         </h3>
-<p id="section-3.2-1">TODO Schema for XML<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">The file starts with an XML header, e.g. <code>&lt;?xml version="1.0"?&gt;</code>,
+and is encoded in UTF-8 without BOM.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<div id="clientconfig">
+<section id="section-3.2.1">
+          <h4 id="name-clientconfig">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-clientconfig" class="section-name selfRef">clientConfig</a>
+          </h4>
+<p id="section-3.2.1-1">The root element of the XML file is <code>&lt;clientConfig version="1.2"&gt;</code>.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-2">The <code>version</code> is <code>1.2</code> for the version defined in this specification. <code>1.1</code> is
+a compatible previous version. Higher versions are for future specifications.
+The client <span class="bcp14">MUST NOT</span> reject a config file solely based on the version number.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="emailprovider">
+<section id="section-3.2.2">
+          <h4 id="name-emailprovider">
+<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-emailprovider" class="section-name selfRef">emailProvider</a>
+          </h4>
+<p id="section-3.2.2-1">Element <code>&lt;emailProvider id="example.com"&gt;</code> is within the root element.
+This element has no semantic purpose and exists for legacy reasons only.
+If all of its child elements were within the root element, their meaning
+would still be the same.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-2">The <code>id</code> is a unique string that typically matches the primary domain of the
+provider.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-3">Within <code>&lt;emailProvider&gt;</code> are <code>&lt;domain&gt;</code>, <code>&lt;displayName&gt;</code> and
+<code>&lt;displayShortName&gt;</code>, <code>&lt;documentation&gt;</code>, <code>&lt;incomingServer&gt;</code> and
+<code>&lt;outgoingServer&gt;</code>.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="domain">
+<section id="section-3.2.3">
+          <h4 id="name-domain">
+<a href="#section-3.2.3" class="section-number selfRef">3.2.3. </a><a href="#name-domain" class="section-name selfRef">domain</a>
+          </h4>
+<p id="section-3.2.3-1">E.g.<a href="#section-3.2.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2.3-2">
+<pre>
+&lt;domain&gt;example.com&lt;/domain&gt;
+&lt;domain&gt;example.net&lt;/domain&gt;
+&lt;domain purpose="mx"&gt;example-hosting.com&lt;/domain&gt;
+</pre><a href="#section-3.2.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2.3-3">The content of the <code>&lt;domain&gt;</code> element defines which email addresses this config
+is valid for. E.g. a config with <code>&lt;domain&gt;example.com&lt;/domain&gt;</code> is valid for
+email address <code>fred@example.com</code>.<a href="#section-3.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-4">Multiple <code>&lt;domain&gt;</code> elements may be included, which means that the config is
+valid for all of these domains. Their order has no meaning - you may sort them
+by number of users, importance to the provider, or alphabethically.<a href="#section-3.2.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-5">A <code>&lt;domain purpose="mx"&gt;</code> specifies the domain name of the MX server of
+the email address, and is used config file lookup using MX
+server names, as specified in section MX. The <code>purpose</code> property is
+mainly informational and may be ignored.<a href="#section-3.2.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="displayname-and-displayshortname">
+<section id="section-3.2.4">
+          <h4 id="name-displayname-and-displayshor">
+<a href="#section-3.2.4" class="section-number selfRef">3.2.4. </a><a href="#name-displayname-and-displayshor" class="section-name selfRef">displayName and displayShortName</a>
+          </h4>
+<p id="section-3.2.4-1">E.g.<a href="#section-3.2.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2.4-2">
+<pre>
+&lt;displayName&gt;Google Workspace&lt;/displayName&gt;
+&lt;displayShortName&gt;GMail&lt;/displayShortName&gt;
+</pre><a href="#section-3.2.4-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2.4-3">The <code>&lt;displayName&gt;</code> element contains the name of the provider, e.g.
+as preferred by the marketing of the provider itself. It <span class="bcp14">SHOULD</span> be no
+longer than 30 characters, but <span class="bcp14">MUST</span> be no longer than 60 characters.<a href="#section-3.2.4-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-4">The <code>&lt;displayShortName&gt;</code> element contains the name of the provider, as
+typically used by end users. It <span class="bcp14">SHOULD</span> be no longer than 12
+characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 characters.<a href="#section-3.2.4-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="documentation">
+<section id="section-3.3">
+        <h3 id="name-documentation">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-documentation" class="section-name selfRef">documentation</a>
+        </h3>
+<p id="section-3.3-1">E.g.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-2">
+<pre>
+&lt;documentation url="http://www.example.com/help/mail/"&gt;
+  &lt;descr lang="en"&gt;Configure mail app for IMAP&lt;/descr&gt;
+  &lt;descr lang="de"&gt;Email mit IMAP konfigurieren&lt;/descr&gt;
+&lt;/documentation&gt;
+</pre><a href="#section-3.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3-3">This is purely informational and not required for the automatic setup.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">Records the user help webpage at the provider that describes the mail
+server settings. The config may be based on that page, but does not
+necessarily have to match it, e.g. when a better config is available
+than the one described on the webpage.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">The <code>url</code> property contains the URL of the webpage. The <code>&lt;descr&gt;</code>
+content describes the content and purpose of the page and why it's
+referenced here.
+Multiple <code>&lt;descr&gt;</code> elements with different <code>lang</code> properties are
+allowed, whereby the <code>lang</code> property contains the 2-letter ISO language
+code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="server-sections">
+<section id="section-3.4">
+        <h3 id="name-server-sections">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-server-sections" class="section-name selfRef">Server sections</a>
+        </h3>
+<p id="section-3.4-1">E.g. <code>&lt;incomingServer type="jmap"&gt;</code> or <code>&lt;calendar type="carddav"&gt;</code><a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4-2.1">
+            <p id="section-3.4-2.1.1">The <code>type</code> property specifies the wire protocol that this server uses. See
+section type below.<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.4-2.2">
+            <p id="section-3.4-2.2.1"><code>&lt;incomingServer&gt;</code> specifies the server that the mail client retrieves email
+from and submits changes to. In many protocols, this server is also used for
+sending email.<a href="#section-3.4-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.4-2.3">
+            <p id="section-3.4-2.3.1"><code>&lt;outgoingServer&gt;</code> is used for sending, if <code>&lt;incomingServer&gt;</code> does not
+support that directly.
+This is currently used only for SMTP in combination with IMAP and POP3.<a href="#section-3.4-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.4-2.4">
+            <p id="section-3.4-2.4.1"><code>&lt;incomingServer&gt;</code> and <code>&lt;outgoingServer&gt;</code> are within element
+<code>&lt;emailProvider&gt;</code>, whereas <code>&lt;calendar&gt;</code>, <code>&lt;addressbook&gt;</code>, <code>&lt;fileShare&gt;</code>,
+<code>&lt;chatServer&gt;</code> and <code>&lt;videoConference&gt;</code> are within the
+root element <code>&lt;clientConfig&gt;</code>, i.e. one level higher.
+Other than that, they work the same.<a href="#section-3.4-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.4-2.5">
+            <p id="section-3.4-2.5.1">In some protocols, the <code>&lt;incomingServer&gt;</code> server additionally provides
+calendars, addressbooks, and other data. For such protocols, the same server
+is not repeated in other specific server sections like <code>&lt;calendar&gt;</code>.
+Calendar-only clients supporting such multi-purpose protocols <span class="bcp14">MUST</span> read the
+<code>&lt;incomingServer&gt;</code> (nonewithstanding that it's within legacy element
+<code>&lt;emailProvider&gt;</code>)
+and test and use the parts of the protocol needed for their
+functionality.<a href="#section-3.4-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<div id="multiple-server-sections">
+<section id="section-3.4.1">
+          <h4 id="name-multiple-server-sections">
+<a href="#section-3.4.1" class="section-number selfRef">3.4.1. </a><a href="#name-multiple-server-sections" class="section-name selfRef">Multiple server sections</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-3.4.1-1.1">
+              <p id="section-3.4.1-1.1.1">Server sections of the same type (like <code>&lt;incomingServer&gt;</code> or <code>&lt;calendar&gt;</code>)
+may appear multiple times in the same config file.
+In this case, the one listed first is preferred by the config provider.
+Unless the client has specific other requirements, it <span class="bcp14">SHOULD</span> pick the first
+config.<a href="#section-3.4.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.4.1-1.2">
+              <p id="section-3.4.1-1.2.1">The client may derivate from this recommendation, because<a href="#section-3.4.1-1.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4.1-1.2.2.1">
+                  <p id="section-3.4.1-1.2.2.1.1">the client doesn't support a higher-priority protocol, e.g. a JMAP
+configuraion is listed first and is the most preferred, but the
+client does not support JMAP yet, or<a href="#section-3.4.1-1.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-3.4.1-1.2.2.2">
+                  <p id="section-3.4.1-1.2.2.2.1">the client doesn't support a configuration setting, e.g. it
+doesn't support STARTTLS, or the config specifies only an OAuth2
+authentication and the client either doesn't implement OAuth2, or
+it doesn't have a client ID for this provider, or<a href="#section-3.4.1-1.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-3.4.1-1.2.2.3">
+                  <p id="section-3.4.1-1.2.2.3.1">the client has a specific policy to prefer another configuration,
+e.g. a STARTTLS config is listed before a direct TLS config, and
+the client has a policy of preferring direct TLS, or likewise
+the client prefers IMAP over POP3.<a href="#section-3.4.1-1.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
+</li>
+            <li class="normal" id="section-3.4.1-1.3">
+              <p id="section-3.4.1-1.3.1">Server types, elements and protocols that the client does not support
+<span class="bcp14">MUST</span> be ignored and the client <span class="bcp14">MUST</span> continue to parse the other
+server sections, which may contain configs that the client
+understands and supports. The client ignores the file only if there
+is no supported and working config found.<a href="#section-3.4.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="type">
+<section id="section-3.5">
+        <h3 id="name-type">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-type" class="section-name selfRef">type</a>
+        </h3>
+<p id="section-3.5-1">The <code>type</code> property on the server section element specifies the
+wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-1">
+          <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Element</th>
+              <th class="text-left" rowspan="1" colspan="1">Type</th>
+              <th class="text-left" rowspan="1" colspan="1">Base</th>
+              <th class="text-left" rowspan="1" colspan="1">Name</th>
+              <th class="text-left" rowspan="1" colspan="1">Specification</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>jmap</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">JMAP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>imap</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">IMAP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 9051 or RFC 3501, et al</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>pop3</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">POP3</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 1939, RFC 5034</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">outgoingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>smtp</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">SMTP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 5321, RFC 2822</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">calendar</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>caldav</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">CalDAV</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 4791</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">addressbook</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>carddav</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">CardDav</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 6352</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">fileShare</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>webdav</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">WebDAV</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 4918</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">chatServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>xmpp</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">XMPP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 6120, RFC 6121, RFC 7395</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">chatServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>xmpptcp</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">XMPP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 6120, RFC 6121</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">chatServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>matrix</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">Matrix</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <a href="https://spec.matrix.org">https://spec.matrix.org</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">setupServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>managesieve</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">ManageSieve</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 5804, RFC 5228</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>ews</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">Exchange Web Services</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>activeSync</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">ActiveSync</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>graph</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">Microsoft Graph</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+          </tbody>
+        </table>
+<p id="section-3.5-3">Other protocol names can be added using an IANA registry. Their
+respective registrations need to define:
+* Element: The XML element wrapping the server section.
+* Type: The <code>type</code> property value of the server section.
+* Base: Whether the protocol is URL-based or TCP-based,
+* Name: The commonly used name of the protocol
+* Specification: Which RFCs or document specifies the protocol, and
+* Additional Elements: (Optional) Protocol-specific XML elements and
+  their meaning.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="url-based-protocols">
+<section id="section-3.6">
+        <h3 id="name-url-based-protocols">
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-url-based-protocols" class="section-name selfRef">URL-based protocols</a>
+        </h3>
+<p id="section-3.6-1">E.g.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6-2">
+<pre>
+&lt;incomingServer type="jmap"&gt;
+  &lt;url&gt;https://jmap.example.com/session&lt;/url&gt;
+  &lt;authentication&gt;http-basic&lt;/authentication&gt;
+  &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+&lt;/incomingServer&gt;
+</pre><a href="#section-3.6-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.6-3">For server sections with protocols that are based on HTTPS or other
+URLs, the following elements are supported:<a href="#section-3.6-3" class="pilcrow">¶</a></p>
+<div id="url">
+<section id="section-3.6.1">
+          <h4 id="name-url">
+<a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-url" class="section-name selfRef">url</a>
+          </h4>
+<p id="section-3.6.1-1">E.g. <code>&lt;url&gt;https://jmap.example.com/session&lt;/url&gt;</code><a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-2">The content of the <code>&lt;url&gt;</code> element contains the URL where to contact the
+server.<a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-3">The URL scheme will normally be HTTPS and the URL start with <code>https://</code>.
+Some protocols may use other schemes, e.g. WebSockets <code>wss://</code>.<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authentication">
+<section id="section-3.6.2">
+          <h4 id="name-authentication">
+<a href="#section-3.6.2" class="section-number selfRef">3.6.2. </a><a href="#name-authentication" class="section-name selfRef">authentication</a>
+          </h4>
+<p id="section-3.6.2-1">E.g. <code>&lt;authentication&gt;http-basic&lt;/authentication&gt;</code><a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-2">The content of the <code>&lt;authentication&gt;</code> element defines which HTTP
+authentication method to use.<a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.6.2-3.1">
+              <p id="section-3.6.2-3.1.1"><code>http-basic</code>: Authenticate to the HTTP server using
+<code>WWW-Authenticate: Basic</code>. See RFC 7617.<a href="#section-3.6.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.6.2-3.2">
+              <p id="section-3.6.2-3.2.1"><code>http-digest</code>: Authenticate to the HTTP server using
+<code>WWW-Authenticate: Digest</code>. See RFC 7616<a href="#section-3.6.2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.6.2-3.3">
+              <p id="section-3.6.2-3.3.1"><code>OAuth</code>: Authenticate to the HTTP server using
+<code>WWW-Authenticate: Bearer</code>. See RFC 6750 Section 3.
+The provider <span class="bcp14">MUST</span> adhere to the requirements defined in section OAuth2
+in this specification.<a href="#section-3.6.2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.6.2-4">The rules as specified in sections "Multiple authentication alternatives" and
+"Authentication verification and fallback" apply here as well.<a href="#section-3.6.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="username">
+<section id="section-3.6.3">
+          <h4 id="name-username">
+<a href="#section-3.6.3" class="section-number selfRef">3.6.3. </a><a href="#name-username" class="section-name selfRef">username</a>
+          </h4>
+<p id="section-3.6.3-1">E.g. <code>&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;</code> or <code>&lt;username&gt;fred&lt;/username&gt;</code><a href="#section-3.6.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.3-2">The username to use for the authentication method.<a href="#section-3.6.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.3-3">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See section
+"Placeholders".<a href="#section-3.6.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="tcp-based-protocols">
+<section id="section-3.7">
+        <h3 id="name-tcp-based-protocols">
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-tcp-based-protocols" class="section-name selfRef">TCP-based protocols</a>
+        </h3>
+<p id="section-3.7-1">For server sections with protocols that are based on TCP,
+the following elements are supported:<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7-2">
+<pre>
+&lt;incomingServer type="imap"&gt;
+  &lt;hostname&gt;imap.example.com&lt;/hostname&gt;
+  &lt;port&gt;993&lt;/port&gt;
+  &lt;socketType&gt;SSL&lt;/socketType&gt;
+  &lt;authentication&gt;password-cleartext&lt;/authentication&gt;
+  &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+&lt;/incomingServer&gt;
+</pre><a href="#section-3.7-2" class="pilcrow">¶</a>
+</div>
+<div id="hostname">
+<section id="section-3.7.1">
+          <h4 id="name-hostname">
+<a href="#section-3.7.1" class="section-number selfRef">3.7.1. </a><a href="#name-hostname" class="section-name selfRef">hostname</a>
+          </h4>
+<p id="section-3.7.1-1">E.g. <code>&lt;hostname&gt;imap.example.com&lt;/hostname&gt;</code><a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-2">The content of the <code>&lt;hostname&gt;</code> element contains the fully qualified hostname
+of the server.<a href="#section-3.7.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="port">
+<section id="section-3.7.2">
+          <h4 id="name-port">
+<a href="#section-3.7.2" class="section-number selfRef">3.7.2. </a><a href="#name-port" class="section-name selfRef">port</a>
+          </h4>
+<p id="section-3.7.2-1">E.g. <code>&lt;port&gt;993&lt;/port&gt;</code><a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-2">The content of the <code>&lt;port&gt;</code> element is an integer and contains the TCP port
+number at the hostname. The port is typically specific to the combination of
+the wire protocol and socketType.<a href="#section-3.7.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sockettype">
+<section id="section-3.7.3">
+          <h4 id="name-sockettype">
+<a href="#section-3.7.3" class="section-number selfRef">3.7.3. </a><a href="#name-sockettype" class="section-name selfRef">socketType</a>
+          </h4>
+<p id="section-3.7.3-1">E.g. <code>&lt;socketType&gt;SSL&lt;/socketType&gt;</code><a href="#section-3.7.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.3-2">The content of the <code>&lt;socketType&gt;</code> element specifies whether to use direct TLS,
+STARTTLS, or none of these.<a href="#section-3.7.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.7.3-3.1">
+              <p id="section-3.7.3-3.1.1"><code>SSL</code>: Directly contact the TCP port using TLS. TLS version 1.2 or higher
+<span class="bcp14">SHOULD</span> be used. Higher versions may be required based on security situation,
+server support, and client policy decisions.<a href="#section-3.7.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.7.3-3.2">
+              <p id="section-3.7.3-3.2.1"><code>STARTTLS</code>: Contact the TCP port first using an unencrypted plain socket,
+then upgrade to TLS
+using the protocol-specific STARTTLS specification. With this configuration,
+STARTTLS <span class="bcp14">MUST</span> be used and TLS <span class="bcp14">MUST</span> be used after the STARTTLS upgrade. If
+the upgrade to TLS fails for whatever reason, the client <span class="bcp14">MUST</span>
+disconnect and <span class="bcp14">MUST NOT</span> try to authenticate. This prevents downgrade attacks
+that could otherwise steal passwords, user data, and impersonate users.<a href="#section-3.7.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.7.3-3.3">
+              <p id="section-3.7.3-3.3.1"><code>plain</code>: Unencrypted connection, with neither TLS nor STARTTLS. May be
+needed for local servers. Deprecated.<a href="#section-3.7.3-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<div id="tls-validation">
+<section id="section-3.7.3.1">
+            <h5 id="name-tls-validation">
+<a href="#section-3.7.3.1" class="section-number selfRef">3.7.3.1. </a><a href="#name-tls-validation" class="section-name selfRef">TLS validation</a>
+            </h5>
+<p id="section-3.7.3.1-1">In all cases where TLS is used, either directly or using STARTTLS,
+the client <span class="bcp14">MUST</span> validate the TLS certificate and ensure that the
+certificate is valid for the hostname given in this config. If not,
+or if the TLS certificate is otherwise invalid, the client <span class="bcp14">MUST</span>
+either disconnect or <span class="bcp14">MAY</span> warn the user of the
+dangers and ask for user confirmation. Such warning and confirmation
+<span class="bcp14">MAY</span> only be allowed at original configuration and <span class="bcp14">MUST NOT</span> be allowed
+during normal everyday connection.<a href="#section-3.7.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.3.1-2">If the server had a valid TLS certificate during original configuration
+and the TLS certificate is invalid during normal connection, the
+client <span class="bcp14">MUST</span> disconnect.<a href="#section-3.7.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.3.1-3">If the problem is that the TLS certificate expired recently,
+the client <span class="bcp14">MAY</span> not consider that a failure during normal connection
+and use other recovery mechanisms.<a href="#section-3.7.3.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="authentication-1">
+<section id="section-3.7.4">
+          <h4 id="name-authentication-2">
+<a href="#section-3.7.4" class="section-number selfRef">3.7.4. </a><a href="#name-authentication-2" class="section-name selfRef">authentication</a>
+          </h4>
+<p id="section-3.7.4-1">E.g. <code>&lt;authentication&gt;password-cleartext&lt;/authentication&gt;</code><a href="#section-3.7.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.4-2">The content of the <code>&lt;authentication&gt;</code> element defines which authentication
+method to use. This can be either an authentication defined by the wire
+protocol, or a SASL scheme, or a successor to SASL.<a href="#section-3.7.4-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.7.4-3.1">
+              <p id="section-3.7.4-3.1.1"><code>password-cleartext</code>: Send password in the clear.
+Uses either the native authentication method defined by the wire protocol
+(if that is based on plaintext passwords), or a SASL authentication scheme
+like SASL <code>PLAIN</code> or SASL <code>LOGIN</code>, or a successor.<a href="#section-3.7.4-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.7.4-3.2">
+              <p id="section-3.7.4-3.2.1"><code>password-encrypted</code>: An encrypted or hashed password mechanism.
+Includes SASL <code>CRAM-MD5</code>, <code>DIGEST-MD5</code> and <code>SCRAM-SHA-256-PLUS</code>.
+TLS alone by itself does not qualify as "password-encrypted".<a href="#section-3.7.4-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.7.4-3.3">
+              <p id="section-3.7.4-3.3.1"><code>NTLM</code>: Legacy Windows login mechanisms NTLM or NTLMv2.<a href="#section-3.7.4-3.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.7.4-3.4">
+              <p id="section-3.7.4-3.4.1"><code>GSSAPI</code>: Kerberos or GSSAPI, a single-signon mechanism based on TCP.<a href="#section-3.7.4-3.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.7.4-3.5">
+              <p id="section-3.7.4-3.5.1"><code>TLS-client-cert</code>: On the SSL/TLS layer, after server request, the client
+sends a TLS client certificate for the user, possibly after letting the user
+select confirm it. Uses SASL <code>EXTERNAL</code> scheme.<a href="#section-3.7.4-3.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.7.4-3.6">
+              <p id="section-3.7.4-3.6.1"><code>OAuth</code>: OAuth. SASL <code>OAUTHBEARER</code> (current) or <code>XOAUTH2</code> (deprecated) or
+successors. The provider <span class="bcp14">MUST</span> adhere to the requirements defined in
+section OAuth2 in this specification.<a href="#section-3.7.4-3.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.7.4-3.7">
+              <p id="section-3.7.4-3.7.1"><code>client-IP-address</code>: Server can be used without any explicit authentication,
+and the client is admitted based on its IP address.
+This may be the case for some SMTP servers on local networks.
+Not supported on the Internet. Deprecated, because it breaks mobile devices.<a href="#section-3.7.4-3.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<div id="recommending-specific-sasl-schemes">
+<section id="section-3.7.4.1">
+            <h5 id="name-recommending-specific-sasl-">
+<a href="#section-3.7.4.1" class="section-number selfRef">3.7.4.1. </a><a href="#name-recommending-specific-sasl-" class="section-name selfRef">Recommending specific SASL schemes</a>
+            </h5>
+<p id="section-3.7.4.1-1">Additionally, a specific SASL scheme may be specified using <code>SASL</code>, a space,
+and the specific SASL authentication scheme name, e.g.
+<code>SASL SCRAM-SHA-256-PLUS</code>. In such a case, the server config <span class="bcp14">SHOULD</span> also
+specify a more generic authentication mechanism as a lower priority
+alternative. That would make clients use the specific authentication
+mechanism, if they support it, and other clients will use the more generic
+authentication mechanism.<a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="multiple-authentication-alternatives">
+<section id="section-3.7.4.2">
+            <h5 id="name-multiple-authentication-alt">
+<a href="#section-3.7.4.2" class="section-number selfRef">3.7.4.2. </a><a href="#name-multiple-authentication-alt" class="section-name selfRef">Multiple authentication alternatives</a>
+            </h5>
+<p id="section-3.7.4.2-1">The <code>&lt;authentication&gt;</code> element may appear multiple times within a server
+section. In this case, they are ordered from the most to the least preferred
+method, based on the policy of the provider.<a href="#section-3.7.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.2-2">If a client does not support a
+specific authentication scheme, or does not have the conditions to use it,
+e.g. the client does not have a Client ID for this OAuth2 server, then the
+client <span class="bcp14">MUST</span> skip this <code>&lt;authentication&gt;</code> element and use the next in the list
+instead.<a href="#section-3.7.4.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.2-3">If none of the authentication methods are supported by the client,
+the client <span class="bcp14">MUST</span> ignore that server section and use the remaining server
+sections.<a href="#section-3.7.4.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authentication-verification-and-fallback">
+<section id="section-3.7.4.3">
+            <h5 id="name-authentication-verification">
+<a href="#section-3.7.4.3" class="section-number selfRef">3.7.4.3. </a><a href="#name-authentication-verification" class="section-name selfRef">Authentication verification and fallback</a>
+            </h5>
+<p id="section-3.7.4.3-1">The client <span class="bcp14">SHOULD</span> test the configuration during setup, with an actual
+authentication attempt.<a href="#section-3.7.4.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.3-2">If the authentication fails, the client decides based on the
+authentication error code how to proceed. E.g. if the authentiocation
+method itself failed, or the error code indicates a systemic failure,
+the client <span class="bcp14">SHOULD</span> use a lower-priority authentication method from the
+list.<a href="#section-3.7.4.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.3-3">If the authentication method is working, but the error code indicated
+that the username or password was wrong, then the client <span class="bcp14">MAY</span> ask the
+user to correct the password.<a href="#section-3.7.4.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.3-4">For that reason, the server <span class="bcp14">SHOULD</span> be specific in the error codes and
+allow the client to distinguish between
+* an unsupported or non-working authentication method or other
+  systemic failures
+* the client being rejected by the server
+* the user being blocked from login
+* the user authentication failing due to wrong password or username
+* other reasons<a href="#section-3.7.4.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.3-5">If the server were to return the same error code for all these cases, the
+client might tell the user that the password is wrong, and the user starts
+attempting other passwords, potentially revealing passwords to other
+higher-value assets, which is highly dangerous.<a href="#section-3.7.4.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.3-6">If the authentification succeeded, the client <span class="bcp14">SHOULD</span> take note of the
+working configutation and use that for all subsequent connections,
+until an explicit reconfiguration occurs. During normal everyday operation,
+the client <span class="bcp14">SHOULD NOT</span> fallback nor attempt multiple different authentication
+methods.<a href="#section-3.7.4.3-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="username-1">
+<section id="section-3.7.5">
+          <h4 id="name-username-2">
+<a href="#section-3.7.5" class="section-number selfRef">3.7.5. </a><a href="#name-username-2" class="section-name selfRef">username</a>
+          </h4>
+<p id="section-3.7.5-1">E.g. <code>&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;</code> or <code>&lt;username&gt;fred&lt;/username&gt;</code><a href="#section-3.7.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.5-2">The username to use for the authentication method.<a href="#section-3.7.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.5-3">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See section
+"Placeholders".<a href="#section-3.7.5-3" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="placeholders">
-<section id="section-3.3">
+<section id="section-3.8">
         <h3 id="name-placeholders">
-<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-placeholders" class="section-name selfRef">Placeholders</a>
+<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-placeholders" class="section-name selfRef">Placeholders</a>
         </h3>
-<p id="section-3.3-1">The fields for <code>&lt;username&gt;</code> support placeholders.
-The config returned by the autoconfig server may contain these
-placeholders, which are to be replaced by the client.
-The following special strings (or substrings/parts) of the value
-should be replaced by the client, after the config was retrieved
-and before its values are actually used.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.3-2">Some clients <span class="bcp14">MAY</span> also support the same placeholders for the fields
-<code>&lt;hostname&gt;</code>, <code>&lt;serverURL&gt;</code>, <code>&lt;authURL&gt;</code>, <code>&lt;tokenURL&gt;</code>, <code>&lt;issuer&gt;</code>,
-<code>&lt;displayName&gt;</code> and <code>&lt;displayShortName&gt;</code>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<table class="center" id="table-1">
-          <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<p id="section-3.8-1">The <code>&lt;username&gt;</code> value may contain placeholders.<a href="#section-3.8-1" class="pilcrow">¶</a></p>
+<p id="section-3.8-2">The following special substrings in the value <span class="bcp14">MUST</span> be
+replaced by the client, before the value is actually used.<a href="#section-3.8-2" class="pilcrow">¶</a></p>
+<table class="center" id="table-2">
+          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Placeholder</th>
@@ -1644,35 +2290,67 @@ and before its values are actually used.<a href="#section-3.3-1" class="pilcrow"
             </tr>
           </tbody>
         </table>
+<p id="section-3.8-4">Some clients <span class="bcp14">MAY</span> also support the same placeholders for the fields
+<code>&lt;hostname&gt;</code>, <code>&lt;url&gt;</code>, <code>&lt;authURL&gt;</code>, <code>&lt;tokenURL&gt;</code>, <code>&lt;issuer&gt;</code>,
+<code>&lt;displayName&gt;</code> and <code>&lt;displayShortName&gt;</code>.<a href="#section-3.8-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="xml-validation">
+<section id="section-3.9">
+        <h3 id="name-xml-validation">
+<a href="#section-3.9" class="section-number selfRef">3.9. </a><a href="#name-xml-validation" class="section-name selfRef">XML validation</a>
+        </h3>
+<p id="section-3.9-1">The client <span class="bcp14">SHOULD</span> validate that the config file is valid XML, and if
+the XML syntax is invalid, the client <span class="bcp14">SHOULD</span> ignore the entire file. In
+contrast, if there are syntactically valid, but unknown elements or
+properties, the client <span class="bcp14">MUST NOT</span> ignore the file.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
+<p id="section-3.9-2">The client <span class="bcp14">SHOULD</span> take only the elements and attributes that are
+supported by the client, and <span class="bcp14">MUST</span> ignore the others that are unknown
+to the client.<a href="#section-3.9-2" class="pilcrow">¶</a></p>
+<p id="section-3.9-3">The client may optionally want to validate the XML before parsing it.
+This is not required. If the client choses to validate, the validation
+<span class="bcp14">MUST</span> ignore unknown elements and properties and <span class="bcp14">MUST NOT</span>
+drop or ignore a configuration that contains unknown elements and
+properties. This is needed to allow future extensions of the format
+without breaking existing clients.<a href="#section-3.9-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="config-retrieval-for-mail-clients">
+<div id="config-retrieval-by-mail-clients">
 <section id="section-4">
-      <h2 id="name-config-retrieval-for-mail-c">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-config-retrieval-for-mail-c" class="section-name selfRef">Config retrieval for mail clients</a>
+      <h2 id="name-config-retrieval-by-mail-cl">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-config-retrieval-by-mail-cl" class="section-name selfRef">Config retrieval by mail clients</a>
       </h2>
-<p id="section-4-1">The mail client application, when it needs the configuration for a given email address,
-will perform several steps to retrieve the configuration from various sources.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">The steps are ordered by priority. They may all be requested at the same time, but a higher priorty
-result that is available <span class="bcp14">SHOULD</span> be preferred over a lower
-priority one, even if the lower priority one is available
-earlier. Exceptions apply when a higher priority result is either
-invalid or outdated, or the fetch method is less secure. Lower
-priority requests <span class="bcp14">MAY</span> be cancelled, if a valid higher priority
-result has been successfully received. The priority is expressed
-below with the number before the URL or location, with lower
-numbers meaning higher priority, e.g. 1.2 has higher priority
-than 4.1.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">In the URLs below, <code>%EMAILADDRESS%</code> shall be replaced with the email address that the user entered and wishes to use, and <code>%EMAILDOMAIN%</code> shall be replaced with the email domain extracted from the email address. For example, for "fred@example.com", the email domain is "example.com", and for "fred@test.cs.example.net", the email domain is "test.cs.example.net".<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">For full support of this specification, all "Required" and "Recommended" mechanisms <span class="bcp14">MUST</span> be implemented and working. For partial support of this specification, all "Required" mechanisms <span class="bcp14">MUST</span> be implemented and working, and in this case, you shall make explicit when advertizing or referring to auto config that there is only partial support of this specification.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-1">The mail client application, when it needs the configuration for a given email
+address, will perform several steps to retrieve the configuration from various
+sources.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">The steps are ordered by priority. They may all be requested at the same time,
+but a higher priorty result that is available <span class="bcp14">SHOULD</span> be preferred over a lower
+priority one, even if the lower priority one is available earlier. Exceptions
+apply when a higher priority result is either invalid or outdated, or the
+fetch method is less secure. Lower priority requests <span class="bcp14">MAY</span> be cancelled, if a
+valid higher priority result has been successfully received. The priority is
+expressed below with the number before the URL or location, with lower numbers
+meaning higher priority, e.g. 1.2 has higher priority than 4.1.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-3">In the URLs below, <code>%EMAILADDRESS%</code> shall be replaced with the email address
+that the user entered and wishes to use, and <code>%EMAILDOMAIN%</code> shall be replaced
+with the email domain extracted from the email address. For example, for
+"fred@example.com", the email domain is "example.com", and for
+"fred@test.cs.example.net", the email domain is "test.cs.example.net".<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4">For full support of this specification, all "Required" and "Recommended"
+mechanisms <span class="bcp14">MUST</span> be implemented and working. For partial support of this
+specification, all "Required" mechanisms <span class="bcp14">MUST</span> be implemented and working, and
+in this case, you shall make explicit when advertizing or referring to auto
+config that there is only partial support of this specification.<a href="#section-4-4" class="pilcrow">¶</a></p>
 <div id="mail-provider">
 <section id="section-4.1">
         <h3 id="name-mail-provider">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-mail-provider" class="section-name selfRef">Mail provider</a>
         </h3>
-<p id="section-4.1-1">First step is to directly ask the mail provider and allow it to return the configuration. This step ensures that the protocol is decentralized and the mail provider is in control of the configuration issued to mail clients.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">First step is to directly ask the mail provider and allow it to return the
+configuration. This step ensures that the protocol is decentralized and the
+mail provider is in control of the configuration issued to mail clients.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1-2.1">
             <p id="section-4.1-2.1.1">1.1. <code>https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%</code> (Required. <code>emailaddress</code> is Optional)<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
@@ -1703,24 +2381,27 @@ use this HTTP URL.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
           <h4 id="name-customzing-the-config-for-a">
 <a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-customzing-the-config-for-a" class="section-name selfRef">Customzing the config for a specific user</a>
           </h4>
-<p id="section-4.1.1-1">To allow the mail provider to return a configuration adjusted for that mailbox, the
-client sends the email address as query parameter in URL 1.1. This allows the mail
-provider to e.g. separate mailboxes on geographically local mail servers, e.g. a
-mail server located in the same office building where an employee works.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-1">To allow the mail provider to return a configuration adjusted for that mailbox,
+the client sends the email address as query parameter in URL 1.1. This allows
+the mail provider to e.g. separate mailboxes on geographically local mail
+servers, e.g. a mail server located in the same office building where an
+employee works.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-2">However, while the protocol allows for such heterogenous configurations, mail
-providers are discouraged from doing so, and are instead encouraged to provide one
-single configuration for all their users. For example, DNS resolution based on
-location, mail proxy servers, or other techniques as necessary, can be used to
-route the traffic and host the mail efficiently.<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
+providers are discouraged from doing so, and are instead encouraged to provide
+one single configuration for all their users. For example, DNS resolution
+based on location, mail proxy servers, or other techniques as necessary, can
+be used to route the traffic and host the mail efficiently.<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-3">This mechanism also allows the autoconfig server to map the email address to
 a username that cannot be expressed using the Placeholders (see section).
-However, this method is discouraged. Instead, the email server login should accept
-email addresses as username, and doing the mapping to internal usernames at login
-time, which avoids the need for the client to know a different username.<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
+However, this method is discouraged. Instead, the email server login should
+accept email addresses as username, and doing the mapping to internal
+usernames at login time, which avoids the need for the client to know a
+different username.<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-4">To avoid that email addresses can be tested for validity, whenever customized
-configs are returned, the autoconfig server should respond to non-existing email
-addresses with a configuation that appears to be real and is similar in structure
-to real configurations, e.g. a random host out of the pool of actual hosts.<a href="#section-4.1.1-4" class="pilcrow">¶</a></p>
+configs are returned, the autoconfig server should respond to non-existing
+email addresses with a configuation that appears to be real and is similar in
+structure to real configurations, e.g. a random host out of the pool of actual
+hosts.<a href="#section-4.1.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1730,9 +2411,15 @@ to real configurations, e.g. a random host out of the pool of actual hosts.<a hr
         <h3 id="name-central-database">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-central-database" class="section-name selfRef">Central database</a>
         </h3>
-<p id="section-4.2-1">The ISPDB contains the configurations for most mail providers with a market share larger than 0.1%, and contains configurations for half of the email accounts in the world.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">This is a useful fallback for mail providers which do not host a config server described in the previous step. Using a central database (ISPDB) of mail configurations for the large mail providers will increase the success rate of finding a valid configuration drastically, up to 10-fold.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3">The mail client application may choose the mail config database provider. A public mail config database is available at base URL <code>https://v1.ispdb.net/</code>.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">The ISPDB contains the configurations for most mail providers with a market
+share larger than 0.1%, and contains configurations for half of the email
+accounts in the world.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">This is a useful fallback for mail providers which do not host a config server
+described in the previous step. Using a central database (ISPDB) of mail
+configurations for the large mail providers will increase the success rate of
+finding a valid configuration drastically, up to 10-fold.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">The mail client application may choose the mail config database provider. A
+public mail config database is available at base URL <code>https://v1.ispdb.net/</code>.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4"><code>%ISPDB%</code> below is the base URL of that database.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.2-5.1">
@@ -1752,30 +2439,48 @@ to real configurations, e.g. a random host out of the pool of actual hosts.<a hr
         <h3 id="name-mx">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-mx" class="section-name selfRef">MX</a>
         </h3>
-<p id="section-4.3-1">Many companies do not maintain their own mail server, but let their email be hosted by a hosting company, which is then responsible for the email of dozens or thousands of domains. For these hosters, it may be difficult to set up the configuration server (step 1.1.) with valid TLS certificate for each of their customers, and to convince their customers to modify their root DNS specifically for autoconfig. On the other side, the ISPDB can only contain the hosting company and cannot know all their customers. To handle such domains, the protocol first needs to find the server hosting the email.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">If the previous mechanisms yield no result, the client may perform a DNS MX lookup on the email domain, and retrieve the MX server (incoming email server) for that domain. Only the highest priority MX hostname is considered. From that MX hostname, 2 values are extracted:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-1">Many companies do not maintain their own mail server, but let their email be
+hosted by a hosting company, which is then responsible for the email of dozens
+or thousands of domains. For these hosters, it may be difficult to set up the
+configuration server (step 1.1.) with valid TLS certificate for each of their
+customers, and to convince their customers to modify their root DNS
+specifically for autoconfig. On the other side, the ISPDB can only contain the
+hosting company and cannot know all their customers. To handle such domains,
+the protocol first needs to find the server hosting the email.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">If the previous mechanisms yield no result, the client <span class="bcp14">SHOULD</span> perform a DNS MX
+lookup on the email domain, and retrieve the MX server (incoming SMTP server)
+for that domain. Only the highest priority MX hostname is considered. From
+that MX hostname, 2 values are extracted:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-3.1">
-            <p id="section-4.3-3.1.1">Extract only the second-level domain from the MX hostname, and use that as value for <code>%MXBASEDOMAIN%</code>. To determine the second-level domain, use the <a href="https://publicsuffix.org">Public Suffic List</a> or a similarly suited method, to correctly handle domains like ".co.uk" and ".com.au".<a href="#section-4.3-3.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-3.1.1">Extract only the second-level domain from the MX hostname, and use that as
+value for <code>%MXBASEDOMAIN%</code>. To determine the second-level domain, use the
+<a href="https://publicsuffix.org">Public Suffic List</a> or a similarly suited method,
+to correctly handle domains like ".co.uk" and ".com.au".<a href="#section-4.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-3.2">
-            <p id="section-4.3-3.2.1">Remove the first component from the MX hostname, i.e. everything up to and including the first <code>.</code>, and use that as value for <code>%MXFULLDOMAIN%</code>. If it is shorter or the
-same length as <code>%MXBASEDOMAIN%</code>, then skip it.<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-3.2.1">Remove the first component from the MX hostname, i.e. everything up to and
+including the first <code>.</code>, and use that as value for <code>%MXFULLDOMAIN%</code>. Use it
+only if it is longer than <code>%MXBASEDOMAIN%</code>.<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.3-4">For example:<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-5.1">
-            <p id="section-4.3-5.1.1">For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both "example.com".<a href="#section-4.3-5.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-5.1.1">For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both
+"example.com".<a href="#section-4.3-5.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-5.2">
-            <p id="section-4.3-5.2.1">For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both "example.co.uk".<a href="#section-4.3-5.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-5.2.1">For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both
+"example.co.uk".<a href="#section-4.3-5.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-5.3">
-            <p id="section-4.3-5.3.1">For "mx.premium.europe.example.com", the MXFULLDOMAIN is "premium.europe.example.com" and the MXBASEDOMAIN is "example.com".<a href="#section-4.3-5.3.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-5.3.1">For "mx.premium.europe.example.com", the MXFULLDOMAIN is
+"premium.europe.example.com" and the MXBASEDOMAIN is "example.com".<a href="#section-4.3-5.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.3-6">Then, attempt to retrieve the config for these MX domains, using the previous methods:<a href="#section-4.3-6" class="pilcrow">¶</a></p>
+<p id="section-4.3-6">Then, attempt to retrieve the config for these MX domains, using the previous
+methods:<a href="#section-4.3-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-7.1">
             <p id="section-4.3-7.1.1">3.1. <code>https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%</code> (Required)<a href="#section-4.3-7.1.1" class="pilcrow">¶</a></p>
@@ -1812,7 +2517,10 @@ same length as <code>%MXBASEDOMAIN%</code>, then skip it.<a href="#section-4.3-3
         <h3 id="name-local-disk">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-local-disk" class="section-name selfRef">Local disk</a>
         </h3>
-<p id="section-4.4-1">For testing purposes, you may want to define a location on the disk, relative to the application installation directory, or relative to the user configuration directory, which may contain a configuration file for a specific domain, and which your application will use, if the above methods fail.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-1">For testing purposes, you may want to define a location on the disk, relative
+to the application installation directory, or relative to the user
+configuration directory, which may contain a configuration file for a specific
+domain, and which your application will use, if the above methods fail.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.4-2.1">
             <p id="section-4.4-2.1.1">4.1. <code>%USER_CONFIGURATION_DIR%/isp/%EMAILDOMAIN%.xml</code> (Optional)<a href="#section-4.4-2.1.1" class="pilcrow">¶</a></p>
@@ -1837,7 +2545,13 @@ same length as <code>%MXBASEDOMAIN%</code>, then skip it.<a href="#section-4.3-3
         <h3 id="name-other-mechanisms">
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-other-mechanisms" class="section-name selfRef">Other mechanisms</a>
         </h3>
-<p id="section-4.5-1">You may want to implement other mechanisms to find a configuration, for example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you implement such alternative methods, and if they are less secure than some of the mechanisms provided here, the alternative methods <span class="bcp14">SHOULD</span> be considered only with lower priority (as defined above) than the more secure mechanisms defined here. For evaluating other mechanisms, use similar criteria as outlined in section "Security considerations".<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-1">You may want to implement other mechanisms to find a configuration, for
+example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you
+implement such alternative methods, and if they are less secure than some of
+the mechanisms provided here, the alternative methods <span class="bcp14">SHOULD</span> be considered
+only with lower priority (as defined above) than the more secure mechanisms
+defined here. For evaluating other mechanisms, use similar criteria as
+outlined in section "Security considerations".<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="manual-configuration">
@@ -1845,7 +2559,10 @@ same length as <code>%MXBASEDOMAIN%</code>, then skip it.<a href="#section-4.3-3
         <h3 id="name-manual-configuration">
 <a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-manual-configuration" class="section-name selfRef">Manual configuration</a>
         </h3>
-<p id="section-4.6-1">If the above mechanisms fail to provide a working configuration, or if the user explicitly chooses so, you <span class="bcp14">SHOULD</span> give the end user the ability to manually enter a configuration, and use that configuration to configure the account.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.6-1">If the above mechanisms fail to provide a working configuration, or if the
+user explicitly chooses so, you <span class="bcp14">SHOULD</span> give the end user the ability to
+manually enter a configuration, and use that configuration to configure the
+account.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1860,16 +2577,21 @@ same length as <code>%MXBASEDOMAIN%</code>, then skip it.<a href="#section-4.3-3
         <h3 id="name-user-approval">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-user-approval" class="section-name selfRef">User approval</a>
         </h3>
-<p id="section-5.1-1">Independent of the mechanisms used to find the configuration, before using that configuration, you <span class="bcp14">SHOULD</span> display that configuration to the end user and let him confirm it. While doing so:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">Independent of the mechanisms used to find the configuration, before using
+that configuration, you <span class="bcp14">SHOULD</span> display that configuration to the end user and
+let him confirm it. While doing so:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1">At least the second-level domain name(s) of the hostnames involved <span class="bcp14">MUST</span> be shown clearly and with high prominence.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.1.1">At least the second-level domain name(s) of the hostnames involved <span class="bcp14">MUST</span> be
+shown clearly and with high prominence.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">The client <span class="bcp14">MUST NOT</span> cut off parts of long second-level domains, to avoid spoofing. At least 63 characters <span class="bcp14">MUST</span> be displayed.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1">The client <span class="bcp14">MUST NOT</span> cut off parts of long second-level domains, to avoid
+spoofing. At least 63 characters <span class="bcp14">MUST</span> be displayed.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.3">
-            <p id="section-5.1-2.3.1">Care <span class="bcp14">SHOULD</span> be taken with international characters that look like ASCII characters, but have a different code.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.3.1">Care <span class="bcp14">SHOULD</span> be taken with international characters that look like ASCII
+characters, but have a different code.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1879,7 +2601,10 @@ same length as <code>%MXBASEDOMAIN%</code>, then skip it.<a href="#section-4.3-3
         <h3 id="name-login-test">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-login-test" class="section-name selfRef">Login test</a>
         </h3>
-<p id="section-5.2-1">After the user confirmed the configuration, you <span class="bcp14">SHOULD</span> test the configuration, by attempting a login to each server configured. Only if the login succeeded, and the server is working, should the configuration be saved and retrieving and sending mail be started.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">After the user confirmed the configuration, you <span class="bcp14">SHOULD</span> test the configuration,
+by attempting a login to each server configured. Only if the login succeeded,
+and the server is working, should the configuration be saved and retrieving
+and sending mail be started.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="oauth2-windows">
@@ -1897,16 +2622,16 @@ This allows for setups where the hoster is not allowed to see the
 plaintext passwords.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.3-2">Showing the URL or hostname allows the end user to verify that he is
 logging in at the expected page, e.g. the login server of their company,
-instead of the email hoster's page.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.3-3">(Editor's note: Not really part of autoconfig, but autoconfig can enable OAuth2, and it's important that this is implemented correctly by mail applications.)<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+instead of the email hoster's page. It is important that the user verifies
+that he enters the passwords on the right domain.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="config-publishing-for-mail-providers">
+<div id="config-publishing-by-mail-providers">
 <section id="section-6">
-      <h2 id="name-config-publishing-for-mail-">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-config-publishing-for-mail-" class="section-name selfRef">Config publishing for mail providers</a>
+      <h2 id="name-config-publishing-by-mail-p">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-config-publishing-by-mail-p" class="section-name selfRef">Config publishing by mail providers</a>
       </h2>
 <p id="section-6-1">Mail service providers who want to support this specification
 and publish the mail configuration for their own mail service,
@@ -1964,7 +2689,8 @@ the location for step 3.1., i.e.<a href="#section-6.2-2" class="pilcrow">¶</a><
             <p id="section-6.2-3.1.1"><code>https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%</code><a href="#section-6.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-6.2-4">E.g. if the MX server for customer domain example.net is "mx.premium.europe.example.com", then the config file should be at<a href="#section-6.2-4" class="pilcrow">¶</a></p>
+<p id="section-6.2-4">E.g. if the MX server for customer domain example.net is
+"mx.premium.europe.example.com", then the config file should be at<a href="#section-6.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.2-5.1">
             <p id="section-6.2-5.1.1">https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net<a href="#section-6.2-5.1.1" class="pilcrow">¶</a></p>
@@ -1974,27 +2700,12 @@ the location for step 3.1., i.e.<a href="#section-6.2-2" class="pilcrow">¶</a><
 step 3.2. should also be implemented.<a href="#section-6.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="no-authentication-for-config">
-<section id="section-6.3">
-        <h3 id="name-no-authentication-for-confi">
-<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-no-authentication-for-confi" class="section-name selfRef">No authentication for config</a>
-        </h3>
-<p id="section-6.3-1">Any of the above URLs for retrieving the config file <span class="bcp14">MUST NOT</span>
-require authentication, but <span class="bcp14">MUST</span> be public.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3-2">This is because the config contains the authentication method.
-Without knowing the config, the client does not know which
-authentication method is required and which username form
-(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE")
-to use. Given that the config is required for authentication,
-the config itself cannot require authentication.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="return-config-for-non-existing-email-addresses">
-<section id="section-6.4">
+<section id="section-6.3">
         <h3 id="name-return-config-for-non-exist">
-<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-return-config-for-non-exist" class="section-name selfRef">Return config for non-existing email addresses</a>
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-return-config-for-non-exist" class="section-name selfRef">Return config for non-existing email addresses</a>
         </h3>
-<p id="section-6.4-1">Servers <span class="bcp14">SHOULD</span> return a valid config, even if the email address
+<p id="section-6.3-1">Servers <span class="bcp14">SHOULD</span> return a valid config, even if the email address
 sent as URL parameter does not exist. Otherwise, spammers
 or attackers would be able to test the validity of email addresses.
 This is true even if the config server needs the email address
@@ -2002,7 +2713,22 @@ to determine which of multiple configurations is correct.
 In such a configuration, if the client sends a non-existing
 email address, the config server <span class="bcp14">SHOULD</span> return one of the
 valid configuations, so that valid and invalid email addresses
-are indistiguishable.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+are indistiguishable.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="no-authentication-for-config">
+<section id="section-6.4">
+        <h3 id="name-no-authentication-for-confi">
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-no-authentication-for-confi" class="section-name selfRef">No authentication for config</a>
+        </h3>
+<p id="section-6.4-1">Any of the above URLs for retrieving the config file <span class="bcp14">MUST NOT</span>
+require authentication, but <span class="bcp14">MUST</span> be public.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+<p id="section-6.4-2">This is because the config contains the authentication method.
+Without knowing the config, the client does not know which
+authentication method is required and which username form
+(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE")
+to use. Given that the config is required for authentication,
+the config itself cannot require authentication.<a href="#section-6.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="oauth2-requirements">
@@ -2010,145 +2736,427 @@ are indistiguishable.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
         <h3 id="name-oauth2-requirements">
 <a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-oauth2-requirements" class="section-name selfRef">OAuth2 requirements</a>
         </h3>
-<p id="section-6.5-1">If OAuth2 is used, the OAuth2 server <span class="bcp14">MUST</span> adhere to the
+<p id="section-6.5-1">If OAuth2 is used, the provider <span class="bcp14">MUST</span> adhere to the
+"Open Profile for Public Clients" or
 <a href="https://benbucksch.github.io/mauth-spec/draft-mauth.html">mAuth</a>
 specification.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
 <p id="section-6.5-2">The OAuth2 server <span class="bcp14">MUST</span> either accept the public client ID
 as given in the config file, without secret, or <span class="bcp14">MUST</span> allow the
-string <code>open</code> as client ID, or both.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
-<p id="section-6.5-3">There are also specific requirements for expiry times and
+string <code>open</code> as client ID, or both. The server <span class="bcp14">MUST NOT</span>
+employ any other methods to block clients that are acting on
+behalf of users.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
+<p id="section-6.5-3">The specifications also contain requirements for expiry times and
 the login page, which are needed for mail client applications to work.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
+<p id="section-6.5-4">The OAuth2 scope <span class="bcp14">MUST</span> include all services defined in this config file.
+The same refresh and access token <span class="bcp14">MUST</span> be valid for all services defined
+in the same config file, including for all URL-based protocols like CalDAV
+and all TCP-based protocols like IMAP.<a href="#section-6.5-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-</section>
-</div>
-<div id="conventions-and-definitions">
-<section id="section-7">
-      <h2 id="name-conventions-and-definitions">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
-      </h2>
-<p id="section-7-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
-"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
-described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
-appear in all capitals, as shown here.<a href="#section-7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="alternatives-considered">
-<section id="section-8">
+<section id="section-7">
       <h2 id="name-alternatives-considered">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-alternatives-considered" class="section-name selfRef">Alternatives considered</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-alternatives-considered" class="section-name selfRef">Alternatives considered</a>
       </h2>
 <div id="dnssec">
-<section id="section-8.1">
+<section id="section-7.1">
         <h3 id="name-dnssec">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-dnssec" class="section-name selfRef">DNSSEC</a>
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-dnssec" class="section-name selfRef">DNSSEC</a>
         </h3>
-<p id="section-8.1-1">Due to their top-level domain, some domains do not have DNSSEC available to them, even if they would like to deploy it.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">Even where the top-level domain supports it, DNSSEC is currently deployed in only 1% of domains, with adoption rates falling instead of rising, due to the difficulties of administrating it correctly.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">Therefore, DNSSEC cannot be relied on in this specification, and DNS must be considered insecure for the purposes of this specification.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">Due to their top-level domain, some domains do not have DNSSEC available to
+them, even if they would like to deploy it.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">Even where the top-level domain supports it, DNSSEC is currently deployed in
+only 1% of domains, with adoption rates falling instead of rising, due to the
+difficulties of administrating it correctly.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">Therefore, DNSSEC cannot be relied on in this specification, and DNS must be
+considered insecure for the purposes of this specification.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="dns-srv">
-<section id="section-8.2">
+<section id="section-7.2">
         <h3 id="name-dns-srv">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-dns-srv" class="section-name selfRef">DNS SRV</a>
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-dns-srv" class="section-name selfRef">DNS SRV</a>
         </h3>
-<p id="section-8.2-1">DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2 reasons:<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-8.2-2">
-<li id="section-8.2-2.1">
-            <p id="section-8.2-2.1.1">DNS SRV relies on insecure DNS and the config can therefore be trivially spoofed by an attacker. See also DNSSEC above.<a href="#section-8.2-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2 reasons:<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7.2-2">
+<li id="section-7.2-2.1">
+            <p id="section-7.2-2.1.1">DNS SRV relies on insecure DNS and the config can therefore be trivially
+spoofed by an attacker. See also DNSSEC above.<a href="#section-7.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-8.2-2.2">
-            <p id="section-8.2-2.2.1">DNS SRV does not provide all the necessary configuration parameters. For example, we need all of:<a href="#section-8.2-2.2.1" class="pilcrow">¶</a></p>
+          <li id="section-7.2-2.2">
+            <p id="section-7.2-2.2.1">DNS SRV does not provide all the necessary configuration parameters. For
+example, we need all of:<a href="#section-7.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <ul class="normal">
-<li class="normal" id="section-8.2-3.1">
-            <p id="section-8.2-3.1.1">the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even a username with no relation to the email address)<a href="#section-8.2-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7.2-3.1">
+            <p id="section-7.2-3.1.1">the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even
+a username with no relation to the email address)<a href="#section-7.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-8.2-3.2">
-            <p id="section-8.2-3.2.1">authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)<a href="#section-8.2-3.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-7.2-3.2">
+            <p id="section-7.2-3.2.1">authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)<a href="#section-7.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-8.2-3.3">
-            <p id="section-8.2-3.3.1">authentication method parameters (e.g. OAuth parameters)<a href="#section-8.2-3.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-7.2-3.3">
+            <p id="section-7.2-3.3.1">authentication method parameters (e.g. OAuth parameters)<a href="#section-7.2-3.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-8.2-4">and other parameters. If any of these parameters are not configured right, the configuration won't work. While these parameters could theoretically be added to DNS SRV, that would mean a new specification and render the idea void that this is a protocol that already exists, is standardized and deployed. It is unlikely that all DNS SRV records would be updated with the new values. Therefore, it does not solve the problem.<a href="#section-8.2-4" class="pilcrow">¶</a></p>
-<p id="section-8.2-5">This specification was created as an answer to these deficiencies and provides an alternative to DNS SRV.<a href="#section-8.2-5" class="pilcrow">¶</a></p>
+<p id="section-7.2-4">and other parameters. If any of these parameters are not configured right, the
+configuration won't work. While these parameters could theoretically be added
+to DNS SRV, that would mean a new specification and render the idea void that
+this is a protocol that already exists, is standardized and deployed. It is
+unlikely that all DNS SRV records would be updated with the new values.
+Therefore, it does not solve the problem.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
+<p id="section-7.2-5">This specification was created as an answer to these deficiencies and provides
+an alternative to DNS SRV.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="capabilities">
-<section id="section-8.3">
+<section id="section-7.3">
         <h3 id="name-capabilities">
-<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-capabilities" class="section-name selfRef">CAPABILITIES</a>
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-capabilities" class="section-name selfRef">CAPABILITIES</a>
         </h3>
-<p id="section-8.3-1">In the wild deployments from actual ISPs show that protocol-specific commands to find available authentication methods, e.g. IMAP <code>CAPABILITIES</code> or POP3 <code>CAPA</code>, are not reliable. Many email servers advertize authentication methods that do not work.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
-<p id="section-8.3-2">Some IMAP servers are default configured to list all SASL authentication methods that have corresponding libraries installed on the system, independent on whether they are actually configured to work. The client receives a long list of authentication methods, and many of them do not work. Additionally, the server response may be only "authentication failed" and may not indicate whether the method failed due to lack of configuration, or because the password was wrong. Because some authentication servers lock the account after 3 failed login attempts, and it may also fail due to unrelated reasons (e.g. username form, wrong password, etc.), the client cannot blindly issue countless login attempts. Locking the account must be avoided. So, simply attempting all methods and seeing which one works is not an option for the email client.<a href="#section-8.3-2" class="pilcrow">¶</a></p>
-<p id="section-8.3-3">Additionally, some email servers advertize Kerberos / GSSAPI, but when trying to use it, the method fails, and also runs into a long 2 minute timeout in some cases. End users consider that to be a broken app.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
-<p id="section-8.3-4">Additionally, such commands are protocol specific and have to be implemented in multiple different ways.<a href="#section-8.3-4" class="pilcrow">¶</a></p>
-<p id="section-8.3-5">Finally, some non-mail protocols may not support capabilties commands that include authentication methods.<a href="#section-8.3-5" class="pilcrow">¶</a></p>
+<p id="section-7.3-1">Deployments in the wild from actual ISPs show that protocol-specific commands
+to find available authentication methods, e.g. IMAP <code>CAPABILITIES</code> or POP3
+<code>CAPA</code>, are not reliable. Many email servers advertize authentication methods
+that do not work.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">Some IMAP servers are default configured to list all SASL authentication
+methods that have corresponding libraries installed on the system, independent
+on whether they are actually configured to work. The client receives a long
+list of authentication methods, and many of them do not work. Additionally,
+the server response may be only "authentication failed" and may not indicate
+whether the method failed due to lack of configuration, or because the
+password was wrong. Because some authentication servers lock the account after
+3 failed login attempts, and it may also fail due to unrelated reasons (e.g.
+username form, wrong password, etc.), the client cannot blindly issue
+countless login attempts. Locking the account must be avoided. So, simply
+attempting all methods and seeing which one works is not an option for the
+email client.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">Additionally, some email servers advertize Kerberos / GSSAPI, but when trying
+to use it, the method fails, and also runs into a long 2 minute timeout in
+some cases. End users consider that to be a broken app.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.3-4">Additionally, such commands are protocol specific and have to be implemented
+in multiple different ways.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
+<p id="section-7.3-5">Finally, some non-mail protocols may not support capabilties commands that
+include authentication methods.<a href="#section-7.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-9">
+<section id="section-8">
       <h2 id="name-security-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <div id="risk">
-<section id="section-9.1">
+<section id="section-8.1">
         <h3 id="name-risk">
-<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-risk" class="section-name selfRef">Risk</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-risk" class="section-name selfRef">Risk</a>
         </h3>
-<p id="section-9.1-1">If an attacker can provide a forged configuration, the provided mail hostname and authentication server can be controlled by the attacker, and the attacker can get access to the plain text password of the user. The attack can be implemented as man-in-the-middle, so the end user might receive mail as expected and never notice the attack.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
-<p id="section-9.1-2">An attacker gaining the plain text password of a real user is a very significant threat for the organization, not only because mail itself can contain sensitive information and can be used to issue orders within the organization that have wide-ranging impact, but given single-sign-on solutions, the same username and password may give access to other resources at the organization, including other computers or, in the case of admin users, even adminstrative access to the core of the entire organization.<a href="#section-9.1-2" class="pilcrow">¶</a></p>
-<p id="section-9.1-3">Multi-factor authentication might not defend against such attacks, because the user may believe to be logging into his email and therefore comply with any multi-factor authentication steps required.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">If an attacker can provide a forged configuration, the provided mail hostname
+and authentication server can be controlled by the attacker, and the attacker
+can get access to the plain text password of the user. The attack can be
+implemented as man-in-the-middle, so the end user might receive mail as
+expected and never notice the attack.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">An attacker gaining the plain text password of a real user is a very
+significant threat for the organization, not only because mail itself can
+contain sensitive information and can be used to issue orders within the
+organization that have wide-ranging impact, but given single-sign-on
+solutions, the same username and password may give access to other resources
+at the organization, including other computers or, in the case of admin users,
+even adminstrative access to the core of the entire organization.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Multi-factor authentication might not defend against such attacks, because the
+user may believe to be logging into his email and therefore comply with any
+multi-factor authentication steps required.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="dns">
-<section id="section-9.2">
+<section id="section-8.2">
         <h3 id="name-dns">
-<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-dns" class="section-name selfRef">DNS</a>
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-dns" class="section-name selfRef">DNS</a>
         </h3>
-<p id="section-9.2-1">Any protocol that relies on DNS without further validation, e.g. http, should be considered insecure. Even if an http URL redirects to a https URL, and the domain of the https URL cannot be validated against the email domain, that is still insecure. This also applies to the DNS MX lookup and the https calls that base on its results, as described in section "MX".<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<p id="section-9.2-2">One possible mitigation is to use multiple different DNS servers
-and verify that the results match, e.g. to use the native DNS
-resolver of the operating system, and additionally also query
-a hardcoded DoH (DNS over HTTPS) server. Nonetheless,
-the result should be used with care.<a href="#section-9.2-2" class="pilcrow">¶</a></p>
-<p id="section-9.2-3">Such insecure configs may only be used, if the end user confirms the config, particularly the resulting second-level domains. See section "User approval".<a href="#section-9.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.2-1">Any protocol that relies on DNS without further validation, e.g. http, should
+be considered insecure.
+This also applies to the DNS MX lookup and the https calls that base on its
+results, as described in section "MX".<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-2">One possible mitigation is to use multiple different DNS servers and verify
+that the results match, e.g. to use the native DNS resolver of the operating
+system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
+<p id="section-8.2-3">Nonetheless, the result should be used with care. If such configs are used,
+the end user <span class="bcp14">MUST</span> explicitly confirm the config, particularly the resulting
+second-level domains. See section "User approval".<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="http">
+<section id="section-8.3">
+        <h3 id="name-http">
+<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-http" class="section-name selfRef">HTTP</a>
+        </h3>
+<p id="section-8.3-1">HTTP requests may be intercepted, redirected, or altered at the network level.
+See "Risk" above.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.3-2">Even if an http URL redirects to a https URL, and the domain of the https URL
+cannot be validated against the email domain, that is still insecure.<a href="#section-8.3-2" class="pilcrow">¶</a></p>
+<p id="section-8.3-3">For that reason, clients <span class="bcp14">MUST</span> prefer HTTPS over HTTP during config retrieval,
+within the same retrieval method.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
+<p id="section-8.3-4">If such configs from HTTP are used, the end user <span class="bcp14">MUST</span> explicitly confirm the
+config, particularly the resulting second-level domains. See section
+"User approval".<a href="#section-8.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="config-updates">
-<section id="section-9.3">
+<section id="section-8.4">
         <h3 id="name-config-updates">
-<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-config-updates" class="section-name selfRef">Config updates</a>
+<a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-config-updates" class="section-name selfRef">Config updates</a>
         </h3>
-<p id="section-9.3-1">Part of the security properties of this protocol assume that the timeframe of possible attack is limited to the moment when the user manually sets up a new mail client. This moment is triggered by the end user, and a rare action - e.g. maybe once per year or even less, for typical setups -, so an attacker has limited chances to run an attack. While not a complete protection on its own, this reduces the risk significantly.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
-<p id="section-9.3-2">However, if the mail client does regular configuration updates using this protocol, this security property is no longer given. For regular configuration updates, the mail client <span class="bcp14">MUST</span> use only mechanisms that are secure and cannot be tampered with by an active attacker. Furthermore, the user <span class="bcp14">SHOULD</span> still approve config changes.<a href="#section-9.3-2" class="pilcrow">¶</a></p>
-<p id="section-9.3-3">But even with all these protections implemented, the mail client vendor should make a security assessment for the risks of making such regular updates. The mail client vendor should consider that servers can be hacked, and most users simply approve changes proposed by the app, so these give only a limited protection.<a href="#section-9.3-3" class="pilcrow">¶</a></p>
+<p id="section-8.4-1">Part of the security properties of this protocol assume that the timeframe of
+possible attack is limited to the moment when the user manually sets up a new
+mail client. This moment is triggered by the end user, and a rare action -
+e.g. maybe once per year or even less, for typical setups -, so an attacker
+has limited chances to run an attack. While not a complete protection on its
+own, this reduces the risk significantly.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
+<p id="section-8.4-2">However, if the mail client does regular configuration updates using this
+protocol, this security property is no longer given. For regular configuration
+updates, the mail client <span class="bcp14">MUST</span> use only mechanisms that are secure and cannot
+be tampered with by an active attacker. Furthermore, the user <span class="bcp14">SHOULD</span> still
+approve config changes.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
+<p id="section-8.4-3">But even with all these protections implemented, the mail client vendor should
+make a security assessment for the risks of making such regular updates. The
+mail client vendor should consider that servers can be hacked, and most users
+simply approve changes proposed by the app, so these give only a limited
+protection.<a href="#section-8.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="server-security">
-<section id="section-9.4">
+<section id="section-8.5">
         <h3 id="name-server-security">
-<a href="#section-9.4" class="section-number selfRef">9.4. </a><a href="#name-server-security" class="section-name selfRef">Server security</a>
+<a href="#section-8.5" class="section-number selfRef">8.5. </a><a href="#name-server-security" class="section-name selfRef">Server security</a>
         </h3>
-<p id="section-9.4-1">Given that mail clients will trust the configuration, the server delivering it needs to be secure. Even though we call it "database", static configuration files that are generated before deployment in combination with a static web server offer better security and significantly better performance than dynamic queries from a database and responses generated on-the-fly on request. If a custom server is used, it <span class="bcp14">SHOULD</span> be updated regularly and hosted on a dedicated secure server with all unnecessary services and server features turned off.<a href="#section-9.4-1" class="pilcrow">¶</a></p>
-<p id="section-9.4-2">Additions and modifications to the configurations are applicable to all respective users and must be made with care. The authenticity of the configuration <span class="bcp14">MUST</span> be verified from authorative sources. Server hostnames <span class="bcp14">MUST</span> be compared with the email domain names they are serving, and if they differ, the ownership of the server hostnames <span class="bcp14">MUST</span> be validated.<a href="#section-9.4-2" class="pilcrow">¶</a></p>
-<p id="section-9.4-3">For these reasons, mail clients may use the public mail config database mentioned above.<a href="#section-9.4-3" class="pilcrow">¶</a></p>
-<p id="section-9.4-4">The risk is mitigated to some degree by section "User approval".<a href="#section-9.4-4" class="pilcrow">¶</a></p>
+<p id="section-8.5-1">Given that mail clients will trust the configuration, the server delivering
+the configuration file needs to be secure. A static web server offers better
+security. The server software <span class="bcp14">SHOULD</span> be updated regularly and hosted on a
+dedicated secure server with all unnecessary services and server features
+turned off.<a href="#section-8.5-1" class="pilcrow">¶</a></p>
+<p id="section-8.5-2">For the ISPDB, additions and modifications to the configurations are
+applicable to all respective users and must be made with care. The
+authenticity of the configuration <span class="bcp14">MUST</span> be verified from authorative sources.
+Server hostnames <span class="bcp14">MUST</span> be compared with the email domain names they are
+serving, and if they differ, the ownership of the server hostnames <span class="bcp14">MUST</span> be
+validated.<a href="#section-8.5-2" class="pilcrow">¶</a></p>
+<p id="section-8.5-3">The risk is mitigated to some degree by section "User approval".<a href="#section-8.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-10">
+<section id="section-9">
       <h2 id="name-iana-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-10-1">This document has no IANA actions.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<div id="registration">
+<section id="section-9.1">
+        <h3 id="name-registration">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-registration" class="section-name selfRef">Registration</a>
+        </h3>
+<p id="section-9.1-1">IANA will create the following registry in a new registry group called
+"Mail Autoconfig":<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-2">Registry Name: "Autoconfig Protocol Type Names"<a href="#section-9.1-2" class="pilcrow">¶</a></p>
+<p id="section-9.1-3">Registration Procedure: Specification Required, per RFC 8126, Section 4<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1-4">Designated Expert: The author of this document.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="contents">
+<section id="section-9.2">
+        <h3 id="name-contents">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-contents" class="section-name selfRef">Contents</a>
+        </h3>
+<p id="section-9.2-1">Table, with fields Element (alphanumeric), Type (alphanumeric), Base (URL or TCP or URL/TCP), Name, Specification, and Additional Elements<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">The registrations need to define
+* Element: The XML element wrapping the server section.
+* Type: The <code>type</code> property value of the server section.
+* Base: Whether the protocol is URL-based or TCP-based,
+* Name: The commonly used name of the protocol
+* Specification: Which RFCs or document specifies the protocol, and
+* Additional Elements: (Optional) Protocol-specific XML elements and
+  their meaning.<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="initial-registration">
+<section id="section-9.3">
+        <h3 id="name-initial-registration">
+<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-initial-registration" class="section-name selfRef">Initial registration</a>
+        </h3>
+<table class="center" id="table-3">
+          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Element</th>
+              <th class="text-left" rowspan="1" colspan="1">Type</th>
+              <th class="text-left" rowspan="1" colspan="1">Base</th>
+              <th class="text-left" rowspan="1" colspan="1">Name</th>
+              <th class="text-left" rowspan="1" colspan="1">Specification</th>
+              <th class="text-left" rowspan="1" colspan="1">Additional Elements</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>jmap</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">JMAP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>imap</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">IMAP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 9051 or RFC 3501, et al</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>pop3</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">POP3</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 1939, RFC 5034</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">outgoingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>smtp</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">SMTP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 5321, RFC 2822</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">calendar</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>caldav</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">CalDAV</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 4791</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">addressbook</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>carddav</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">CardDav</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 6352</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">fileShare</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>webdav</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">WebDAV</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 4918</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">chatServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>xmpp</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">XMPP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 6120, RFC 6121, RFC 7395</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">chatServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>xmpptcp</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">XMPP</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 6120, RFC 6121</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">chatServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>matrix</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">Matrix</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <a href="https://spec.matrix.org">https://spec.matrix.org</a>
+</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">setupServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>managesieve</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">TCP</td>
+              <td class="text-left" rowspan="1" colspan="1">ManageSieve</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC 5804, RFC 5228</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>ews</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">Exchange Web Services</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>activeSync</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">ActiveSync</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>graph</code>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">URL</td>
+              <td class="text-left" rowspan="1" colspan="1">Microsoft Graph</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+            </tr>
+          </tbody>
+        </table>
+<p id="section-9.3-2">The Additional Elements field is empty in all of the initial values.<a href="#section-9.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="conventions-and-definitions">
+<section id="section-10">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-10-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-normative-references">
@@ -2168,16 +3176,8 @@ the result should be used with care.<a href="#section-9.2-2" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="acknowledgments">
-<section id="appendix-A">
-      <h2 id="name-acknowledgments">
-<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
-      </h2>
-<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="authors-addresses">
-<section id="appendix-B">
+<section id="appendix-A">
       <h2 id="name-authors-address">
 <a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>

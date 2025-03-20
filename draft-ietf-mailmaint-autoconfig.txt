@@ -4,8 +4,8 @@
 
 mailmaint                                                     B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                           5 November 2024
-Expires: 9 May 2025
+Intended status: Informational                             20 March 2025
+Expires: 21 September 2025
 
 
                             Mail Autoconfig
@@ -20,9 +20,9 @@ About This Document
    This note is to be removed before publishing as an RFC.
 
    The latest revision of this draft can be found at
-   https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html.
-   Status information for this document may be found at
-   https://datatracker.ietf.org/doc/draft-ietf-mailmaint-autoconfig/.
+   https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-
+   autoconfig.html.  Status information for this document may be found
+   at https://datatracker.ietf.org/doc/draft-ietf-mailmaint-autoconfig/.
 
    Discussion of this document takes place on the mailmaint Working
    Group mailing list (mailto:mailmaint@ietf.org), which is archived at
@@ -47,11 +47,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 May 2025.
+   This Internet-Draft will expire on 21 September 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -68,10 +68,29 @@ Table of Contents
    1.  Introduction
    2.  Implementations
    3.  Data format
-     3.1.  Sample config file
-     3.2.  Formal definition
-     3.3.  Placeholders
-   4.  Config retrieval for mail clients
+     3.1.  XML config file
+     3.2.  Global elements
+       3.2.1.  clientConfig
+       3.2.2.  emailProvider
+       3.2.3.  domain
+       3.2.4.  displayName and displayShortName
+     3.3.  documentation
+     3.4.  Server sections
+       3.4.1.  Multiple server sections
+     3.5.  type
+     3.6.  URL-based protocols
+       3.6.1.  url
+       3.6.2.  authentication
+       3.6.3.  username
+     3.7.  TCP-based protocols
+       3.7.1.  hostname
+       3.7.2.  port
+       3.7.3.  socketType
+       3.7.4.  authentication
+       3.7.5.  username
+     3.8.  Placeholders
+     3.9.  XML validation
+   4.  Config retrieval by mail clients
      4.1.  Mail provider
        4.1.1.  Customzing the config for a specific user
      4.2.  Central database
@@ -83,25 +102,28 @@ Table of Contents
      5.1.  User approval
      5.2.  Login test
      5.3.  OAuth2 windows
-   6.  Config publishing for mail providers
+   6.  Config publishing by mail providers
      6.1.  Config location for single domain
      6.2.  Config location for domain hosters
-     6.3.  No authentication for config
-     6.4.  Return config for non-existing email addresses
+     6.3.  Return config for non-existing email addresses
+     6.4.  No authentication for config
      6.5.  OAuth2 requirements
-   7.  Conventions and Definitions
-   8.  Alternatives considered
-     8.1.  DNSSEC
-     8.2.  DNS SRV
-     8.3.  CAPABILITIES
-   9.  Security Considerations
-     9.1.  Risk
-     9.2.  DNS
-     9.3.  Config updates
-     9.4.  Server security
-   10. IANA Considerations
+   7.  Alternatives considered
+     7.1.  DNSSEC
+     7.2.  DNS SRV
+     7.3.  CAPABILITIES
+   8.  Security Considerations
+     8.1.  Risk
+     8.2.  DNS
+     8.3.  HTTP
+     8.4.  Config updates
+     8.5.  Server security
+   9.  IANA Considerations
+     9.1.  Registration
+     9.2.  Contents
+     9.3.  Initial registration
+   10. Conventions and Definitions
    11. Normative References
-   Acknowledgments
    Author's Address
 
 1.  Introduction
@@ -123,6 +145,12 @@ Table of Contents
    directly support this protocol, or other mechanisms to determine the
    configuration.
 
+   While this AutoConfig protocol was conceived for configuring mail
+   clients, it can also be used for accounts of other types, like
+   contacts and calendar sync, chat, video conference, or online
+   publishing.  The primary concept and limitation here is that these
+   accounts need to be hosted by the same provider as the email address.
+
 2.  Implementations
 
    This protocol is in production use since 15 years by major email
@@ -133,8 +161,7 @@ Table of Contents
 
    *  Thunderbird (https://thunderbird.net)
 
-   *  Mustang (https://mustang.im/) and Parula (https://www.beonex.com/
-      parula/)
+   *  Parula (https://parula.beonex.com)
 
    *  Evolution (https://projects.gnome.org/evolution/)
 
@@ -154,223 +181,612 @@ Table of Contents
    and likely other mail clients.
 
    The purpose of this paper is to document and specify what is deployed
-   and used in the wild.  A later version 2 of the protocol might be
-   based on JSON.
+   in the wild.
 
 3.  Data format
 
    Whether the ISP or a common central database returns the
    configuration, the resulting document has the following data format.
 
-   The MIME type is text/xml or text/xml+autoconfig.
+   The MIME type is text/xml.
 
-3.1.  Sample config file
+3.1.  XML config file
+
+   The following example shows the syntax of the XML config file
+   returned.
 
 <?xml version="1.0"?>
 <clientConfig version="1.2">
-    <emailProvider id="example.com">
-      <domain>example.com</domain>
-      <domain>example.net</domain>
+  <emailProvider id="example.com">
+    <domain>example.com</domain>
+    <domain>example.net</domain>
 
-      <displayName>Google Mail</displayName>
-      <displayShortName>GMail</displayShortName>
+    <displayName>Google Workspace</displayName>
+    <displayShortName>GMail</displayShortName>
 
       <!-- type=
-          "imap": IMAP
-          "pop3": POP3
-          "jmap": JMAP
-          "ews": Microsoft Exchange Web Services
-          "activesync": Microsoft ActiveSync
-          -->
-      <incomingServer type="imap">
-        <hostname>imap.example.com</hostname>
-        <port>993</port>
-          <!-- "plain": no encryption
-                "SSL": SSL 3 or TLS 1 on SSL-specific port
-                "STARTTLS": listening on normal plain port
-                  and mandatory upgrade to TLS via STARTTLS
-                -->
-        <socketType>SSL</socketType>
-        <username>%EMAILADDRESS%</username>
-        <!-- Authentication methods:
-          "password-cleartext",
-            Send password in the clear
-            (dangerous, if SSL isn't used either).
-            AUTH PLAIN, LOGIN or protocol-native login.
-          "password-encrypted",
-            A secure encrypted password mechanism.
-            Can be CRAM-MD5 or DIGEST-MD5. Not NTLM.
-          "NTLM":
-            Use NTLM (or NTLMv2 or successors),
-            the Windows login mechanism.
-          "GSSAPI":
-            Use Kerberos / GSSAPI,
-            a single-signon mechanism used for big sites.
-          "TLS-client-cert":
-            On the SSL/TLS layer, the server requests a
-            client certificate and the client sends one
-            (possibly after letting the user select/confirm
-            one), if available.
-          "OAuth2":
-            Server MUST support the
-            "Open Client OAuth2 profile".
-            Clients SHOULD skip OAuth2 and fall back to
-            other auth mechanisms, if they support
-            OAuth2 in general, but cannot find a valid
-            OAuth2 config for this server.
-          "none":
-            No authentication
-
-          Multiple <authentication> elements per server
-          config are valid. Clients will pick the first
-          one that they support.
-          -->
-        <authentication>password-cleartext</authentication>
-      </incomingServer>
-
-      <!-- You can have multiple incoming servers,
-        and even multiple IMAP server configs.
-        The first config is the preferred one, but the user or
-        or client can choose the alternative configs. -->
-      <incomingServer type="pop3">
-        <hostname>pop.example.com</hostname>
-        <port>995</port>
-        <socketType>SSL</socketType>
-        <username>%EMAILADDRESS%</username>
-        <authentication>password-cleartext</authentication>
-      </incomingServer>
-
-      <!-- Needed only for IMAP or POP3 -->
-      <outgoingServer type="smtp">
-        <hostname>smtp.googlemail.com</hostname>
-        <port>587</port>
-        <socketType>STARTTLS</socketType>
-        <username>%EMAILADDRESS%</username>
-        <!-- smtp-auth (RFC 2554, 4954) or other
-          auth mechanism.
-          For values, see incoming.
-          Additional options here:
-          "client-IP-address":
-            The server recognizes this user based on
-            the IP address.
-            No authentication needed, the server will
-            require no username nor password.
-            This is strongly discouraged, because it
-            will not work for remote workers.
-          -->
-        <authentication>password-cleartext</authentication>
-      </outgoingServer>
-
-      <incomingServer type="jmap">
-        <url>https://jmap.example.com</url>
-        <username>%EMAILADDRESS%</username>
-        <authentication>http-basic</authentication>
-      </incomingServer>
-
-      <incomingServer type="ews">
-        <url>https://mail.example.com/EWS/Exchange.asmx</url>
-        <username>%EMAILADDRESS%</username>
-        <authentication>http-basic</authentication>
-      </incomingServer>
-
-      <incomingServer type="activesync">
-        <url>https://mail.example.com/Microsoft-Server-ActiveSync</url>
-        <username>%EMAILADDRESS%</username>
-        <authentication>OAuth2</authentication>
-      </incomingServer>
-
-      <!-- A page where the ISP describes the configuration.
-        This is purely informational and currently mainly for
-        maintenance of the files and not used by the client
-        at all.
-        Note that we do not necessarily use exactly the
-        config suggested by the ISP. E.g. when they don't
-        recommend TLS, but it's available, we will configure
-        TLS.
-        The text content should contains a description in the
-        native language of the ISP (customers), and a short
-        English description, mostly for us.
+      "imap": IMAP
+      "pop3": POP3
+      "jmap": JMAP
+      "ews": Microsoft Exchange Web Services
+      "activesync": Microsoft ActiveSync
       -->
-      <documentation url="http://www.example.com/help/mail/">
-        <descr lang="en">Configure mail app for IMAP</descr>
-        <descr lang="de">Email mit IMAP konfigurieren</descr>
-      </documentation>
-
-    </emailProvider>
-
-    <!-- Syncronize the user's address book / contacts. -->
-    <addressBook type="carddav">
-      <username>%EMAILADDRESS%</username>
-      <!-- Authentication methods. See also <incomingServer>.
-        "http-basic":
-          Authenticate to the HTTP server using
-          WWW-Authenticate: Basic
-        "http-digest":
-          Authenticate to the HTTP server using
-          WWW-Authenticate: Digest
-        "OAuth2":
-          The "Open Client OAuth profile".
-          Uses the same token as for email.
-          <scope> needs to include addressbook/calendar.
+    <incomingServer type="imap">
+      <hostname>imap.example.com</hostname>
+      <port>993</port>
+        <!--
+        "plain": no encryption
+        "SSL": TLS on TLS-specific port
+        "STARTTLS": mandatory upgrade to TLS via STARTTLS
         -->
-      <authentication>http-basic</authentication>
-      <url>https://jmap.example.com/remote.php/dav</url>
-    </addressBook>
+      <socketType>SSL</socketType>
+        <!-- Authentication methods:
+        "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
+        "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
+        "NTLM": Deprecated Windows login mechanism
+        "GSSAPI": Kerberos or Windows GSSAPI
+        "TLS-client-cert": TLS client certificate on TLS layer
+        "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
+        "none": No authentication
 
-    <!-- Syncronize the user's calendar. -->
-    <calendar type="caldav">
+        Multiple <authentication> elements per server
+        config are valid. Clients will pick the first
+        one that they support.
+        -->
+      <authentication>password-cleartext</authentication>
       <username>%EMAILADDRESS%</username>
-      <!-- see <addressBook> -->
+    </incomingServer>
+
+    <!-- You can have multiple incoming servers,
+      and even multiple IMAP server configs.
+      The first config is the preferred one, but the user or
+      or client can choose the alternative configs. -->
+    <incomingServer type="pop3">
+      <hostname>pop.example.com</hostname>
+      <port>995</port>
+      <socketType>SSL</socketType>
+      <authentication>password-cleartext</authentication>
+      <username>%EMAILADDRESS%</username>
+    </incomingServer>
+
+    <!-- Needed only for IMAP or POP3 -->
+    <outgoingServer type="smtp">
+      <hostname>smtp.googlemail.com</hostname>
+      <port>587</port>
+      <socketType>STARTTLS</socketType>
+        <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism. -->
+      <authentication>password-cleartext</authentication>
+      <username>%EMAILADDRESS%</username>
+    </outgoingServer>
+
+    <incomingServer type="jmap">
+      <url>https://jmap.example.com</url>
+        <!-- Authentication methods
+        "http-basic": RRFC 7661
+        "http-digest"
+        "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
+        -->
+      <authentication>OAuth2</authentication>
       <authentication>http-basic</authentication>
-      <url>https://calendar.example.com/remote.php/dav</url>
-    </calendar>
+      <username>%EMAILADDRESS%</username>
+    </incomingServer>
+
+    <incomingServer type="ews">
+      <url>https://mail.example.com/EWS/Exchange.asmx</url>
+      <username>%EMAILADDRESS%</username>
+      <authentication>http-basic</authentication>
+    </incomingServer>
+
+    <incomingServer type="activesync">
+      <url>https://mail.example.com/Microsoft-Server-ActiveSync</url>
+      <username>%EMAILADDRESS%</username>
+      <authentication>OAuth2</authentication>
+    </incomingServer>
+
+    <documentation url="http://www.example.com/help/mail/">
+      <descr lang="en">Configure mail app for IMAP</descr>
+      <descr lang="de">Email mit IMAP konfigurieren</descr>
+    </documentation>
+
+  </emailProvider>
+
+  <addressbook type="carddav">
+    <url>https://contacts.example.com/remote.php/dav</url>
+    <authentication>http-basic</authentication>
+    <username>%EMAILADDRESS%</username>
+  </addressbook>
+
+  <calendar type="caldav">
+    <url>https://calendar.example.com/remote.php/dav</url>
+    <authentication>http-basic</authentication>
+    <username>%EMAILADDRESS%</username>
+  </calendar>
 
     <!-- Upload files, allowing the user to share them.
-      This can be used for Thunderbird's FileLink feature,
-      or to set up a file sync folder on the user's desktop.
-      -->
-    <fileShare type="webdav">
-      <username>%EMAILADDRESS%</username>
-      <!-- see <addressBook> -->
-      <authentication>http-basic</authentication>
-      <url>https://share.example.com/remote.php/dav</url>
-    </fileShare>
+    This can be used to send links instead of attachments,
+    or to set up a file sync folder on the user's desktop.
+    -->
+  <fileShare type="webdav">
+    <url>https://share.example.com/remote.php/dav</url>
+    <authentication>http-basic</authentication>
+    <username>%EMAILADDRESS%</username>
+  </fileShare>
 
-    <!-- OAuth2 config for mail and other native and
-      public client apps.
-      Gives e.g. clientID, expiry, and login page
-      MUST adhere to "Open Client OAuth2 profile".
-      -->
-    <oAuth2>
-      <authURL>https://login.example.com/auth</authURL>
-      <tokenURL>https://login.example.com/token</tokenURL>
-      <issuer>login.example.com</issuer>
-      <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
-      <clientID>open</clientID>
-      <!-- optional -->
-      <clientSecret>give-me-your-password</clientSecret>
-    </oAuth2>
+  <chatServer type="xmpp">
+    <url>wss://example.com:5281/xmpp-websocket</url>
+    <authentication>http-basic</authentication>
+    <username>%EMAILADDRESS%</username>
+  </chatServer>
 
-    <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
+  <chatServer type="xmpp">
+    <hostname>xmpp.example.com</hostname>
+    <port>5223</port>
+    <socketType>TLS</socketType>
+    <authentication>password-cleartext</authentication>
+    <username>%EMAILADDRESS%</username>
+  </chatServer>
+
+  <videoConference type="opentalk">
+    <url>https://talk.example.com/login</url>
+    <authentication>OAuth2</authentication>
+    <username>%EMAILADDRESS%</username>
+  </videoConference>
+
+    <!-- OAuth2 config for native public client apps.
+    Gives e.g. clientID, expiry, and login page.
+    The provider MUST adhere to "Open Client OAuth2 profile".
+    -->
+  <oAuth2>
+    <authURL>https://login.example.com/auth</authURL>
+    <tokenURL>https://login.example.com/token</tokenURL>
+    <issuer>login.example.com</issuer>
+    <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
+    <clientID>open</clientID>
+    <!-- optional -->
+    <clientSecret>give-me-your-password</clientSecret>
+  </oAuth2>
+
+  <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
 
 </clientConfig>
 
-3.2.  Formal definition
+3.2.  Global elements
 
-   TODO Schema for XML
+   The file starts with an XML header, e.g. <?xml version="1.0"?>, and
+   is encoded in UTF-8 without BOM.
 
-3.3.  Placeholders
+3.2.1.  clientConfig
 
-   The fields for <username> support placeholders.  The config returned
-   by the autoconfig server may contain these placeholders, which are to
-   be replaced by the client.  The following special strings (or
-   substrings/parts) of the value should be replaced by the client,
-   after the config was retrieved and before its values are actually
-   used.
+   The root element of the XML file is <clientConfig version="1.2">.
 
-   Some clients MAY also support the same placeholders for the fields
-   <hostname>, <serverURL>, <authURL>, <tokenURL>, <issuer>,
-   <displayName> and <displayShortName>.
+   The version is 1.2 for the version defined in this specification. 1.1
+   is a compatible previous version.  Higher versions are for future
+   specifications.  The client MUST NOT reject a config file solely
+   based on the version number.
+
+3.2.2.  emailProvider
+
+   Element <emailProvider id="example.com"> is within the root element.
+   This element has no semantic purpose and exists for legacy reasons
+   only.  If all of its child elements were within the root element,
+   their meaning would still be the same.
+
+   The id is a unique string that typically matches the primary domain
+   of the provider.
+
+   Within <emailProvider> are <domain>, <displayName> and
+   <displayShortName>, <documentation>, <incomingServer> and
+   <outgoingServer>.
+
+3.2.3.  domain
+
+   E.g.
+
+   <domain>example.com</domain>
+   <domain>example.net</domain>
+   <domain purpose="mx">example-hosting.com</domain>
+
+   The content of the <domain> element defines which email addresses
+   this config is valid for.  E.g. a config with
+   <domain>example.com</domain> is valid for email address
+   fred@example.com.
+
+   Multiple <domain> elements may be included, which means that the
+   config is valid for all of these domains.  Their order has no meaning
+   - you may sort them by number of users, importance to the provider,
+   or alphabethically.
+
+   A <domain purpose="mx"> specifies the domain name of the MX server of
+   the email address, and is used config file lookup using MX server
+   names, as specified in section MX.  The purpose property is mainly
+   informational and may be ignored.
+
+3.2.4.  displayName and displayShortName
+
+   E.g.
+
+   <displayName>Google Workspace</displayName>
+   <displayShortName>GMail</displayShortName>
+
+   The <displayName> element contains the name of the provider, e.g. as
+   preferred by the marketing of the provider itself.  It SHOULD be no
+   longer than 30 characters, but MUST be no longer than 60 characters.
+
+   The <displayShortName> element contains the name of the provider, as
+   typically used by end users.  It SHOULD be no longer than 12
+   characters, and it MUST NOT be longer than 20 characters.
+
+3.3.  documentation
+
+   E.g.
+
+   <documentation url="http://www.example.com/help/mail/">
+     <descr lang="en">Configure mail app for IMAP</descr>
+     <descr lang="de">Email mit IMAP konfigurieren</descr>
+   </documentation>
+
+   This is purely informational and not required for the automatic
+   setup.
+
+   Records the user help webpage at the provider that describes the mail
+   server settings.  The config may be based on that page, but does not
+   necessarily have to match it, e.g. when a better config is available
+   than the one described on the webpage.
+
+   The url property contains the URL of the webpage.  The <descr>
+   content describes the content and purpose of the page and why it's
+   referenced here.  Multiple <descr> elements with different lang
+   properties are allowed, whereby the lang property contains the
+   2-letter ISO language code, like the HTML lang attribute.
+
+3.4.  Server sections
+
+   E.g. <incomingServer type="jmap"> or <calendar type="carddav">
+
+   *  The type property specifies the wire protocol that this server
+      uses.  See section type below.
+
+   *  <incomingServer> specifies the server that the mail client
+      retrieves email from and submits changes to.  In many protocols,
+      this server is also used for sending email.
+
+   *  <outgoingServer> is used for sending, if <incomingServer> does not
+      support that directly.  This is currently used only for SMTP in
+      combination with IMAP and POP3.
+
+   *  <incomingServer> and <outgoingServer> are within element
+      <emailProvider>, whereas <calendar>, <addressbook>, <fileShare>,
+      <chatServer> and <videoConference> are within the root element
+      <clientConfig>, i.e. one level higher.  Other than that, they work
+      the same.
+
+   *  In some protocols, the <incomingServer> server additionally
+      provides calendars, addressbooks, and other data.  For such
+      protocols, the same server is not repeated in other specific
+      server sections like <calendar>.  Calendar-only clients supporting
+      such multi-purpose protocols MUST read the <incomingServer>
+      (nonewithstanding that it's within legacy element <emailProvider>)
+      and test and use the parts of the protocol needed for their
+      functionality.
+
+3.4.1.  Multiple server sections
+
+   *  Server sections of the same type (like <incomingServer> or
+      <calendar>) may appear multiple times in the same config file.  In
+      this case, the one listed first is preferred by the config
+      provider.  Unless the client has specific other requirements, it
+      SHOULD pick the first config.
+
+   *  The client may derivate from this recommendation, because
+
+      -  the client doesn't support a higher-priority protocol, e.g. a
+         JMAP configuraion is listed first and is the most preferred,
+         but the client does not support JMAP yet, or
+
+      -  the client doesn't support a configuration setting, e.g. it
+         doesn't support STARTTLS, or the config specifies only an
+         OAuth2 authentication and the client either doesn't implement
+         OAuth2, or it doesn't have a client ID for this provider, or
+
+      -  the client has a specific policy to prefer another
+         configuration, e.g. a STARTTLS config is listed before a direct
+         TLS config, and the client has a policy of preferring direct
+         TLS, or likewise the client prefers IMAP over POP3.
+
+   *  Server types, elements and protocols that the client does not
+      support MUST be ignored and the client MUST continue to parse the
+      other server sections, which may contain configs that the client
+      understands and supports.  The client ignores the file only if
+      there is no supported and working config found.
+
+3.5.  type
+
+   The type property on the server section element specifies the wire
+   protocol that this server uses.
+
+   +==============+===========+====+===========+=========================+
+   |Element       |Type       |Base|Name       |Specification            |
+   +==============+===========+====+===========+=========================+
+   |incomingServer|jmap       |URL |JMAP       |RFC 8620, RFC 8621, RFC  |
+   |              |           |    |           |8887, RFC 9610 et al     |
+   +--------------+-----------+----+-----------+-------------------------+
+   |incomingServer|imap       |TCP |IMAP       |RFC 9051 or RFC 3501, et |
+   |              |           |    |           |al                       |
+   +--------------+-----------+----+-----------+-------------------------+
+   |incomingServer|pop3       |TCP |POP3       |RFC 1939, RFC 5034       |
+   +--------------+-----------+----+-----------+-------------------------+
+   |outgoingServer|smtp       |TCP |SMTP       |RFC 5321, RFC 2822       |
+   +--------------+-----------+----+-----------+-------------------------+
+   |calendar      |caldav     |URL |CalDAV     |RFC 4791                 |
+   +--------------+-----------+----+-----------+-------------------------+
+   |addressbook   |carddav    |URL |CardDav    |RFC 6352                 |
+   +--------------+-----------+----+-----------+-------------------------+
+   |fileShare     |webdav     |URL |WebDAV     |RFC 4918                 |
+   +--------------+-----------+----+-----------+-------------------------+
+   |chatServer    |xmpp       |URL |XMPP       |RFC 6120, RFC 6121, RFC  |
+   |              |           |    |           |7395                     |
+   +--------------+-----------+----+-----------+-------------------------+
+   |chatServer    |xmpptcp    |TCP |XMPP       |RFC 6120, RFC 6121       |
+   +--------------+-----------+----+-----------+-------------------------+
+   |chatServer    |matrix     |URL |Matrix     |https://spec.matrix.org  |
+   |              |           |    |           |(https://spec.matrix.org)|
+   +--------------+-----------+----+-----------+-------------------------+
+   |setupServer   |managesieve|TCP |ManageSieve|RFC 5804, RFC 5228       |
+   +--------------+-----------+----+-----------+-------------------------+
+   |incomingServer|ews        |URL |Exchange   |                         |
+   |              |           |    |Web        |                         |
+   |              |           |    |Services   |                         |
+   +--------------+-----------+----+-----------+-------------------------+
+   |incomingServer|activeSync |URL |ActiveSync |                         |
+   +--------------+-----------+----+-----------+-------------------------+
+   |incomingServer|graph      |URL |Microsoft  |                         |
+   |              |           |    |Graph      |                         |
+   +--------------+-----------+----+-----------+-------------------------+
+
+                                  Table 1
+
+   Other protocol names can be added using an IANA registry.  Their
+   respective registrations need to define: * Element: The XML element
+   wrapping the server section. * Type: The type property value of the
+   server section. * Base: Whether the protocol is URL-based or TCP-
+   based, * Name: The commonly used name of the protocol *
+   Specification: Which RFCs or document specifies the protocol, and *
+   Additional Elements: (Optional) Protocol-specific XML elements and
+   their meaning.
+
+3.6.  URL-based protocols
+
+   E.g.
+
+   <incomingServer type="jmap">
+     <url>https://jmap.example.com/session</url>
+     <authentication>http-basic</authentication>
+     <username>%EMAILADDRESS%</username>
+   </incomingServer>
+
+   For server sections with protocols that are based on HTTPS or other
+   URLs, the following elements are supported:
+
+3.6.1.  url
+
+   E.g. <url>https://jmap.example.com/session</url>
+
+   The content of the <url> element contains the URL where to contact
+   the server.
+
+   The URL scheme will normally be HTTPS and the URL start with
+   https://. Some protocols may use other schemes, e.g. WebSockets
+   wss://.
+
+3.6.2.  authentication
+
+   E.g. <authentication>http-basic</authentication>
+
+   The content of the <authentication> element defines which HTTP
+   authentication method to use.
+
+   *  http-basic: Authenticate to the HTTP server using WWW-
+      Authenticate: Basic.  See RFC 7617.
+
+   *  http-digest: Authenticate to the HTTP server using WWW-
+      Authenticate: Digest.  See RFC 7616
+
+   *  OAuth: Authenticate to the HTTP server using WWW-Authenticate:
+      Bearer.  See RFC 6750 Section 3.  The provider MUST adhere to the
+      requirements defined in section OAuth2 in this specification.
+
+   The rules as specified in sections "Multiple authentication
+   alternatives" and "Authentication verification and fallback" apply
+   here as well.
+
+3.6.3.  username
+
+   E.g. <username>%EMAILADDRESS%</username> or <username>fred</username>
+
+   The username to use for the authentication method.
+
+   Placeholders MUST be replaced before using the actual value.  See
+   section "Placeholders".
+
+3.7.  TCP-based protocols
+
+   For server sections with protocols that are based on TCP, the
+   following elements are supported:
+
+   <incomingServer type="imap">
+     <hostname>imap.example.com</hostname>
+     <port>993</port>
+     <socketType>SSL</socketType>
+     <authentication>password-cleartext</authentication>
+     <username>%EMAILADDRESS%</username>
+   </incomingServer>
+
+3.7.1.  hostname
+
+   E.g. <hostname>imap.example.com</hostname>
+
+   The content of the <hostname> element contains the fully qualified
+   hostname of the server.
+
+3.7.2.  port
+
+   E.g. <port>993</port>
+
+   The content of the <port> element is an integer and contains the TCP
+   port number at the hostname.  The port is typically specific to the
+   combination of the wire protocol and socketType.
+
+3.7.3.  socketType
+
+   E.g. <socketType>SSL</socketType>
+
+   The content of the <socketType> element specifies whether to use
+   direct TLS, STARTTLS, or none of these.
+
+   *  SSL: Directly contact the TCP port using TLS.  TLS version 1.2 or
+      higher SHOULD be used.  Higher versions may be required based on
+      security situation, server support, and client policy decisions.
+
+   *  STARTTLS: Contact the TCP port first using an unencrypted plain
+      socket, then upgrade to TLS using the protocol-specific STARTTLS
+      specification.  With this configuration, STARTTLS MUST be used and
+      TLS MUST be used after the STARTTLS upgrade.  If the upgrade to
+      TLS fails for whatever reason, the client MUST disconnect and MUST
+      NOT try to authenticate.  This prevents downgrade attacks that
+      could otherwise steal passwords, user data, and impersonate users.
+
+   *  plain: Unencrypted connection, with neither TLS nor STARTTLS.  May
+      be needed for local servers.  Deprecated.
+
+3.7.3.1.  TLS validation
+
+   In all cases where TLS is used, either directly or using STARTTLS,
+   the client MUST validate the TLS certificate and ensure that the
+   certificate is valid for the hostname given in this config.  If not,
+   or if the TLS certificate is otherwise invalid, the client MUST
+   either disconnect or MAY warn the user of the dangers and ask for
+   user confirmation.  Such warning and confirmation MAY only be allowed
+   at original configuration and MUST NOT be allowed during normal
+   everyday connection.
+
+   If the server had a valid TLS certificate during original
+   configuration and the TLS certificate is invalid during normal
+   connection, the client MUST disconnect.
+
+   If the problem is that the TLS certificate expired recently, the
+   client MAY not consider that a failure during normal connection and
+   use other recovery mechanisms.
+
+3.7.4.  authentication
+
+   E.g. <authentication>password-cleartext</authentication>
+
+   The content of the <authentication> element defines which
+   authentication method to use.  This can be either an authentication
+   defined by the wire protocol, or a SASL scheme, or a successor to
+   SASL.
+
+   *  password-cleartext: Send password in the clear.  Uses either the
+      native authentication method defined by the wire protocol (if that
+      is based on plaintext passwords), or a SASL authentication scheme
+      like SASL PLAIN or SASL LOGIN, or a successor.
+
+   *  password-encrypted: An encrypted or hashed password mechanism.
+      Includes SASL CRAM-MD5, DIGEST-MD5 and SCRAM-SHA-256-PLUS.  TLS
+      alone by itself does not qualify as "password-encrypted".
+
+   *  NTLM: Legacy Windows login mechanisms NTLM or NTLMv2.
+
+   *  GSSAPI: Kerberos or GSSAPI, a single-signon mechanism based on
+      TCP.
+
+   *  TLS-client-cert: On the SSL/TLS layer, after server request, the
+      client sends a TLS client certificate for the user, possibly after
+      letting the user select confirm it.  Uses SASL EXTERNAL scheme.
+
+   *  OAuth: OAuth.  SASL OAUTHBEARER (current) or XOAUTH2 (deprecated)
+      or successors.  The provider MUST adhere to the requirements
+      defined in section OAuth2 in this specification.
+
+   *  client-IP-address: Server can be used without any explicit
+      authentication, and the client is admitted based on its IP
+      address.  This may be the case for some SMTP servers on local
+      networks.  Not supported on the Internet.  Deprecated, because it
+      breaks mobile devices.
+
+3.7.4.1.  Recommending specific SASL schemes
+
+   Additionally, a specific SASL scheme may be specified using SASL, a
+   space, and the specific SASL authentication scheme name, e.g. SASL
+   SCRAM-SHA-256-PLUS.  In such a case, the server config SHOULD also
+   specify a more generic authentication mechanism as a lower priority
+   alternative.  That would make clients use the specific authentication
+   mechanism, if they support it, and other clients will use the more
+   generic authentication mechanism.
+
+3.7.4.2.  Multiple authentication alternatives
+
+   The <authentication> element may appear multiple times within a
+   server section.  In this case, they are ordered from the most to the
+   least preferred method, based on the policy of the provider.
+
+   If a client does not support a specific authentication scheme, or
+   does not have the conditions to use it, e.g. the client does not have
+   a Client ID for this OAuth2 server, then the client MUST skip this
+   <authentication> element and use the next in the list instead.
+
+   If none of the authentication methods are supported by the client,
+   the client MUST ignore that server section and use the remaining
+   server sections.
+
+3.7.4.3.  Authentication verification and fallback
+
+   The client SHOULD test the configuration during setup, with an actual
+   authentication attempt.
+
+   If the authentication fails, the client decides based on the
+   authentication error code how to proceed.  E.g. if the
+   authentiocation method itself failed, or the error code indicates a
+   systemic failure, the client SHOULD use a lower-priority
+   authentication method from the list.
+
+   If the authentication method is working, but the error code indicated
+   that the username or password was wrong, then the client MAY ask the
+   user to correct the password.
+
+   For that reason, the server SHOULD be specific in the error codes and
+   allow the client to distinguish between * an unsupported or non-
+   working authentication method or other systemic failures * the client
+   being rejected by the server * the user being blocked from login *
+   the user authentication failing due to wrong password or username *
+   other reasons
+
+   If the server were to return the same error code for all these cases,
+   the client might tell the user that the password is wrong, and the
+   user starts attempting other passwords, potentially revealing
+   passwords to other higher-value assets, which is highly dangerous.
+
+   If the authentification succeeded, the client SHOULD take note of the
+   working configutation and use that for all subsequent connections,
+   until an explicit reconfiguration occurs.  During normal everyday
+   operation, the client SHOULD NOT fallback nor attempt multiple
+   different authentication methods.
+
+3.7.5.  username
+
+   E.g. <username>%EMAILADDRESS%</username> or <username>fred</username>
+
+   The username to use for the authentication method.
+
+   Placeholders MUST be replaced before using the actual value.  See
+   section "Placeholders".
+
+3.8.  Placeholders
+
+   The <username> value may contain placeholders.
+
+   The following special substrings in the value MUST be replaced by the
+   client, before the value is actually used.
 
    +==================+============================+==================+
    | Placeholder      | Replace with               | Example          |
@@ -384,9 +800,31 @@ Table of Contents
    |                  | Mail-Address               |                  |
    +------------------+----------------------------+------------------+
 
-                                 Table 1
+                                 Table 2
 
-4.  Config retrieval for mail clients
+   Some clients MAY also support the same placeholders for the fields
+   <hostname>, <url>, <authURL>, <tokenURL>, <issuer>, <displayName> and
+   <displayShortName>.
+
+3.9.  XML validation
+
+   The client SHOULD validate that the config file is valid XML, and if
+   the XML syntax is invalid, the client SHOULD ignore the entire file.
+   In contrast, if there are syntactically valid, but unknown elements
+   or properties, the client MUST NOT ignore the file.
+
+   The client SHOULD take only the elements and attributes that are
+   supported by the client, and MUST ignore the others that are unknown
+   to the client.
+
+   The client may optionally want to validate the XML before parsing it.
+   This is not required.  If the client choses to validate, the
+   validation MUST ignore unknown elements and properties and MUST NOT
+   drop or ignore a configuration that contains unknown elements and
+   properties.  This is needed to allow future extensions of the format
+   without breaking existing clients.
+
+4.  Config retrieval by mail clients
 
    The mail client application, when it needs the configuration for a
    given email address, will perform several steps to retrieve the
@@ -511,10 +949,10 @@ Table of Contents
    cannot know all their customers.  To handle such domains, the
    protocol first needs to find the server hosting the email.
 
-   If the previous mechanisms yield no result, the client may perform a
-   DNS MX lookup on the email domain, and retrieve the MX server
-   (incoming email server) for that domain.  Only the highest priority
-   MX hostname is considered.  From that MX hostname, 2 values are
+   If the previous mechanisms yield no result, the client SHOULD perform
+   a DNS MX lookup on the email domain, and retrieve the MX server
+   (incoming SMTP server) for that domain.  Only the highest priority MX
+   hostname is considered.  From that MX hostname, 2 values are
    extracted:
 
    *  Extract only the second-level domain from the MX hostname, and use
@@ -525,8 +963,7 @@ Table of Contents
 
    *  Remove the first component from the MX hostname, i.e. everything
       up to and including the first ., and use that as value for
-      %MXFULLDOMAIN%. If it is shorter or the same length as
-      %MXBASEDOMAIN%, then skip it.
+      %MXFULLDOMAIN%. Use it only if it is longer than %MXBASEDOMAIN%.
 
    For example:
 
@@ -638,13 +1075,10 @@ Table of Contents
 
    Showing the URL or hostname allows the end user to verify that he is
    logging in at the expected page, e.g. the login server of their
-   company, instead of the email hoster's page.
+   company, instead of the email hoster's page.  It is important that
+   the user verifies that he enters the passwords on the right domain.
 
-   (Editor's note: Not really part of autoconfig, but autoconfig can
-   enable OAuth2, and it's important that this is implemented correctly
-   by mail applications.)
-
-6.  Config publishing for mail providers
+6.  Config publishing by mail providers
 
    Mail service providers who want to support this specification and
    publish the mail configuration for their own mail service, so that
@@ -698,7 +1132,18 @@ Table of Contents
    For backwards compatibility with older mail clients, step 3.2. should
    also be implemented.
 
-6.3.  No authentication for config
+6.3.  Return config for non-existing email addresses
+
+   Servers SHOULD return a valid config, even if the email address sent
+   as URL parameter does not exist.  Otherwise, spammers or attackers
+   would be able to test the validity of email addresses.  This is true
+   even if the config server needs the email address to determine which
+   of multiple configurations is correct.  In such a configuration, if
+   the client sends a non-existing email address, the config server
+   SHOULD return one of the valid configuations, so that valid and
+   invalid email addresses are indistiguishable.
+
+6.4.  No authentication for config
 
    Any of the above URLs for retrieving the config file MUST NOT require
    authentication, but MUST be public.
@@ -710,41 +1155,28 @@ Table of Contents
    Given that the config is required for authentication, the config
    itself cannot require authentication.
 
-6.4.  Return config for non-existing email addresses
-
-   Servers SHOULD return a valid config, even if the email address sent
-   as URL parameter does not exist.  Otherwise, spammers or attackers
-   would be able to test the validity of email addresses.  This is true
-   even if the config server needs the email address to determine which
-   of multiple configurations is correct.  In such a configuration, if
-   the client sends a non-existing email address, the config server
-   SHOULD return one of the valid configuations, so that valid and
-   invalid email addresses are indistiguishable.
-
 6.5.  OAuth2 requirements
 
-   If OAuth2 is used, the OAuth2 server MUST adhere to the mAuth
-   (https://benbucksch.github.io/mauth-spec/draft-mauth.html)
-   specification.
+   If OAuth2 is used, the provider MUST adhere to the "Open Profile for
+   Public Clients" or mAuth (https://benbucksch.github.io/mauth-spec/
+   draft-mauth.html) specification.
 
    The OAuth2 server MUST either accept the public client ID as given in
    the config file, without secret, or MUST allow the string open as
-   client ID, or both.
+   client ID, or both.  The server MUST NOT employ any other methods to
+   block clients that are acting on behalf of users.
 
-   There are also specific requirements for expiry times and the login
-   page, which are needed for mail client applications to work.
+   The specifications also contain requirements for expiry times and the
+   login page, which are needed for mail client applications to work.
 
-7.  Conventions and Definitions
+   The OAuth2 scope MUST include all services defined in this config
+   file.  The same refresh and access token MUST be valid for all
+   services defined in the same config file, including for all URL-based
+   protocols like CalDAV and all TCP-based protocols like IMAP.
 
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in
-   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
-   capitals, as shown here.
+7.  Alternatives considered
 
-8.  Alternatives considered
-
-8.1.  DNSSEC
+7.1.  DNSSEC
 
    Due to their top-level domain, some domains do not have DNSSEC
    available to them, even if they would like to deploy it.
@@ -756,7 +1188,7 @@ Table of Contents
    Therefore, DNSSEC cannot be relied on in this specification, and DNS
    must be considered insecure for the purposes of this specification.
 
-8.2.  DNS SRV
+7.2.  DNS SRV
 
    DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2
    reasons:
@@ -774,7 +1206,7 @@ Table of Contents
    *  authentication method (password, CRAM-MD5, OAuth2, SSL client
       certificate)
 
-   *  authentication method parameters (e.g.  OAuth parameters)
+   *  authentication method parameters (e.g. OAuth parameters)
 
    and other parameters.  If any of these parameters are not configured
    right, the configuration won't work.  While these parameters could
@@ -787,10 +1219,10 @@ Table of Contents
    This specification was created as an answer to these deficiencies and
    provides an alternative to DNS SRV.
 
-8.3.  CAPABILITIES
+7.3.  CAPABILITIES
 
-   In the wild deployments from actual ISPs show that protocol-specific
-   commands to find available authentication methods, e.g.  IMAP
+   Deployments in the wild from actual ISPs show that protocol-specific
+   commands to find available authentication methods, e.g. IMAP
    CAPABILITIES or POP3 CAPA, are not reliable.  Many email servers
    advertize authentication methods that do not work.
 
@@ -819,9 +1251,9 @@ Table of Contents
    Finally, some non-mail protocols may not support capabilties commands
    that include authentication methods.
 
-9.  Security Considerations
+8.  Security Considerations
 
-9.1.  Risk
+8.1.  Risk
 
    If an attacker can provide a forged configuration, the provided mail
    hostname and authentication server can be controlled by the attacker,
@@ -842,26 +1274,40 @@ Table of Contents
    because the user may believe to be logging into his email and
    therefore comply with any multi-factor authentication steps required.
 
-9.2.  DNS
+8.2.  DNS
 
    Any protocol that relies on DNS without further validation, e.g.
-   http, should be considered insecure.  Even if an http URL redirects
-   to a https URL, and the domain of the https URL cannot be validated
-   against the email domain, that is still insecure.  This also applies
-   to the DNS MX lookup and the https calls that base on its results, as
-   described in section "MX".
+   http, should be considered insecure.  This also applies to the DNS MX
+   lookup and the https calls that base on its results, as described in
+   section "MX".
 
    One possible mitigation is to use multiple different DNS servers and
    verify that the results match, e.g. to use the native DNS resolver of
    the operating system, and additionally also query a hardcoded DoH
-   (DNS over HTTPS) server.  Nonetheless, the result should be used with
-   care.
+   (DNS over HTTPS) server.
 
-   Such insecure configs may only be used, if the end user confirms the
-   config, particularly the resulting second-level domains.  See section
-   "User approval".
+   Nonetheless, the result should be used with care.  If such configs
+   are used, the end user MUST explicitly confirm the config,
+   particularly the resulting second-level domains.  See section "User
+   approval".
 
-9.3.  Config updates
+8.3.  HTTP
+
+   HTTP requests may be intercepted, redirected, or altered at the
+   network level.  See "Risk" above.
+
+   Even if an http URL redirects to a https URL, and the domain of the
+   https URL cannot be validated against the email domain, that is still
+   insecure.
+
+   For that reason, clients MUST prefer HTTPS over HTTP during config
+   retrieval, within the same retrieval method.
+
+   If such configs from HTTP are used, the end user MUST explicitly
+   confirm the config, particularly the resulting second-level domains.
+   See section "User approval".
+
+8.4.  Config updates
 
    Part of the security properties of this protocol assume that the
    timeframe of possible attack is limited to the moment when the user
@@ -883,32 +1329,102 @@ Table of Contents
    can be hacked, and most users simply approve changes proposed by the
    app, so these give only a limited protection.
 
-9.4.  Server security
+8.5.  Server security
 
    Given that mail clients will trust the configuration, the server
-   delivering it needs to be secure.  Even though we call it "database",
-   static configuration files that are generated before deployment in
-   combination with a static web server offer better security and
-   significantly better performance than dynamic queries from a database
-   and responses generated on-the-fly on request.  If a custom server is
-   used, it SHOULD be updated regularly and hosted on a dedicated secure
-   server with all unnecessary services and server features turned off.
+   delivering the configuration file needs to be secure.  A static web
+   server offers better security.  The server software SHOULD be updated
+   regularly and hosted on a dedicated secure server with all
+   unnecessary services and server features turned off.
 
-   Additions and modifications to the configurations are applicable to
-   all respective users and must be made with care.  The authenticity of
-   the configuration MUST be verified from authorative sources.  Server
-   hostnames MUST be compared with the email domain names they are
-   serving, and if they differ, the ownership of the server hostnames
-   MUST be validated.
-
-   For these reasons, mail clients may use the public mail config
-   database mentioned above.
+   For the ISPDB, additions and modifications to the configurations are
+   applicable to all respective users and must be made with care.  The
+   authenticity of the configuration MUST be verified from authorative
+   sources.  Server hostnames MUST be compared with the email domain
+   names they are serving, and if they differ, the ownership of the
+   server hostnames MUST be validated.
 
    The risk is mitigated to some degree by section "User approval".
 
-10.  IANA Considerations
+9.  IANA Considerations
 
-   This document has no IANA actions.
+9.1.  Registration
+
+   IANA will create the following registry in a new registry group
+   called "Mail Autoconfig":
+
+   Registry Name: "Autoconfig Protocol Type Names"
+
+   Registration Procedure: Specification Required, per RFC 8126,
+   Section 4
+
+   Designated Expert: The author of this document.
+
+9.2.  Contents
+
+   Table, with fields Element (alphanumeric), Type (alphanumeric), Base
+   (URL or TCP or URL/TCP), Name, Specification, and Additional Elements
+
+   The registrations need to define * Element: The XML element wrapping
+   the server section. * Type: The type property value of the server
+   section. * Base: Whether the protocol is URL-based or TCP-based, *
+   Name: The commonly used name of the protocol * Specification: Which
+   RFCs or document specifies the protocol, and * Additional Elements:
+   (Optional) Protocol-specific XML elements and their meaning.
+
+9.3.  Initial registration
+
+   +==============+===========+====+===========+=========================+==========+
+   |Element       |Type       |Base|Name       |Specification            |Additional|
+   |              |           |    |           |                         |Elements  |
+   +==============+===========+====+===========+=========================+==========+
+   |incomingServer|jmap       |URL |JMAP       |RFC 8620, RFC 8621, RFC  |          |
+   |              |           |    |           |8887, RFC 9610 et al     |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |incomingServer|imap       |TCP |IMAP       |RFC 9051 or RFC 3501, et |          |
+   |              |           |    |           |al                       |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |incomingServer|pop3       |TCP |POP3       |RFC 1939, RFC 5034       |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |outgoingServer|smtp       |TCP |SMTP       |RFC 5321, RFC 2822       |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |calendar      |caldav     |URL |CalDAV     |RFC 4791                 |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |addressbook   |carddav    |URL |CardDav    |RFC 6352                 |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |fileShare     |webdav     |URL |WebDAV     |RFC 4918                 |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |chatServer    |xmpp       |URL |XMPP       |RFC 6120, RFC 6121, RFC  |          |
+   |              |           |    |           |7395                     |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |chatServer    |xmpptcp    |TCP |XMPP       |RFC 6120, RFC 6121       |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |chatServer    |matrix     |URL |Matrix     |https://spec.matrix.org  |          |
+   |              |           |    |           |(https://spec.matrix.org)|          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |setupServer   |managesieve|TCP |ManageSieve|RFC 5804, RFC 5228       |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |incomingServer|ews        |URL |Exchange   |                         |          |
+   |              |           |    |Web        |                         |          |
+   |              |           |    |Services   |                         |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |incomingServer|activeSync |URL |ActiveSync |                         |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+   |incomingServer|graph      |URL |Microsoft  |                         |          |
+   |              |           |    |Graph      |                         |          |
+   +--------------+-----------+----+-----------+-------------------------+----------+
+
+                                  Table 3
+
+   The Additional Elements field is empty in all of the initial values.
+
+10.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
 11.  Normative References
 
@@ -920,10 +1436,6 @@ Table of Contents
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
-
-Acknowledgments
-
-   TODO acknowledge.
 
 Author's Address
 
