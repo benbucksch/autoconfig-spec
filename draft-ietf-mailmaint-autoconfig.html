@@ -1436,14 +1436,14 @@ wild.<a href="#section-2-5" class="pilcrow">¶</a></p>
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-data-format" class="section-name selfRef">Data format</a>
       </h2>
 <p id="section-3-1">Whether the ISP or a common central database returns the configuration, the
-resulting document has the following data format.<a href="#section-3-1" class="pilcrow">¶</a></p>
+resulting document <span class="bcp14">MUST</span> have the following data format and qualities.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The MIME type is <code>text/xml</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <div id="xml-config-file">
 <section id="section-3.1">
         <h3 id="name-xml-config-file">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-xml-config-file" class="section-name selfRef">XML config file</a>
         </h3>
-<p id="section-3.1-1">The following example shows the syntax of the XML config file returned.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">The following example shows the syntax of the XML config file.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1-2">
 <pre>
 &lt;?xml version="1.0"?&gt;
@@ -1756,44 +1756,28 @@ functionality.<a href="#section-3.4-2.5.1" class="pilcrow">¶</a></p>
           <h4 id="name-multiple-server-sections">
 <a href="#section-3.4.1" class="section-number selfRef">3.4.1. </a><a href="#name-multiple-server-sections" class="section-name selfRef">Multiple server sections</a>
           </h4>
-<ul class="normal">
-<li class="normal" id="section-3.4.1-1.1">
-              <p id="section-3.4.1-1.1.1">Server sections of the same type (like <code>&lt;incomingServer&gt;</code> or <code>&lt;calendar&gt;</code>)
+<p id="section-3.4.1-1">Server sections of the same type (like <code>&lt;incomingServer&gt;</code> or <code>&lt;calendar&gt;</code>)
 may appear multiple times in the same config file.
 In this case, the one listed first is preferred by the config provider.
 Unless the client has specific other requirements, it <span class="bcp14">SHOULD</span> pick the first
-config.<a href="#section-3.4.1-1.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-3.4.1-1.2">
-              <p id="section-3.4.1-1.2.1">The client may derivate from this recommendation, because<a href="#section-3.4.1-1.2.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.4.1-1.2.2.1">
-                  <p id="section-3.4.1-1.2.2.1.1">the client doesn't support a higher-priority protocol, e.g. a JMAP
-configuraion is listed first and is the most preferred, but the
-client does not support JMAP yet, or<a href="#section-3.4.1-1.2.2.1.1" class="pilcrow">¶</a></p>
-</li>
-                <li class="normal" id="section-3.4.1-1.2.2.2">
-                  <p id="section-3.4.1-1.2.2.2.1">the client doesn't support a configuration setting, e.g. it
-doesn't support STARTTLS, or the config specifies only an OAuth2
-authentication and the client either doesn't implement OAuth2, or
-it doesn't have a client ID for this provider, or<a href="#section-3.4.1-1.2.2.2.1" class="pilcrow">¶</a></p>
-</li>
-                <li class="normal" id="section-3.4.1-1.2.2.3">
-                  <p id="section-3.4.1-1.2.2.3.1">the client has a specific policy to prefer another configuration,
-e.g. a STARTTLS config is listed before a direct TLS config, and
-the client has a policy of preferring direct TLS, or likewise
-the client prefers IMAP over POP3.<a href="#section-3.4.1-1.2.2.3.1" class="pilcrow">¶</a></p>
-</li>
-              </ul>
-</li>
-            <li class="normal" id="section-3.4.1-1.3">
-              <p id="section-3.4.1-1.3.1">Server types, elements and protocols that the client does not support
+config.<a href="#section-3.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.4.1-2">The client may derivate from this recommendation, because
+* the client doesn't support a higher-priority protocol, e.g. a JMAP
+  configuraion is listed first and is the most preferred, but the
+  client does not support JMAP yet, or
+* the client doesn't support a configuration setting, e.g. it
+  doesn't support STARTTLS, or the config specifies only an OAuth2
+  authentication and the client either doesn't implement OAuth2, or
+  there is a problem in the OAuth2 flow with this provider, or
+* the client has a specific policy to prefer another configuration,
+  e.g. a STARTTLS config is listed before a direct TLS config, and
+  the client has a policy of preferring direct TLS, or likewise
+  the client prefers IMAP over POP3.<a href="#section-3.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.4.1-3">Server types, elements and protocols that the client does not support
 <span class="bcp14">MUST</span> be ignored and the client <span class="bcp14">MUST</span> continue to parse the other
 server sections, which may contain configs that the client
 understands and supports. The client ignores the file only if there
-is no supported and working config found.<a href="#section-3.4.1-1.3.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
+is no supported and working config found.<a href="#section-3.4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1947,15 +1931,8 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
             </tr>
           </tbody>
         </table>
-<p id="section-3.5-3">Other protocol names can be added using an IANA registry. Their
-respective registrations need to define:
-* Element: The XML element wrapping the server section.
-* Type: The <code>type</code> property value of the server section.
-* Base: Whether the protocol is URL-based or TCP-based,
-* Name: The commonly used name of the protocol
-* Specification: Which RFCs or document specifies the protocol, and
-* Additional Elements: (Optional) Protocol-specific XML elements and
-  their meaning.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">Other protocol names can be added using an IANA registry. See the
+corresponding section below.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="url-based-protocols">
@@ -2105,15 +2082,15 @@ the client <span class="bcp14">MUST</span> validate the TLS certificate and ensu
 certificate is valid for the hostname given in this config. If not,
 or if the TLS certificate is otherwise invalid, the client <span class="bcp14">MUST</span>
 either disconnect or <span class="bcp14">MAY</span> warn the user of the
-dangers and ask for user confirmation. Such warning and confirmation
-<span class="bcp14">MAY</span> only be allowed at original configuration and <span class="bcp14">MUST NOT</span> be allowed
-during normal everyday connection.<a href="#section-3.7.3.1-1" class="pilcrow">¶</a></p>
+dangers and ask for user confirmation. Such fallback with warning and
+confirmation is allowed only at original configuration and <span class="bcp14">MUST NOT</span> be
+allowed during normal everyday connection.<a href="#section-3.7.3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.3.1-2">If the server had a valid TLS certificate during original configuration
-and the TLS certificate is invalid during normal connection, the
+and the TLS certificate is later invalid during normal connection, the
 client <span class="bcp14">MUST</span> disconnect.<a href="#section-3.7.3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.7.3.1-3">If the problem is that the TLS certificate expired recently,
-the client <span class="bcp14">MAY</span> not consider that a failure during normal connection
-and use other recovery mechanisms.<a href="#section-3.7.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.7.3.1-3">As an exception, if the problem is that the TLS certificate expired recently,
+the client <span class="bcp14">MAY</span> choose to not consider that a failure during normal connection
+and <span class="bcp14">MAY</span> use other recovery mechanisms.<a href="#section-3.7.3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2210,22 +2187,34 @@ list.<a href="#section-3.7.4.3-2" class="pilcrow">¶</a></p>
 that the username or password was wrong, then the client <span class="bcp14">MAY</span> ask the
 user to correct the password.<a href="#section-3.7.4.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.7.4.3-4">For that reason, the server <span class="bcp14">SHOULD</span> be specific in the error codes and
-allow the client to distinguish between
-* an unsupported or non-working authentication method or other
-  systemic failures
-* the client being rejected by the server
-* the user being blocked from login
-* the user authentication failing due to wrong password or username
-* other reasons<a href="#section-3.7.4.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.3-5">If the server were to return the same error code for all these cases, the
+allow the client to distinguish between<a href="#section-3.7.4.3-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.7.4.3-5.1">
+                <p id="section-3.7.4.3-5.1.1">an unsupported or non-working authentication method or other
+systemic failures<a href="#section-3.7.4.3-5.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.7.4.3-5.2">
+                <p id="section-3.7.4.3-5.2.1">the client being rejected by the server<a href="#section-3.7.4.3-5.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.7.4.3-5.3">
+                <p id="section-3.7.4.3-5.3.1">the user being blocked from login<a href="#section-3.7.4.3-5.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.7.4.3-5.4">
+                <p id="section-3.7.4.3-5.4.1">the user authentication failing due to wrong password or username<a href="#section-3.7.4.3-5.4.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.7.4.3-5.5">
+                <p id="section-3.7.4.3-5.5.1">other reasons<a href="#section-3.7.4.3-5.5.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+<p id="section-3.7.4.3-6">If the server were to return the same error code for all these cases, the
 client might tell the user that the password is wrong, and the user starts
 attempting other passwords, potentially revealing passwords to other
-higher-value assets, which is highly dangerous.<a href="#section-3.7.4.3-5" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.3-6">If the authentification succeeded, the client <span class="bcp14">SHOULD</span> take note of the
+higher-value assets, which is highly dangerous.<a href="#section-3.7.4.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.3-7">If the authentification succeeded, the client <span class="bcp14">SHOULD</span> take note of the
 working configutation and use that for all subsequent connections,
 until an explicit reconfiguration occurs. During normal everyday operation,
 the client <span class="bcp14">SHOULD NOT</span> fallback nor attempt multiple different authentication
-methods.<a href="#section-3.7.4.3-6" class="pilcrow">¶</a></p>
+methods.<a href="#section-3.7.4.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2302,16 +2291,16 @@ replaced by the client, before the value is actually used.<a href="#section-3.8-
         </h3>
 <p id="section-3.9-1">The client <span class="bcp14">SHOULD</span> validate that the config file is valid XML, and if
 the XML syntax is invalid, the client <span class="bcp14">SHOULD</span> ignore the entire file. In
-contrast, if there are syntactically valid, but unknown elements or
+contrast, if there are merely unknown elements or
 properties, the client <span class="bcp14">MUST NOT</span> ignore the file.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
-<p id="section-3.9-2">The client <span class="bcp14">SHOULD</span> take only the elements and attributes that are
+<p id="section-3.9-2">The client <span class="bcp14">SHOULD</span> read only the elements and attributes that are
 supported by the client, and <span class="bcp14">MUST</span> ignore the others that are unknown
 to the client.<a href="#section-3.9-2" class="pilcrow">¶</a></p>
 <p id="section-3.9-3">The client may optionally want to validate the XML before parsing it.
 This is not required. If the client choses to validate, the validation
 <span class="bcp14">MUST</span> ignore unknown elements and properties and <span class="bcp14">MUST NOT</span>
 drop or ignore a configuration that contains unknown elements and
-properties. This is needed to allow future extensions of the format
+properties. This is required to allow future extensions of the format
 without breaking existing clients.<a href="#section-3.9-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2971,14 +2960,28 @@ validated.<a href="#section-8.5-2" class="pilcrow">¶</a></p>
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-contents" class="section-name selfRef">Contents</a>
         </h3>
 <p id="section-9.2-1">Table, with fields Element (alphanumeric), Type (alphanumeric), Base (URL or TCP or URL/TCP), Name, Specification, and Additional Elements<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<p id="section-9.2-2">The registrations need to define
-* Element: The XML element wrapping the server section.
-* Type: The <code>type</code> property value of the server section.
-* Base: Whether the protocol is URL-based or TCP-based,
-* Name: The commonly used name of the protocol
-* Specification: Which RFCs or document specifies the protocol, and
-* Additional Elements: (Optional) Protocol-specific XML elements and
-  their meaning.<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">The registrations need to define:<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-9.2-3.1">
+            <p id="section-9.2-3.1.1">Element: The XML element wrapping the server section.<a href="#section-9.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.2-3.2">
+            <p id="section-9.2-3.2.1">Type: The <code>type</code> property value of the server section.<a href="#section-9.2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.2-3.3">
+            <p id="section-9.2-3.3.1">Base: Whether the protocol is URL-based or TCP-based,<a href="#section-9.2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.2-3.4">
+            <p id="section-9.2-3.4.1">Name: The commonly used name of the protocol<a href="#section-9.2-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.2-3.5">
+            <p id="section-9.2-3.5.1">Specification: Which RFCs or document specifies the protocol, and<a href="#section-9.2-3.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.2-3.6">
+            <p id="section-9.2-3.6.1">Additional Elements: (Optional) Protocol-specific XML elements and
+their meaning.<a href="#section-9.2-3.6.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 <div id="initial-registration">
