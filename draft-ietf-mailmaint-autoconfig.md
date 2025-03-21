@@ -114,7 +114,7 @@ wild.
 Whether the ISP or a common central database returns the configuration, the
 resulting document MUST have the following data format and qualities.
 
-The format is {{?XML=RFC3470}}. The MIME type is `text/xml`.
+The format is in {{?XML=RFC3470}}. The MIME type is `text/xml`.
 
 ## XML config file
 
@@ -466,11 +466,12 @@ E.g. `<authentication system="http">basic</authentication>` or
 `<authentication>OAuth2</authentication>`
 
 The content of the `<authentication>` element defines which HTTP
-authentication method to use. The optional `system="http"` attribute
-signals that the value refers to a `WWW-Authenticate` mechanism.
+authentication method to use. The `system="http"` attribute
+signals that the value refers to a `WWW-Authenticate` mechanism, but the
+attribute is optional when a https: or wss: URL is used.
 
 * `basic`: Authenticate to the HTTP server using
-  `WWW-Authenticate: Basic`. See {{!basic-Auth=RFC7617}}.
+  `WWW-Authenticate: Basic`. See {{!HTTP-Basic-Auth=RFC7617}}.
 * `digest`: Authenticate to the HTTP server using
   `WWW-Authenticate: Digest`. See {{!HTTP-Digest-Auth=RFC7616}}
 * `OAuth2`: Authenticate to the HTTP server using
@@ -1092,7 +1093,7 @@ attempting all methods and seeing which one works is not an option for the
 email client.
 
 Additionally, some email servers advertize {{?Kerberos=RFC4120}} /
-{{?SSAPI=RFC2743}}, but when trying
+{{?GSSAPI=RFC2743}}, but when trying
 to use it, the method fails, and also runs into a long 2 minute timeout in
 some cases. End users consider that to be a broken app.
 
