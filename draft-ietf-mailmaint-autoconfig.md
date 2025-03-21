@@ -36,6 +36,22 @@ author:
     email: "ben.bucksch@beonex.com"
 
 normative:
+  OAuth2Client:
+    target: https://datatracker.ietf.org/doc/draft-ietf-mailmaint-oauth-public/
+    title: OAuth Profile for Open Public Clients
+    author:
+      -
+        ins: N. Jenkis
+        name: Neil Jenkins
+        org: Fastmail
+      -
+        ins: B. Bucksch
+        name: Ben Bucksch
+        org: Beonex
+    date: 2025
+  Matrix:
+    target: https://spec.matrix.org
+    title: Matrix protocol specification
 
 informative:
 
@@ -98,7 +114,7 @@ wild.
 Whether the ISP or a common central database returns the configuration, the
 resulting document MUST have the following data format and qualities.
 
-The MIME type is `text/xml`.
+The format is {{?XML=RFC3470}}. The MIME type is `text/xml`.
 
 ## XML config file
 
@@ -132,8 +148,6 @@ The following example shows the syntax of the XML config file.
             <!-- Authentication methods:
             "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
             "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
-            "NTLM": Deprecated Windows login mechanism
-            "GSSAPI": Kerberos or Windows GSSAPI
             "TLS-client-cert": TLS client certificate on TLS layer
             "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
             "none": No authentication
@@ -171,7 +185,7 @@ The following example shows the syntax of the XML config file.
         <incomingServer type="jmap">
           <url>https://jmap.example.com</url>
             <!-- Authentication methods
-            "http-basic": RRFC 7661
+            "http-basic": RFC 7617
             "http-digest"
             "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
             -->
@@ -192,7 +206,7 @@ The following example shows the syntax of the XML config file.
           <authentication>OAuth2</authentication>
         </incomingServer>
 
-        <documentation url="http://www.example.com/help/mail/">
+        <documentation url="https://www.example.com/help/mail/">
           <descr lang="en">Configure mail app for IMAP</descr>
           <descr lang="de">Email mit IMAP konfigurieren</descr>
         </documentation>
@@ -326,7 +340,7 @@ characters, and it MUST NOT be longer than 20 characters.
 
 E.g.
 
-    <documentation url="http://www.example.com/help/mail/">
+    <documentation url="https://www.example.com/help/mail/">
       <descr lang="en">Configure mail app for IMAP</descr>
       <descr lang="de">Email mit IMAP konfigurieren</descr>
     </documentation>
@@ -405,17 +419,17 @@ wire protocol that this server uses.
 
 | Element        | Type          | Base | Name         | Specification
 | -------------- | ------------- | ---- | ------------ | ------------------
-| incomingServer | `jmap`        | URL  | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al
-| incomingServer | `imap`        | TCP  | IMAP         | RFC 9051 or RFC 3501, et al
-| incomingServer | `pop3`        | TCP  | POP3         | RFC 1939, RFC 5034
-| outgoingServer | `smtp`        | TCP  | SMTP         | RFC 5321, RFC 2822
-| calendar       | `caldav`      | URL  | CalDAV       | RFC 4791
-| addressbook    | `carddav`     | URL  | CardDav      | RFC 6352
-| fileShare      | `webdav`      | URL  | WebDAV       | RFC 4918
-| chatServer     | `xmpp`        | URL  | XMPP         | RFC 6120, RFC 6121, RFC 7395
-| chatServer     | `xmpptcp`     | TCP  | XMPP         | RFC 6120, RFC 6121
-| chatServer     | `matrix`      | URL  | Matrix       | <https://spec.matrix.org>
-| setupServer    | `managesieve` | TCP  | ManageSieve  | RFC 5804, RFC 5228
+| incomingServer | `jmap`        | URL  | JMAP         | {{!JMAP-Core=RFC8620}}, {{!JMAP-Mail=RFC8621}}, {{!JMAP-WebSocket=RFC8887}}, {{!JMAP-Contacts=RFC9610}} et al
+| incomingServer | `imap`        | TCP  | IMAP         | {{!IMAP4rev2=RFC9051}} or {{!IMAP4rev1=RFC3501}}, et al
+| incomingServer | `pop3`        | TCP  | POP3         | {{!POP3=RFC1939}}, {{!POP3-SASL=RFC5034}}
+| outgoingServer | `smtp`        | TCP  | SMTP         | {{!SMTP=RFC5321}}, {{!EMail=RFC2822}}
+| calendar       | `caldav`      | URL  | CalDAV       | {{!CalDAV=RFC4791}}
+| addressbook    | `carddav`     | URL  | CardDav      | {{!CardDav=RFC6352}}
+| fileShare      | `webdav`      | URL  | WebDAV       | {{!WebDAV=RFC4918}}
+| chatServer     | `xmpp`        | URL  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}, {{!XMPP-WebSocket=RFC7395}}
+| chatServer     | `xmpptcp`     | TCP  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}
+| chatServer     | `matrix`      | URL  | Matrix       | [Matrix]
+| setupServer    | `managesieve` | TCP  | ManageSieve  | {{!ManageSieve=RFC5804}}, {{!Sieve=RFC5228}}
 | incomingServer | `ews`         | URL  | Exchange Web Services |
 | incomingServer | `activeSync`  | URL  | ActiveSync            |
 | incomingServer | `graph`       | URL  | Microsoft Graph       |
@@ -454,11 +468,11 @@ The content of the `<authentication>` element defines which HTTP
 authentication method to use.
 
 * `http-basic`: Authenticate to the HTTP server using
-  `WWW-Authenticate: Basic`. See RFC 7617.
+  `WWW-Authenticate: Basic`. See {{!HTTP-Basic-Auth=RFC7617}}.
 * `http-digest`: Authenticate to the HTTP server using
-  `WWW-Authenticate: Digest`. See RFC 7616
+  `WWW-Authenticate: Digest`. See {{!HTTP-Digest-Auth=RFC7616}}
 * `OAuth`: Authenticate to the HTTP server using
-  `WWW-Authenticate: Bearer`. See RFC 6750 Section 3.
+  `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750}} Section 3.
   The provider MUST adhere to the requirements defined in section OAuth2
   in this specification.
 
@@ -509,12 +523,13 @@ E.g. `<socketType>SSL</socketType>`
 The content of the `<socketType>` element specifies whether to use direct TLS,
 STARTTLS, or none of these.
 
-* `SSL`: Directly contact the TCP port using TLS. TLS version 1.2 or higher
-  SHOULD be used. Higher versions may be required based on security situation,
-  server support, and client policy decisions.
+* `SSL`: Directly contact the TCP port using TLS. TLS version 1.2
+  {{!TLSv1.2=RFC5246}}
+  or higher SHOULD be used. Higher versions may be required based on security
+  situation, server support, and client policy decisions.
 * `STARTTLS`: Contact the TCP port first using an unencrypted plain socket,
-  then upgrade to TLS
-  using the protocol-specific STARTTLS specification. With this configuration,
+  then upgrade to TLS using the protocol-specific STARTTLS specification
+  {{!STARTTLS=RFC2595}}. With this configuration,
   STARTTLS MUST be used and TLS MUST be used after the STARTTLS upgrade. If
   the upgrade to TLS fails for whatever reason, the client MUST
   disconnect and MUST NOT try to authenticate. This prevents downgrade attacks
@@ -554,16 +569,20 @@ protocol, or a SASL scheme, or a successor to SASL.
   (if that is based on plaintext passwords), or a SASL authentication scheme
   like SASL `PLAIN` or SASL `LOGIN`, or a successor.
 * `password-encrypted`: An encrypted or hashed password mechanism.
-  Includes SASL `CRAM-MD5`, `DIGEST-MD5` and `SCRAM-SHA-256-PLUS`.
-  TLS alone by itself does not qualify as "password-encrypted".
+  Includes SASL `CRAM-MD5` {{!CRAM-MD5=RFC2195}},
+  `DIGEST-MD5` {{!DIGEST-MD5=RFC2831}},
+  `SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}, and successors.
+  TLS by itself does not qualify as "password-encrypted".
 * `NTLM`: Legacy Windows login mechanisms NTLM or NTLMv2.
-* `GSSAPI`: Kerberos or GSSAPI, a single-signon mechanism based on TCP.
+* `GSSAPI`: {{?Kerberos=RFC4120}} or {{?GSSAPI=RFC2743}},
+   a single-signon mechanism based on TCP.
 * `TLS-client-cert`: On the SSL/TLS layer, after server request, the client
   sends a TLS client certificate for the user, possibly after letting the user
-  select confirm it. Uses SASL `EXTERNAL` scheme.
-* `OAuth`: OAuth. SASL `OAUTHBEARER` (current) or `XOAUTH2` (deprecated) or
-  successors. The provider MUST adhere to the requirements defined in
-  section OAuth2 in this specification.
+  select confirm it. Uses SASL `EXTERNAL` scheme {{!SASL=RFC4422}}, Appendix A.
+* `OAuth`: OAuth. SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
+  `XOAUTH2` (deprecated) or successors.
+  The provider MUST adhere to the requirements defined in section OAuth2 in
+  this specification.
 * `client-IP-address`: Server can be used without any explicit authentication,
   and the client is admitted based on its IP address.
   This may be the case for some SMTP servers on local networks.
@@ -571,9 +590,10 @@ protocol, or a SASL scheme, or a successor to SASL.
 
 #### Recommending specific SASL schemes
 
-Additionally, a specific SASL scheme may be specified using `SASL`, a space,
-and the specific SASL authentication scheme name, e.g.
-`SASL SCRAM-SHA-256-PLUS`. In such a case, the server config SHOULD also
+Additionally, a specific SASL scheme {{!SASL=RFC4422}} may be specified using
+`SASL`, a space, and the specific SASL authentication scheme name, e.g.
+`SASL SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}. In such a case, the server config
+SHOULD also
 specify a more generic authentication mechanism as a lower priority
 alternative. That would make clients use the specific authentication
 mechanism, if they support it, and other clients will use the more generic
@@ -840,7 +860,8 @@ For example:
 ## Other mechanisms
 
 You may want to implement other mechanisms to find a configuration, for
-example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you
+example Exchange AutoDiscover, DNS-SRV {{?RFC6186}},
+or heuristic guessing. If you
 implement such alternative methods, and if they are less secure than some of
 the mechanisms provided here, the alternative methods SHOULD be considered
 only with lower priority (as defined above) than the more secure mechanisms
@@ -970,9 +991,7 @@ the autoconfig file itself cannot require authentication.
 
 ## OAuth2 requirements
 
-If OAuth2 is used, the OAuth2 server MUST adhere either to the
-[OAuth Profile for Open Public Clients](https://datatracker.ietf.org/doc/draft-ietf-mailmaint-oauth-public/)
-specification specification, including all SHOULD requirements stated in those.
+If OAuth2 is used, the OAuth2 server MUST adhere either to the [OAuth2Client] specification, including all SHOULD requirements stated in those.
 
 The provider MUST allow any client application that acts on behalf of the end
 user who the mailbox is for.
@@ -984,8 +1003,8 @@ The OAuth2 server MUST
 
 * accept the client ID that is given in the config file, or
 * MUST allow the string `open` as client ID, or
-* MUST implement Dynamic Client Registration as defined by
-  "OAuth Profile for Open Public Clients"
+* MUST implement Dynamic Client Registration {{!RFC7591}} in the way
+  as defined by [OAuth2Client]
 
 and accept resulting Client ID, without client secret, or
 support multiple of those methods.
@@ -1008,8 +1027,8 @@ and all TCP-based protocols like IMAP.
 
 ## DNSSEC
 
-Due to their top-level domain, some domains do not have DNSSEC available to
-them, even if they would like to deploy it.
+Due to their top-level domain, some domains do not have {{?DNSSEC=RFC9364}}
+available to them, even if they would like to deploy it.
 
 Even where the top-level domain supports it, DNSSEC is currently deployed in
 only 1% of domains, with adoption rates falling instead of rising, due to the
@@ -1020,7 +1039,7 @@ considered insecure for the purposes of this specification.
 
 ## DNS SRV
 
-DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2 reasons:
+DNS SRV protocols {{?DNS-SRV=RFC2782}} {{?RFC6186}} are not used here, for 2 reasons:
 
 1. DNS SRV relies on insecure DNS and the config can therefore be trivially
    spoofed by an attacker. See also DNSSEC above.
@@ -1062,7 +1081,8 @@ countless login attempts. Locking the account must be avoided. So, simply
 attempting all methods and seeing which one works is not an option for the
 email client.
 
-Additionally, some email servers advertize Kerberos / GSSAPI, but when trying
+Additionally, some email servers advertize {{?Kerberos=RFC4120}} /
+{{?SSAPI=RFC2743}}, but when trying
 to use it, the method fails, and also runs into a long 2 minute timeout in
 some cases. End users consider that to be a broken app.
 
@@ -1173,7 +1193,7 @@ IANA will create the following registry in a new registry group called
 
 Registry Name: "Autoconfig Protocol Type Names"
 
-Registration Procedure: Specification Required, per RFC 8126, Section 4
+Registration Procedure: Specification Required, per {{?RFC8126}}, Section 4
 
 Designated Expert: The author of this document.
 
