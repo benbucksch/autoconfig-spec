@@ -2182,7 +2182,7 @@ Not supported on the Internet. Deprecated, because it breaks mobile devices.<a h
 <p id="section-3.7.4.1-2">A specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> <span class="bcp14">MAY</span> be specified using
 the specific SASL authentication scheme name, e.g.
 <code>SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>. To signal that, the
-the <code>&lt;authentication&gt;</code> element <span class="bcp14">SHOULD</span> have the <code>system</code> attribute set
+<code>&lt;authentication&gt;</code> element <span class="bcp14">SHOULD</span> have the <code>system</code> attribute set
 to value <code>sasl</code>, i.e. <code>&lt;authentication system="sasl"&gt;</code>.<a href="#section-3.7.4.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.7.4.1-3">In such a case, the server configuration section <span class="bcp14">SHOULD</span> also
 specify a more generic authentication mechanism as a lower priority
@@ -2774,18 +2774,14 @@ end users, which may be contrary to laws in multiple countries.<a href="#section
 <p id="section-6.5-3">The OAuth2 server <span class="bcp14">MUST</span><a href="#section-6.5-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.5-4.1">
-            <p id="section-6.5-4.1.1">accept the client ID that is given in the config file, or<a href="#section-6.5-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-6.5-4.1.1">accept the client ID that is given in the config file, or if that is not given,<a href="#section-6.5-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.5-4.2">
-            <p id="section-6.5-4.2.1"><span class="bcp14">MUST</span> allow the string <code>open</code> as client ID, or<a href="#section-6.5-4.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-6.5-4.3">
-            <p id="section-6.5-4.3.1"><span class="bcp14">MUST</span> implement Dynamic Client Registration <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span> in the way
-as defined by <span>[<a href="#OAuth2Client" class="cite xref">OAuth2Client</a>]</span><a href="#section-6.5-4.3.1" class="pilcrow">¶</a></p>
+            <p id="section-6.5-4.2.1">implement Dynamic Client Registration <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span> in the way
+as defined by <span>[<a href="#OAuth2Client" class="cite xref">OAuth2Client</a>]</span> and accept the resulting Client ID,<a href="#section-6.5-4.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-6.5-5">and accept resulting Client ID, without client secret, or
-support multiple of those methods.<a href="#section-6.5-5" class="pilcrow">¶</a></p>
+<p id="section-6.5-5">without client secret. It <span class="bcp14">MAY</span> support multiple of those methods.<a href="#section-6.5-5" class="pilcrow">¶</a></p>
 <p id="section-6.5-6">The server <span class="bcp14">MUST NOT</span> employ any methods at any point to block or hinder
 clients applications that are acting on behalf of end users.<a href="#section-6.5-6" class="pilcrow">¶</a></p>
 <p id="section-6.5-7">The specifications above contain requirements for expiry times and
