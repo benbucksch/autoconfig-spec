@@ -972,9 +972,7 @@ the autoconfig file itself cannot require authentication.
 
 If OAuth2 is used, the OAuth2 server MUST adhere either to the
 [OAuth Profile for Open Public Clients](https://datatracker.ietf.org/doc/draft-ietf-mailmaint-oauth-public/)
-specification or the
-[mAuth](https://benbucksch.github.io/mauth-spec/draft-mauth.html) 
-specification, including all SHOULD requirements stated in those.
+specification specification, including all SHOULD requirements stated in those.
 
 The provider MUST allow any client application that acts on behalf of the end
 user who the mailbox is for.
