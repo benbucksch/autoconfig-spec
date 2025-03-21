@@ -290,8 +290,6 @@ The client MUST NOT reject a config file solely based on the version number.
 
 Element `<emailProvider id="example.com">` is within the root element.
 This element has no semantic purpose and exists for legacy reasons only.
-If all of its child elements were within the root element, their meaning
-would still be the same.
 
 The `id` is a unique string that typically matches the primary domain of the
 provider.
