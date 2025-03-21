@@ -318,7 +318,7 @@ by number of users, importance to the provider, or alphabethically.
 
 A `<domain purpose="mx">` specifies the domain name of the MX server of
 the email address, and is used config file lookup using MX
-server names, as specified in section MX. The `purpose` property is
+server names, as specified in section MX. The `purpose` attribute is
 mainly informational and may be ignored.
 
 ### displayName and displayShortName
@@ -352,18 +352,18 @@ server settings. The config may be based on that page, but does not
 necessarily have to match it, e.g. when a better config is available
 than the one described on the webpage.
 
-The `url` property contains the URL of the webpage. The `<descr>`
+The `url` attribute contains the URL of the webpage. The `<descr>`
 content describes the content and purpose of the page and why it's
 referenced here.
-Multiple `<descr>` elements with different `lang` properties are
-allowed, whereby the `lang` property contains the 2-letter ISO language
+Multiple `<descr>` elements with different `lang` attributes are
+allowed, whereby the `lang` attribute contains the 2-letter ISO language
 code, like the HTML `lang` attribute.
 
 ## Server sections
 
 E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
 
-* The `type` property specifies the wire protocol that this server uses. See
+* The `type` attribute specifies the wire protocol that this server uses. See
   section type below.
 * `<incomingServer>` specifies the server that the mail client retrieves email
   from and submits changes to. In many protocols, this server is also used for
@@ -414,7 +414,7 @@ is no supported and working config found.
 
 ## type
 
-The `type` property on the server section element specifies the
+The `type` attribute on the server section element specifies the
 wire protocol that this server uses.
 
 | Element        | Type          | Base | Name         | Specification
@@ -692,7 +692,7 @@ Some clients MAY also support the same placeholders for the fields
 The client SHOULD validate that the config file is valid XML, and if
 the XML syntax is invalid, the client SHOULD ignore the entire file. In
 contrast, if there are merely unknown elements or
-properties, the client MUST NOT ignore the file.
+attributes, the client MUST NOT ignore the file.
 
 The client SHOULD read only the elements and attributes that are
 supported by the client, and MUST ignore the others that are unknown
@@ -700,9 +700,9 @@ to the client.
 
 The client may optionally want to validate the XML before parsing it.
 This is not required. If the client choses to validate, the validation
-MUST ignore unknown elements and properties and MUST NOT
+MUST ignore unknown elements and attributes and MUST NOT
 drop or ignore a configuration that contains unknown elements and
-properties. This is required to allow future extensions of the format
+attributes. This is required to allow future extensions of the format
 without breaking existing clients.
 
 # Config retrieval by mail clients
@@ -1214,7 +1214,7 @@ Table, with fields Element (alphanumeric), Type (alphanumeric), Base (URL or TCP
 The registrations need to define:
 
 * Element: The XML element wrapping the server section.
-* Type: The `type` property value of the server section.
+* Type: The `type` attribute value of the server section.
 * Base: Whether the protocol is URL-based or TCP-based,
 * Name: The commonly used name of the protocol
 * Specification: Which RFCs or document specifies the protocol, and
