@@ -191,7 +191,7 @@ Table of Contents
    configuration, the resulting document MUST have the following data
    format and qualities.
 
-   The format is [XML].  The MIME type is text/xml.
+   The format is in [XML].  The MIME type is text/xml.
 
 3.1.  XML config file
 
