@@ -595,15 +595,15 @@ protocol, or a SASL scheme, or a successor to SASL.
 
 #### Recommending specific SASL schemes
 
-E.g. `<authentication system="sasl">password-cleartext</authentication>`
+E.g. `<authentication system="sasl">SCRAM-SHA-256-PLUS</authentication>`
 
-Additionally, a specific SASL scheme {{!SASL=RFC4422}} may be specified using
+A specific SASL scheme {{!SASL=RFC4422}} MAY be specified using
 the specific SASL authentication scheme name, e.g.
-`SASL SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}, and the `<authentication>`
-element should have the `system` attribute set to value `sasl`, i.e.
-`<authentication system="sasl">`.
+`SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}. To signal that, the
+the `<authentication>` element SHOULD have the `system` attribute set
+to value `sasl`, i.e. `<authentication system="sasl">`.
 
-In such a case, the server config SHOULD also
+In such a case, the server configuration section SHOULD also
 specify a more generic authentication mechanism as a lower priority
 alternative. That would make clients use the specific authentication
 mechanism, if they support it, and other clients will use the more generic
