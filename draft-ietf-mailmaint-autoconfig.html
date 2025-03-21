@@ -1352,7 +1352,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
             <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
@@ -1437,7 +1445,7 @@ wild.<a href="#section-2-5" class="pilcrow">¶</a></p>
       </h2>
 <p id="section-3-1">Whether the ISP or a common central database returns the configuration, the
 resulting document <span class="bcp14">MUST</span> have the following data format and qualities.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">The MIME type is <code>text/xml</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-2">The format is <span>[<a href="#XML" class="cite xref">XML</a>]</span>. The MIME type is <code>text/xml</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <div id="xml-config-file">
 <section id="section-3.1">
         <h3 id="name-xml-config-file">
@@ -1474,8 +1482,6 @@ resulting document <span class="bcp14">MUST</span> have the following data forma
         &lt;!-- Authentication methods:
         "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
         "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
-        "NTLM": Deprecated Windows login mechanism
-        "GSSAPI": Kerberos or Windows GSSAPI
         "TLS-client-cert": TLS client certificate on TLS layer
         "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
         "none": No authentication
@@ -1513,7 +1519,7 @@ resulting document <span class="bcp14">MUST</span> have the following data forma
     &lt;incomingServer type="jmap"&gt;
       &lt;url&gt;https://jmap.example.com&lt;/url&gt;
         &lt;!-- Authentication methods
-        "http-basic": RRFC 7661
+        "http-basic": RFC 7617
         "http-digest"
         "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
         --&gt;
@@ -1534,7 +1540,7 @@ resulting document <span class="bcp14">MUST</span> have the following data forma
       &lt;authentication&gt;OAuth2&lt;/authentication&gt;
     &lt;/incomingServer&gt;
 
-    &lt;documentation url="http://www.example.com/help/mail/"&gt;
+    &lt;documentation url="https://www.example.com/help/mail/"&gt;
       &lt;descr lang="en"&gt;Configure mail app for IMAP&lt;/descr&gt;
       &lt;descr lang="de"&gt;Email mit IMAP konfigurieren&lt;/descr&gt;
     &lt;/documentation&gt;
@@ -1693,7 +1699,7 @@ characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 charact
 <p id="section-3.3-1">E.g.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.3-2">
 <pre>
-&lt;documentation url="http://www.example.com/help/mail/"&gt;
+&lt;documentation url="https://www.example.com/help/mail/"&gt;
   &lt;descr lang="en"&gt;Configure mail app for IMAP&lt;/descr&gt;
   &lt;descr lang="de"&gt;Email mit IMAP konfigurieren&lt;/descr&gt;
 &lt;/documentation&gt;
@@ -1808,7 +1814,8 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">URL</td>
               <td class="text-left" rowspan="1" colspan="1">JMAP</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#JMAP-Core" class="cite xref">JMAP-Core</a>]</span>, <span>[<a href="#JMAP-Mail" class="cite xref">JMAP-Mail</a>]</span>, <span>[<a href="#JMAP-WebSocket" class="cite xref">JMAP-WebSocket</a>]</span>, <span>[<a href="#JMAP-Contacts" class="cite xref">JMAP-Contacts</a>]</span> et al</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
@@ -1817,7 +1824,8 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">TCP</td>
               <td class="text-left" rowspan="1" colspan="1">IMAP</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 9051 or RFC 3501, et al</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#IMAP4rev2" class="cite xref">IMAP4rev2</a>]</span> or <span>[<a href="#IMAP4rev1" class="cite xref">IMAP4rev1</a>]</span>, et al</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
@@ -1826,7 +1834,9 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">TCP</td>
               <td class="text-left" rowspan="1" colspan="1">POP3</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 1939, RFC 5034</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#POP3" class="cite xref">POP3</a>]</span>, <span>[<a href="#POP3-SASL" class="cite xref">POP3-SASL</a>]</span>
+</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">outgoingServer</td>
@@ -1835,7 +1845,9 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">TCP</td>
               <td class="text-left" rowspan="1" colspan="1">SMTP</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 5321, RFC 2822</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#SMTP" class="cite xref">SMTP</a>]</span>, <span>[<a href="#EMail" class="cite xref">EMail</a>]</span>
+</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">calendar</td>
@@ -1844,7 +1856,9 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">URL</td>
               <td class="text-left" rowspan="1" colspan="1">CalDAV</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 4791</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#CalDAV" class="cite xref">CalDAV</a>]</span>
+</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">addressbook</td>
@@ -1853,7 +1867,9 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">URL</td>
               <td class="text-left" rowspan="1" colspan="1">CardDav</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 6352</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#CardDav" class="cite xref">CardDav</a>]</span>
+</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">fileShare</td>
@@ -1862,7 +1878,9 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">URL</td>
               <td class="text-left" rowspan="1" colspan="1">WebDAV</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 4918</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#WebDAV" class="cite xref">WebDAV</a>]</span>
+</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">chatServer</td>
@@ -1871,7 +1889,9 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">URL</td>
               <td class="text-left" rowspan="1" colspan="1">XMPP</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 6120, RFC 6121, RFC 7395</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#XMPP" class="cite xref">XMPP</a>]</span>, <span>[<a href="#XMPP-IM" class="cite xref">XMPP-IM</a>]</span>, <span>[<a href="#XMPP-WebSocket" class="cite xref">XMPP-WebSocket</a>]</span>
+</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">chatServer</td>
@@ -1880,7 +1900,9 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">TCP</td>
               <td class="text-left" rowspan="1" colspan="1">XMPP</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 6120, RFC 6121</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#XMPP" class="cite xref">XMPP</a>]</span>, <span>[<a href="#XMPP-IM" class="cite xref">XMPP-IM</a>]</span>
+</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">chatServer</td>
@@ -1890,7 +1912,7 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
               <td class="text-left" rowspan="1" colspan="1">URL</td>
               <td class="text-left" rowspan="1" colspan="1">Matrix</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="https://spec.matrix.org">https://spec.matrix.org</a>
+                <span>[<a href="#Matrix" class="cite xref">Matrix</a>]</span>
 </td>
             </tr>
             <tr>
@@ -1900,7 +1922,9 @@ wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶<
 </td>
               <td class="text-left" rowspan="1" colspan="1">TCP</td>
               <td class="text-left" rowspan="1" colspan="1">ManageSieve</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 5804, RFC 5228</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#ManageSieve" class="cite xref">ManageSieve</a>]</span>, <span>[<a href="#Sieve" class="cite xref">Sieve</a>]</span>
+</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">incomingServer</td>
@@ -1975,15 +1999,15 @@ authentication method to use.<a href="#section-3.6.2-2" class="pilcrow">¶</a></
 <ul class="normal">
 <li class="normal" id="section-3.6.2-3.1">
               <p id="section-3.6.2-3.1.1"><code>http-basic</code>: Authenticate to the HTTP server using
-<code>WWW-Authenticate: Basic</code>. See RFC 7617.<a href="#section-3.6.2-3.1.1" class="pilcrow">¶</a></p>
+<code>WWW-Authenticate: Basic</code>. See <span>[<a href="#HTTP-Basic-Auth" class="cite xref">HTTP-Basic-Auth</a>]</span>.<a href="#section-3.6.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.6.2-3.2">
               <p id="section-3.6.2-3.2.1"><code>http-digest</code>: Authenticate to the HTTP server using
-<code>WWW-Authenticate: Digest</code>. See RFC 7616<a href="#section-3.6.2-3.2.1" class="pilcrow">¶</a></p>
+<code>WWW-Authenticate: Digest</code>. See <span>[<a href="#HTTP-Digest-Auth" class="cite xref">HTTP-Digest-Auth</a>]</span><a href="#section-3.6.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.6.2-3.3">
               <p id="section-3.6.2-3.3.1"><code>OAuth</code>: Authenticate to the HTTP server using
-<code>WWW-Authenticate: Bearer</code>. See RFC 6750 Section 3.
+<code>WWW-Authenticate: Bearer</code>. See <span>[<a href="#OAuth2" class="cite xref">OAuth2</a>]</span> Section 3.
 The provider <span class="bcp14">MUST</span> adhere to the requirements defined in section OAuth2
 in this specification.<a href="#section-3.6.2-3.3.1" class="pilcrow">¶</a></p>
 </li>
@@ -2054,14 +2078,14 @@ the wire protocol and socketType.<a href="#section-3.7.2-2" class="pilcrow">¶</
 STARTTLS, or none of these.<a href="#section-3.7.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7.3-3.1">
-              <p id="section-3.7.3-3.1.1"><code>SSL</code>: Directly contact the TCP port using TLS. TLS version 1.2 or higher
-<span class="bcp14">SHOULD</span> be used. Higher versions may be required based on security situation,
-server support, and client policy decisions.<a href="#section-3.7.3-3.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.7.3-3.1.1"><code>SSL</code>: Directly contact the TCP port using TLS. TLS version 1.2 <span>[<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>
+or higher <span class="bcp14">SHOULD</span> be used. Higher versions may be required based on security
+situation, server support, and client policy decisions.<a href="#section-3.7.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.3-3.2">
               <p id="section-3.7.3-3.2.1"><code>STARTTLS</code>: Contact the TCP port first using an unencrypted plain socket,
-then upgrade to TLS
-using the protocol-specific STARTTLS specification. With this configuration,
+then upgrade to TLS using the protocol-specific STARTTLS specification
+<span>[<a href="#RFC2595" class="cite xref">RFC2595</a>]</span>. With this configuration,
 STARTTLS <span class="bcp14">MUST</span> be used and TLS <span class="bcp14">MUST</span> be used after the STARTTLS upgrade. If
 the upgrade to TLS fails for whatever reason, the client <span class="bcp14">MUST</span>
 disconnect and <span class="bcp14">MUST NOT</span> try to authenticate. This prevents downgrade attacks
@@ -2113,24 +2137,28 @@ like SASL <code>PLAIN</code> or SASL <code>LOGIN</code>, or a successor.<a href=
 </li>
             <li class="normal" id="section-3.7.4-3.2">
               <p id="section-3.7.4-3.2.1"><code>password-encrypted</code>: An encrypted or hashed password mechanism.
-Includes SASL <code>CRAM-MD5</code>, <code>DIGEST-MD5</code> and <code>SCRAM-SHA-256-PLUS</code>.
-TLS alone by itself does not qualify as "password-encrypted".<a href="#section-3.7.4-3.2.1" class="pilcrow">¶</a></p>
+Includes SASL <code>CRAM-MD5</code> <span>[<a href="#CRAM-MD5" class="cite xref">CRAM-MD5</a>]</span>,
+<code>DIGEST-MD5</code> <span>[<a href="#DIGEST-MD5" class="cite xref">DIGEST-MD5</a>]</span>,
+<code>SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>, and successors.
+TLS by itself does not qualify as "password-encrypted".<a href="#section-3.7.4-3.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-3.3">
               <p id="section-3.7.4-3.3.1"><code>NTLM</code>: Legacy Windows login mechanisms NTLM or NTLMv2.<a href="#section-3.7.4-3.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-3.4">
-              <p id="section-3.7.4-3.4.1"><code>GSSAPI</code>: Kerberos or GSSAPI, a single-signon mechanism based on TCP.<a href="#section-3.7.4-3.4.1" class="pilcrow">¶</a></p>
+              <p id="section-3.7.4-3.4.1"><code>GSSAPI</code>: <span>[<a href="#Kerberos" class="cite xref">Kerberos</a>]</span> or <span>[<a href="#SSAPI" class="cite xref">SSAPI</a>]</span>,
+ a single-signon mechanism based on TCP.<a href="#section-3.7.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-3.5">
               <p id="section-3.7.4-3.5.1"><code>TLS-client-cert</code>: On the SSL/TLS layer, after server request, the client
 sends a TLS client certificate for the user, possibly after letting the user
-select confirm it. Uses SASL <code>EXTERNAL</code> scheme.<a href="#section-3.7.4-3.5.1" class="pilcrow">¶</a></p>
+select confirm it. Uses SASL <code>EXTERNAL</code> scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span>, Appendix A.<a href="#section-3.7.4-3.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-3.6">
-              <p id="section-3.7.4-3.6.1"><code>OAuth</code>: OAuth. SASL <code>OAUTHBEARER</code> (current) or <code>XOAUTH2</code> (deprecated) or
-successors. The provider <span class="bcp14">MUST</span> adhere to the requirements defined in
-section OAuth2 in this specification.<a href="#section-3.7.4-3.6.1" class="pilcrow">¶</a></p>
+              <p id="section-3.7.4-3.6.1"><code>OAuth</code>: OAuth. SASL <code>OAUTHBEARER</code> <span>[<a href="#SASL-OAuth2" class="cite xref">SASL-OAuth2</a>]</span> (current) or
+<code>XOAUTH2</code> (deprecated) or successors.
+The provider <span class="bcp14">MUST</span> adhere to the requirements defined in section OAuth2 in
+this specification.<a href="#section-3.7.4-3.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-3.7">
               <p id="section-3.7.4-3.7.1"><code>client-IP-address</code>: Server can be used without any explicit authentication,
@@ -2144,9 +2172,10 @@ Not supported on the Internet. Deprecated, because it breaks mobile devices.<a h
             <h5 id="name-recommending-specific-sasl-">
 <a href="#section-3.7.4.1" class="section-number selfRef">3.7.4.1. </a><a href="#name-recommending-specific-sasl-" class="section-name selfRef">Recommending specific SASL schemes</a>
             </h5>
-<p id="section-3.7.4.1-1">Additionally, a specific SASL scheme may be specified using <code>SASL</code>, a space,
-and the specific SASL authentication scheme name, e.g.
-<code>SASL SCRAM-SHA-256-PLUS</code>. In such a case, the server config <span class="bcp14">SHOULD</span> also
+<p id="section-3.7.4.1-1">Additionally, a specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> may be specified using
+<code>SASL</code>, a space, and the specific SASL authentication scheme name, e.g.
+<code>SASL SCRAM-SHA-256-PLUS</code> <span>[<a href="#RFC7677" class="cite xref">RFC7677</a>]</span>. In such a case, the server config
+<span class="bcp14">SHOULD</span> also
 specify a more generic authentication mechanism as a lower priority
 alternative. That would make clients use the specific authentication
 mechanism, if they support it, and other clients will use the more generic
@@ -2535,7 +2564,8 @@ domain, and which your application will use, if the above methods fail.<a href="
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-other-mechanisms" class="section-name selfRef">Other mechanisms</a>
         </h3>
 <p id="section-4.5-1">You may want to implement other mechanisms to find a configuration, for
-example Exchange AutoDiscover, DNS SRV, or heuristic guessing. If you
+example Exchange AutoDiscover, DNS-SRV <span>[<a href="#RFC6186" class="cite xref">RFC6186</a>]</span>,
+or heuristic guessing. If you
 implement such alternative methods, and if they are less secure than some of
 the mechanisms provided here, the alternative methods <span class="bcp14">SHOULD</span> be considered
 only with lower priority (as defined above) than the more secure mechanisms
@@ -2726,9 +2756,7 @@ the autoconfig file itself cannot require authentication.<a href="#section-6.4-2
         <h3 id="name-oauth2-requirements">
 <a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-oauth2-requirements" class="section-name selfRef">OAuth2 requirements</a>
         </h3>
-<p id="section-6.5-1">If OAuth2 is used, the OAuth2 server <span class="bcp14">MUST</span> adhere either to the
-<a href="https://datatracker.ietf.org/doc/draft-ietf-mailmaint-oauth-public/">OAuth Profile for Open Public Clients</a>
-specification specification, including all <span class="bcp14">SHOULD</span> requirements stated in those.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
+<p id="section-6.5-1">If OAuth2 is used, the OAuth2 server <span class="bcp14">MUST</span> adhere either to the <span>[<a href="#OAuth2Client" class="cite xref">OAuth2Client</a>]</span> specification, including all <span class="bcp14">SHOULD</span> requirements stated in those.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
 <p id="section-6.5-2">The provider <span class="bcp14">MUST</span> allow any client application that acts on behalf of the end
 user who the mailbox is for.
 Failure to do so implies a cartell or monopolistic behavior to lock out
@@ -2743,8 +2771,8 @@ end users, which may be contrary to laws in multiple countries.<a href="#section
             <p id="section-6.5-4.2.1"><span class="bcp14">MUST</span> allow the string <code>open</code> as client ID, or<a href="#section-6.5-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.5-4.3">
-            <p id="section-6.5-4.3.1"><span class="bcp14">MUST</span> implement Dynamic Client Registration as defined by
-"OAuth Profile for Open Public Clients"<a href="#section-6.5-4.3.1" class="pilcrow">¶</a></p>
+            <p id="section-6.5-4.3.1"><span class="bcp14">MUST</span> implement Dynamic Client Registration <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span> in the way
+as defined by <span>[<a href="#OAuth2Client" class="cite xref">OAuth2Client</a>]</span><a href="#section-6.5-4.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-6.5-5">and accept resulting Client ID, without client secret, or
@@ -2773,8 +2801,8 @@ and all TCP-based protocols like IMAP.<a href="#section-6.5-8" class="pilcrow">�
         <h3 id="name-dnssec">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-dnssec" class="section-name selfRef">DNSSEC</a>
         </h3>
-<p id="section-7.1-1">Due to their top-level domain, some domains do not have DNSSEC available to
-them, even if they would like to deploy it.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">Due to their top-level domain, some domains do not have <span>[<a href="#DNSSEC" class="cite xref">DNSSEC</a>]</span>
+available to them, even if they would like to deploy it.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <p id="section-7.1-2">Even where the top-level domain supports it, DNSSEC is currently deployed in
 only 1% of domains, with adoption rates falling instead of rising, due to the
 difficulties of administrating it correctly.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
@@ -2787,7 +2815,7 @@ considered insecure for the purposes of this specification.<a href="#section-7.1
         <h3 id="name-dns-srv">
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-dns-srv" class="section-name selfRef">DNS SRV</a>
         </h3>
-<p id="section-7.2-1">DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2 reasons:<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">DNS SRV protocols <span>[<a href="#DNS-SRV" class="cite xref">DNS-SRV</a>]</span> <span>[<a href="#RFC6186" class="cite xref">RFC6186</a>]</span> are not used here, for 2 reasons:<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-7.2-2">
 <li id="section-7.2-2.1">
             <p id="section-7.2-2.1.1">DNS SRV relies on insecure DNS and the config can therefore be trivially
@@ -2841,7 +2869,8 @@ username form, wrong password, etc.), the client cannot blindly issue
 countless login attempts. Locking the account must be avoided. So, simply
 attempting all methods and seeing which one works is not an option for the
 email client.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
-<p id="section-7.3-3">Additionally, some email servers advertize Kerberos / GSSAPI, but when trying
+<p id="section-7.3-3">Additionally, some email servers advertize <span>[<a href="#Kerberos" class="cite xref">Kerberos</a>]</span> /
+<span>[<a href="#SSAPI" class="cite xref">SSAPI</a>]</span>, but when trying
 to use it, the method fails, and also runs into a long 2 minute timeout in
 some cases. End users consider that to be a broken app.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
 <p id="section-7.3-4">Additionally, such commands are protocol specific and have to be implemented
@@ -2969,7 +2998,7 @@ validated.<a href="#section-8.5-2" class="pilcrow">¶</a></p>
 <p id="section-9.1-1">IANA will create the following registry in a new registry group called
 "Mail Autoconfig":<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <p id="section-9.1-2">Registry Name: "Autoconfig Protocol Type Names"<a href="#section-9.1-2" class="pilcrow">¶</a></p>
-<p id="section-9.1-3">Registration Procedure: Specification Required, per RFC 8126, Section 4<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1-3">Registration Procedure: Specification Required, per <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>, Section 4<a href="#section-9.1-3" class="pilcrow">¶</a></p>
 <p id="section-9.1-4">Designated Expert: The author of this document.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3181,21 +3210,193 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-normative-references">
+<div id="sec-combined-references">
 <section id="section-11">
-      <h2 id="name-normative-references">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      <h2 id="name-references">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
+<div id="sec-normative-references">
+<section id="section-11.1">
+        <h3 id="name-normative-references">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
 <dl class="references">
+<dt id="CalDAV">[CalDAV]</dt>
+        <dd>
+<span class="refAuthor">Daboo, C.</span>, <span class="refAuthor">Desruisseaux, B.</span>, and <span class="refAuthor">L. Dusseault</span>, <span class="refTitle">"Calendaring Extensions to WebDAV (CalDAV)"</span>, <span class="seriesInfo">RFC 4791</span>, <span class="seriesInfo">DOI 10.17487/RFC4791</span>, <time datetime="2007-03" class="refDate">March 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4791">https://www.rfc-editor.org/rfc/rfc4791</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="CardDav">[CardDav]</dt>
+        <dd>
+<span class="refAuthor">Daboo, C.</span>, <span class="refTitle">"CardDAV: vCard Extensions to Web Distributed Authoring and Versioning (WebDAV)"</span>, <span class="seriesInfo">RFC 6352</span>, <span class="seriesInfo">DOI 10.17487/RFC6352</span>, <time datetime="2011-08" class="refDate">August 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6352">https://www.rfc-editor.org/rfc/rfc6352</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="CRAM-MD5">[CRAM-MD5]</dt>
+        <dd>
+<span class="refAuthor">Klensin, J.</span>, <span class="refAuthor">Catoe, R.</span>, and <span class="refAuthor">P. Krumviede</span>, <span class="refTitle">"IMAP/POP AUTHorize Extension for Simple Challenge/Response"</span>, <span class="seriesInfo">RFC 2195</span>, <span class="seriesInfo">DOI 10.17487/RFC2195</span>, <time datetime="1997-09" class="refDate">September 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2195">https://www.rfc-editor.org/rfc/rfc2195</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DIGEST-MD5">[DIGEST-MD5]</dt>
+        <dd>
+<span class="refAuthor">Leach, P.</span> and <span class="refAuthor">C. Newman</span>, <span class="refTitle">"Using Digest Authentication as a SASL Mechanism"</span>, <span class="seriesInfo">RFC 2831</span>, <span class="seriesInfo">DOI 10.17487/RFC2831</span>, <time datetime="2000-05" class="refDate">May 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2831">https://www.rfc-editor.org/rfc/rfc2831</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="EMail">[EMail]</dt>
+        <dd>
+<span class="refAuthor">Resnick, P., Ed.</span>, <span class="refTitle">"Internet Message Format"</span>, <span class="seriesInfo">RFC 2822</span>, <span class="seriesInfo">DOI 10.17487/RFC2822</span>, <time datetime="2001-04" class="refDate">April 2001</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2822">https://www.rfc-editor.org/rfc/rfc2822</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="HTTP-Basic-Auth">[HTTP-Basic-Auth]</dt>
+        <dd>
+<span class="refAuthor">Reschke, J.</span>, <span class="refTitle">"The 'Basic' HTTP Authentication Scheme"</span>, <span class="seriesInfo">RFC 7617</span>, <span class="seriesInfo">DOI 10.17487/RFC7617</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7617">https://www.rfc-editor.org/rfc/rfc7617</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="HTTP-Digest-Auth">[HTTP-Digest-Auth]</dt>
+        <dd>
+<span class="refAuthor">Shekh-Yusef, R., Ed.</span>, <span class="refAuthor">Ahrens, D.</span>, and <span class="refAuthor">S. Bremer</span>, <span class="refTitle">"HTTP Digest Access Authentication"</span>, <span class="seriesInfo">RFC 7616</span>, <span class="seriesInfo">DOI 10.17487/RFC7616</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7616">https://www.rfc-editor.org/rfc/rfc7616</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IMAP4rev1">[IMAP4rev1]</dt>
+        <dd>
+<span class="refAuthor">Crispin, M.</span>, <span class="refTitle">"INTERNET MESSAGE ACCESS PROTOCOL - VERSION 4rev1"</span>, <span class="seriesInfo">RFC 3501</span>, <span class="seriesInfo">DOI 10.17487/RFC3501</span>, <time datetime="2003-03" class="refDate">March 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3501">https://www.rfc-editor.org/rfc/rfc3501</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IMAP4rev2">[IMAP4rev2]</dt>
+        <dd>
+<span class="refAuthor">Melnikov, A., Ed.</span> and <span class="refAuthor">B. Leiba, Ed.</span>, <span class="refTitle">"Internet Message Access Protocol (IMAP) - Version 4rev2"</span>, <span class="seriesInfo">RFC 9051</span>, <span class="seriesInfo">DOI 10.17487/RFC9051</span>, <time datetime="2021-08" class="refDate">August 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9051">https://www.rfc-editor.org/rfc/rfc9051</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="JMAP-Contacts">[JMAP-Contacts]</dt>
+        <dd>
+<span class="refAuthor">Jenkins, N., Ed.</span>, <span class="refTitle">"JSON Meta Application Protocol (JMAP) for Contacts"</span>, <span class="seriesInfo">RFC 9610</span>, <span class="seriesInfo">DOI 10.17487/RFC9610</span>, <time datetime="2024-12" class="refDate">December 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9610">https://www.rfc-editor.org/rfc/rfc9610</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="JMAP-Core">[JMAP-Core]</dt>
+        <dd>
+<span class="refAuthor">Jenkins, N.</span> and <span class="refAuthor">C. Newman</span>, <span class="refTitle">"The JSON Meta Application Protocol (JMAP)"</span>, <span class="seriesInfo">RFC 8620</span>, <span class="seriesInfo">DOI 10.17487/RFC8620</span>, <time datetime="2019-07" class="refDate">July 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8620">https://www.rfc-editor.org/rfc/rfc8620</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="JMAP-Mail">[JMAP-Mail]</dt>
+        <dd>
+<span class="refAuthor">Jenkins, N.</span> and <span class="refAuthor">C. Newman</span>, <span class="refTitle">"The JSON Meta Application Protocol (JMAP) for Mail"</span>, <span class="seriesInfo">RFC 8621</span>, <span class="seriesInfo">DOI 10.17487/RFC8621</span>, <time datetime="2019-08" class="refDate">August 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8621">https://www.rfc-editor.org/rfc/rfc8621</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="JMAP-WebSocket">[JMAP-WebSocket]</dt>
+        <dd>
+<span class="refAuthor">Murchison, K.</span>, <span class="refTitle">"A JSON Meta Application Protocol (JMAP) Subprotocol for WebSocket"</span>, <span class="seriesInfo">RFC 8887</span>, <span class="seriesInfo">DOI 10.17487/RFC8887</span>, <time datetime="2020-08" class="refDate">August 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8887">https://www.rfc-editor.org/rfc/rfc8887</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ManageSieve">[ManageSieve]</dt>
+        <dd>
+<span class="refAuthor">Melnikov, A., Ed.</span> and <span class="refAuthor">T. Martin</span>, <span class="refTitle">"A Protocol for Remotely Managing Sieve Scripts"</span>, <span class="seriesInfo">RFC 5804</span>, <span class="seriesInfo">DOI 10.17487/RFC5804</span>, <time datetime="2010-07" class="refDate">July 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5804">https://www.rfc-editor.org/rfc/rfc5804</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Matrix">[Matrix]</dt>
+        <dd>
+<span class="refTitle">"Matrix protocol specification"</span>, <span>n.d.</span>, <span>&lt;<a href="https://spec.matrix.org">https://spec.matrix.org</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OAuth2">[OAuth2]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span> and <span class="refAuthor">D. Hardt</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework: Bearer Token Usage"</span>, <span class="seriesInfo">RFC 6750</span>, <span class="seriesInfo">DOI 10.17487/RFC6750</span>, <time datetime="2012-10" class="refDate">October 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6750">https://www.rfc-editor.org/rfc/rfc6750</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OAuth2Client">[OAuth2Client]</dt>
+        <dd>
+<span class="refAuthor">Jenkis, N.</span> and <span class="refAuthor">B. Bucksch</span>, <span class="refTitle">"OAuth Profile for Open Public Clients"</span>, <time datetime="2025" class="refDate">2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-mailmaint-oauth-public/">https://datatracker.ietf.org/doc/draft-ietf-mailmaint-oauth-public/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="POP3">[POP3]</dt>
+        <dd>
+<span class="refAuthor">Myers, J.</span> and <span class="refAuthor">M. Rose</span>, <span class="refTitle">"Post Office Protocol - Version 3"</span>, <span class="seriesInfo">STD 53</span>, <span class="seriesInfo">RFC 1939</span>, <span class="seriesInfo">DOI 10.17487/RFC1939</span>, <time datetime="1996-05" class="refDate">May 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1939">https://www.rfc-editor.org/rfc/rfc1939</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="POP3-SASL">[POP3-SASL]</dt>
+        <dd>
+<span class="refAuthor">Siemborski, R.</span> and <span class="refAuthor">A. Menon-Sen</span>, <span class="refTitle">"The Post Office Protocol (POP3) Simple Authentication and Security Layer (SASL) Authentication Mechanism"</span>, <span class="seriesInfo">RFC 5034</span>, <span class="seriesInfo">DOI 10.17487/RFC5034</span>, <time datetime="2007-07" class="refDate">July 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5034">https://www.rfc-editor.org/rfc/rfc5034</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC2595">[RFC2595]</dt>
+        <dd>
+<span class="refAuthor">Newman, C.</span>, <span class="refTitle">"Using TLS with IMAP, POP3 and ACAP"</span>, <span class="seriesInfo">RFC 2595</span>, <span class="seriesInfo">DOI 10.17487/RFC2595</span>, <time datetime="1999-06" class="refDate">June 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2595">https://www.rfc-editor.org/rfc/rfc2595</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5246">[RFC5246]</dt>
+        <dd>
+<span class="refAuthor">Dierks, T.</span> and <span class="refAuthor">E. Rescorla</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.2"</span>, <span class="seriesInfo">RFC 5246</span>, <span class="seriesInfo">DOI 10.17487/RFC5246</span>, <time datetime="2008-08" class="refDate">August 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5246">https://www.rfc-editor.org/rfc/rfc5246</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7591">[RFC7591]</dt>
+        <dd>
+<span class="refAuthor">Richer, J., Ed.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Machulak, M.</span>, and <span class="refAuthor">P. Hunt</span>, <span class="refTitle">"OAuth 2.0 Dynamic Client Registration Protocol"</span>, <span class="seriesInfo">RFC 7591</span>, <span class="seriesInfo">DOI 10.17487/RFC7591</span>, <time datetime="2015-07" class="refDate">July 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7591">https://www.rfc-editor.org/rfc/rfc7591</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-    <dd>
+        <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="SASL">[SASL]</dt>
+        <dd>
+<span class="refAuthor">Melnikov, A., Ed.</span> and <span class="refAuthor">K. Zeilenga, Ed.</span>, <span class="refTitle">"Simple Authentication and Security Layer (SASL)"</span>, <span class="seriesInfo">RFC 4422</span>, <span class="seriesInfo">DOI 10.17487/RFC4422</span>, <time datetime="2006-06" class="refDate">June 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4422">https://www.rfc-editor.org/rfc/rfc4422</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SASL-OAuth2">[SASL-OAuth2]</dt>
+        <dd>
+<span class="refAuthor">Mills, W.</span>, <span class="refAuthor">Showalter, T.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"A Set of Simple Authentication and Security Layer (SASL) Mechanisms for OAuth"</span>, <span class="seriesInfo">RFC 7628</span>, <span class="seriesInfo">DOI 10.17487/RFC7628</span>, <time datetime="2015-08" class="refDate">August 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7628">https://www.rfc-editor.org/rfc/rfc7628</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SCRAM">[SCRAM]</dt>
+        <dd>
+<span class="refAuthor">Hansen, T.</span>, <span class="refTitle">"SCRAM-SHA-256 and SCRAM-SHA-256-PLUS Simple Authentication and Security Layer (SASL) Mechanisms"</span>, <span class="seriesInfo">RFC 7677</span>, <span class="seriesInfo">DOI 10.17487/RFC7677</span>, <time datetime="2015-11" class="refDate">November 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7677">https://www.rfc-editor.org/rfc/rfc7677</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Sieve">[Sieve]</dt>
+        <dd>
+<span class="refAuthor">Guenther, P., Ed.</span> and <span class="refAuthor">T. Showalter, Ed.</span>, <span class="refTitle">"Sieve: An Email Filtering Language"</span>, <span class="seriesInfo">RFC 5228</span>, <span class="seriesInfo">DOI 10.17487/RFC5228</span>, <time datetime="2008-01" class="refDate">January 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5228">https://www.rfc-editor.org/rfc/rfc5228</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SMTP">[SMTP]</dt>
+        <dd>
+<span class="refAuthor">Klensin, J.</span>, <span class="refTitle">"Simple Mail Transfer Protocol"</span>, <span class="seriesInfo">RFC 5321</span>, <span class="seriesInfo">DOI 10.17487/RFC5321</span>, <time datetime="2008-10" class="refDate">October 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5321">https://www.rfc-editor.org/rfc/rfc5321</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="WebDAV">[WebDAV]</dt>
+        <dd>
+<span class="refAuthor">Dusseault, L., Ed.</span>, <span class="refTitle">"HTTP Extensions for Web Distributed Authoring and Versioning (WebDAV)"</span>, <span class="seriesInfo">RFC 4918</span>, <span class="seriesInfo">DOI 10.17487/RFC4918</span>, <time datetime="2007-06" class="refDate">June 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4918">https://www.rfc-editor.org/rfc/rfc4918</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="XMPP">[XMPP]</dt>
+        <dd>
+<span class="refAuthor">Saint-Andre, P.</span>, <span class="refTitle">"Extensible Messaging and Presence Protocol (XMPP): Core"</span>, <span class="seriesInfo">RFC 6120</span>, <span class="seriesInfo">DOI 10.17487/RFC6120</span>, <time datetime="2011-03" class="refDate">March 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6120">https://www.rfc-editor.org/rfc/rfc6120</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="XMPP-IM">[XMPP-IM]</dt>
+        <dd>
+<span class="refAuthor">Saint-Andre, P.</span>, <span class="refTitle">"Extensible Messaging and Presence Protocol (XMPP): Instant Messaging and Presence"</span>, <span class="seriesInfo">RFC 6121</span>, <span class="seriesInfo">DOI 10.17487/RFC6121</span>, <time datetime="2011-03" class="refDate">March 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6121">https://www.rfc-editor.org/rfc/rfc6121</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="XMPP-WebSocket">[XMPP-WebSocket]</dt>
+      <dd>
+<span class="refAuthor">Stout, L., Ed.</span>, <span class="refAuthor">Moffitt, J.</span>, and <span class="refAuthor">E. Cestari</span>, <span class="refTitle">"An Extensible Messaging and Presence Protocol (XMPP) Subprotocol for WebSocket"</span>, <span class="seriesInfo">RFC 7395</span>, <span class="seriesInfo">DOI 10.17487/RFC7395</span>, <time datetime="2014-10" class="refDate">October 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7395">https://www.rfc-editor.org/rfc/rfc7395</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 </dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-11.2">
+        <h3 id="name-informative-references">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="DNS-SRV">[DNS-SRV]</dt>
+        <dd>
+<span class="refAuthor">Gulbrandsen, A.</span>, <span class="refAuthor">Vixie, P.</span>, and <span class="refAuthor">L. Esibov</span>, <span class="refTitle">"A DNS RR for specifying the location of services (DNS SRV)"</span>, <span class="seriesInfo">RFC 2782</span>, <span class="seriesInfo">DOI 10.17487/RFC2782</span>, <time datetime="2000-02" class="refDate">February 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2782">https://www.rfc-editor.org/rfc/rfc2782</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DNSSEC">[DNSSEC]</dt>
+        <dd>
+<span class="refAuthor">Hoffman, P.</span>, <span class="refTitle">"DNS Security Extensions (DNSSEC)"</span>, <span class="seriesInfo">BCP 237</span>, <span class="seriesInfo">RFC 9364</span>, <span class="seriesInfo">DOI 10.17487/RFC9364</span>, <time datetime="2023-02" class="refDate">February 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9364">https://www.rfc-editor.org/rfc/rfc9364</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Kerberos">[Kerberos]</dt>
+        <dd>
+<span class="refAuthor">Neuman, C.</span>, <span class="refAuthor">Yu, T.</span>, <span class="refAuthor">Hartman, S.</span>, and <span class="refAuthor">K. Raeburn</span>, <span class="refTitle">"The Kerberos Network Authentication Service (V5)"</span>, <span class="seriesInfo">RFC 4120</span>, <span class="seriesInfo">DOI 10.17487/RFC4120</span>, <time datetime="2005-07" class="refDate">July 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4120">https://www.rfc-editor.org/rfc/rfc4120</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6186">[RFC6186]</dt>
+        <dd>
+<span class="refAuthor">Daboo, C.</span>, <span class="refTitle">"Use of SRV Records for Locating Email Submission/Access Services"</span>, <span class="seriesInfo">RFC 6186</span>, <span class="seriesInfo">DOI 10.17487/RFC6186</span>, <time datetime="2011-03" class="refDate">March 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6186">https://www.rfc-editor.org/rfc/rfc6186</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7677">[RFC7677]</dt>
+        <dd>
+<span class="refAuthor">Hansen, T.</span>, <span class="refTitle">"SCRAM-SHA-256 and SCRAM-SHA-256-PLUS Simple Authentication and Security Layer (SASL) Mechanisms"</span>, <span class="seriesInfo">RFC 7677</span>, <span class="seriesInfo">DOI 10.17487/RFC7677</span>, <time datetime="2015-11" class="refDate">November 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7677">https://www.rfc-editor.org/rfc/rfc7677</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8126">[RFC8126]</dt>
+        <dd>
+<span class="refAuthor">Cotton, M.</span>, <span class="refAuthor">Leiba, B.</span>, and <span class="refAuthor">T. Narten</span>, <span class="refTitle">"Guidelines for Writing an IANA Considerations Section in RFCs"</span>, <span class="seriesInfo">BCP 26</span>, <span class="seriesInfo">RFC 8126</span>, <span class="seriesInfo">DOI 10.17487/RFC8126</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8126">https://www.rfc-editor.org/rfc/rfc8126</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SSAPI">[SSAPI]</dt>
+        <dd>
+<span class="refAuthor">Linn, J.</span>, <span class="refTitle">"Generic Security Service Application Program Interface Version 2, Update 1"</span>, <span class="seriesInfo">RFC 2743</span>, <span class="seriesInfo">DOI 10.17487/RFC2743</span>, <time datetime="2000-01" class="refDate">January 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2743">https://www.rfc-editor.org/rfc/rfc2743</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="XML">[XML]</dt>
+      <dd>
+<span class="refAuthor">Hollenbeck, S.</span>, <span class="refAuthor">Rose, M.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Guidelines for the Use of Extensible Markup Language (XML) within IETF Protocols"</span>, <span class="seriesInfo">BCP 70</span>, <span class="seriesInfo">RFC 3470</span>, <span class="seriesInfo">DOI 10.17487/RFC3470</span>, <time datetime="2003-01" class="refDate">January 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3470">https://www.rfc-editor.org/rfc/rfc3470</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
 </section>
 </div>
 <div id="authors-addresses">

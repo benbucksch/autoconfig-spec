@@ -123,7 +123,9 @@ Table of Contents
      9.2.  Contents
      9.3.  Initial registration
    10. Conventions and Definitions
-   11. Normative References
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Author's Address
 
 1.  Introduction
@@ -189,7 +191,7 @@ Table of Contents
    configuration, the resulting document MUST have the following data
    format and qualities.
 
-   The MIME type is text/xml.
+   The format is [XML].  The MIME type is text/xml.
 
 3.1.  XML config file
 
@@ -223,8 +225,6 @@ Table of Contents
         <!-- Authentication methods:
         "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
         "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
-        "NTLM": Deprecated Windows login mechanism
-        "GSSAPI": Kerberos or Windows GSSAPI
         "TLS-client-cert": TLS client certificate on TLS layer
         "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
         "none": No authentication
@@ -262,7 +262,7 @@ Table of Contents
     <incomingServer type="jmap">
       <url>https://jmap.example.com</url>
         <!-- Authentication methods
-        "http-basic": RRFC 7661
+        "http-basic": RFC 7617
         "http-digest"
         "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
         -->
@@ -283,7 +283,7 @@ Table of Contents
       <authentication>OAuth2</authentication>
     </incomingServer>
 
-    <documentation url="http://www.example.com/help/mail/">
+    <documentation url="https://www.example.com/help/mail/">
       <descr lang="en">Configure mail app for IMAP</descr>
       <descr lang="de">Email mit IMAP konfigurieren</descr>
     </documentation>
@@ -420,7 +420,7 @@ Table of Contents
 
    E.g.
 
-   <documentation url="http://www.example.com/help/mail/">
+   <documentation url="https://www.example.com/help/mail/">
      <descr lang="en">Configure mail app for IMAP</descr>
      <descr lang="de">Email mit IMAP konfigurieren</descr>
    </documentation>
@@ -500,44 +500,50 @@ Table of Contents
    The type property on the server section element specifies the wire
    protocol that this server uses.
 
-   +==============+===========+====+===========+=========================+
-   |Element       |Type       |Base|Name       |Specification            |
-   +==============+===========+====+===========+=========================+
-   |incomingServer|jmap       |URL |JMAP       |RFC 8620, RFC 8621, RFC  |
-   |              |           |    |           |8887, RFC 9610 et al     |
-   +--------------+-----------+----+-----------+-------------------------+
-   |incomingServer|imap       |TCP |IMAP       |RFC 9051 or RFC 3501, et |
-   |              |           |    |           |al                       |
-   +--------------+-----------+----+-----------+-------------------------+
-   |incomingServer|pop3       |TCP |POP3       |RFC 1939, RFC 5034       |
-   +--------------+-----------+----+-----------+-------------------------+
-   |outgoingServer|smtp       |TCP |SMTP       |RFC 5321, RFC 2822       |
-   +--------------+-----------+----+-----------+-------------------------+
-   |calendar      |caldav     |URL |CalDAV     |RFC 4791                 |
-   +--------------+-----------+----+-----------+-------------------------+
-   |addressbook   |carddav    |URL |CardDav    |RFC 6352                 |
-   +--------------+-----------+----+-----------+-------------------------+
-   |fileShare     |webdav     |URL |WebDAV     |RFC 4918                 |
-   +--------------+-----------+----+-----------+-------------------------+
-   |chatServer    |xmpp       |URL |XMPP       |RFC 6120, RFC 6121, RFC  |
-   |              |           |    |           |7395                     |
-   +--------------+-----------+----+-----------+-------------------------+
-   |chatServer    |xmpptcp    |TCP |XMPP       |RFC 6120, RFC 6121       |
-   +--------------+-----------+----+-----------+-------------------------+
-   |chatServer    |matrix     |URL |Matrix     |https://spec.matrix.org  |
-   |              |           |    |           |(https://spec.matrix.org)|
-   +--------------+-----------+----+-----------+-------------------------+
-   |setupServer   |managesieve|TCP |ManageSieve|RFC 5804, RFC 5228       |
-   +--------------+-----------+----+-----------+-------------------------+
-   |incomingServer|ews        |URL |Exchange   |                         |
-   |              |           |    |Web        |                         |
-   |              |           |    |Services   |                         |
-   +--------------+-----------+----+-----------+-------------------------+
-   |incomingServer|activeSync |URL |ActiveSync |                         |
-   +--------------+-----------+----+-----------+-------------------------+
-   |incomingServer|graph      |URL |Microsoft  |                         |
-   |              |           |    |Graph      |                         |
-   +--------------+-----------+----+-----------+-------------------------+
+    +================+===========+====+===========+===================+
+    | Element        |Type       |Base|Name       | Specification     |
+    +================+===========+====+===========+===================+
+    | incomingServer |jmap       |URL |JMAP       | [JMAP-Core],      |
+    |                |           |    |           | [JMAP-Mail],      |
+    |                |           |    |           | [JMAP-WebSocket], |
+    |                |           |    |           | [JMAP-Contacts]   |
+    |                |           |    |           | et al             |
+    +----------------+-----------+----+-----------+-------------------+
+    | incomingServer |imap       |TCP |IMAP       | [IMAP4rev2] or    |
+    |                |           |    |           | [IMAP4rev1], et   |
+    |                |           |    |           | al                |
+    +----------------+-----------+----+-----------+-------------------+
+    | incomingServer |pop3       |TCP |POP3       | [POP3],           |
+    |                |           |    |           | [POP3-SASL]       |
+    +----------------+-----------+----+-----------+-------------------+
+    | outgoingServer |smtp       |TCP |SMTP       | [SMTP], [EMail]   |
+    +----------------+-----------+----+-----------+-------------------+
+    | calendar       |caldav     |URL |CalDAV     | [CalDAV]          |
+    +----------------+-----------+----+-----------+-------------------+
+    | addressbook    |carddav    |URL |CardDav    | [CardDav]         |
+    +----------------+-----------+----+-----------+-------------------+
+    | fileShare      |webdav     |URL |WebDAV     | [WebDAV]          |
+    +----------------+-----------+----+-----------+-------------------+
+    | chatServer     |xmpp       |URL |XMPP       | [XMPP],           |
+    |                |           |    |           | [XMPP-IM],        |
+    |                |           |    |           | [XMPP-WebSocket]  |
+    +----------------+-----------+----+-----------+-------------------+
+    | chatServer     |xmpptcp    |TCP |XMPP       | [XMPP], [XMPP-IM] |
+    +----------------+-----------+----+-----------+-------------------+
+    | chatServer     |matrix     |URL |Matrix     | [Matrix]          |
+    +----------------+-----------+----+-----------+-------------------+
+    | setupServer    |managesieve|TCP |ManageSieve| [ManageSieve],    |
+    |                |           |    |           | [Sieve]           |
+    +----------------+-----------+----+-----------+-------------------+
+    | incomingServer |ews        |URL |Exchange   |                   |
+    |                |           |    |Web        |                   |
+    |                |           |    |Services   |                   |
+    +----------------+-----------+----+-----------+-------------------+
+    | incomingServer |activeSync |URL |ActiveSync |                   |
+    +----------------+-----------+----+-----------+-------------------+
+    | incomingServer |graph      |URL |Microsoft  |                   |
+    |                |           |    |Graph      |                   |
+    +----------------+-----------+----+-----------+-------------------+
 
                                   Table 1
 
@@ -576,13 +582,13 @@ Table of Contents
    authentication method to use.
 
    *  http-basic: Authenticate to the HTTP server using WWW-
-      Authenticate: Basic.  See RFC 7617.
+      Authenticate: Basic.  See [HTTP-Basic-Auth].
 
    *  http-digest: Authenticate to the HTTP server using WWW-
-      Authenticate: Digest.  See RFC 7616
+      Authenticate: Digest.  See [HTTP-Digest-Auth]
 
    *  OAuth: Authenticate to the HTTP server using WWW-Authenticate:
-      Bearer.  See RFC 6750 Section 3.  The provider MUST adhere to the
+      Bearer.  See [OAuth2] Section 3.  The provider MUST adhere to the
       requirements defined in section OAuth2 in this specification.
 
    The rules as specified in sections "Multiple authentication
@@ -633,17 +639,19 @@ Table of Contents
    The content of the <socketType> element specifies whether to use
    direct TLS, STARTTLS, or none of these.
 
-   *  SSL: Directly contact the TCP port using TLS.  TLS version 1.2 or
-      higher SHOULD be used.  Higher versions may be required based on
-      security situation, server support, and client policy decisions.
+   *  SSL: Directly contact the TCP port using TLS.  TLS version 1.2
+      [RFC5246] or higher SHOULD be used.  Higher versions may be
+      required based on security situation, server support, and client
+      policy decisions.
 
    *  STARTTLS: Contact the TCP port first using an unencrypted plain
       socket, then upgrade to TLS using the protocol-specific STARTTLS
-      specification.  With this configuration, STARTTLS MUST be used and
-      TLS MUST be used after the STARTTLS upgrade.  If the upgrade to
-      TLS fails for whatever reason, the client MUST disconnect and MUST
-      NOT try to authenticate.  This prevents downgrade attacks that
-      could otherwise steal passwords, user data, and impersonate users.
+      specification [RFC2595].  With this configuration, STARTTLS MUST
+      be used and TLS MUST be used after the STARTTLS upgrade.  If the
+      upgrade to TLS fails for whatever reason, the client MUST
+      disconnect and MUST NOT try to authenticate.  This prevents
+      downgrade attacks that could otherwise steal passwords, user data,
+      and impersonate users.
 
    *  plain: Unencrypted connection, with neither TLS nor STARTTLS.  May
       be needed for local servers.  Deprecated.
@@ -682,21 +690,23 @@ Table of Contents
       like SASL PLAIN or SASL LOGIN, or a successor.
 
    *  password-encrypted: An encrypted or hashed password mechanism.
-      Includes SASL CRAM-MD5, DIGEST-MD5 and SCRAM-SHA-256-PLUS.  TLS
-      alone by itself does not qualify as "password-encrypted".
+      Includes SASL CRAM-MD5 [CRAM-MD5], DIGEST-MD5 [DIGEST-MD5], SCRAM-
+      SHA-256-PLUS [SCRAM], and successors.  TLS by itself does not
+      qualify as "password-encrypted".
 
    *  NTLM: Legacy Windows login mechanisms NTLM or NTLMv2.
 
-   *  GSSAPI: Kerberos or GSSAPI, a single-signon mechanism based on
+   *  GSSAPI: [Kerberos] or [SSAPI], a single-signon mechanism based on
       TCP.
 
    *  TLS-client-cert: On the SSL/TLS layer, after server request, the
       client sends a TLS client certificate for the user, possibly after
-      letting the user select confirm it.  Uses SASL EXTERNAL scheme.
+      letting the user select confirm it.  Uses SASL EXTERNAL scheme
+      [SASL], Appendix A.
 
-   *  OAuth: OAuth.  SASL OAUTHBEARER (current) or XOAUTH2 (deprecated)
-      or successors.  The provider MUST adhere to the requirements
-      defined in section OAuth2 in this specification.
+   *  OAuth: OAuth.  SASL OAUTHBEARER [SASL-OAuth2] (current) or XOAUTH2
+      (deprecated) or successors.  The provider MUST adhere to the
+      requirements defined in section OAuth2 in this specification.
 
    *  client-IP-address: Server can be used without any explicit
       authentication, and the client is admitted based on its IP
@@ -706,13 +716,13 @@ Table of Contents
 
 3.7.4.1.  Recommending specific SASL schemes
 
-   Additionally, a specific SASL scheme may be specified using SASL, a
-   space, and the specific SASL authentication scheme name, e.g. SASL
-   SCRAM-SHA-256-PLUS.  In such a case, the server config SHOULD also
-   specify a more generic authentication mechanism as a lower priority
-   alternative.  That would make clients use the specific authentication
-   mechanism, if they support it, and other clients will use the more
-   generic authentication mechanism.
+   Additionally, a specific SASL scheme [SASL] may be specified using
+   SASL, a space, and the specific SASL authentication scheme name, e.g.
+   SASL SCRAM-SHA-256-PLUS [RFC7677].  In such a case, the server config
+   SHOULD also specify a more generic authentication mechanism as a
+   lower priority alternative.  That would make clients use the specific
+   authentication mechanism, if they support it, and other clients will
+   use the more generic authentication mechanism.
 
 3.7.4.2.  Multiple authentication alternatives
 
@@ -1020,13 +1030,13 @@ Table of Contents
 4.5.  Other mechanisms
 
    You may want to implement other mechanisms to find a configuration,
-   for example Exchange AutoDiscover, DNS SRV, or heuristic guessing.
-   If you implement such alternative methods, and if they are less
-   secure than some of the mechanisms provided here, the alternative
-   methods SHOULD be considered only with lower priority (as defined
-   above) than the more secure mechanisms defined here.  For evaluating
-   other mechanisms, use similar criteria as outlined in section
-   "Security considerations".
+   for example Exchange AutoDiscover, DNS-SRV [RFC6186], or heuristic
+   guessing.  If you implement such alternative methods, and if they are
+   less secure than some of the mechanisms provided here, the
+   alternative methods SHOULD be considered only with lower priority (as
+   defined above) than the more secure mechanisms defined here.  For
+   evaluating other mechanisms, use similar criteria as outlined in
+   section "Security considerations".
 
 4.6.  Manual configuration
 
@@ -1155,10 +1165,9 @@ Table of Contents
 
 6.5.  OAuth2 requirements
 
-   If OAuth2 is used, the OAuth2 server MUST adhere either to the OAuth
-   Profile for Open Public Clients (https://datatracker.ietf.org/doc/
-   draft-ietf-mailmaint-oauth-public/) specification specification,
-   including all SHOULD requirements stated in those.
+   If OAuth2 is used, the OAuth2 server MUST adhere either to the
+   [OAuth2Client] specification, including all SHOULD requirements
+   stated in those.
 
    The provider MUST allow any client application that acts on behalf of
    the end user who the mailbox is for.  Failure to do so implies a
@@ -1172,8 +1181,8 @@ Table of Contents
 
    *  MUST allow the string open as client ID, or
 
-   *  MUST implement Dynamic Client Registration as defined by "OAuth
-      Profile for Open Public Clients"
+   *  MUST implement Dynamic Client Registration [RFC7591] in the way as
+      defined by [OAuth2Client]
 
    and accept resulting Client ID, without client secret, or support
    multiple of those methods.
@@ -1195,7 +1204,7 @@ Table of Contents
 
 7.1.  DNSSEC
 
-   Due to their top-level domain, some domains do not have DNSSEC
+   Due to their top-level domain, some domains do not have [DNSSEC]
    available to them, even if they would like to deploy it.
 
    Even where the top-level domain supports it, DNSSEC is currently
@@ -1207,7 +1216,7 @@ Table of Contents
 
 7.2.  DNS SRV
 
-   DNS SRV protocols (RFC 2782, RFC 6186) are not used here, for 2
+   DNS SRV protocols [DNS-SRV] [RFC6186] are not used here, for 2
    reasons:
 
    1.  DNS SRV relies on insecure DNS and the config can therefore be
@@ -1257,7 +1266,7 @@ Table of Contents
    So, simply attempting all methods and seeing which one works is not
    an option for the email client.
 
-   Additionally, some email servers advertize Kerberos / GSSAPI, but
+   Additionally, some email servers advertize [Kerberos] / [SSAPI], but
    when trying to use it, the method fails, and also runs into a long 2
    minute timeout in some cases.  End users consider that to be a broken
    app.
@@ -1372,7 +1381,7 @@ Table of Contents
 
    Registry Name: "Autoconfig Protocol Type Names"
 
-   Registration Procedure: Specification Required, per RFC 8126,
+   Registration Procedure: Specification Required, per [RFC8126],
    Section 4
 
    Designated Expert: The author of this document.
@@ -1451,16 +1460,213 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-11.  Normative References
+11.  References
+
+11.1.  Normative References
+
+   [CalDAV]   Daboo, C., Desruisseaux, B., and L. Dusseault,
+              "Calendaring Extensions to WebDAV (CalDAV)", RFC 4791,
+              DOI 10.17487/RFC4791, March 2007,
+              <https://www.rfc-editor.org/rfc/rfc4791>.
+
+   [CardDav]  Daboo, C., "CardDAV: vCard Extensions to Web Distributed
+              Authoring and Versioning (WebDAV)", RFC 6352,
+              DOI 10.17487/RFC6352, August 2011,
+              <https://www.rfc-editor.org/rfc/rfc6352>.
+
+   [CRAM-MD5] Klensin, J., Catoe, R., and P. Krumviede, "IMAP/POP
+              AUTHorize Extension for Simple Challenge/Response",
+              RFC 2195, DOI 10.17487/RFC2195, September 1997,
+              <https://www.rfc-editor.org/rfc/rfc2195>.
+
+   [DIGEST-MD5]
+              Leach, P. and C. Newman, "Using Digest Authentication as a
+              SASL Mechanism", RFC 2831, DOI 10.17487/RFC2831, May 2000,
+              <https://www.rfc-editor.org/rfc/rfc2831>.
+
+   [EMail]    Resnick, P., Ed., "Internet Message Format", RFC 2822,
+              DOI 10.17487/RFC2822, April 2001,
+              <https://www.rfc-editor.org/rfc/rfc2822>.
+
+   [HTTP-Basic-Auth]
+              Reschke, J., "The 'Basic' HTTP Authentication Scheme",
+              RFC 7617, DOI 10.17487/RFC7617, September 2015,
+              <https://www.rfc-editor.org/rfc/rfc7617>.
+
+   [HTTP-Digest-Auth]
+              Shekh-Yusef, R., Ed., Ahrens, D., and S. Bremer, "HTTP
+              Digest Access Authentication", RFC 7616,
+              DOI 10.17487/RFC7616, September 2015,
+              <https://www.rfc-editor.org/rfc/rfc7616>.
+
+   [IMAP4rev1]
+              Crispin, M., "INTERNET MESSAGE ACCESS PROTOCOL - VERSION
+              4rev1", RFC 3501, DOI 10.17487/RFC3501, March 2003,
+              <https://www.rfc-editor.org/rfc/rfc3501>.
+
+   [IMAP4rev2]
+              Melnikov, A., Ed. and B. Leiba, Ed., "Internet Message
+              Access Protocol (IMAP) - Version 4rev2", RFC 9051,
+              DOI 10.17487/RFC9051, August 2021,
+              <https://www.rfc-editor.org/rfc/rfc9051>.
+
+   [JMAP-Contacts]
+              Jenkins, N., Ed., "JSON Meta Application Protocol (JMAP)
+              for Contacts", RFC 9610, DOI 10.17487/RFC9610, December
+              2024, <https://www.rfc-editor.org/rfc/rfc9610>.
+
+   [JMAP-Core]
+              Jenkins, N. and C. Newman, "The JSON Meta Application
+              Protocol (JMAP)", RFC 8620, DOI 10.17487/RFC8620, July
+              2019, <https://www.rfc-editor.org/rfc/rfc8620>.
+
+   [JMAP-Mail]
+              Jenkins, N. and C. Newman, "The JSON Meta Application
+              Protocol (JMAP) for Mail", RFC 8621, DOI 10.17487/RFC8621,
+              August 2019, <https://www.rfc-editor.org/rfc/rfc8621>.
+
+   [JMAP-WebSocket]
+              Murchison, K., "A JSON Meta Application Protocol (JMAP)
+              Subprotocol for WebSocket", RFC 8887,
+              DOI 10.17487/RFC8887, August 2020,
+              <https://www.rfc-editor.org/rfc/rfc8887>.
+
+   [ManageSieve]
+              Melnikov, A., Ed. and T. Martin, "A Protocol for Remotely
+              Managing Sieve Scripts", RFC 5804, DOI 10.17487/RFC5804,
+              July 2010, <https://www.rfc-editor.org/rfc/rfc5804>.
+
+   [Matrix]   "Matrix protocol specification", n.d.,
+              <https://spec.matrix.org>.
+
+   [OAuth2]   Jones, M. and D. Hardt, "The OAuth 2.0 Authorization
+              Framework: Bearer Token Usage", RFC 6750,
+              DOI 10.17487/RFC6750, October 2012,
+              <https://www.rfc-editor.org/rfc/rfc6750>.
+
+   [OAuth2Client]
+              Jenkis, N. and B. Bucksch, "OAuth Profile for Open Public
+              Clients", 2025, <https://datatracker.ietf.org/doc/draft-
+              ietf-mailmaint-oauth-public/>.
+
+   [POP3]     Myers, J. and M. Rose, "Post Office Protocol - Version 3",
+              STD 53, RFC 1939, DOI 10.17487/RFC1939, May 1996,
+              <https://www.rfc-editor.org/rfc/rfc1939>.
+
+   [POP3-SASL]
+              Siemborski, R. and A. Menon-Sen, "The Post Office Protocol
+              (POP3) Simple Authentication and Security Layer (SASL)
+              Authentication Mechanism", RFC 5034, DOI 10.17487/RFC5034,
+              July 2007, <https://www.rfc-editor.org/rfc/rfc5034>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
+   [RFC2595]  Newman, C., "Using TLS with IMAP, POP3 and ACAP",
+              RFC 2595, DOI 10.17487/RFC2595, June 1999,
+              <https://www.rfc-editor.org/rfc/rfc2595>.
+
+   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", RFC 5246,
+              DOI 10.17487/RFC5246, August 2008,
+              <https://www.rfc-editor.org/rfc/rfc5246>.
+
+   [RFC7591]  Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and
+              P. Hunt, "OAuth 2.0 Dynamic Client Registration Protocol",
+              RFC 7591, DOI 10.17487/RFC7591, July 2015,
+              <https://www.rfc-editor.org/rfc/rfc7591>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [SASL]     Melnikov, A., Ed. and K. Zeilenga, Ed., "Simple
+              Authentication and Security Layer (SASL)", RFC 4422,
+              DOI 10.17487/RFC4422, June 2006,
+              <https://www.rfc-editor.org/rfc/rfc4422>.
+
+   [SASL-OAuth2]
+              Mills, W., Showalter, T., and H. Tschofenig, "A Set of
+              Simple Authentication and Security Layer (SASL) Mechanisms
+              for OAuth", RFC 7628, DOI 10.17487/RFC7628, August 2015,
+              <https://www.rfc-editor.org/rfc/rfc7628>.
+
+   [SCRAM]    Hansen, T., "SCRAM-SHA-256 and SCRAM-SHA-256-PLUS Simple
+              Authentication and Security Layer (SASL) Mechanisms",
+              RFC 7677, DOI 10.17487/RFC7677, November 2015,
+              <https://www.rfc-editor.org/rfc/rfc7677>.
+
+   [Sieve]    Guenther, P., Ed. and T. Showalter, Ed., "Sieve: An Email
+              Filtering Language", RFC 5228, DOI 10.17487/RFC5228,
+              January 2008, <https://www.rfc-editor.org/rfc/rfc5228>.
+
+   [SMTP]     Klensin, J., "Simple Mail Transfer Protocol", RFC 5321,
+              DOI 10.17487/RFC5321, October 2008,
+              <https://www.rfc-editor.org/rfc/rfc5321>.
+
+   [WebDAV]   Dusseault, L., Ed., "HTTP Extensions for Web Distributed
+              Authoring and Versioning (WebDAV)", RFC 4918,
+              DOI 10.17487/RFC4918, June 2007,
+              <https://www.rfc-editor.org/rfc/rfc4918>.
+
+   [XMPP]     Saint-Andre, P., "Extensible Messaging and Presence
+              Protocol (XMPP): Core", RFC 6120, DOI 10.17487/RFC6120,
+              March 2011, <https://www.rfc-editor.org/rfc/rfc6120>.
+
+   [XMPP-IM]  Saint-Andre, P., "Extensible Messaging and Presence
+              Protocol (XMPP): Instant Messaging and Presence",
+              RFC 6121, DOI 10.17487/RFC6121, March 2011,
+              <https://www.rfc-editor.org/rfc/rfc6121>.
+
+   [XMPP-WebSocket]
+              Stout, L., Ed., Moffitt, J., and E. Cestari, "An
+              Extensible Messaging and Presence Protocol (XMPP)
+              Subprotocol for WebSocket", RFC 7395,
+              DOI 10.17487/RFC7395, October 2014,
+              <https://www.rfc-editor.org/rfc/rfc7395>.
+
+11.2.  Informative References
+
+   [DNS-SRV]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
+              specifying the location of services (DNS SRV)", RFC 2782,
+              DOI 10.17487/RFC2782, February 2000,
+              <https://www.rfc-editor.org/rfc/rfc2782>.
+
+   [DNSSEC]   Hoffman, P., "DNS Security Extensions (DNSSEC)", BCP 237,
+              RFC 9364, DOI 10.17487/RFC9364, February 2023,
+              <https://www.rfc-editor.org/rfc/rfc9364>.
+
+   [Kerberos] Neuman, C., Yu, T., Hartman, S., and K. Raeburn, "The
+              Kerberos Network Authentication Service (V5)", RFC 4120,
+              DOI 10.17487/RFC4120, July 2005,
+              <https://www.rfc-editor.org/rfc/rfc4120>.
+
+   [RFC6186]  Daboo, C., "Use of SRV Records for Locating Email
+              Submission/Access Services", RFC 6186,
+              DOI 10.17487/RFC6186, March 2011,
+              <https://www.rfc-editor.org/rfc/rfc6186>.
+
+   [RFC7677]  Hansen, T., "SCRAM-SHA-256 and SCRAM-SHA-256-PLUS Simple
+              Authentication and Security Layer (SASL) Mechanisms",
+              RFC 7677, DOI 10.17487/RFC7677, November 2015,
+              <https://www.rfc-editor.org/rfc/rfc7677>.
+
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8126>.
+
+   [SSAPI]    Linn, J., "Generic Security Service Application Program
+              Interface Version 2, Update 1", RFC 2743,
+              DOI 10.17487/RFC2743, January 2000,
+              <https://www.rfc-editor.org/rfc/rfc2743>.
+
+   [XML]      Hollenbeck, S., Rose, M., and L. Masinter, "Guidelines for
+              the Use of Extensible Markup Language (XML) within IETF
+              Protocols", BCP 70, RFC 3470, DOI 10.17487/RFC3470,
+              January 2003, <https://www.rfc-editor.org/rfc/rfc3470>.
 
 Author's Address
 
