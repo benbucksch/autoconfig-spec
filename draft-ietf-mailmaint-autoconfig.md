@@ -600,7 +600,7 @@ E.g. `<authentication system="sasl">SCRAM-SHA-256-PLUS</authentication>`
 A specific SASL scheme {{!SASL=RFC4422}} MAY be specified using
 the specific SASL authentication scheme name, e.g.
 `SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}. To signal that, the
-the `<authentication>` element SHOULD have the `system` attribute set
+`<authentication>` element SHOULD have the `system` attribute set
 to value `sasl`, i.e. `<authentication system="sasl">`.
 
 In such a case, the server configuration section SHOULD also
@@ -1011,13 +1011,11 @@ end users, which may be contrary to laws in multiple countries.
 
 The OAuth2 server MUST
 
-* accept the client ID that is given in the config file, or
-* MUST allow the string `open` as client ID, or
-* MUST implement Dynamic Client Registration {{!RFC7591}} in the way
-  as defined by [OAuth2Client]
+* accept the client ID that is given in the config file, or if that is not given,
+* implement Dynamic Client Registration {{!RFC7591}} in the way
+  as defined by [OAuth2Client] and accept the resulting Client ID,
 
-and accept resulting Client ID, without client secret, or
-support multiple of those methods.
+without client secret. It MAY support multiple of those methods.
 
 The server MUST NOT employ any methods at any point to block or hinder
 clients applications that are acting on behalf of end users.
