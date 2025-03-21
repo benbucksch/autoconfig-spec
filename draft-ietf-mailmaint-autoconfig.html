@@ -2178,13 +2178,13 @@ Not supported on the Internet. Deprecated, because it breaks mobile devices.<a h
             <h5 id="name-recommending-specific-sasl-">
 <a href="#section-3.7.4.1" class="section-number selfRef">3.7.4.1. </a><a href="#name-recommending-specific-sasl-" class="section-name selfRef">Recommending specific SASL schemes</a>
             </h5>
-<p id="section-3.7.4.1-1">E.g. <code>&lt;authentication system="sasl"&gt;password-cleartext&lt;/authentication&gt;</code><a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.1-2">Additionally, a specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> may be specified using
+<p id="section-3.7.4.1-1">E.g. <code>&lt;authentication system="sasl"&gt;SCRAM-SHA-256-PLUS&lt;/authentication&gt;</code><a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.1-2">A specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> <span class="bcp14">MAY</span> be specified using
 the specific SASL authentication scheme name, e.g.
-<code>SASL SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>, and the <code>&lt;authentication&gt;</code>
-element should have the <code>system</code> attribute set to value <code>sasl</code>, i.e.
-<code>&lt;authentication system="sasl"&gt;</code>.<a href="#section-3.7.4.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.1-3">In such a case, the server config <span class="bcp14">SHOULD</span> also
+<code>SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>. To signal that, the
+the <code>&lt;authentication&gt;</code> element <span class="bcp14">SHOULD</span> have the <code>system</code> attribute set
+to value <code>sasl</code>, i.e. <code>&lt;authentication system="sasl"&gt;</code>.<a href="#section-3.7.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.1-3">In such a case, the server configuration section <span class="bcp14">SHOULD</span> also
 specify a more generic authentication mechanism as a lower priority
 alternative. That would make clients use the specific authentication
 mechanism, if they support it, and other clients will use the more generic
