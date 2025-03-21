@@ -4,8 +4,8 @@
 
 mailmaint                                                     B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                             20 March 2025
-Expires: 21 September 2025
+Intended status: Informational                             21 March 2025
+Expires: 22 September 2025
 
 
                             Mail Autoconfig
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 September 2025.
+   This Internet-Draft will expire on 22 September 2025.
 
 Copyright Notice
 
@@ -1046,8 +1046,8 @@ Table of Contents
    *  At least the second-level domain name(s) of the hostnames involved
       MUST be shown clearly and with high prominence.
 
-   *  The client MUST NOT cut off parts of long second-level domains, to
-      avoid spoofing.  At least 63 characters MUST be displayed.
+   *  To avoid spoofing, the client MUST NOT cut off parts of long
+      second-level domains.  At least 63 characters MUST be displayed.
 
    *  Care SHOULD be taken with international characters that look like
       ASCII characters, but have a different code.
@@ -1145,30 +1145,50 @@ Table of Contents
    Any of the above URLs for retrieving the config file MUST NOT require
    authentication, but MUST be public.
 
-   This is because the config contains the authentication method.
-   Without knowing the config, the client does not know which
-   authentication method is required and which username form (e.g.
-   username "fred" or "fred@example.com" or "fred\EXAMPLE") to use.
-   Given that the config is required for authentication, the config
-   itself cannot require authentication.
+   This is because the configuration information in the autoconfig file
+   includes the authentication method.  Without the autoconfig file, the
+   client does not know which authentication method is required and
+   which username form to use (e.g. username "fred" or
+   "fred@example.com" or "fred\EXAMPLE").  Given that this information
+   is required for authentication, the autoconfig file itself cannot
+   require authentication.
 
 6.5.  OAuth2 requirements
 
-   If OAuth2 is used, the provider MUST adhere to the "Open Profile for
-   Public Clients" or mAuth (https://benbucksch.github.io/mauth-spec/
-   draft-mauth.html) specification.
+   If OAuth2 is used, the OAuth2 server MUST adhere either to the OAuth
+   Profile for Open Public Clients (https://datatracker.ietf.org/doc/
+   draft-ietf-mailmaint-oauth-public/) specification specification,
+   including all SHOULD requirements stated in those.
 
-   The OAuth2 server MUST either accept the public client ID as given in
-   the config file, without secret, or MUST allow the string open as
-   client ID, or both.  The server MUST NOT employ any other methods to
-   block clients that are acting on behalf of users.
+   The provider MUST allow any client application that acts on behalf of
+   the end user who the mailbox is for.  Failure to do so implies a
+   cartell or monopolistic behavior to lock out competing email
+   applications from fulfilling their purpose on behalf of end users,
+   which may be contrary to laws in multiple countries.
 
-   The specifications also contain requirements for expiry times and the
-   login page, which are needed for mail client applications to work.
+   The OAuth2 server MUST
+
+   *  accept the client ID that is given in the config file, or
+
+   *  MUST allow the string open as client ID, or
+
+   *  MUST implement Dynamic Client Registration as defined by "OAuth
+      Profile for Open Public Clients"
+
+   and accept resulting Client ID, without client secret, or support
+   multiple of those methods.
+
+   The server MUST NOT employ any methods at any point to block or
+   hinder clients applications that are acting on behalf of end users.
+
+   The specifications above contain requirements for expiry times and
+   the login page, which are needed for mail client applications to
+   work, and MUST be followed.
 
    The OAuth2 scope MUST include all services defined in this config
-   file.  The same refresh and access token MUST be valid for all
-   services defined in the same config file, including for all URL-based
+   file, so that a single user login is sufficient for all services.
+   The resulting refresh and access tokens MUST be valid for all
+   services defined in the config file, including for all URL-based
    protocols like CalDAV and all TCP-based protocols like IMAP.
 
 7.  Alternatives considered

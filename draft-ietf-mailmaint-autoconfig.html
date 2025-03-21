@@ -1056,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bucksch</td>
-<td class="center">Expires 21 September 2025</td>
+<td class="center">Expires 22 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1069,12 +1069,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mailmaint-autoconfig-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-03-20" class="published">20 March 2025</time>
+<time datetime="2025-03-21" class="published">21 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-09-21">21 September 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-22">22 September 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1124,7 +1124,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2575,8 +2575,8 @@ let him confirm it. While doing so:<a href="#section-5.1-1" class="pilcrow">¶</
 shown clearly and with high prominence.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">The client <span class="bcp14">MUST NOT</span> cut off parts of long second-level domains, to avoid
-spoofing. At least 63 characters <span class="bcp14">MUST</span> be displayed.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1">To avoid spoofing, the client <span class="bcp14">MUST NOT</span> cut off parts of long
+second-level domains. At least 63 characters <span class="bcp14">MUST</span> be displayed.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.3">
             <p id="section-5.1-2.3.1">Care <span class="bcp14">SHOULD</span> be taken with international characters that look like ASCII
@@ -2712,12 +2712,13 @@ are indistiguishable.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-6.4-1">Any of the above URLs for retrieving the config file <span class="bcp14">MUST NOT</span>
 require authentication, but <span class="bcp14">MUST</span> be public.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
-<p id="section-6.4-2">This is because the config contains the authentication method.
-Without knowing the config, the client does not know which
-authentication method is required and which username form
-(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE")
-to use. Given that the config is required for authentication,
-the config itself cannot require authentication.<a href="#section-6.4-2" class="pilcrow">¶</a></p>
+<p id="section-6.4-2">This is because the configuration information in the autoconfig file
+includes the authentication method. Without the autoconfig file,
+the client does not know which authentication method is required and
+which username form to use
+(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE").
+Given that this information is required for authentication,
+the autoconfig file itself cannot require authentication.<a href="#section-6.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="oauth2-requirements">
@@ -2725,21 +2726,39 @@ the config itself cannot require authentication.<a href="#section-6.4-2" class="
         <h3 id="name-oauth2-requirements">
 <a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-oauth2-requirements" class="section-name selfRef">OAuth2 requirements</a>
         </h3>
-<p id="section-6.5-1">If OAuth2 is used, the provider <span class="bcp14">MUST</span> adhere to the
-"Open Profile for Public Clients" or
-<a href="https://benbucksch.github.io/mauth-spec/draft-mauth.html">mAuth</a>
-specification.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
-<p id="section-6.5-2">The OAuth2 server <span class="bcp14">MUST</span> either accept the public client ID
-as given in the config file, without secret, or <span class="bcp14">MUST</span> allow the
-string <code>open</code> as client ID, or both. The server <span class="bcp14">MUST NOT</span>
-employ any other methods to block clients that are acting on
-behalf of users.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
-<p id="section-6.5-3">The specifications also contain requirements for expiry times and
-the login page, which are needed for mail client applications to work.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
-<p id="section-6.5-4">The OAuth2 scope <span class="bcp14">MUST</span> include all services defined in this config file.
-The same refresh and access token <span class="bcp14">MUST</span> be valid for all services defined
-in the same config file, including for all URL-based protocols like CalDAV
-and all TCP-based protocols like IMAP.<a href="#section-6.5-4" class="pilcrow">¶</a></p>
+<p id="section-6.5-1">If OAuth2 is used, the OAuth2 server <span class="bcp14">MUST</span> adhere either to the
+<a href="https://datatracker.ietf.org/doc/draft-ietf-mailmaint-oauth-public/">OAuth Profile for Open Public Clients</a>
+specification specification, including all <span class="bcp14">SHOULD</span> requirements stated in those.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
+<p id="section-6.5-2">The provider <span class="bcp14">MUST</span> allow any client application that acts on behalf of the end
+user who the mailbox is for.
+Failure to do so implies a cartell or monopolistic behavior to lock out
+competing email applications from fulfilling their purpose on behalf of
+end users, which may be contrary to laws in multiple countries.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
+<p id="section-6.5-3">The OAuth2 server <span class="bcp14">MUST</span><a href="#section-6.5-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.5-4.1">
+            <p id="section-6.5-4.1.1">accept the client ID that is given in the config file, or<a href="#section-6.5-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.5-4.2">
+            <p id="section-6.5-4.2.1"><span class="bcp14">MUST</span> allow the string <code>open</code> as client ID, or<a href="#section-6.5-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.5-4.3">
+            <p id="section-6.5-4.3.1"><span class="bcp14">MUST</span> implement Dynamic Client Registration as defined by
+"OAuth Profile for Open Public Clients"<a href="#section-6.5-4.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.5-5">and accept resulting Client ID, without client secret, or
+support multiple of those methods.<a href="#section-6.5-5" class="pilcrow">¶</a></p>
+<p id="section-6.5-6">The server <span class="bcp14">MUST NOT</span> employ any methods at any point to block or hinder
+clients applications that are acting on behalf of end users.<a href="#section-6.5-6" class="pilcrow">¶</a></p>
+<p id="section-6.5-7">The specifications above contain requirements for expiry times and
+the login page, which are needed for mail client applications to work,
+and <span class="bcp14">MUST</span> be followed.<a href="#section-6.5-7" class="pilcrow">¶</a></p>
+<p id="section-6.5-8">The OAuth2 scope <span class="bcp14">MUST</span> include all services defined in this config file,
+so that a single user login is sufficient for all services.
+The resulting refresh and access tokens <span class="bcp14">MUST</span> be valid for all services defined
+in the config file, including for all URL-based protocols like CalDAV
+and all TCP-based protocols like IMAP.<a href="#section-6.5-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
