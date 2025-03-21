@@ -580,11 +580,12 @@ Table of Contents
    <authentication>OAuth2</authentication>
 
    The content of the <authentication> element defines which HTTP
-   authentication method to use.  The optional system="http" attribute
-   signals that the value refers to a WWW-Authenticate mechanism.
+   authentication method to use.  The system="http" attribute signals
+   that the value refers to a WWW-Authenticate mechanism, but the
+   attribute is optional when a https: or wss: URL is used.
 
    *  basic: Authenticate to the HTTP server using WWW-Authenticate:
-      Basic.  See [basic-Auth].
+      Basic.  See [HTTP-Basic-Auth].
 
    *  digest: Authenticate to the HTTP server using WWW-Authenticate:
       Digest.  See [HTTP-Digest-Auth]
@@ -1277,7 +1278,7 @@ Table of Contents
    So, simply attempting all methods and seeing which one works is not
    an option for the email client.
 
-   Additionally, some email servers advertize [Kerberos] / [SSAPI], but
+   Additionally, some email servers advertize [Kerberos] / [GSSAPI], but
    when trying to use it, the method fails, and also runs into a long 2
    minute timeout in some cases.  End users consider that to be a broken
    app.
@@ -1475,11 +1476,6 @@ Table of Contents
 
 11.1.  Normative References
 
-   [basic-Auth]
-              Reschke, J., "The 'Basic' HTTP Authentication Scheme",
-              RFC 7617, DOI 10.17487/RFC7617, September 2015,
-              <https://www.rfc-editor.org/rfc/rfc7617>.
-
    [CalDAV]   Daboo, C., Desruisseaux, B., and L. Dusseault,
               "Calendaring Extensions to WebDAV (CalDAV)", RFC 4791,
               DOI 10.17487/RFC4791, March 2007,
@@ -1503,6 +1499,11 @@ Table of Contents
    [EMail]    Resnick, P., Ed., "Internet Message Format", RFC 2822,
               DOI 10.17487/RFC2822, April 2001,
               <https://www.rfc-editor.org/rfc/rfc2822>.
+
+   [HTTP-Basic-Auth]
+              Reschke, J., "The 'Basic' HTTP Authentication Scheme",
+              RFC 7617, DOI 10.17487/RFC7617, September 2015,
+              <https://www.rfc-editor.org/rfc/rfc7617>.
 
    [HTTP-Digest-Auth]
               Shekh-Yusef, R., Ed., Ahrens, D., and S. Bremer, "HTTP
@@ -1668,11 +1669,6 @@ Table of Contents
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/rfc/rfc8126>.
-
-   [SSAPI]    Linn, J., "Generic Security Service Application Program
-              Interface Version 2, Update 1", RFC 2743,
-              DOI 10.17487/RFC2743, January 2000,
-              <https://www.rfc-editor.org/rfc/rfc2743>.
 
    [XML]      Hollenbeck, S., Rose, M., and L. Masinter, "Guidelines for
               the Use of Extensible Markup Language (XML) within IETF

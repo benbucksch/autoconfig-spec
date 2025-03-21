@@ -1996,12 +1996,13 @@ Some protocols may use other schemes, e.g. WebSockets <code>wss://</code>.<a hre
 <p id="section-3.6.2-1">E.g. <code>&lt;authentication system="http"&gt;basic&lt;/authentication&gt;</code> or
 <code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code><a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.6.2-2">The content of the <code>&lt;authentication&gt;</code> element defines which HTTP
-authentication method to use. The optional <code>system="http"</code> attribute
-signals that the value refers to a <code>WWW-Authenticate</code> mechanism.<a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
+authentication method to use. The <code>system="http"</code> attribute
+signals that the value refers to a <code>WWW-Authenticate</code> mechanism, but the
+attribute is optional when a https: or wss: URL is used.<a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.6.2-3.1">
               <p id="section-3.6.2-3.1.1"><code>basic</code>: Authenticate to the HTTP server using
-<code>WWW-Authenticate: Basic</code>. See <span>[<a href="#basic-Auth" class="cite xref">basic-Auth</a>]</span>.<a href="#section-3.6.2-3.1.1" class="pilcrow">¶</a></p>
+<code>WWW-Authenticate: Basic</code>. See <span>[<a href="#HTTP-Basic-Auth" class="cite xref">HTTP-Basic-Auth</a>]</span>.<a href="#section-3.6.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.6.2-3.2">
               <p id="section-3.6.2-3.2.1"><code>digest</code>: Authenticate to the HTTP server using
@@ -2879,7 +2880,7 @@ countless login attempts. Locking the account must be avoided. So, simply
 attempting all methods and seeing which one works is not an option for the
 email client.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 <p id="section-7.3-3">Additionally, some email servers advertize <span>[<a href="#Kerberos" class="cite xref">Kerberos</a>]</span> /
-<span>[<a href="#SSAPI" class="cite xref">SSAPI</a>]</span>, but when trying
+<span>[<a href="#GSSAPI" class="cite xref">GSSAPI</a>]</span>, but when trying
 to use it, the method fails, and also runs into a long 2 minute timeout in
 some cases. End users consider that to be a broken app.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
 <p id="section-7.3-4">Additionally, such commands are protocol specific and have to be implemented
@@ -3230,10 +3231,6 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
 <a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="basic-Auth">[basic-Auth]</dt>
-        <dd>
-<span class="refAuthor">Reschke, J.</span>, <span class="refTitle">"The 'Basic' HTTP Authentication Scheme"</span>, <span class="seriesInfo">RFC 7617</span>, <span class="seriesInfo">DOI 10.17487/RFC7617</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7617">https://www.rfc-editor.org/rfc/rfc7617</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="CalDAV">[CalDAV]</dt>
         <dd>
 <span class="refAuthor">Daboo, C.</span>, <span class="refAuthor">Desruisseaux, B.</span>, and <span class="refAuthor">L. Dusseault</span>, <span class="refTitle">"Calendaring Extensions to WebDAV (CalDAV)"</span>, <span class="seriesInfo">RFC 4791</span>, <span class="seriesInfo">DOI 10.17487/RFC4791</span>, <time datetime="2007-03" class="refDate">March 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4791">https://www.rfc-editor.org/rfc/rfc4791</a>&gt;</span>. </dd>
@@ -3253,6 +3250,10 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
 <dt id="EMail">[EMail]</dt>
         <dd>
 <span class="refAuthor">Resnick, P., Ed.</span>, <span class="refTitle">"Internet Message Format"</span>, <span class="seriesInfo">RFC 2822</span>, <span class="seriesInfo">DOI 10.17487/RFC2822</span>, <time datetime="2001-04" class="refDate">April 2001</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2822">https://www.rfc-editor.org/rfc/rfc2822</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="HTTP-Basic-Auth">[HTTP-Basic-Auth]</dt>
+        <dd>
+<span class="refAuthor">Reschke, J.</span>, <span class="refTitle">"The 'Basic' HTTP Authentication Scheme"</span>, <span class="seriesInfo">RFC 7617</span>, <span class="seriesInfo">DOI 10.17487/RFC7617</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7617">https://www.rfc-editor.org/rfc/rfc7617</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="HTTP-Digest-Auth">[HTTP-Digest-Auth]</dt>
         <dd>
@@ -3394,10 +3395,6 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
 <dt id="RFC8126">[RFC8126]</dt>
         <dd>
 <span class="refAuthor">Cotton, M.</span>, <span class="refAuthor">Leiba, B.</span>, and <span class="refAuthor">T. Narten</span>, <span class="refTitle">"Guidelines for Writing an IANA Considerations Section in RFCs"</span>, <span class="seriesInfo">BCP 26</span>, <span class="seriesInfo">RFC 8126</span>, <span class="seriesInfo">DOI 10.17487/RFC8126</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8126">https://www.rfc-editor.org/rfc/rfc8126</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="SSAPI">[SSAPI]</dt>
-        <dd>
-<span class="refAuthor">Linn, J.</span>, <span class="refTitle">"Generic Security Service Application Program Interface Version 2, Update 1"</span>, <span class="seriesInfo">RFC 2743</span>, <span class="seriesInfo">DOI 10.17487/RFC2743</span>, <time datetime="2000-01" class="refDate">January 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2743">https://www.rfc-editor.org/rfc/rfc2743</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="XML">[XML]</dt>
       <dd>
