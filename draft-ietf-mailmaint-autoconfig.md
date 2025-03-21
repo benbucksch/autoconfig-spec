@@ -185,19 +185,19 @@ The following example shows the syntax of the XML config file.
         <incomingServer type="jmap">
           <url>https://jmap.example.com</url>
             <!-- Authentication methods
-            "http-basic": RFC 7617
-            "http-digest"
+            "basic": RFC 7617
+            "digest": RFC 7616
             "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
             -->
           <authentication>OAuth2</authentication>
-          <authentication>http-basic</authentication>
+          <authentication>basic</authentication>
           <username>%EMAILADDRESS%</username>
         </incomingServer>
 
         <incomingServer type="ews">
           <url>https://mail.example.com/EWS/Exchange.asmx</url>
           <username>%EMAILADDRESS%</username>
-          <authentication>http-basic</authentication>
+          <authentication>basic</authentication>
         </incomingServer>
 
         <incomingServer type="activesync">
@@ -215,13 +215,13 @@ The following example shows the syntax of the XML config file.
 
       <addressbook type="carddav">
         <url>https://contacts.example.com/remote.php/dav</url>
-        <authentication>http-basic</authentication>
+        <authentication>basic</authentication>
         <username>%EMAILADDRESS%</username>
       </addressbook>
 
       <calendar type="caldav">
         <url>https://calendar.example.com/remote.php/dav</url>
-        <authentication>http-basic</authentication>
+        <authentication>basic</authentication>
         <username>%EMAILADDRESS%</username>
       </calendar>
 
@@ -231,13 +231,13 @@ The following example shows the syntax of the XML config file.
         -->
       <fileShare type="webdav">
         <url>https://share.example.com/remote.php/dav</url>
-        <authentication>http-basic</authentication>
+        <authentication>basic</authentication>
         <username>%EMAILADDRESS%</username>
       </fileShare>
 
       <chatServer type="xmpp">
         <url>wss://example.com:5281/xmpp-websocket</url>
-        <authentication>http-basic</authentication>
+        <authentication>basic</authentication>
         <username>%EMAILADDRESS%</username>
       </chatServer>
 
@@ -443,7 +443,7 @@ E.g.
 
     <incomingServer type="jmap">
       <url>https://jmap.example.com/session</url>
-      <authentication>http-basic</authentication>
+      <authentication>basic</authentication>
       <username>%EMAILADDRESS%</username>
     </incomingServer>
 
@@ -462,19 +462,24 @@ Some protocols may use other schemes, e.g. WebSockets `wss://`.
 
 ### authentication
 
-E.g. `<authentication>http-basic</authentication>`
+E.g. `<authentication system="http">basic</authentication>` or
+`<authentication>OAuth2</authentication>`
 
 The content of the `<authentication>` element defines which HTTP
-authentication method to use.
+authentication method to use. The optional `system="http"` attribute
+signals that the value refers to a `WWW-Authenticate` mechanism.
 
-* `http-basic`: Authenticate to the HTTP server using
-  `WWW-Authenticate: Basic`. See {{!HTTP-Basic-Auth=RFC7617}}.
-* `http-digest`: Authenticate to the HTTP server using
+* `basic`: Authenticate to the HTTP server using
+  `WWW-Authenticate: Basic`. See {{!basic-Auth=RFC7617}}.
+* `digest`: Authenticate to the HTTP server using
   `WWW-Authenticate: Digest`. See {{!HTTP-Digest-Auth=RFC7616}}
-* `OAuth`: Authenticate to the HTTP server using
+* `OAuth2`: Authenticate to the HTTP server using
   `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750}} Section 3.
   The provider MUST adhere to the requirements defined in section OAuth2
   in this specification.
+  Note: The XML element for OAuth2 is
+  `<authentication>OAuth2</authentication>` without system attribute.
+  `<authentication system="http">Bearer</authentication>` is invalid.
 
 The rules as specified in sections "Multiple authentication alternatives" and
 "Authentication verification and fallback" apply here as well.
@@ -590,10 +595,15 @@ protocol, or a SASL scheme, or a successor to SASL.
 
 #### Recommending specific SASL schemes
 
+E.g. `<authentication system="sasl">password-cleartext</authentication>`
+
 Additionally, a specific SASL scheme {{!SASL=RFC4422}} may be specified using
-`SASL`, a space, and the specific SASL authentication scheme name, e.g.
-`SASL SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}. In such a case, the server config
-SHOULD also
+the specific SASL authentication scheme name, e.g.
+`SASL SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}, and the `<authentication>`
+element should have the `system` attribute set to value `sasl`, i.e.
+`<authentication system="sasl">`.
+
+In such a case, the server config SHOULD also
 specify a more generic authentication mechanism as a lower priority
 alternative. That would make clients use the specific authentication
 mechanism, if they support it, and other clients will use the more generic
