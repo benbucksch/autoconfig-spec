@@ -2078,14 +2078,15 @@ the wire protocol and socketType.<a href="#section-3.7.2-2" class="pilcrow">¶</
 STARTTLS, or none of these.<a href="#section-3.7.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7.3-3.1">
-              <p id="section-3.7.3-3.1.1"><code>SSL</code>: Directly contact the TCP port using TLS. TLS version 1.2 <span>[<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>
+              <p id="section-3.7.3-3.1.1"><code>SSL</code>: Directly contact the TCP port using TLS. TLS version 1.2
+<span>[<a href="#TLSv1.2" class="cite xref">TLSv1.2</a>]</span>
 or higher <span class="bcp14">SHOULD</span> be used. Higher versions may be required based on security
 situation, server support, and client policy decisions.<a href="#section-3.7.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.3-3.2">
               <p id="section-3.7.3-3.2.1"><code>STARTTLS</code>: Contact the TCP port first using an unencrypted plain socket,
 then upgrade to TLS using the protocol-specific STARTTLS specification
-<span>[<a href="#RFC2595" class="cite xref">RFC2595</a>]</span>. With this configuration,
+<span>[<a href="#STARTTLS" class="cite xref">STARTTLS</a>]</span>. With this configuration,
 STARTTLS <span class="bcp14">MUST</span> be used and TLS <span class="bcp14">MUST</span> be used after the STARTTLS upgrade. If
 the upgrade to TLS fails for whatever reason, the client <span class="bcp14">MUST</span>
 disconnect and <span class="bcp14">MUST NOT</span> try to authenticate. This prevents downgrade attacks
@@ -2146,7 +2147,7 @@ TLS by itself does not qualify as "password-encrypted".<a href="#section-3.7.4-3
               <p id="section-3.7.4-3.3.1"><code>NTLM</code>: Legacy Windows login mechanisms NTLM or NTLMv2.<a href="#section-3.7.4-3.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-3.4">
-              <p id="section-3.7.4-3.4.1"><code>GSSAPI</code>: <span>[<a href="#Kerberos" class="cite xref">Kerberos</a>]</span> or <span>[<a href="#SSAPI" class="cite xref">SSAPI</a>]</span>,
+              <p id="section-3.7.4-3.4.1"><code>GSSAPI</code>: <span>[<a href="#Kerberos" class="cite xref">Kerberos</a>]</span> or <span>[<a href="#GSSAPI" class="cite xref">GSSAPI</a>]</span>,
  a single-signon mechanism based on TCP.<a href="#section-3.7.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-3.5">
@@ -2174,7 +2175,7 @@ Not supported on the Internet. Deprecated, because it breaks mobile devices.<a h
             </h5>
 <p id="section-3.7.4.1-1">Additionally, a specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> may be specified using
 <code>SASL</code>, a space, and the specific SASL authentication scheme name, e.g.
-<code>SASL SCRAM-SHA-256-PLUS</code> <span>[<a href="#RFC7677" class="cite xref">RFC7677</a>]</span>. In such a case, the server config
+<code>SASL SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>. In such a case, the server config
 <span class="bcp14">SHOULD</span> also
 specify a more generic authentication mechanism as a lower priority
 alternative. That would make clients use the specific authentication
@@ -3301,14 +3302,6 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC2595">[RFC2595]</dt>
-        <dd>
-<span class="refAuthor">Newman, C.</span>, <span class="refTitle">"Using TLS with IMAP, POP3 and ACAP"</span>, <span class="seriesInfo">RFC 2595</span>, <span class="seriesInfo">DOI 10.17487/RFC2595</span>, <time datetime="1999-06" class="refDate">June 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2595">https://www.rfc-editor.org/rfc/rfc2595</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC5246">[RFC5246]</dt>
-        <dd>
-<span class="refAuthor">Dierks, T.</span> and <span class="refAuthor">E. Rescorla</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.2"</span>, <span class="seriesInfo">RFC 5246</span>, <span class="seriesInfo">DOI 10.17487/RFC5246</span>, <time datetime="2008-08" class="refDate">August 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5246">https://www.rfc-editor.org/rfc/rfc5246</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC7591">[RFC7591]</dt>
         <dd>
 <span class="refAuthor">Richer, J., Ed.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Machulak, M.</span>, and <span class="refAuthor">P. Hunt</span>, <span class="refTitle">"OAuth 2.0 Dynamic Client Registration Protocol"</span>, <span class="seriesInfo">RFC 7591</span>, <span class="seriesInfo">DOI 10.17487/RFC7591</span>, <time datetime="2015-07" class="refDate">July 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7591">https://www.rfc-editor.org/rfc/rfc7591</a>&gt;</span>. </dd>
@@ -3336,6 +3329,14 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
 <dt id="SMTP">[SMTP]</dt>
         <dd>
 <span class="refAuthor">Klensin, J.</span>, <span class="refTitle">"Simple Mail Transfer Protocol"</span>, <span class="seriesInfo">RFC 5321</span>, <span class="seriesInfo">DOI 10.17487/RFC5321</span>, <time datetime="2008-10" class="refDate">October 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5321">https://www.rfc-editor.org/rfc/rfc5321</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="STARTTLS">[STARTTLS]</dt>
+        <dd>
+<span class="refAuthor">Newman, C.</span>, <span class="refTitle">"Using TLS with IMAP, POP3 and ACAP"</span>, <span class="seriesInfo">RFC 2595</span>, <span class="seriesInfo">DOI 10.17487/RFC2595</span>, <time datetime="1999-06" class="refDate">June 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2595">https://www.rfc-editor.org/rfc/rfc2595</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TLSv1.2">[TLSv1.2]</dt>
+        <dd>
+<span class="refAuthor">Dierks, T.</span> and <span class="refAuthor">E. Rescorla</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.2"</span>, <span class="seriesInfo">RFC 5246</span>, <span class="seriesInfo">DOI 10.17487/RFC5246</span>, <time datetime="2008-08" class="refDate">August 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5246">https://www.rfc-editor.org/rfc/rfc5246</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WebDAV">[WebDAV]</dt>
         <dd>
@@ -3370,6 +3371,10 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
         <dd>
 <span class="refAuthor">Hoffman, P.</span>, <span class="refTitle">"DNS Security Extensions (DNSSEC)"</span>, <span class="seriesInfo">BCP 237</span>, <span class="seriesInfo">RFC 9364</span>, <span class="seriesInfo">DOI 10.17487/RFC9364</span>, <time datetime="2023-02" class="refDate">February 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9364">https://www.rfc-editor.org/rfc/rfc9364</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="GSSAPI">[GSSAPI]</dt>
+        <dd>
+<span class="refAuthor">Linn, J.</span>, <span class="refTitle">"Generic Security Service Application Program Interface Version 2, Update 1"</span>, <span class="seriesInfo">RFC 2743</span>, <span class="seriesInfo">DOI 10.17487/RFC2743</span>, <time datetime="2000-01" class="refDate">January 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2743">https://www.rfc-editor.org/rfc/rfc2743</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="Kerberos">[Kerberos]</dt>
         <dd>
 <span class="refAuthor">Neuman, C.</span>, <span class="refAuthor">Yu, T.</span>, <span class="refAuthor">Hartman, S.</span>, and <span class="refAuthor">K. Raeburn</span>, <span class="refTitle">"The Kerberos Network Authentication Service (V5)"</span>, <span class="seriesInfo">RFC 4120</span>, <span class="seriesInfo">DOI 10.17487/RFC4120</span>, <time datetime="2005-07" class="refDate">July 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4120">https://www.rfc-editor.org/rfc/rfc4120</a>&gt;</span>. </dd>
@@ -3377,10 +3382,6 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
 <dt id="RFC6186">[RFC6186]</dt>
         <dd>
 <span class="refAuthor">Daboo, C.</span>, <span class="refTitle">"Use of SRV Records for Locating Email Submission/Access Services"</span>, <span class="seriesInfo">RFC 6186</span>, <span class="seriesInfo">DOI 10.17487/RFC6186</span>, <time datetime="2011-03" class="refDate">March 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6186">https://www.rfc-editor.org/rfc/rfc6186</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC7677">[RFC7677]</dt>
-        <dd>
-<span class="refAuthor">Hansen, T.</span>, <span class="refTitle">"SCRAM-SHA-256 and SCRAM-SHA-256-PLUS Simple Authentication and Security Layer (SASL) Mechanisms"</span>, <span class="seriesInfo">RFC 7677</span>, <span class="seriesInfo">DOI 10.17487/RFC7677</span>, <time datetime="2015-11" class="refDate">November 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7677">https://www.rfc-editor.org/rfc/rfc7677</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8126">[RFC8126]</dt>
         <dd>

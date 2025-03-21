@@ -640,13 +640,13 @@ Table of Contents
    direct TLS, STARTTLS, or none of these.
 
    *  SSL: Directly contact the TCP port using TLS.  TLS version 1.2
-      [RFC5246] or higher SHOULD be used.  Higher versions may be
+      [TLSv1.2] or higher SHOULD be used.  Higher versions may be
       required based on security situation, server support, and client
       policy decisions.
 
    *  STARTTLS: Contact the TCP port first using an unencrypted plain
       socket, then upgrade to TLS using the protocol-specific STARTTLS
-      specification [RFC2595].  With this configuration, STARTTLS MUST
+      specification [STARTTLS].  With this configuration, STARTTLS MUST
       be used and TLS MUST be used after the STARTTLS upgrade.  If the
       upgrade to TLS fails for whatever reason, the client MUST
       disconnect and MUST NOT try to authenticate.  This prevents
@@ -696,7 +696,7 @@ Table of Contents
 
    *  NTLM: Legacy Windows login mechanisms NTLM or NTLMv2.
 
-   *  GSSAPI: [Kerberos] or [SSAPI], a single-signon mechanism based on
+   *  GSSAPI: [Kerberos] or [GSSAPI], a single-signon mechanism based on
       TCP.
 
    *  TLS-client-cert: On the SSL/TLS layer, after server request, the
@@ -718,7 +718,7 @@ Table of Contents
 
    Additionally, a specific SASL scheme [SASL] may be specified using
    SASL, a space, and the specific SASL authentication scheme name, e.g.
-   SASL SCRAM-SHA-256-PLUS [RFC7677].  In such a case, the server config
+   SASL SCRAM-SHA-256-PLUS [SCRAM].  In such a case, the server config
    SHOULD also specify a more generic authentication mechanism as a
    lower priority alternative.  That would make clients use the specific
    authentication mechanism, if they support it, and other clients will
@@ -1564,15 +1564,6 @@ Table of Contents
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
-   [RFC2595]  Newman, C., "Using TLS with IMAP, POP3 and ACAP",
-              RFC 2595, DOI 10.17487/RFC2595, June 1999,
-              <https://www.rfc-editor.org/rfc/rfc2595>.
-
-   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.2", RFC 5246,
-              DOI 10.17487/RFC5246, August 2008,
-              <https://www.rfc-editor.org/rfc/rfc5246>.
-
    [RFC7591]  Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and
               P. Hunt, "OAuth 2.0 Dynamic Client Registration Protocol",
               RFC 7591, DOI 10.17487/RFC7591, July 2015,
@@ -1606,6 +1597,15 @@ Table of Contents
               DOI 10.17487/RFC5321, October 2008,
               <https://www.rfc-editor.org/rfc/rfc5321>.
 
+   [STARTTLS] Newman, C., "Using TLS with IMAP, POP3 and ACAP",
+              RFC 2595, DOI 10.17487/RFC2595, June 1999,
+              <https://www.rfc-editor.org/rfc/rfc2595>.
+
+   [TLSv1.2]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", RFC 5246,
+              DOI 10.17487/RFC5246, August 2008,
+              <https://www.rfc-editor.org/rfc/rfc5246>.
+
    [WebDAV]   Dusseault, L., Ed., "HTTP Extensions for Web Distributed
               Authoring and Versioning (WebDAV)", RFC 4918,
               DOI 10.17487/RFC4918, June 2007,
@@ -1638,6 +1638,11 @@ Table of Contents
               RFC 9364, DOI 10.17487/RFC9364, February 2023,
               <https://www.rfc-editor.org/rfc/rfc9364>.
 
+   [GSSAPI]   Linn, J., "Generic Security Service Application Program
+              Interface Version 2, Update 1", RFC 2743,
+              DOI 10.17487/RFC2743, January 2000,
+              <https://www.rfc-editor.org/rfc/rfc2743>.
+
    [Kerberos] Neuman, C., Yu, T., Hartman, S., and K. Raeburn, "The
               Kerberos Network Authentication Service (V5)", RFC 4120,
               DOI 10.17487/RFC4120, July 2005,
@@ -1647,11 +1652,6 @@ Table of Contents
               Submission/Access Services", RFC 6186,
               DOI 10.17487/RFC6186, March 2011,
               <https://www.rfc-editor.org/rfc/rfc6186>.
-
-   [RFC7677]  Hansen, T., "SCRAM-SHA-256 and SCRAM-SHA-256-PLUS Simple
-              Authentication and Security Layer (SASL) Mechanisms",
-              RFC 7677, DOI 10.17487/RFC7677, November 2015,
-              <https://www.rfc-editor.org/rfc/rfc7677>.
 
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
