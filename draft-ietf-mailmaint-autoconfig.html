@@ -1519,19 +1519,19 @@ resulting document <span class="bcp14">MUST</span> have the following data forma
     &lt;incomingServer type="jmap"&gt;
       &lt;url&gt;https://jmap.example.com&lt;/url&gt;
         &lt;!-- Authentication methods
-        "http-basic": RFC 7617
-        "http-digest"
+        "basic": RFC 7617
+        "digest": RFC 7616
         "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
         --&gt;
       &lt;authentication&gt;OAuth2&lt;/authentication&gt;
-      &lt;authentication&gt;http-basic&lt;/authentication&gt;
+      &lt;authentication&gt;basic&lt;/authentication&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
     &lt;/incomingServer&gt;
 
     &lt;incomingServer type="ews"&gt;
       &lt;url&gt;https://mail.example.com/EWS/Exchange.asmx&lt;/url&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;authentication&gt;http-basic&lt;/authentication&gt;
+      &lt;authentication&gt;basic&lt;/authentication&gt;
     &lt;/incomingServer&gt;
 
     &lt;incomingServer type="activesync"&gt;
@@ -1549,13 +1549,13 @@ resulting document <span class="bcp14">MUST</span> have the following data forma
 
   &lt;addressbook type="carddav"&gt;
     &lt;url&gt;https://contacts.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;authentication&gt;basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/addressbook&gt;
 
   &lt;calendar type="caldav"&gt;
     &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;authentication&gt;basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/calendar&gt;
 
@@ -1565,13 +1565,13 @@ resulting document <span class="bcp14">MUST</span> have the following data forma
     --&gt;
   &lt;fileShare type="webdav"&gt;
     &lt;url&gt;https://share.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;authentication&gt;basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/fileShare&gt;
 
   &lt;chatServer type="xmpp"&gt;
     &lt;url&gt;wss://example.com:5281/xmpp-websocket&lt;/url&gt;
-    &lt;authentication&gt;http-basic&lt;/authentication&gt;
+    &lt;authentication&gt;basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/chatServer&gt;
 
@@ -1665,7 +1665,7 @@ valid for all of these domains. Their order has no meaning - you may sort them
 by number of users, importance to the provider, or alphabethically.<a href="#section-3.2.3-4" class="pilcrow">¶</a></p>
 <p id="section-3.2.3-5">A <code>&lt;domain purpose="mx"&gt;</code> specifies the domain name of the MX server of
 the email address, and is used config file lookup using MX
-server names, as specified in section MX. The <code>purpose</code> property is
+server names, as specified in section MX. The <code>purpose</code> attribute is
 mainly informational and may be ignored.<a href="#section-3.2.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1710,11 +1710,11 @@ characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 charact
 server settings. The config may be based on that page, but does not
 necessarily have to match it, e.g. when a better config is available
 than the one described on the webpage.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.3-5">The <code>url</code> property contains the URL of the webpage. The <code>&lt;descr&gt;</code>
+<p id="section-3.3-5">The <code>url</code> attribute contains the URL of the webpage. The <code>&lt;descr&gt;</code>
 content describes the content and purpose of the page and why it's
 referenced here.
-Multiple <code>&lt;descr&gt;</code> elements with different <code>lang</code> properties are
-allowed, whereby the <code>lang</code> property contains the 2-letter ISO language
+Multiple <code>&lt;descr&gt;</code> elements with different <code>lang</code> attributes are
+allowed, whereby the <code>lang</code> attribute contains the 2-letter ISO language
 code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1726,7 +1726,7 @@ code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-5" class="
 <p id="section-3.4-1">E.g. <code>&lt;incomingServer type="jmap"&gt;</code> or <code>&lt;calendar type="carddav"&gt;</code><a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-2.1">
-            <p id="section-3.4-2.1.1">The <code>type</code> property specifies the wire protocol that this server uses. See
+            <p id="section-3.4-2.1.1">The <code>type</code> attribute specifies the wire protocol that this server uses. See
 section type below.<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-2.2">
@@ -1793,7 +1793,7 @@ is no supported and working config found.<a href="#section-3.4.1-3" class="pilcr
         <h3 id="name-type">
 <a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-type" class="section-name selfRef">type</a>
         </h3>
-<p id="section-3.5-1">The <code>type</code> property on the server section element specifies the
+<p id="section-3.5-1">The <code>type</code> attribute on the server section element specifies the
 wire protocol that this server uses.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
           <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
@@ -1969,7 +1969,7 @@ corresponding section below.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 <pre>
 &lt;incomingServer type="jmap"&gt;
   &lt;url&gt;https://jmap.example.com/session&lt;/url&gt;
-  &lt;authentication&gt;http-basic&lt;/authentication&gt;
+  &lt;authentication&gt;basic&lt;/authentication&gt;
   &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
 &lt;/incomingServer&gt;
 </pre><a href="#section-3.6-2" class="pilcrow">¶</a>
@@ -1993,23 +1993,28 @@ Some protocols may use other schemes, e.g. WebSockets <code>wss://</code>.<a hre
           <h4 id="name-authentication">
 <a href="#section-3.6.2" class="section-number selfRef">3.6.2. </a><a href="#name-authentication" class="section-name selfRef">authentication</a>
           </h4>
-<p id="section-3.6.2-1">E.g. <code>&lt;authentication&gt;http-basic&lt;/authentication&gt;</code><a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-1">E.g. <code>&lt;authentication system="http"&gt;basic&lt;/authentication&gt;</code> or
+<code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code><a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.6.2-2">The content of the <code>&lt;authentication&gt;</code> element defines which HTTP
-authentication method to use.<a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
+authentication method to use. The optional <code>system="http"</code> attribute
+signals that the value refers to a <code>WWW-Authenticate</code> mechanism.<a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.6.2-3.1">
-              <p id="section-3.6.2-3.1.1"><code>http-basic</code>: Authenticate to the HTTP server using
-<code>WWW-Authenticate: Basic</code>. See <span>[<a href="#HTTP-Basic-Auth" class="cite xref">HTTP-Basic-Auth</a>]</span>.<a href="#section-3.6.2-3.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.6.2-3.1.1"><code>basic</code>: Authenticate to the HTTP server using
+<code>WWW-Authenticate: Basic</code>. See <span>[<a href="#basic-Auth" class="cite xref">basic-Auth</a>]</span>.<a href="#section-3.6.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.6.2-3.2">
-              <p id="section-3.6.2-3.2.1"><code>http-digest</code>: Authenticate to the HTTP server using
+              <p id="section-3.6.2-3.2.1"><code>digest</code>: Authenticate to the HTTP server using
 <code>WWW-Authenticate: Digest</code>. See <span>[<a href="#HTTP-Digest-Auth" class="cite xref">HTTP-Digest-Auth</a>]</span><a href="#section-3.6.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.6.2-3.3">
-              <p id="section-3.6.2-3.3.1"><code>OAuth</code>: Authenticate to the HTTP server using
+              <p id="section-3.6.2-3.3.1"><code>OAuth2</code>: Authenticate to the HTTP server using
 <code>WWW-Authenticate: Bearer</code>. See <span>[<a href="#OAuth2" class="cite xref">OAuth2</a>]</span> Section 3.
 The provider <span class="bcp14">MUST</span> adhere to the requirements defined in section OAuth2
-in this specification.<a href="#section-3.6.2-3.3.1" class="pilcrow">¶</a></p>
+in this specification.
+Note: The XML element for OAuth2 is
+<code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code> without system attribute.
+<code>&lt;authentication system="http"&gt;Bearer&lt;/authentication&gt;</code> is invalid.<a href="#section-3.6.2-3.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-3.6.2-4">The rules as specified in sections "Multiple authentication alternatives" and
@@ -2173,14 +2178,17 @@ Not supported on the Internet. Deprecated, because it breaks mobile devices.<a h
             <h5 id="name-recommending-specific-sasl-">
 <a href="#section-3.7.4.1" class="section-number selfRef">3.7.4.1. </a><a href="#name-recommending-specific-sasl-" class="section-name selfRef">Recommending specific SASL schemes</a>
             </h5>
-<p id="section-3.7.4.1-1">Additionally, a specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> may be specified using
-<code>SASL</code>, a space, and the specific SASL authentication scheme name, e.g.
-<code>SASL SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>. In such a case, the server config
-<span class="bcp14">SHOULD</span> also
+<p id="section-3.7.4.1-1">E.g. <code>&lt;authentication system="sasl"&gt;password-cleartext&lt;/authentication&gt;</code><a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.1-2">Additionally, a specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> may be specified using
+the specific SASL authentication scheme name, e.g.
+<code>SASL SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>, and the <code>&lt;authentication&gt;</code>
+element should have the <code>system</code> attribute set to value <code>sasl</code>, i.e.
+<code>&lt;authentication system="sasl"&gt;</code>.<a href="#section-3.7.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.1-3">In such a case, the server config <span class="bcp14">SHOULD</span> also
 specify a more generic authentication mechanism as a lower priority
 alternative. That would make clients use the specific authentication
 mechanism, if they support it, and other clients will use the more generic
-authentication mechanism.<a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
+authentication mechanism.<a href="#section-3.7.4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="multiple-authentication-alternatives">
@@ -2322,15 +2330,15 @@ replaced by the client, before the value is actually used.<a href="#section-3.8-
 <p id="section-3.9-1">The client <span class="bcp14">SHOULD</span> validate that the config file is valid XML, and if
 the XML syntax is invalid, the client <span class="bcp14">SHOULD</span> ignore the entire file. In
 contrast, if there are merely unknown elements or
-properties, the client <span class="bcp14">MUST NOT</span> ignore the file.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
+attributes, the client <span class="bcp14">MUST NOT</span> ignore the file.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
 <p id="section-3.9-2">The client <span class="bcp14">SHOULD</span> read only the elements and attributes that are
 supported by the client, and <span class="bcp14">MUST</span> ignore the others that are unknown
 to the client.<a href="#section-3.9-2" class="pilcrow">¶</a></p>
 <p id="section-3.9-3">The client may optionally want to validate the XML before parsing it.
 This is not required. If the client choses to validate, the validation
-<span class="bcp14">MUST</span> ignore unknown elements and properties and <span class="bcp14">MUST NOT</span>
+<span class="bcp14">MUST</span> ignore unknown elements and attributes and <span class="bcp14">MUST NOT</span>
 drop or ignore a configuration that contains unknown elements and
-properties. This is required to allow future extensions of the format
+attributes. This is required to allow future extensions of the format
 without breaking existing clients.<a href="#section-3.9-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3015,7 +3023,7 @@ validated.<a href="#section-8.5-2" class="pilcrow">¶</a></p>
             <p id="section-9.2-3.1.1">Element: The XML element wrapping the server section.<a href="#section-9.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-9.2-3.2">
-            <p id="section-9.2-3.2.1">Type: The <code>type</code> property value of the server section.<a href="#section-9.2-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-9.2-3.2.1">Type: The <code>type</code> attribute value of the server section.<a href="#section-9.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-9.2-3.3">
             <p id="section-9.2-3.3.1">Base: Whether the protocol is URL-based or TCP-based,<a href="#section-9.2-3.3.1" class="pilcrow">¶</a></p>
@@ -3222,6 +3230,10 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
 <a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
+<dt id="basic-Auth">[basic-Auth]</dt>
+        <dd>
+<span class="refAuthor">Reschke, J.</span>, <span class="refTitle">"The 'Basic' HTTP Authentication Scheme"</span>, <span class="seriesInfo">RFC 7617</span>, <span class="seriesInfo">DOI 10.17487/RFC7617</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7617">https://www.rfc-editor.org/rfc/rfc7617</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="CalDAV">[CalDAV]</dt>
         <dd>
 <span class="refAuthor">Daboo, C.</span>, <span class="refAuthor">Desruisseaux, B.</span>, and <span class="refAuthor">L. Dusseault</span>, <span class="refTitle">"Calendaring Extensions to WebDAV (CalDAV)"</span>, <span class="seriesInfo">RFC 4791</span>, <span class="seriesInfo">DOI 10.17487/RFC4791</span>, <time datetime="2007-03" class="refDate">March 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4791">https://www.rfc-editor.org/rfc/rfc4791</a>&gt;</span>. </dd>
@@ -3241,10 +3253,6 @@ appear in all capitals, as shown here.<a href="#section-10-1" class="pilcrow">¶
 <dt id="EMail">[EMail]</dt>
         <dd>
 <span class="refAuthor">Resnick, P., Ed.</span>, <span class="refTitle">"Internet Message Format"</span>, <span class="seriesInfo">RFC 2822</span>, <span class="seriesInfo">DOI 10.17487/RFC2822</span>, <time datetime="2001-04" class="refDate">April 2001</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2822">https://www.rfc-editor.org/rfc/rfc2822</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="HTTP-Basic-Auth">[HTTP-Basic-Auth]</dt>
-        <dd>
-<span class="refAuthor">Reschke, J.</span>, <span class="refTitle">"The 'Basic' HTTP Authentication Scheme"</span>, <span class="seriesInfo">RFC 7617</span>, <span class="seriesInfo">DOI 10.17487/RFC7617</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7617">https://www.rfc-editor.org/rfc/rfc7617</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="HTTP-Digest-Auth">[HTTP-Digest-Auth]</dt>
         <dd>

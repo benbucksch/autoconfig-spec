@@ -262,19 +262,19 @@ Table of Contents
     <incomingServer type="jmap">
       <url>https://jmap.example.com</url>
         <!-- Authentication methods
-        "http-basic": RFC 7617
-        "http-digest"
+        "basic": RFC 7617
+        "digest": RFC 7616
         "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
         -->
       <authentication>OAuth2</authentication>
-      <authentication>http-basic</authentication>
+      <authentication>basic</authentication>
       <username>%EMAILADDRESS%</username>
     </incomingServer>
 
     <incomingServer type="ews">
       <url>https://mail.example.com/EWS/Exchange.asmx</url>
       <username>%EMAILADDRESS%</username>
-      <authentication>http-basic</authentication>
+      <authentication>basic</authentication>
     </incomingServer>
 
     <incomingServer type="activesync">
@@ -292,13 +292,13 @@ Table of Contents
 
   <addressbook type="carddav">
     <url>https://contacts.example.com/remote.php/dav</url>
-    <authentication>http-basic</authentication>
+    <authentication>basic</authentication>
     <username>%EMAILADDRESS%</username>
   </addressbook>
 
   <calendar type="caldav">
     <url>https://calendar.example.com/remote.php/dav</url>
-    <authentication>http-basic</authentication>
+    <authentication>basic</authentication>
     <username>%EMAILADDRESS%</username>
   </calendar>
 
@@ -308,13 +308,13 @@ Table of Contents
     -->
   <fileShare type="webdav">
     <url>https://share.example.com/remote.php/dav</url>
-    <authentication>http-basic</authentication>
+    <authentication>basic</authentication>
     <username>%EMAILADDRESS%</username>
   </fileShare>
 
   <chatServer type="xmpp">
     <url>wss://example.com:5281/xmpp-websocket</url>
-    <authentication>http-basic</authentication>
+    <authentication>basic</authentication>
     <username>%EMAILADDRESS%</username>
   </chatServer>
 
@@ -398,7 +398,7 @@ Table of Contents
 
    A <domain purpose="mx"> specifies the domain name of the MX server of
    the email address, and is used config file lookup using MX server
-   names, as specified in section MX.  The purpose property is mainly
+   names, as specified in section MX.  The purpose attribute is mainly
    informational and may be ignored.
 
 3.2.4.  displayName and displayShortName
@@ -433,17 +433,17 @@ Table of Contents
    necessarily have to match it, e.g. when a better config is available
    than the one described on the webpage.
 
-   The url property contains the URL of the webpage.  The <descr>
+   The url attribute contains the URL of the webpage.  The <descr>
    content describes the content and purpose of the page and why it's
    referenced here.  Multiple <descr> elements with different lang
-   properties are allowed, whereby the lang property contains the
+   attributes are allowed, whereby the lang attribute contains the
    2-letter ISO language code, like the HTML lang attribute.
 
 3.4.  Server sections
 
    E.g. <incomingServer type="jmap"> or <calendar type="carddav">
 
-   *  The type property specifies the wire protocol that this server
+   *  The type attribute specifies the wire protocol that this server
       uses.  See section type below.
 
    *  <incomingServer> specifies the server that the mail client
@@ -497,7 +497,7 @@ Table of Contents
 
 3.5.  type
 
-   The type property on the server section element specifies the wire
+   The type attribute on the server section element specifies the wire
    protocol that this server uses.
 
     +================+===========+====+===========+===================+
@@ -556,7 +556,7 @@ Table of Contents
 
    <incomingServer type="jmap">
      <url>https://jmap.example.com/session</url>
-     <authentication>http-basic</authentication>
+     <authentication>basic</authentication>
      <username>%EMAILADDRESS%</username>
    </incomingServer>
 
@@ -576,20 +576,25 @@ Table of Contents
 
 3.6.2.  authentication
 
-   E.g. <authentication>http-basic</authentication>
+   E.g. <authentication system="http">basic</authentication> or
+   <authentication>OAuth2</authentication>
 
    The content of the <authentication> element defines which HTTP
-   authentication method to use.
+   authentication method to use.  The optional system="http" attribute
+   signals that the value refers to a WWW-Authenticate mechanism.
 
-   *  http-basic: Authenticate to the HTTP server using WWW-
-      Authenticate: Basic.  See [HTTP-Basic-Auth].
+   *  basic: Authenticate to the HTTP server using WWW-Authenticate:
+      Basic.  See [basic-Auth].
 
-   *  http-digest: Authenticate to the HTTP server using WWW-
-      Authenticate: Digest.  See [HTTP-Digest-Auth]
+   *  digest: Authenticate to the HTTP server using WWW-Authenticate:
+      Digest.  See [HTTP-Digest-Auth]
 
-   *  OAuth: Authenticate to the HTTP server using WWW-Authenticate:
+   *  OAuth2: Authenticate to the HTTP server using WWW-Authenticate:
       Bearer.  See [OAuth2] Section 3.  The provider MUST adhere to the
       requirements defined in section OAuth2 in this specification.
+      Note: The XML element for OAuth2 is
+      <authentication>OAuth2</authentication> without system attribute.
+      <authentication system="http">Bearer</authentication> is invalid.
 
    The rules as specified in sections "Multiple authentication
    alternatives" and "Authentication verification and fallback" apply
@@ -716,13 +721,20 @@ Table of Contents
 
 3.7.4.1.  Recommending specific SASL schemes
 
+   E.g. <authentication system="sasl">password-
+   cleartext</authentication>
+
    Additionally, a specific SASL scheme [SASL] may be specified using
-   SASL, a space, and the specific SASL authentication scheme name, e.g.
-   SASL SCRAM-SHA-256-PLUS [SCRAM].  In such a case, the server config
-   SHOULD also specify a more generic authentication mechanism as a
-   lower priority alternative.  That would make clients use the specific
-   authentication mechanism, if they support it, and other clients will
-   use the more generic authentication mechanism.
+   the specific SASL authentication scheme name, e.g. SASL SCRAM-SHA-
+   256-PLUS [SCRAM], and the <authentication> element should have the
+   system attribute set to value sasl, i.e. <authentication
+   system="sasl">.
+
+   In such a case, the server config SHOULD also specify a more generic
+   authentication mechanism as a lower priority alternative.  That would
+   make clients use the specific authentication mechanism, if they
+   support it, and other clients will use the more generic
+   authentication mechanism.
 
 3.7.4.2.  Multiple authentication alternatives
 
@@ -817,7 +829,7 @@ Table of Contents
 
    The client SHOULD validate that the config file is valid XML, and if
    the XML syntax is invalid, the client SHOULD ignore the entire file.
-   In contrast, if there are merely unknown elements or properties, the
+   In contrast, if there are merely unknown elements or attributes, the
    client MUST NOT ignore the file.
 
    The client SHOULD read only the elements and attributes that are
@@ -826,9 +838,9 @@ Table of Contents
 
    The client may optionally want to validate the XML before parsing it.
    This is not required.  If the client choses to validate, the
-   validation MUST ignore unknown elements and properties and MUST NOT
+   validation MUST ignore unknown elements and attributes and MUST NOT
    drop or ignore a configuration that contains unknown elements and
-   properties.  This is required to allow future extensions of the
+   attributes.  This is required to allow future extensions of the
    format without breaking existing clients.
 
 4.  Config retrieval by mail clients
@@ -1395,7 +1407,7 @@ Table of Contents
 
    *  Element: The XML element wrapping the server section.
 
-   *  Type: The type property value of the server section.
+   *  Type: The type attribute value of the server section.
 
    *  Base: Whether the protocol is URL-based or TCP-based,
 
@@ -1464,6 +1476,11 @@ Table of Contents
 
 11.1.  Normative References
 
+   [basic-Auth]
+              Reschke, J., "The 'Basic' HTTP Authentication Scheme",
+              RFC 7617, DOI 10.17487/RFC7617, September 2015,
+              <https://www.rfc-editor.org/rfc/rfc7617>.
+
    [CalDAV]   Daboo, C., Desruisseaux, B., and L. Dusseault,
               "Calendaring Extensions to WebDAV (CalDAV)", RFC 4791,
               DOI 10.17487/RFC4791, March 2007,
@@ -1487,11 +1504,6 @@ Table of Contents
    [EMail]    Resnick, P., Ed., "Internet Message Format", RFC 2822,
               DOI 10.17487/RFC2822, April 2001,
               <https://www.rfc-editor.org/rfc/rfc2822>.
-
-   [HTTP-Basic-Auth]
-              Reschke, J., "The 'Basic' HTTP Authentication Scheme",
-              RFC 7617, DOI 10.17487/RFC7617, September 2015,
-              <https://www.rfc-editor.org/rfc/rfc7617>.
 
    [HTTP-Digest-Auth]
               Shekh-Yusef, R., Ed., Ahrens, D., and S. Bremer, "HTTP
