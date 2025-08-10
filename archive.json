@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-01T00:18:58.991570+00:00",
+  "timestamp": "2025-08-10T00:21:01.380824+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -825,6 +825,22 @@
           "updatedAt": "2025-03-17T01:31:19Z"
         }
       ]
+    },
+    {
+      "number": 17,
+      "id": "I_kwDOKo_bRc7Eqq4j",
+      "title": "No `emailaddress` argument for `.well-known` URL",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/17",
+      "state": "OPEN",
+      "author": "link2xt",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Current specification says that `emailaddress` argument is optionally included in the request for `autoconfig` subdomain, but not for `.well-known` URL here:\nhttps://github.com/benbucksch/autoconfig-spec/blob/5a4be0aa065ba624dc3812599bec8e62ce567751/draft-ietf-mailmaint-autoconfig.md?plain=1#L743\n\nThunderbird seems to include `emailaddress` in all requests if `mailnews.auto_config.fetchFromISP.sendEmailAddress` is enabled:\nhttps://hg-edge.mozilla.org/comm-central/file/757a86e8931e48c05f8f0449bc6647c5d4c3dfa8/mail/components/accountcreation/modules/FetchConfig.sys.mjs\nDelta Chat also includes `emailaddress` and according to https://github.com/chatmail/core/issues/7085 some servers expect `emailaddress` query argument sent to `.well-known` URL.\n\nIs `emailaddress` not included in `.well-known` URL on purpose? Otherwise if the intention is to document existing deployments it should be included in `.well-known` URL as well.",
+      "createdAt": "2025-08-07T08:23:06Z",
+      "updatedAt": "2025-08-07T08:56:47Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
