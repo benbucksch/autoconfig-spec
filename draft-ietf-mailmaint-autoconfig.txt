@@ -201,6 +201,9 @@ Table of Contents
 
    The format is in [XML].  The MIME type is text/xml.
 
+   The seconds below define the XML and its meaning.  Most sections
+   start with a concrete example of the elements that they define.
+
 3.1.  XML config file
 
    The following example shows the syntax of the XML config file.
@@ -368,18 +371,21 @@ Table of Contents
    The root element of the XML file is <clientConfig version="1.2">.
 
    The version is 1.2 for the version defined in this specification. 1.1
-   is a compatible previous version.  Higher versions are for future
-   specifications.  The client MUST NOT reject a config file solely
-   based on the version number.
+   is a compatible previous version of this protocol: [Autoconfig1.1].
+   Higher versions are for future specifications.  The client MUST NOT
+   reject a config file solely based on the version number.
 
 3.2.2.  emailProvider
 
-   Element <emailProvider id="example.com"> is within the root element.
-   This element has no semantic purpose and exists for legacy reasons
-   only, but its content is significant.
+   <emailProvider id="example.com">
+
+   Element <emailProvider> is within the root element.  This element has
+   no semantic purpose and exists for legacy reasons only, but its
+   content is significant.
 
    The id is a unique string that typically matches the primary domain
-   of the provider.
+   of the provider.  The syntax of the ID is the same as for domain and
+   hostname.
 
    Within <emailProvider> are <domain>, <displayName> and
    <displayShortName>, <documentation>, <incomingServer> and
@@ -387,14 +393,12 @@ Table of Contents
 
 3.2.3.  domain
 
-   E.g.
-
    <domain>example.com</domain>
    <domain>example.net</domain>
    <domain purpose="mx">example-hosting.com</domain>
 
    The content of the <domain> element defines which email addresses
-   this config is valid for.  E.g. a config with
+   this config is valid for.  For example, a config with
    <domain>example.com</domain> is valid for email address
    fred@example.com.
 
@@ -410,8 +414,6 @@ Table of Contents
 
 3.2.4.  displayName and displayShortName
 
-   E.g.
-
    <displayName>Google Workspace</displayName>
    <displayShortName>GMail</displayShortName>
 
@@ -424,8 +426,6 @@ Table of Contents
    characters, and it MUST NOT be longer than 20 characters.
 
 3.3.  documentation
-
-   E.g.
 
    <documentation url="https://www.example.com/help/mail/">
      <descr lang="en">Configure mail app for IMAP</descr>
@@ -448,7 +448,7 @@ Table of Contents
 
 3.4.  Server sections
 
-   E.g. <incomingServer type="jmap"> or <calendar type="carddav">
+   <incomingServer type="jmap">, <calendar type="carddav"> etc.
 
    *  The type attribute specifies the wire protocol that this server
       uses.  See section type below.
@@ -559,8 +559,6 @@ Table of Contents
 
 3.6.  URL-based protocols
 
-   E.g.
-
    <incomingServer type="jmap">
      <url>https://jmap.example.com/session</url>
      <authentication>basic</authentication>
@@ -572,7 +570,7 @@ Table of Contents
 
 3.6.1.  url
 
-   E.g. <url>https://jmap.example.com/session</url>
+   Example: <url>https://jmap.example.com/session</url>
 
    The content of the <url> element contains the URL where to contact
    the server.
@@ -583,7 +581,7 @@ Table of Contents
 
 3.6.2.  authentication
 
-   E.g. <authentication system="http">basic</authentication> or
+   Example: <authentication system="http">basic</authentication> or
    <authentication>OAuth2</authentication>
 
    The content of the <authentication> element defines which HTTP
@@ -610,7 +608,7 @@ Table of Contents
 
 3.6.3.  username
 
-   E.g. <username>%EMAILADDRESS%</username> or <username>fred</username>
+   <username>%EMAILADDRESS%</username> or <username>fred</username>
 
    The username to use for the authentication method.
 
@@ -632,14 +630,14 @@ Table of Contents
 
 3.7.1.  hostname
 
-   E.g. <hostname>imap.example.com</hostname>
+   <hostname>imap.example.com</hostname>
 
    The content of the <hostname> element contains the fully qualified
    hostname of the server.
 
 3.7.2.  port
 
-   E.g. <port>993</port>
+   <port>993</port>
 
    The content of the <port> element is an integer and contains the TCP
    port number at the hostname.  The port is typically specific to the
@@ -647,7 +645,7 @@ Table of Contents
 
 3.7.3.  socketType
 
-   E.g. <socketType>SSL</socketType>
+   <socketType>SSL</socketType>
 
    The content of the <socketType> element specifies whether to use
    direct TLS, STARTTLS, or none of these.
@@ -690,7 +688,7 @@ Table of Contents
 
 3.7.4.  authentication
 
-   E.g. <authentication>password-cleartext</authentication>
+   <authentication>password-cleartext</authentication>
 
    The content of the <authentication> element defines which
    authentication method to use.  This can be either an authentication
@@ -729,8 +727,7 @@ Table of Contents
 
 3.7.4.1.  Recommending specific SASL schemes
 
-   E.g. <authentication system="sasl">SCRAM-SHA-
-   256-PLUS</authentication>
+   <authentication system="sasl">SCRAM-SHA-256-PLUS</authentication>
 
    A specific SASL scheme [SASL] MAY be specified using the specific
    SASL authentication scheme name, e.g. SCRAM-SHA-256-PLUS [SCRAM].  To
@@ -764,7 +761,7 @@ Table of Contents
    authentication attempt.
 
    If the authentication fails, the client decides based on the
-   authentication error code how to proceed.  E.g. if the
+   authentication error code how to proceed.  For example, if the
    authentiocation method itself failed, or the error code indicates a
    systemic failure, the client SHOULD use a lower-priority
    authentication method from the list.
@@ -800,7 +797,7 @@ Table of Contents
 
 3.7.5.  username
 
-   E.g. <username>%EMAILADDRESS%</username> or <username>fred</username>
+   <username>%EMAILADDRESS%</username> or <username>fred</username>
 
    The username to use for the authentication method.
 
@@ -1149,7 +1146,7 @@ Table of Contents
    *  https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-
       v1.xml?emailaddress=%EMAILADDRESS%
 
-   E.g. if the MX server for customer domain example.net is
+   For example, if the MX server for customer domain example.net is
    "mx.premium.europe.example.com", then the config file should be at
 
    *  https://autoconfig.premium.europe.example.com/.well-known/mail-
@@ -1662,6 +1659,11 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc7395>.
 
 11.2.  Informative References
+
+   [Autoconfig1.1]
+              Bucksch, B., "Autoconfig version 1.1", 2020,
+              <https://www.bucksch.org/1/projects/autoconfiguration/
+              config-file-format.html>.
 
    [DNS-SRV]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,

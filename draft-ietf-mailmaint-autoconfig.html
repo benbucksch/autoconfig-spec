@@ -1425,6 +1425,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3-1">Whether the ISP or a common central database returns the configuration, the
 resulting document <span class="bcp14">MUST</span> have the following data format and qualities.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The format is in <span>[<a href="#XML" class="cite xref">XML</a>]</span>. The MIME type is <code>text/xml</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">The seconds below define the XML and its meaning. Most sections start
+with a concrete example of the elements that they define.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <div id="xml-config-file">
 <section id="section-3.1">
         <h3 id="name-xml-config-file">
@@ -1603,7 +1605,7 @@ and is encoded in UTF-8 without BOM.<a href="#section-3.2-1" class="pilcrow">¶<
           </h4>
 <p id="section-3.2.1-1">The root element of the XML file is <code>&lt;clientConfig version="1.2"&gt;</code>.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.1-2">The <code>version</code> is <code>1.2</code> for the version defined in this specification. <code>1.1</code> is
-a compatible previous version. Higher versions are for future specifications.
+a compatible previous version of this protocol: <span>[<a href="#Autoconfig1.1" class="cite xref">Autoconfig1.1</a>]</span>. Higher versions are for future specifications.
 The client <span class="bcp14">MUST NOT</span> reject a config file solely based on the version number.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1612,14 +1614,14 @@ The client <span class="bcp14">MUST NOT</span> reject a config file solely based
           <h4 id="name-emailprovider">
 <a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-emailprovider" class="section-name selfRef">emailProvider</a>
           </h4>
-<p id="section-3.2.2-1">Element <code>&lt;emailProvider id="example.com"&gt;</code> is within the root element.
+<p id="section-3.2.2-1"><code>&lt;emailProvider id="example.com"&gt;</code><a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-2">Element <code>&lt;emailProvider&gt;</code> is within the root element.
 This element has no semantic purpose and exists for legacy reasons only,
-but its content is significant.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-2">The <code>id</code> is a unique string that typically matches the primary domain of the
-provider.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-3">Within <code>&lt;emailProvider&gt;</code> are <code>&lt;domain&gt;</code>, <code>&lt;displayName&gt;</code> and
+but its content is significant.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-3">The <code>id</code> is a unique string that typically matches the primary domain of the provider. The syntax of the ID is the same as for domain and hostname.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-4">Within <code>&lt;emailProvider&gt;</code> are <code>&lt;domain&gt;</code>, <code>&lt;displayName&gt;</code> and
 <code>&lt;displayShortName&gt;</code>, <code>&lt;documentation&gt;</code>, <code>&lt;incomingServer&gt;</code> and
-<code>&lt;outgoingServer&gt;</code>.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+<code>&lt;outgoingServer&gt;</code>.<a href="#section-3.2.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="domain">
@@ -1627,24 +1629,23 @@ provider.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
           <h4 id="name-domain">
 <a href="#section-3.2.3" class="section-number selfRef">3.2.3. </a><a href="#name-domain" class="section-name selfRef">domain</a>
           </h4>
-<p id="section-3.2.3-1">E.g.<a href="#section-3.2.3-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3.2.3-2">
+<div class="alignLeft art-text artwork" id="section-3.2.3-1">
 <pre>
 &lt;domain&gt;example.com&lt;/domain&gt;
 &lt;domain&gt;example.net&lt;/domain&gt;
 &lt;domain purpose="mx"&gt;example-hosting.com&lt;/domain&gt;
-</pre><a href="#section-3.2.3-2" class="pilcrow">¶</a>
+</pre><a href="#section-3.2.3-1" class="pilcrow">¶</a>
 </div>
-<p id="section-3.2.3-3">The content of the <code>&lt;domain&gt;</code> element defines which email addresses this config
-is valid for. E.g. a config with <code>&lt;domain&gt;example.com&lt;/domain&gt;</code> is valid for
-email address <code>fred@example.com</code>.<a href="#section-3.2.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.3-4">Multiple <code>&lt;domain&gt;</code> elements may be included, which means that the config is
+<p id="section-3.2.3-2">The content of the <code>&lt;domain&gt;</code> element defines which email addresses this config
+is valid for. For example, a config with <code>&lt;domain&gt;example.com&lt;/domain&gt;</code> is valid for
+email address <code>fred@example.com</code>.<a href="#section-3.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-3">Multiple <code>&lt;domain&gt;</code> elements may be included, which means that the config is
 valid for all of these domains. Their order has no meaning - you may sort them
-by number of users, importance to the provider, or alphabethically.<a href="#section-3.2.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.2.3-5">A <code>&lt;domain purpose="mx"&gt;</code> specifies the domain name of the MX server of
+by number of users, importance to the provider, or alphabethically.<a href="#section-3.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-4">A <code>&lt;domain purpose="mx"&gt;</code> specifies the domain name of the MX server of
 the email address, and is used config file lookup using MX
 server names, as specified in section MX. The <code>purpose</code> attribute is
-mainly informational and may be ignored.<a href="#section-3.2.3-5" class="pilcrow">¶</a></p>
+mainly informational and may be ignored.<a href="#section-3.2.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="displayname-and-displayshortname">
@@ -1652,19 +1653,18 @@ mainly informational and may be ignored.<a href="#section-3.2.3-5" class="pilcro
           <h4 id="name-displayname-and-displayshor">
 <a href="#section-3.2.4" class="section-number selfRef">3.2.4. </a><a href="#name-displayname-and-displayshor" class="section-name selfRef">displayName and displayShortName</a>
           </h4>
-<p id="section-3.2.4-1">E.g.<a href="#section-3.2.4-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3.2.4-2">
+<div class="alignLeft art-text artwork" id="section-3.2.4-1">
 <pre>
 &lt;displayName&gt;Google Workspace&lt;/displayName&gt;
 &lt;displayShortName&gt;GMail&lt;/displayShortName&gt;
-</pre><a href="#section-3.2.4-2" class="pilcrow">¶</a>
+</pre><a href="#section-3.2.4-1" class="pilcrow">¶</a>
 </div>
-<p id="section-3.2.4-3">The <code>&lt;displayName&gt;</code> element contains the name of the provider, e.g.
+<p id="section-3.2.4-2">The <code>&lt;displayName&gt;</code> element contains the name of the provider, e.g.
 as preferred by the marketing of the provider itself. It <span class="bcp14">SHOULD</span> be no
-longer than 30 characters, but <span class="bcp14">MUST</span> be no longer than 60 characters.<a href="#section-3.2.4-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-4">The <code>&lt;displayShortName&gt;</code> element contains the name of the provider, as
+longer than 30 characters, but <span class="bcp14">MUST</span> be no longer than 60 characters.<a href="#section-3.2.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-3">The <code>&lt;displayShortName&gt;</code> element contains the name of the provider, as
 typically used by end users. It <span class="bcp14">SHOULD</span> be no longer than 12
-characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 characters.<a href="#section-3.2.4-4" class="pilcrow">¶</a></p>
+characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 characters.<a href="#section-3.2.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1674,26 +1674,25 @@ characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 charact
         <h3 id="name-documentation">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-documentation" class="section-name selfRef">documentation</a>
         </h3>
-<p id="section-3.3-1">E.g.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3.3-2">
+<div class="alignLeft art-text artwork" id="section-3.3-1">
 <pre>
 &lt;documentation url="https://www.example.com/help/mail/"&gt;
   &lt;descr lang="en"&gt;Configure mail app for IMAP&lt;/descr&gt;
   &lt;descr lang="de"&gt;Email mit IMAP konfigurieren&lt;/descr&gt;
 &lt;/documentation&gt;
-</pre><a href="#section-3.3-2" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-1" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-3">This is purely informational and not required for the automatic setup.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.3-4">Records the user help webpage at the provider that describes the mail
+<p id="section-3.3-2">This is purely informational and not required for the automatic setup.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">Records the user help webpage at the provider that describes the mail
 server settings. The config may be based on that page, but does not
 necessarily have to match it, e.g. when a better config is available
-than the one described on the webpage.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.3-5">The <code>url</code> attribute contains the URL of the webpage. The <code>&lt;descr&gt;</code>
+than the one described on the webpage.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">The <code>url</code> attribute contains the URL of the webpage. The <code>&lt;descr&gt;</code>
 content describes the content and purpose of the page and why it's
 referenced here.
 Multiple <code>&lt;descr&gt;</code> elements with different <code>lang</code> attributes are
 allowed, whereby the <code>lang</code> attribute contains the 2-letter ISO language
-code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="server-sections">
@@ -1701,7 +1700,7 @@ code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-5" class="
         <h3 id="name-server-sections">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-server-sections" class="section-name selfRef">Server sections</a>
         </h3>
-<p id="section-3.4-1">E.g. <code>&lt;incomingServer type="jmap"&gt;</code> or <code>&lt;calendar type="carddav"&gt;</code><a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1"><code>&lt;incomingServer type="jmap"&gt;</code>, <code>&lt;calendar type="carddav"&gt;</code> etc.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-2.1">
             <p id="section-3.4-2.1.1">The <code>type</code> attribute specifies the wire protocol that this server uses. See
@@ -1942,24 +1941,23 @@ corresponding section below.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
         <h3 id="name-url-based-protocols">
 <a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-url-based-protocols" class="section-name selfRef">URL-based protocols</a>
         </h3>
-<p id="section-3.6-1">E.g.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3.6-2">
+<div class="alignLeft art-text artwork" id="section-3.6-1">
 <pre>
 &lt;incomingServer type="jmap"&gt;
   &lt;url&gt;https://jmap.example.com/session&lt;/url&gt;
   &lt;authentication&gt;basic&lt;/authentication&gt;
   &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
 &lt;/incomingServer&gt;
-</pre><a href="#section-3.6-2" class="pilcrow">¶</a>
+</pre><a href="#section-3.6-1" class="pilcrow">¶</a>
 </div>
-<p id="section-3.6-3">For server sections with protocols that are based on HTTPS or other
-URLs, the following elements are supported:<a href="#section-3.6-3" class="pilcrow">¶</a></p>
+<p id="section-3.6-2">For server sections with protocols that are based on HTTPS or other
+URLs, the following elements are supported:<a href="#section-3.6-2" class="pilcrow">¶</a></p>
 <div id="url">
 <section id="section-3.6.1">
           <h4 id="name-url">
 <a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-url" class="section-name selfRef">url</a>
           </h4>
-<p id="section-3.6.1-1">E.g. <code>&lt;url&gt;https://jmap.example.com/session&lt;/url&gt;</code><a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-1">Example: <code>&lt;url&gt;https://jmap.example.com/session&lt;/url&gt;</code><a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.6.1-2">The content of the <code>&lt;url&gt;</code> element contains the URL where to contact the
 server.<a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.6.1-3">The URL scheme will normally be HTTPS and the URL start with <code>https://</code>.
@@ -1971,7 +1969,7 @@ Some protocols may use other schemes, e.g. WebSockets <code>wss://</code>.<a hre
           <h4 id="name-authentication">
 <a href="#section-3.6.2" class="section-number selfRef">3.6.2. </a><a href="#name-authentication" class="section-name selfRef">authentication</a>
           </h4>
-<p id="section-3.6.2-1">E.g. <code>&lt;authentication system="http"&gt;basic&lt;/authentication&gt;</code> or
+<p id="section-3.6.2-1">Example: <code>&lt;authentication system="http"&gt;basic&lt;/authentication&gt;</code> or
 <code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code><a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.6.2-2">The content of the <code>&lt;authentication&gt;</code> element defines which HTTP
 authentication method to use. The <code>system="http"</code> attribute
@@ -2005,7 +2003,7 @@ Note: The XML element for OAuth2 is
           <h4 id="name-username">
 <a href="#section-3.6.3" class="section-number selfRef">3.6.3. </a><a href="#name-username" class="section-name selfRef">username</a>
           </h4>
-<p id="section-3.6.3-1">E.g. <code>&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;</code> or <code>&lt;username&gt;fred&lt;/username&gt;</code><a href="#section-3.6.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.3-1"><code>&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;</code> or <code>&lt;username&gt;fred&lt;/username&gt;</code><a href="#section-3.6.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.6.3-2">The username to use for the authentication method.<a href="#section-3.6.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.6.3-3">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See section
 "Placeholders".<a href="#section-3.6.3-3" class="pilcrow">¶</a></p>
@@ -2036,7 +2034,7 @@ the following elements are supported:<a href="#section-3.7-1" class="pilcrow">¶
           <h4 id="name-hostname">
 <a href="#section-3.7.1" class="section-number selfRef">3.7.1. </a><a href="#name-hostname" class="section-name selfRef">hostname</a>
           </h4>
-<p id="section-3.7.1-1">E.g. <code>&lt;hostname&gt;imap.example.com&lt;/hostname&gt;</code><a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-1"><code>&lt;hostname&gt;imap.example.com&lt;/hostname&gt;</code><a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-2">The content of the <code>&lt;hostname&gt;</code> element contains the fully qualified hostname
 of the server.<a href="#section-3.7.1-2" class="pilcrow">¶</a></p>
 </section>
@@ -2046,7 +2044,7 @@ of the server.<a href="#section-3.7.1-2" class="pilcrow">¶</a></p>
           <h4 id="name-port">
 <a href="#section-3.7.2" class="section-number selfRef">3.7.2. </a><a href="#name-port" class="section-name selfRef">port</a>
           </h4>
-<p id="section-3.7.2-1">E.g. <code>&lt;port&gt;993&lt;/port&gt;</code><a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-1"><code>&lt;port&gt;993&lt;/port&gt;</code><a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.2-2">The content of the <code>&lt;port&gt;</code> element is an integer and contains the TCP port
 number at the hostname. The port is typically specific to the combination of
 the wire protocol and socketType.<a href="#section-3.7.2-2" class="pilcrow">¶</a></p>
@@ -2057,7 +2055,7 @@ the wire protocol and socketType.<a href="#section-3.7.2-2" class="pilcrow">¶</
           <h4 id="name-sockettype">
 <a href="#section-3.7.3" class="section-number selfRef">3.7.3. </a><a href="#name-sockettype" class="section-name selfRef">socketType</a>
           </h4>
-<p id="section-3.7.3-1">E.g. <code>&lt;socketType&gt;SSL&lt;/socketType&gt;</code><a href="#section-3.7.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.3-1"><code>&lt;socketType&gt;SSL&lt;/socketType&gt;</code><a href="#section-3.7.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.3-2">The content of the <code>&lt;socketType&gt;</code> element specifies whether to use direct TLS,
 STARTTLS, or none of these.<a href="#section-3.7.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -2109,7 +2107,7 @@ and <span class="bcp14">MAY</span> use other recovery mechanisms.<a href="#secti
           <h4 id="name-authentication-2">
 <a href="#section-3.7.4" class="section-number selfRef">3.7.4. </a><a href="#name-authentication-2" class="section-name selfRef">authentication</a>
           </h4>
-<p id="section-3.7.4-1">E.g. <code>&lt;authentication&gt;password-cleartext&lt;/authentication&gt;</code><a href="#section-3.7.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.4-1"><code>&lt;authentication&gt;password-cleartext&lt;/authentication&gt;</code><a href="#section-3.7.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.4-2">The content of the <code>&lt;authentication&gt;</code> element defines which authentication
 method to use. This can be either an authentication defined by the wire
 protocol, or a SASL scheme, or a successor to SASL.<a href="#section-3.7.4-2" class="pilcrow">¶</a></p>
@@ -2157,7 +2155,7 @@ Not supported on the Internet. Deprecated, because it breaks mobile devices.<a h
             <h5 id="name-recommending-specific-sasl-">
 <a href="#section-3.7.4.1" class="section-number selfRef">3.7.4.1. </a><a href="#name-recommending-specific-sasl-" class="section-name selfRef">Recommending specific SASL schemes</a>
             </h5>
-<p id="section-3.7.4.1-1">E.g. <code>&lt;authentication system="sasl"&gt;SCRAM-SHA-256-PLUS&lt;/authentication&gt;</code><a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.1-1"><code>&lt;authentication system="sasl"&gt;SCRAM-SHA-256-PLUS&lt;/authentication&gt;</code><a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.4.1-2">A specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> <span class="bcp14">MAY</span> be specified using
 the specific SASL authentication scheme name, e.g.
 <code>SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>. To signal that, the
@@ -2196,7 +2194,7 @@ sections.<a href="#section-3.7.4.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.7.4.3-1">The client <span class="bcp14">SHOULD</span> test the configuration during setup, with an actual
 authentication attempt.<a href="#section-3.7.4.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.4.3-2">If the authentication fails, the client decides based on the
-authentication error code how to proceed. E.g. if the authentiocation
+authentication error code how to proceed. For example, if the authentiocation
 method itself failed, or the error code indicates a systemic failure,
 the client <span class="bcp14">SHOULD</span> use a lower-priority authentication method from the
 list.<a href="#section-3.7.4.3-2" class="pilcrow">¶</a></p>
@@ -2241,7 +2239,7 @@ methods.<a href="#section-3.7.4.3-7" class="pilcrow">¶</a></p>
           <h4 id="name-username-2">
 <a href="#section-3.7.5" class="section-number selfRef">3.7.5. </a><a href="#name-username-2" class="section-name selfRef">username</a>
           </h4>
-<p id="section-3.7.5-1">E.g. <code>&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;</code> or <code>&lt;username&gt;fred&lt;/username&gt;</code><a href="#section-3.7.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.5-1"><code>&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;</code> or <code>&lt;username&gt;fred&lt;/username&gt;</code><a href="#section-3.7.5-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.5-2">The username to use for the authentication method.<a href="#section-3.7.5-2" class="pilcrow">¶</a></p>
 <p id="section-3.7.5-3">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See section
 "Placeholders".<a href="#section-3.7.5-3" class="pilcrow">¶</a></p>
@@ -2696,7 +2694,7 @@ the location for step 3.1., i.e.<a href="#section-6.2-2" class="pilcrow">¶</a><
             <p id="section-6.2-3.1.1"><code>https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%</code><a href="#section-6.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-6.2-4">E.g. if the MX server for customer domain example.net is
+<p id="section-6.2-4">For example, if the MX server for customer domain example.net is
 "mx.premium.europe.example.com", then the config file should be at<a href="#section-6.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.2-5.1">
@@ -3374,6 +3372,10 @@ their meaning.<a href="#section-10.2-3.6.1" class="pilcrow">¶</a></p>
 <a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="Autoconfig1.1">[Autoconfig1.1]</dt>
+        <dd>
+<span class="refAuthor">Bucksch, B.</span>, <span class="refTitle">"Autoconfig version 1.1"</span>, <time datetime="2020" class="refDate">2020</time>, <span>&lt;<a href="https://www.bucksch.org/1/projects/autoconfiguration/config-file-format.html">https://www.bucksch.org/1/projects/autoconfiguration/config-file-format.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="DNS-SRV">[DNS-SRV]</dt>
         <dd>
 <span class="refAuthor">Gulbrandsen, A.</span>, <span class="refAuthor">Vixie, P.</span>, and <span class="refAuthor">L. Esibov</span>, <span class="refTitle">"A DNS RR for specifying the location of services (DNS SRV)"</span>, <span class="seriesInfo">RFC 2782</span>, <span class="seriesInfo">DOI 10.17487/RFC2782</span>, <time datetime="2000-02" class="refDate">February 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2782">https://www.rfc-editor.org/rfc/rfc2782</a>&gt;</span>. </dd>
