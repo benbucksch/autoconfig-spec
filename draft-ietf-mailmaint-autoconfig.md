@@ -296,8 +296,7 @@ Element `<emailProvider id="example.com">` is within the root element.
 This element has no semantic purpose and exists for legacy reasons only,
 but its content is significant.
 
-The `id` is a unique string that typically matches the primary domain of the
-provider.
+The `id` is a unique string that typically matches the primary domain of the provider. The syntax of the ID is the same as for domain and hostname.
 
 Within `<emailProvider>` are `<domain>`, `<displayName>` and
 `<displayShortName>`, `<documentation>`, `<incomingServer>` and
