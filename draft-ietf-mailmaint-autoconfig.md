@@ -365,7 +365,7 @@ code, like the HTML `lang` attribute.
 `<incomingServer type="jmap">`, `<calendar type="carddav">` etc.
 
 * The `type` attribute specifies the wire protocol that this server uses. See
-  section type below.
+  section {{<<type}} below.
 * `<incomingServer>` specifies the server that the mail client retrieves email
   from and submits changes to. In many protocols, this server is also used for
   sending email.
@@ -475,7 +475,7 @@ attribute is optional when a https: or wss: URL is used.
   `WWW-Authenticate: Digest`. See {{!HTTP-Digest-Auth=RFC7616}}
 * `OAuth2`: Authenticate to the HTTP server using
   `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750}} Section 3.
-  The provider MUST adhere to the requirements defined in section OAuth2
+  The provider MUST adhere to the requirements defined in section {{<<OAuth2 requirements}}
   in this specification.
   Note: The XML element for OAuth2 is
   `<authentication>OAuth2</authentication>` without system attribute.
@@ -586,7 +586,7 @@ protocol, or a SASL scheme, or a successor to SASL.
   select confirm it. Uses SASL `EXTERNAL` scheme {{!SASL=RFC4422}}, Appendix A.
 * `OAuth`: OAuth. SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
   `XOAUTH2` (deprecated) or successors.
-  The provider MUST adhere to the requirements defined in section OAuth2 in
+  The provider MUST adhere to the requirements defined in section {{<<OAuth2 requirements}} in
   this specification.
 * `client-IP-address`: Server can be used without any explicit authentication,
   and the client is admitted based on its IP address.
@@ -876,7 +876,7 @@ implement such alternative methods, and if they are less secure than some of
 the mechanisms provided here, the alternative methods SHOULD be considered
 only with lower priority (as defined above) than the more secure mechanisms
 defined here. For evaluating other mechanisms, use similar criteria as
-outlined in section "Security considerations".
+outlined in section {{<<Security considerations}}.
 
 
 ## Manual configuration
@@ -1076,7 +1076,7 @@ multi-factor authentication steps required.
 Any protocol that relies on DNS without further validation, e.g. http, should
 be considered insecure.
 This also applies to the DNS MX lookup and the https calls that base on its
-results, as described in section "MX".
+results, as described in section {{<<MX}}.
 
 One possible mitigation is to use multiple different DNS servers and verify
 that the results match, e.g. to use the native DNS resolver of the operating
@@ -1084,7 +1084,7 @@ system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.
 
 Nonetheless, the result should be used with care. If such configs are used,
 the end user MUST explicitly confirm the config, particularly the resulting
-second-level domains. See section "User approval".
+second-level domains. See section {{<<User approval}}.
 
 ## HTTP
 
@@ -1137,7 +1137,7 @@ Server hostnames MUST be compared with the email domain names they are
 serving, and if they differ, the ownership of the server hostnames MUST be
 validated.
 
-The risk is mitigated to some degree by section "User approval".
+The risk is mitigated to some degree by section {{<<User approval}}.
 
 
 # Alternatives considered
