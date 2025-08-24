@@ -1038,76 +1038,6 @@ Currently, this protocol or parts of it has been implemented by:
 and likely other mail clients.
 
 
-# Alternatives considered
-
-## DNSSEC
-
-Due to their top-level domain, some domains do not have {{?DNSSEC=RFC9364}}
-available to them, even if they would like to deploy it.
-
-Even where the top-level domain supports it, DNSSEC is currently deployed in
-only 1% of domains, with adoption rates falling instead of rising, due to the
-difficulties of administrating it correctly.
-
-Therefore, DNSSEC cannot be relied on in this specification, and DNS must be
-considered insecure for the purposes of this specification.
-
-## DNS SRV
-
-DNS SRV protocols {{?DNS-SRV=RFC2782}} {{?RFC6186}} are not used here, for 2 reasons:
-
-1. DNS SRV relies on insecure DNS and the config can therefore be trivially
-   spoofed by an attacker. See also DNSSEC above.
-2. DNS SRV does not provide all the necessary configuration parameters. For
-   example, we need all of:
-
-* the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even
-  a username with no relation to the email address)
-* authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)
-* authentication method parameters (e.g. OAuth parameters)
-
-and other parameters. If any of these parameters are not configured right, the
-configuration won't work. While these parameters could theoretically be added
-to DNS SRV, that would mean a new specification and render the idea void that
-this is a protocol that already exists, is standardized and deployed. It is
-unlikely that all DNS SRV records would be updated with the new values.
-Therefore, it does not solve the problem.
-
-This specification was created as an answer to these deficiencies and provides
-an alternative to DNS SRV.
-
-## CAPABILITIES
-
-Deployments in the wild from actual ISPs show that protocol-specific commands
-to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3
-`CAPA`, are not reliable. Many email servers advertize authentication methods
-that do not work.
-
-Some IMAP servers are default configured to list all SASL authentication
-methods that have corresponding libraries installed on the system, independent
-on whether they are actually configured to work. The client receives a long
-list of authentication methods, and many of them do not work. Additionally,
-the server response may be only "authentication failed" and may not indicate
-whether the method failed due to lack of configuration, or because the
-password was wrong. Because some authentication servers lock the account after
-3 failed login attempts, and it may also fail due to unrelated reasons (e.g.
-username form, wrong password, etc.), the client cannot blindly issue
-countless login attempts. Locking the account must be avoided. So, simply
-attempting all methods and seeing which one works is not an option for the
-email client.
-
-Additionally, some email servers advertize {{?Kerberos=RFC4120}} /
-{{?GSSAPI=RFC2743}}, but when trying
-to use it, the method fails, and also runs into a long 2 minute timeout in
-some cases. End users consider that to be a broken app.
-
-Additionally, such commands are protocol specific and have to be implemented
-in multiple different ways.
-
-Finally, some non-mail protocols may not support capabilties commands that
-include authentication methods.
-
-
 # Security Considerations
 
 ## Risk
@@ -1197,6 +1127,76 @@ serving, and if they differ, the ownership of the server hostnames MUST be
 validated.
 
 The risk is mitigated to some degree by section "User approval".
+
+
+# Alternatives considered
+
+## DNSSEC
+
+Due to their top-level domain, some domains do not have {{?DNSSEC=RFC9364}}
+available to them, even if they would like to deploy it.
+
+Even where the top-level domain supports it, DNSSEC is currently deployed in
+only 1% of domains, with adoption rates falling instead of rising, due to the
+difficulties of administrating it correctly.
+
+Therefore, DNSSEC cannot be relied on in this specification, and DNS must be
+considered insecure for the purposes of this specification.
+
+## DNS SRV
+
+DNS SRV protocols {{?DNS-SRV=RFC2782}} {{?RFC6186}} are not used here, for 2 reasons:
+
+1. DNS SRV relies on insecure DNS and the config can therefore be trivially
+   spoofed by an attacker. See also DNSSEC above.
+2. DNS SRV does not provide all the necessary configuration parameters. For
+   example, we need all of:
+
+* the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even
+  a username with no relation to the email address)
+* authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)
+* authentication method parameters (e.g. OAuth parameters)
+
+and other parameters. If any of these parameters are not configured right, the
+configuration won't work. While these parameters could theoretically be added
+to DNS SRV, that would mean a new specification and render the idea void that
+this is a protocol that already exists, is standardized and deployed. It is
+unlikely that all DNS SRV records would be updated with the new values.
+Therefore, it does not solve the problem.
+
+This specification was created as an answer to these deficiencies and provides
+an alternative to DNS SRV.
+
+## CAPABILITIES
+
+Deployments in the wild from actual ISPs show that protocol-specific commands
+to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3
+`CAPA`, are not reliable. Many email servers advertize authentication methods
+that do not work.
+
+Some IMAP servers are default configured to list all SASL authentication
+methods that have corresponding libraries installed on the system, independent
+on whether they are actually configured to work. The client receives a long
+list of authentication methods, and many of them do not work. Additionally,
+the server response may be only "authentication failed" and may not indicate
+whether the method failed due to lack of configuration, or because the
+password was wrong. Because some authentication servers lock the account after
+3 failed login attempts, and it may also fail due to unrelated reasons (e.g.
+username form, wrong password, etc.), the client cannot blindly issue
+countless login attempts. Locking the account must be avoided. So, simply
+attempting all methods and seeing which one works is not an option for the
+email client.
+
+Additionally, some email servers advertize {{?Kerberos=RFC4120}} /
+{{?GSSAPI=RFC2743}}, but when trying
+to use it, the method fails, and also runs into a long 2 minute timeout in
+some cases. End users consider that to be a broken app.
+
+Additionally, such commands are protocol specific and have to be implemented
+in multiple different ways.
+
+Finally, some non-mail protocols may not support capabilties commands that
+include authentication methods.
 
 
 # IANA Considerations
