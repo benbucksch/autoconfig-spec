@@ -394,7 +394,7 @@ In this case, the one listed first is preferred by the configuration provider.
 Unless the client has specific other requirements, it SHOULD pick the first
 config.
 
-The client may derivate from this recommendation, because
+The client may deviate from this recommendation, because
 
 * the client doesn't support a higher-priority protocol, e.g. a JMAP
   configuraion is listed first and is the most preferred, but the
