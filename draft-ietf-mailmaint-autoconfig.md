@@ -94,30 +94,9 @@ sync, chat, video conference, or online publishing. The primary concept and
 limitation here is that these accounts need to be hosted by the same provider
 as the email address.
 
-
-# Implementations
-
 This protocol is in production use since 15 years by major email clients, and
-the config database (used as fallback) contains configurations for over 50% of
+the config database contains configurations for over 80% of
 all email accounts.
-
-Currently, this protocol or parts of it has been implemented by:
-
-* [Thunderbird](https://thunderbird.net)
-* [Parula](https://parula.beonex.com)
-* [Evolution](https://projects.gnome.org/evolution/)
-* [KMail](https://userbase.kde.org/KMail)
-* [Kontact](https://www.kontact.org)
-* [K9 Mail](https://k9mail.app) and
-  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
-* [FairEmail](https://email.faircode.eu)
-* [NextCloud email](https://apps.nextcloud.com/apps/mail)
-* [Delta Chat](https://delta.chat/)
-
-and likely other mail clients.
-
-The purpose of this paper is to document and specify what is deployed in the
-wild.
 
 # Data format
 
@@ -1039,6 +1018,24 @@ so that a single user login is sufficient for all services.
 The resulting refresh and access tokens MUST be valid for all services defined
 in the config file, including for all URL-based protocols like CalDAV
 and all TCP-based protocols like IMAP.
+
+
+# Implementations
+
+Currently, this protocol or parts of it has been implemented by:
+
+* [Thunderbird](https://thunderbird.net)
+* [Parula](https://parula.beonex.com)
+* [Evolution](https://projects.gnome.org/evolution/)
+* [KMail](https://userbase.kde.org/KMail)
+* [Kontact](https://www.kontact.org)
+* [K9 Mail](https://k9mail.app) and
+  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
+* [FairEmail](https://email.faircode.eu)
+* [NextCloud email](https://apps.nextcloud.com/apps/mail)
+* [Delta Chat](https://delta.chat/)
+
+and likely other mail clients.
 
 
 # Alternatives considered
