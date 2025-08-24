@@ -321,10 +321,10 @@ Multiple `<domain>` elements may be included, which means that the config is
 valid for all of these domains. Their order has no meaning - you may sort them
 by number of users, importance to the provider, or alphabethically.
 
-A `<domain purpose="mx">` specifies the domain name of the MX server of
-the email address, and is used config file lookup using MX
-server names, as specified in section MX. The `purpose` attribute is
-mainly informational and may be ignored.
+`<domain purpose="mx">` specifies the domain name of the MX server
+of this provider. It is used during the config file lookup using MX
+server names, as specified in section {{<<MX}}. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this config is applicable for that email address.
+Adding the `purpose` attribute is RECOMMENDED.
 
 ### displayName and displayShortName
 
