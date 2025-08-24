@@ -454,11 +454,10 @@ URLs, the following elements are supported:
 
 Example: `<url>https://jmap.example.com/session</url>`
 
-The content of the `<url>` element contains the URL where to contact the
-server.
+The content of the `<url>` element contains the {{!URL=RFC3986}} where to contact the server.
 
-The URL scheme will normally be HTTPS and the URL start with `https://`.
-Some protocols may use other schemes, e.g. WebSockets `wss://`.
+The URL scheme will normally be HTTPS and the URL starts with `https://` ({{!HTTP=RFC9110}}, Section 4.2.2).
+Some protocols may use other schemes, e.g. WebSockets `wss://` ({{!HTTP=RFC6455}}, Section 3).
 
 ### authentication
 
