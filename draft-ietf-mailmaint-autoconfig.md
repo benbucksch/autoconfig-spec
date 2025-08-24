@@ -120,6 +120,9 @@ resulting document MUST have the following data format and qualities.
 
 The format is in {{?XML=RFC3470}}. The MIME type is `text/xml`.
 
+The seconds below define the XML and its meaning. Most sections start
+with a concrete example of the elements that they define.
+
 ## XML config file
 
 The following example shows the syntax of the XML config file.
@@ -292,7 +295,9 @@ The client MUST NOT reject a config file solely based on the version number.
 
 ### emailProvider
 
-Element `<emailProvider id="example.com">` is within the root element.
+`<emailProvider id="example.com">`
+
+Element `<emailProvider>` is within the root element.
 This element has no semantic purpose and exists for legacy reasons only,
 but its content is significant.
 
@@ -304,14 +309,12 @@ Within `<emailProvider>` are `<domain>`, `<displayName>` and
 
 ### domain
 
-E.g.
-
     <domain>example.com</domain>
     <domain>example.net</domain>
     <domain purpose="mx">example-hosting.com</domain>
 
 The content of the `<domain>` element defines which email addresses this config
-is valid for. E.g. a config with `<domain>example.com</domain>` is valid for
+is valid for. For example, a config with `<domain>example.com</domain>` is valid for
 email address `fred@example.com`.
 
 Multiple `<domain>` elements may be included, which means that the config is
@@ -325,8 +328,6 @@ mainly informational and may be ignored.
 
 ### displayName and displayShortName
 
-E.g.
-
     <displayName>Google Workspace</displayName>
     <displayShortName>GMail</displayShortName>
 
@@ -339,8 +340,6 @@ typically used by end users. It SHOULD be no longer than 12
 characters, and it MUST NOT be longer than 20 characters.
 
 ## documentation
-
-E.g.
 
     <documentation url="https://www.example.com/help/mail/">
       <descr lang="en">Configure mail app for IMAP</descr>
@@ -363,7 +362,7 @@ code, like the HTML `lang` attribute.
 
 ## Server sections
 
-E.g. `<incomingServer type="jmap">` or `<calendar type="carddav">`
+`<incomingServer type="jmap">`, `<calendar type="carddav">` etc.
 
 * The `type` attribute specifies the wire protocol that this server uses. See
   section type below.
@@ -441,8 +440,6 @@ corresponding section below.
 
 ## URL-based protocols
 
-E.g.
-
     <incomingServer type="jmap">
       <url>https://jmap.example.com/session</url>
       <authentication>basic</authentication>
@@ -454,7 +451,7 @@ URLs, the following elements are supported:
 
 ### url
 
-E.g. `<url>https://jmap.example.com/session</url>`
+Example: `<url>https://jmap.example.com/session</url>`
 
 The content of the `<url>` element contains the URL where to contact the
 server.
@@ -464,7 +461,7 @@ Some protocols may use other schemes, e.g. WebSockets `wss://`.
 
 ### authentication
 
-E.g. `<authentication system="http">basic</authentication>` or
+Example: `<authentication system="http">basic</authentication>` or
 `<authentication>OAuth2</authentication>`
 
 The content of the `<authentication>` element defines which HTTP
@@ -489,7 +486,7 @@ The rules as specified in sections "Multiple authentication alternatives" and
 
 ### username
 
-E.g. `<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
+`<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
 
 The username to use for the authentication method.
 
@@ -511,14 +508,14 @@ the following elements are supported:
 
 ### hostname
 
-E.g. `<hostname>imap.example.com</hostname>`
+`<hostname>imap.example.com</hostname>`
 
 The content of the `<hostname>` element contains the fully qualified hostname
 of the server.
 
 ### port
 
-E.g. `<port>993</port>`
+`<port>993</port>`
 
 The content of the `<port>` element is an integer and contains the TCP port
 number at the hostname. The port is typically specific to the combination of
@@ -526,7 +523,7 @@ the wire protocol and socketType.
 
 ### socketType
 
-E.g. `<socketType>SSL</socketType>`
+`<socketType>SSL</socketType>`
 
 The content of the `<socketType>` element specifies whether to use direct TLS,
 STARTTLS, or none of these.
@@ -566,7 +563,7 @@ and MAY use other recovery mechanisms.
 
 ### authentication
 
-E.g. `<authentication>password-cleartext</authentication>`
+`<authentication>password-cleartext</authentication>`
 
 The content of the `<authentication>` element defines which authentication
 method to use. This can be either an authentication defined by the wire
@@ -598,7 +595,7 @@ protocol, or a SASL scheme, or a successor to SASL.
 
 #### Recommending specific SASL schemes
 
-E.g. `<authentication system="sasl">SCRAM-SHA-256-PLUS</authentication>`
+`<authentication system="sasl">SCRAM-SHA-256-PLUS</authentication>`
 
 A specific SASL scheme {{!SASL=RFC4422}} MAY be specified using
 the specific SASL authentication scheme name, e.g.
@@ -634,7 +631,7 @@ The client SHOULD test the configuration during setup, with an actual
 authentication attempt.
 
 If the authentication fails, the client decides based on the
-authentication error code how to proceed. E.g. if the authentiocation
+authentication error code how to proceed. For example, if the authentiocation
 method itself failed, or the error code indicates a systemic failure,
 the client SHOULD use a lower-priority authentication method from the
 list.
@@ -666,7 +663,7 @@ methods.
 
 ### username
 
-E.g. `<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
+`<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
 
 The username to use for the authentication method.
 
@@ -968,7 +965,7 @@ the location for step 3.1., i.e.
 
 * `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
 
-E.g. if the MX server for customer domain example.net is
+For example, if the MX server for customer domain example.net is
 "mx.premium.europe.example.com", then the config file should be at
 
 * https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
