@@ -4,8 +4,8 @@
 
 mailmaint                                                     B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                             21 March 2025
-Expires: 22 September 2025
+Intended status: Informational                            24 August 2025
+Expires: 25 February 2026
 
 
                             Mail Autoconfig
@@ -13,7 +13,22 @@ Expires: 22 September 2025
 
 Abstract
 
-   Set up a mail account with only email address and password.
+   A protocol that allows email applications to set up mail accounts and
+   related accounts with only the email address and password.
+
+   It defines how service providers can publish the account
+   configuration, so that email applications can automatically find a
+   working configuration.  It reduces setup friction for their users,
+   and calls to the support for the service provider.
+
+   Although the discovery process starts with an email address, the
+   protocol is not limited setting up email accounts, but can also set
+   up calendar, contact and file sync, video conference accounts and
+   other accounts that are connected to the same user account.
+
+   This protocol uses a well-known address and DNS lookups, based on the
+   email address domain, to find the XML configuration file for the
+   service provider.
 
 About This Document
 
@@ -47,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 September 2025.
+   This Internet-Draft will expire on 25 February 2026.
 
 Copyright Notice
 
@@ -66,7 +81,7 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
-   2.  Implementations
+   2.  Conventions and Definitions
    3.  Data format
      3.1.  XML config file
      3.2.  Global elements
@@ -108,21 +123,21 @@ Table of Contents
      6.3.  Return config for non-existing email addresses
      6.4.  No authentication for config
      6.5.  OAuth2 requirements
-   7.  Alternatives considered
-     7.1.  DNSSEC
-     7.2.  DNS SRV
-     7.3.  CAPABILITIES
+   7.  Implementations
    8.  Security Considerations
      8.1.  Risk
      8.2.  DNS
      8.3.  HTTP
      8.4.  Config updates
      8.5.  Server security
-   9.  IANA Considerations
-     9.1.  Registration
-     9.2.  Contents
-     9.3.  Initial registration
-   10. Conventions and Definitions
+   9.  Alternatives considered
+     9.1.  DNSSEC
+     9.2.  DNS SRV
+     9.3.  CAPABILITIES
+   10. IANA Considerations
+     10.1.  Registration
+     10.2.  Contents
+     10.3.  Initial registration
    11. References
      11.1.  Normative References
      11.2.  Informative References
@@ -130,14 +145,27 @@ Table of Contents
 
 1.  Introduction
 
+   Configuring email, calendar and contacts client applications for a
+   given user account at a specific service provider is often a tedious,
+   error-prone and unnerving process.  Even technical users struggle to
+   find the right combination of hostname, port number, security
+   protocols, authentication methods and forms of username.  Less
+   technical users often abort entirely.  This difficulty is one of the
+   primary factors why many users use provider-specific web applications
+   which use proprietary internal protocols instead of generic provider
+   independent client applications that use open protocols specified by
+   the IETF.  This in turn leads to significantly less choice for end
+   users in their everyday user experience.
+
    This protocol allows users to set up their existing email account in
-   a new mail client application, by entering only their name, email
-   address, and password.  The mail application, by means of mail
-   autoconfig specified here, will determine all the other parameters
-   that are required, including IMAP or POP3 hostname, TLS
-   configuration, form of username, authentication method, and other
-   settings, and likewise for SMTP.  Contact sync and calendar, file
-   sharing and other services can also be set up automatically.
+   a email client application, by entering only their name, email
+   address, and password.  The application, by means of the Autoconfig
+   protocol specified here, will determine all the other parameters that
+   are required, including IMAP or POP3 hostname, TLS configuration,
+   form of username, authentication method, and other settings, and
+   likewise for SMTP.  Calendar, contact and file sync, video conference
+   accounts and other accounts that are connected to the same user
+   account can be set up at the same time.
 
    The protocol works by first determining the domain from the email
    address, and the querying well-known URLs at the email provider,
@@ -153,37 +181,17 @@ Table of Contents
    publishing.  The primary concept and limitation here is that these
    accounts need to be hosted by the same provider as the email address.
 
-2.  Implementations
-
    This protocol is in production use since 15 years by major email
-   clients, and the config database (used as fallback) contains
-   configurations for over 50% of all email accounts.
+   clients, and the config database contains configurations for over 80%
+   of all email accounts.
 
-   Currently, this protocol or parts of it has been implemented by:
+2.  Conventions and Definitions
 
-   *  Thunderbird (https://thunderbird.net)
-
-   *  Parula (https://parula.beonex.com)
-
-   *  Evolution (https://projects.gnome.org/evolution/)
-
-   *  KMail (https://userbase.kde.org/KMail)
-
-   *  Kontact (https://www.kontact.org)
-
-   *  K9 Mail (https://k9mail.app) and Thunderbird Mobile
-      (https://www.thunderbird.net/mobile/)
-
-   *  FairEmail (https://email.faircode.eu)
-
-   *  NextCloud email (https://apps.nextcloud.com/apps/mail)
-
-   *  Delta Chat (https://delta.chat/)
-
-   and likely other mail clients.
-
-   The purpose of this paper is to document and specify what is deployed
-   in the wild.
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
 3.  Data format
 
@@ -1209,82 +1217,30 @@ Table of Contents
    services defined in the config file, including for all URL-based
    protocols like CalDAV and all TCP-based protocols like IMAP.
 
-7.  Alternatives considered
+7.  Implementations
 
-7.1.  DNSSEC
+   Currently, this protocol or parts of it has been implemented by:
 
-   Due to their top-level domain, some domains do not have [DNSSEC]
-   available to them, even if they would like to deploy it.
+   *  Thunderbird (https://thunderbird.net)
 
-   Even where the top-level domain supports it, DNSSEC is currently
-   deployed in only 1% of domains, with adoption rates falling instead
-   of rising, due to the difficulties of administrating it correctly.
+   *  Parula (https://parula.beonex.com)
 
-   Therefore, DNSSEC cannot be relied on in this specification, and DNS
-   must be considered insecure for the purposes of this specification.
+   *  Evolution (https://projects.gnome.org/evolution/)
 
-7.2.  DNS SRV
+   *  KMail (https://userbase.kde.org/KMail)
 
-   DNS SRV protocols [DNS-SRV] [RFC6186] are not used here, for 2
-   reasons:
+   *  Kontact (https://www.kontact.org)
 
-   1.  DNS SRV relies on insecure DNS and the config can therefore be
-       trivially spoofed by an attacker.  See also DNSSEC above.
+   *  K9 Mail (https://k9mail.app) and Thunderbird Mobile
+      (https://www.thunderbird.net/mobile/)
 
-   2.  DNS SRV does not provide all the necessary configuration
-       parameters.  For example, we need all of:
+   *  FairEmail (https://email.faircode.eu)
 
-   *  the username form ("fred@example.com", or "fred", or
-      "fred\EXAMPLE", or even a username with no relation to the email
-      address)
+   *  NextCloud email (https://apps.nextcloud.com/apps/mail)
 
-   *  authentication method (password, CRAM-MD5, OAuth2, SSL client
-      certificate)
+   *  Delta Chat (https://delta.chat/)
 
-   *  authentication method parameters (e.g. OAuth parameters)
-
-   and other parameters.  If any of these parameters are not configured
-   right, the configuration won't work.  While these parameters could
-   theoretically be added to DNS SRV, that would mean a new
-   specification and render the idea void that this is a protocol that
-   already exists, is standardized and deployed.  It is unlikely that
-   all DNS SRV records would be updated with the new values.  Therefore,
-   it does not solve the problem.
-
-   This specification was created as an answer to these deficiencies and
-   provides an alternative to DNS SRV.
-
-7.3.  CAPABILITIES
-
-   Deployments in the wild from actual ISPs show that protocol-specific
-   commands to find available authentication methods, e.g. IMAP
-   CAPABILITIES or POP3 CAPA, are not reliable.  Many email servers
-   advertize authentication methods that do not work.
-
-   Some IMAP servers are default configured to list all SASL
-   authentication methods that have corresponding libraries installed on
-   the system, independent on whether they are actually configured to
-   work.  The client receives a long list of authentication methods, and
-   many of them do not work.  Additionally, the server response may be
-   only "authentication failed" and may not indicate whether the method
-   failed due to lack of configuration, or because the password was
-   wrong.  Because some authentication servers lock the account after 3
-   failed login attempts, and it may also fail due to unrelated reasons
-   (e.g. username form, wrong password, etc.), the client cannot blindly
-   issue countless login attempts.  Locking the account must be avoided.
-   So, simply attempting all methods and seeing which one works is not
-   an option for the email client.
-
-   Additionally, some email servers advertize [Kerberos] / [GSSAPI], but
-   when trying to use it, the method fails, and also runs into a long 2
-   minute timeout in some cases.  End users consider that to be a broken
-   app.
-
-   Additionally, such commands are protocol specific and have to be
-   implemented in multiple different ways.
-
-   Finally, some non-mail protocols may not support capabilties commands
-   that include authentication methods.
+   and likely other mail clients.
 
 8.  Security Considerations
 
@@ -1381,9 +1337,86 @@ Table of Contents
 
    The risk is mitigated to some degree by section "User approval".
 
-9.  IANA Considerations
+9.  Alternatives considered
 
-9.1.  Registration
+9.1.  DNSSEC
+
+   Due to their top-level domain, some domains do not have [DNSSEC]
+   available to them, even if they would like to deploy it.
+
+   Even where the top-level domain supports it, DNSSEC is currently
+   deployed in only 1% of domains, with adoption rates falling instead
+   of rising, due to the difficulties of administrating it correctly.
+
+   Therefore, DNSSEC cannot be relied on in this specification, and DNS
+   must be considered insecure for the purposes of this specification.
+
+9.2.  DNS SRV
+
+   DNS SRV protocols [DNS-SRV] [RFC6186] are not used here, for 2
+   reasons:
+
+   1.  DNS SRV relies on insecure DNS and the config can therefore be
+       trivially spoofed by an attacker.  See also DNSSEC above.
+
+   2.  DNS SRV does not provide all the necessary configuration
+       parameters.  For example, we need all of:
+
+   *  the username form ("fred@example.com", or "fred", or
+      "fred\EXAMPLE", or even a username with no relation to the email
+      address)
+
+   *  authentication method (password, CRAM-MD5, OAuth2, SSL client
+      certificate)
+
+   *  authentication method parameters (e.g. OAuth parameters)
+
+   and other parameters.  If any of these parameters are not configured
+   right, the configuration won't work.  While these parameters could
+   theoretically be added to DNS SRV, that would mean a new
+   specification and render the idea void that this is a protocol that
+   already exists, is standardized and deployed.  It is unlikely that
+   all DNS SRV records would be updated with the new values.  Therefore,
+   it does not solve the problem.
+
+   This specification was created as an answer to these deficiencies and
+   provides an alternative to DNS SRV.
+
+9.3.  CAPABILITIES
+
+   Deployments in the wild from actual ISPs show that protocol-specific
+   commands to find available authentication methods, e.g. IMAP
+   CAPABILITIES or POP3 CAPA, are not reliable.  Many email servers
+   advertize authentication methods that do not work.
+
+   Some IMAP servers are default configured to list all SASL
+   authentication methods that have corresponding libraries installed on
+   the system, independent on whether they are actually configured to
+   work.  The client receives a long list of authentication methods, and
+   many of them do not work.  Additionally, the server response may be
+   only "authentication failed" and may not indicate whether the method
+   failed due to lack of configuration, or because the password was
+   wrong.  Because some authentication servers lock the account after 3
+   failed login attempts, and it may also fail due to unrelated reasons
+   (e.g. username form, wrong password, etc.), the client cannot blindly
+   issue countless login attempts.  Locking the account must be avoided.
+   So, simply attempting all methods and seeing which one works is not
+   an option for the email client.
+
+   Additionally, some email servers advertize [Kerberos] / [GSSAPI], but
+   when trying to use it, the method fails, and also runs into a long 2
+   minute timeout in some cases.  End users consider that to be a broken
+   app.
+
+   Additionally, such commands are protocol specific and have to be
+   implemented in multiple different ways.
+
+   Finally, some non-mail protocols may not support capabilties commands
+   that include authentication methods.
+
+10.  IANA Considerations
+
+10.1.  Registration
 
    IANA will create the following registry in a new registry group
    called "Mail Autoconfig":
@@ -1395,7 +1428,7 @@ Table of Contents
 
    Designated Expert: The author of this document.
 
-9.2.  Contents
+10.2.  Contents
 
    Table, with fields Element (alphanumeric), Type (alphanumeric), Base
    (URL or TCP or URL/TCP), Name, Specification, and Additional Elements
@@ -1415,7 +1448,7 @@ Table of Contents
    *  Additional Elements: (Optional) Protocol-specific XML elements and
       their meaning.
 
-9.3.  Initial registration
+10.3.  Initial registration
 
    +==============+===========+====+===========+=========================+==========+
    |Element       |Type       |Base|Name       |Specification            |Additional|
@@ -1460,14 +1493,6 @@ Table of Contents
                                   Table 3
 
    The Additional Elements field is empty in all of the initial values.
-
-10.  Conventions and Definitions
-
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in
-   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
-   capitals, as shown here.
 
 11.  References
 
