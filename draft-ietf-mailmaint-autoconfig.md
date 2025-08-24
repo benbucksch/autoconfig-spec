@@ -54,6 +54,15 @@ normative:
     title: Matrix protocol specification
 
 informative:
+  Autoconfig1.1:
+    target: https://www.bucksch.org/1/projects/autoconfiguration/config-file-format.html
+    title: Autoconfig version 1.1
+    author:
+      -
+        ins: B. Bucksch
+        name: Ben Bucksch
+        org: Beonex
+    date: 2020
 
 
 --- abstract
@@ -278,7 +287,7 @@ and is encoded in UTF-8 without BOM.
 The root element of the XML file is `<clientConfig version="1.2">`.
 
 The `version` is `1.2` for the version defined in this specification. `1.1` is
-a compatible previous version. Higher versions are for future specifications.
+a compatible previous version of this protocol: {{Autoconfig1.1}}. Higher versions are for future specifications.
 The client MUST NOT reject a config file solely based on the version number.
 
 ### emailProvider
