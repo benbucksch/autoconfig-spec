@@ -58,19 +58,28 @@ informative:
 
 --- abstract
 
-Set up a mail account with only email address and password.
+A protocol that allows email applications to set up mail accounts and related accounts with only the email address and password.
+
+It defines how service providers can publish the account configuration, so that email applications can automatically find a working configuration. It reduces setup friction for their users, and calls to the support for the service provider.
+
+Although the discovery process starts with an email address, the protocol is not limited setting up email accounts, but can also set up calendar, contact and file sync, video conference accounts and other
+accounts that are connected to the same user account.
+
+This protocol uses a well-known address and DNS lookups, based on the email address domain, to find the XML configuration file for the service provider.
 
 --- middle
 
 # Introduction
 
-This protocol allows users to set up their existing email account in a new
-mail client application, by entering only their name, email address, and
-password. The mail application, by means of mail autoconfig specified here,
-will determine all the other parameters that are required, including IMAP or
-POP3 hostname, TLS configuration, form of username, authentication method, and
-other settings, and likewise for SMTP. Contact sync and calendar, file sharing
-and other services can also be set up automatically.
+Configuring email, calendar and contacts client applications for a given user account at a specific service provider is often a tedious, error-prone and unnerving process. Even technical users struggle to find the right combination of hostname, port number, security protocols, authentication methods and forms of username. Less technical users often abort entirely. This difficulty is one of the primary factors why many users use provider-specific web applications which use proprietary internal protocols instead of generic provider independent client applications that use open protocols specified by the IETF. This in turn leads to significantly less choice for end users in their everyday user experience.
+
+This protocol allows users to set up their existing email account in a email client application,
+by entering only their name, email address, and password.
+The application, by means of the Autoconfig protocol specified here, will determine all the other
+parameters that are required, including IMAP or POP3 hostname, TLS configuration,
+form of username, authentication method, and other settings, and likewise for SMTP.
+Calendar, contact and file sync, video conference accounts and other
+accounts that are connected to the same user account can be set up at the same time.
 
 The protocol works by first determining the domain from the email address, and
 the querying well-known URLs at the email provider, which return the
@@ -84,6 +93,7 @@ it can also be used for accounts of other types, like contacts and calendar
 sync, chat, video conference, or online publishing. The primary concept and
 limitation here is that these accounts need to be hosted by the same provider
 as the email address.
+
 
 # Implementations
 
