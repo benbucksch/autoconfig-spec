@@ -98,6 +98,12 @@ This protocol is in production use since 15 years by major email clients, and
 the config database contains configurations for over 80% of
 all email accounts.
 
+
+# Conventions and Definitions
+
+{::boilerplate bcp14-tagged}
+
+
 # Data format
 
 Whether the ISP or a common central database returns the configuration, the
@@ -1247,9 +1253,5 @@ The registrations need to define:
 
 The Additional Elements field is empty in all of the initial values.
 
-
-# Conventions and Definitions
-
-{::boilerplate bcp14-tagged}
 
 --- back
