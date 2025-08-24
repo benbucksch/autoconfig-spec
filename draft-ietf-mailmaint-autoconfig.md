@@ -72,8 +72,7 @@ A protocol that allows email applications to set up mail accounts and related ac
 
 It defines how service providers can publish the account configuration, so that email applications can automatically find a working configuration. It reduces setup friction for their users, and calls to the support for the service provider.
 
-Although the discovery process starts with an email address, the protocol is not limited setting up email accounts, but can also set up calendar, contact and file sync, video conference accounts and other
-accounts that are connected to the same user account.
+Although the discovery process starts with an email address, the protocol is not limited setting up email accounts, but can also set up calendar, contact and file sync, video conference accounts and other accounts that are connected to the same user account.
 
 This protocol uses a well-known address and DNS lookups, based on the email address domain, to find the XML configuration file for the service provider.
 
@@ -349,7 +348,7 @@ characters, and it MUST NOT be longer than 20 characters.
 
 This is purely informational and not required for the automatic setup.
 
-Records the user help webpage at the provider that describes the mail
+This element contains the end-user help webpage at the provider that describes the mail
 server settings. The configuration may be based on that page, but does not
 necessarily have to match it, e.g. when a better configuration is available
 than the one described on the webpage.
@@ -396,6 +395,7 @@ Unless the client has specific other requirements, it SHOULD pick the first
 config.
 
 The client may derivate from this recommendation, because
+
 * the client doesn't support a higher-priority protocol, e.g. a JMAP
   configuraion is listed first and is the most preferred, but the
   client does not support JMAP yet, or
