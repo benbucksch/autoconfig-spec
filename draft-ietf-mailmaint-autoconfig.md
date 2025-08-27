@@ -734,7 +734,7 @@ in this case, you shall make explicit when advertizing or referring to Autoconfi
 
 ## Mail provider
 
-First step is to directly ask the mail provider and allow it to return the
+The first step is to directly ask the mail provider and allow it to return the
 configuration. This step ensures that the protocol is decentralized and the
 mail provider is in control of the configuration issued to mail clients.
 
@@ -754,10 +754,9 @@ use this HTTP URL.
 ### Customzing the configuration for a specific user
 
 To allow the mail provider to return a configuration adjusted for that mailbox,
-the client sends the email address as query parameter in URL 1.1. This allows
-the mail provider to e.g. separate mailboxes on geographically local mail
-servers, e.g. a mail server located in the same office building where an
-employee works.
+the client sends the email address as query parameter in URL 1.1.
+
+For example, a global company might want to locate the mailbox geographically close to the user, in the same country or even in the same office building.
 
 However, while the protocol allows for such heterogenous configurations, mail
 providers are discouraged from doing so, and are instead encouraged to provide
