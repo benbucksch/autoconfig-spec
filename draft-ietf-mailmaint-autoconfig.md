@@ -113,6 +113,28 @@ all email accounts.
 {::boilerplate bcp14-tagged}
 
 
+# Implementations
+
+Currently, this protocol or parts of it has been implemented by:
+
+* [Thunderbird](https://thunderbird.net)
+* [Parula](https://parula.beonex.com)
+* [Evolution](https://projects.gnome.org/evolution/)
+* [KMail](https://userbase.kde.org/KMail)
+* [Kontact](https://www.kontact.org)
+* [K9 Mail](https://k9mail.app) and
+  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
+* [FairEmail](https://email.faircode.eu)
+* [NextCloud email](https://apps.nextcloud.com/apps/mail)
+* [Delta Chat](https://delta.chat/)
+
+and likely other mail clients.
+
+A number of mail servers automatically provide AutoConfig files that follow
+this specification, including [Stalwart](https://stalw.art/),
+[Mailcow](https://mailcow.email/) and many others.
+
+
 # Data format
 
 Whether the ISP or a common central database returns the configuration, the
@@ -123,7 +145,7 @@ The format is in {{?XML=RFC3470}}. The MIME type is `text/xml`.
 The seconds below define the XML and its meaning. Most sections start
 with a concrete example of the elements that they define.
 
-## XML configuration file
+## XML configuration file example
 
 The following example shows the syntax of the XML configuration file.
 
@@ -167,7 +189,7 @@ The following example shows the syntax of the XML configuration file.
           <username>%EMAILADDRESS%</username>
         </incomingServer>
 
-        <!-- You can have multiple incoming servers,
+        <!-- There can be multiple incoming servers,
           and even multiple IMAP server configs.
           The first configuration is the preferred one, but the user or
           or client can choose the alternative configs. -->
@@ -318,7 +340,7 @@ is valid for. For example, a configuration with `<domain>example.com</domain>` i
 email address `fred@example.com`.
 
 Multiple `<domain>` elements may be included, which means that the configuration is
-valid for all of these domains. Their order has no meaning - you may sort them
+valid for all of these domains. Their order has no meaning - they may be sorted
 by number of users, importance to the provider, or alphabethically.
 
 `<domain purpose="mx">` specifies the domain name of the MX server
@@ -338,6 +360,16 @@ longer than 30 characters, but MUST be no longer than 60 characters.
 The `<displayShortName>` element contains the name of the provider, as
 typically used by end users. It SHOULD be no longer than 12
 characters, and it MUST NOT be longer than 20 characters.
+
+Both elements may used to display the provider or account name by the
+mail client UI, which has reasonable expectations on length and
+expressiveness.
+
+The `<displayShortName>` in particular may be used by the mail client
+together with the email address as partial base for the account name,
+and during everyday use of the app to represent the account, so it
+SHOULD be short, distinctive and represent the provider in the way
+end users refer and think of it.
 
 ## documentation
 
@@ -481,8 +513,8 @@ attribute is optional when a https: or wss: URL is used.
   `<authentication>OAuth2</authentication>` without system attribute.
   `<authentication system="http">Bearer</authentication>` is invalid.
 
-The rules as specified in sections "Multiple authentication alternatives" and
-"Authentication verification and fallback" apply here as well.
+The rules as specified in sections {{<<Multiple authentication alternatives}} and
+{{<<Authentication verification and fallback}} apply here as well.
 
 ### username
 
@@ -490,8 +522,7 @@ The rules as specified in sections "Multiple authentication alternatives" and
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See section
-"Placeholders".
+Placeholders MUST be replaced before using the actual value. See section {{<<Placeholders}}.
 
 ## TCP-based protocols
 
@@ -577,7 +608,7 @@ protocol, or a SASL scheme, or a successor to SASL.
   Includes SASL `CRAM-MD5` {{!CRAM-MD5=RFC2195}},
   `DIGEST-MD5` {{!DIGEST-MD5=RFC2831}},
   `SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}, and successors.
-  TLS by itself does not qualify as "password-encrypted".
+  TLS by itself does not qualify as `password-encrypted`.
 * `NTLM`: Legacy Windows login mechanisms NTLM or NTLMv2.
 * `GSSAPI`: {{?Kerberos=RFC4120}} or {{?GSSAPI=RFC2743}},
    a single-signon mechanism based on TCP.
@@ -667,8 +698,7 @@ methods.
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See section
-"Placeholders".
+Placeholders MUST be replaced before using the actual value. See section {{<<Placeholders}}.
 
 ## Placeholders
 
@@ -694,7 +724,7 @@ the XML syntax is invalid, the client SHOULD ignore the entire file. In
 contrast, if there are merely unknown elements or
 attributes, the client MUST NOT ignore the file.
 
-The client SHOULD read only the elements and attributes that are
+The client SHOULD regard only the elements and attributes that are
 supported by the client, and MUST ignore the others that are unknown
 to the client.
 
@@ -720,16 +750,17 @@ valid higher priority result has been successfully received. The priority is
 expressed below with the number before the URL or location, with lower numbers
 meaning higher priority, e.g. 1.2 has higher priority than 4.1.
 
-In the URLs below, `%EMAILADDRESS%` shall be replaced with the email address
-that the user entered and wishes to use, and `%EMAILDOMAIN%` shall be replaced
+In the URLs below, `%EMAILADDRESS%` SHALL be replaced with the email address
+that the user entered and wishes to use, and `%EMAILDOMAIN%` SHALL be replaced
 with the email domain extracted from the email address. For example, for
-"fred@example.com", the email domain is "example.com", and for
-"fred@test.cs.example.net", the email domain is "test.cs.example.net".
+`fred@example.com`, the email domain is `example.com`, and for
+`fred@test.cs.example.net`, the email domain is `test.cs.example.net`.
 
 For full support of this specification, all "Required" and "Recommended"
 mechanisms MUST be implemented and working. For partial support of this
 specification, all "Required" mechanisms MUST be implemented and working, and
-in this case, you shall make explicit when advertizing or referring to Autoconfig that there is only partial support of this specification.
+in this case, the implementor SHALL make explicit when advertizing or referring
+to Autoconfig that there is only partial support of this specification.
 
 
 ## Mail provider
@@ -744,9 +775,9 @@ mail provider is in control of the configuration issued to mail clients.
 
 For example:
 
-* 1.1. https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
-* 1.2. https://example.com/.well-known/autoconfig/mail/config-v1.1.xml
-* 1.3. http://autoconfig.example.com/mail/config-v1.1.xml
+* 1.1. `https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
+* 1.2. `https://example.com/.well-known/autoconfig/mail/config-v1.1.xml`
+* 1.3. `http://autoconfig.example.com/mail/config-v1.1.xml`
 
 Step 1.3. is mainly for legacy servers. Many current deployments
 use this HTTP URL.
@@ -756,7 +787,8 @@ use this HTTP URL.
 To allow the mail provider to return a configuration adjusted for that mailbox,
 the client sends the email address as query parameter in URL 1.1.
 
-For example, a global company might want to locate the mailbox geographically close to the user, in the same country or even in the same office building.
+For example, a global company might want to locate the mailbox geographically
+close to the user, in the same country or even in the same office building.
 
 However, while the protocol allows for such heterogenous configurations, mail
 providers are discouraged from doing so, and are instead encouraged to provide
@@ -765,28 +797,33 @@ based on location, mail proxy servers, or other techniques as necessary, can
 be used to route the traffic and host the mail efficiently.
 
 This mechanism also allows the Autoconfig server to map the email address to
-a username that cannot be expressed using the Placeholders (see section).
+a username that cannot be expressed using the Placeholders (see section {{<<Placeholders}}).
 However, this method is discouraged. Instead, the email server login should
 accept email addresses as username, and doing the mapping to internal
 usernames at login time, which avoids the need for the client to know a
 different username.
 
-To avoid that email addresses can be tested for validity, whenever customized
-configs are returned, the Autoconfig server should respond to non-existing
-email addresses with a configuation that appears to be real and is similar in
-structure to real configurations, e.g. a random host out of the pool of actual
-hosts.
+Autoconfig servers that customize the returned configuration file to the
+email address should avoid that email addresses can be tested for validity
+by hostile parties like spammers or attackers.
+For that reason, Autoconfig servers SHOULD return a real configuration,
+even if the email address sent as URL parameter does not exist.
+If the query contains a non-existing email address,
+the server should not return an error nor a fake configuration, but rather
+a random real configuation, e.g. a random host out of the pool of real hosts.
+Supporting mail clients should test the login before completing setup,
+so spelling mistakes in the email address will be signaled to the user
+as login error in later stages of the setup process.
 
 ## Central database
 
-The ISPDB contains the configurations for most mail providers with a market
-share larger than 0.1%, and contains configurations for half of the email
-accounts in the world.
+The ISPDB is a central database that contains the configurations for most
+mail providers with a market share larger than 0.1%, and contains configurations
+for half of the email accounts in the world.
 
-This is a useful fallback for mail providers which do not host a configuration server
-described in the previous step. Using a central database (ISPDB) of mail
-configurations for the large mail providers will increase the success rate of
-finding a valid configuration drastically, up to 10-fold.
+This is a useful fallback that allows mail clients to support mail providers
+which do not host a configuration server described in the previous step.
+This can increase the success rate of finding a valid configuration up to 10-fold.
 
 The mail client application may choose the mail configuration database provider. A
 public mail configuration database is available at base URL `https://v1.ispdb.net/`.
@@ -819,58 +856,58 @@ that MX hostname, 2 values are extracted:
 * Extract only the second-level domain from the MX hostname, and use that as
   value for `%MXBASEDOMAIN%`. To determine the second-level domain, use the
   [Public Suffic List](https://publicsuffix.org) or a similarly suited method,
-  to correctly handle domains like ".co.uk" and ".com.au".
+  to correctly handle domains like `.co.uk` and `.com.au`.
 * Remove the first component from the MX hostname, i.e. everything up to and
   including the first `.`, and use that as value for `%MXFULLDOMAIN%`. Use it
   only if it is longer than `%MXBASEDOMAIN%`.
 
 For example:
 
- * For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both
-   "example.com".
- * For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both
-   "example.co.uk".
- * For "mx.premium.europe.example.com", the MXFULLDOMAIN is
-   "premium.europe.example.com" and the MXBASEDOMAIN is "example.com".
+ * For `mx.example.com`, the MXFULLDOMAIN and MXBASEDOMAIN are both
+   `example.com`.
+ * For `mx.example.co.uk`, the MXFULLDOMAIN and MXBASEDOMAIN are both
+   `example.co.uk`.
+ * For `mx.premium.europe.example.com`, the MXFULLDOMAIN is
+   `premium.europe.example.com` and the MXBASEDOMAIN is `example.com`.
 
 Then, attempt to retrieve the configuration for these MX domains, using the previous
 methods:
 
-* 3.1. `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Required)
-* 3.2. `https://autoconfig.%MXBASEDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%` (Recommended)
+* 3.1. `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Required. `emailaddress` is Optional)
+* 3.2. `https://autoconfig.%MXBASEDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended. `emailaddress` is Optional)
 * 3.3. `%ISPDB%%MXFULLDOMAIN%` (Recommended)
 * 3.4. `%ISPDB%%MXBASEDOMAIN%` (Recommended)
 
 For example:
 
-* 3.1. https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
-* 3.2. https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
-* 3.3. https://v1.ispdb.net/premium.europe.example.com
-* 3.4. https://v1.ispdb.net/example.com
+* 3.1. `https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
+* 3.2. `https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
+* 3.3. `https://v1.ispdb.net/premium.europe.example.com`
+* 3.4. `https://v1.ispdb.net/example.com`
 
 
 ## Local disk
 
-For testing purposes, you may want to define a location on the disk, relative
+For testing purposes, a mail client may want to define a location on the disk, relative
 to the application installation directory, or relative to the user
 configuration directory, which may contain a configuration file for a specific
-domain, and which your application will use, if the above methods fail.
+domain, and which the mail client will use, if the above methods fail.
 
 * 4.1. `%USER_CONFIGURATION_DIR%/isp/%EMAILDOMAIN%.xml` (Optional)
 * 4.2. `%APP_INSTALL_DIR%/isp/%EMAILDOMAIN%.xml` (Optional)
 
 For example:
 
-* 4.1. /home/fred/.config/yourapp/isp/example.com.xml
-* 4.2. /opt/yourapp/isp/example.com.xml
+* 4.1. `/home/fred/.config/acmemailapp/isp/example.com.xml`
+* 4.2. `/opt/acmemailapp/isp/example.com.xml`
 
 
 ## Other mechanisms
 
-You may want to implement other mechanisms to find a configuration, for
+A mail client may want to implement other mechanisms to find a configuration, for
 example Exchange AutoDiscover, DNS-SRV {{?RFC6186}},
-or heuristic guessing. If you
-implement such alternative methods, and if they are less secure than some of
+or heuristic guessing. If the mail client
+implements such alternative methods, and if they are less secure than some of
 the mechanisms provided here, the alternative methods SHOULD be considered
 only with lower priority (as defined above) than the more secure mechanisms
 defined here. For evaluating other mechanisms, use similar criteria as
@@ -880,7 +917,7 @@ outlined in section {{<<Security considerations}}.
 ## Manual configuration
 
 If the above mechanisms fail to provide a working configuration, or if the
-user explicitly chooses so, you SHOULD give the end user the ability to
+user explicitly chooses so, the mail client SHOULD give the end user the ability to
 manually enter a configuration, and use that configuration to configure the
 account.
 
@@ -890,7 +927,7 @@ account.
 ## User approval
 
 Independent of the mechanisms used to find the configuration, before using
-that configuration, you SHOULD display that configuration to the end user and
+that configuration, the mail client SHOULD display that configuration to the end user and
 let him confirm it. While doing so:
 
 * At least the second-level domain name(s) of the hostnames involved MUST be
@@ -902,7 +939,7 @@ let him confirm it. While doing so:
 
 ## Login test
 
-After the user confirmed the configuration, you SHOULD test the configuration,
+After the user confirmed the configuration, the mail client SHOULD test the configuration,
 by attempting a login to each server configured. Only if the login succeeded,
 and the server is working, should the configuration be saved and retrieving
 and sending mail be started.
@@ -911,7 +948,7 @@ and sending mail be started.
 
 If the configuration contains OAuth2 authentication, or any other kind of
 authentication that uses a web browser with URL redirects,
-you MUST show the full URL or the second-level domain of the current page
+the mail client MUST show the full URL or the second-level domain of the current page
 to the end user, at all times, including after page changes, URL changes,
 or redirects. The authentication start URL may be the email hoster, but
 it redirects to a corporate server for login, and then back to the hoster.
@@ -928,7 +965,7 @@ that he enters the passwords on the right domain.
 Mail service providers who want to support this specification
 and publish the mail configuration for their own mail service,
 so that mail client apps can be automatically configured,
-SHOULD follow this section as guideline and MUST respect the
+MUST follow this section as guideline and MUST respect the
 definitions in this specification.
 
 * Configuration fields MUST NOT contain invalid or non-working
@@ -943,14 +980,11 @@ definitions in this specification.
 The configuration file SHOULD be published at the URL for
 step 1.1., i.e.
 
-* `https://autoconfig.%EMAILDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
+* `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml`
 
-e.g. for fred@example.com
+e.g. for `fred@example.com`
 
-* https://autoconfig.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.com
-
-For backwards compatibility with older mail clients,
-step 1.2. should also be implemented.
+* `https://autoconfig.example.com/mail/config-v1.1.xml`
 
 ## Configuration location for domain hosters
 
@@ -959,41 +993,27 @@ customers, the same URL as listed in the previous section is
 preferred.
 
 Alternatively, the configuration file SHOULD be published at
-the location for step 3.1., i.e.
+the locations for step 3.1. and 3.2., i.e.
 
-* `https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-v1.xml?emailaddress=%EMAILADDRESS%`
+* `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml`
+* `https://autoconfig.%MXBASEDOMAIN%/mail/config-v1.1.xml`
 
 For example, if the MX server for customer domain example.net is
-"mx.premium.europe.example.com", then the configuration file should be at
+`mx.premium.europe.example.com`, then the configuration file should be at both
 
-* https://autoconfig.premium.europe.example.com/.well-known/mail-v1.xml?emailaddress=fred@example.net
-
-For backwards compatibility with older mail clients,
-step 3.2. should also be implemented.
-
-## Return configuration for non-existing email addresses
-
-Servers SHOULD return a valid config, even if the email address
-sent as URL parameter does not exist. Otherwise, spammers
-or attackers would be able to test the validity of email addresses.
-This is true even if the configuration server needs the email address
-to determine which of multiple configurations is correct.
-In such a configuration, if the client sends a non-existing
-email address, the configuration server SHOULD return one of the
-valid configuations, so that valid and invalid email addresses
-are indistiguishable.
+* `https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml`
+* `https://autoconfig.example.com/mail/config-v1.1.xml`
 
 ## No authentication for config
 
 Any of the above URLs for retrieving the configuration file MUST NOT
 require authentication, but MUST be public.
 
-
 This is because the configuration information in the Autoconfig file
 includes the authentication method. Without the Autoconfig file,
 the client does not know which authentication method is required and
 which username form to use
-(e.g. username "fred" or "fred@example.com" or "fred\EXAMPLE").
+(e.g. username `fred` or `fred@example.com` or `fred\EXAMPLE`).
 Given that this information is required for authentication,
 the Autoconfig file itself cannot require authentication.
 
@@ -1027,24 +1047,6 @@ so that a single user login is sufficient for all services.
 The resulting refresh and access tokens MUST be valid for all services defined
 in the configuration file, including for all URL-based protocols like CalDAV
 and all TCP-based protocols like IMAP.
-
-
-# Implementations
-
-Currently, this protocol or parts of it has been implemented by:
-
-* [Thunderbird](https://thunderbird.net)
-* [Parula](https://parula.beonex.com)
-* [Evolution](https://projects.gnome.org/evolution/)
-* [KMail](https://userbase.kde.org/KMail)
-* [Kontact](https://www.kontact.org)
-* [K9 Mail](https://k9mail.app) and
-  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
-* [FairEmail](https://email.faircode.eu)
-* [NextCloud email](https://apps.nextcloud.com/apps/mail)
-* [Delta Chat](https://delta.chat/)
-
-and likely other mail clients.
 
 
 # Security Considerations
@@ -1087,7 +1089,7 @@ second-level domains. See section {{<<User approval}}.
 ## HTTP
 
 HTTP requests may be intercepted, redirected, or altered at the network level.
-See "Risk" above.
+See section {{<<Risk}} above.
 
 Even if an http URL redirects to a https URL, and the domain of the https URL
 cannot be validated against the email domain, that is still insecure.
@@ -1096,8 +1098,7 @@ For that reason, clients MUST prefer HTTPS over HTTP during configuration retrie
 within the same retrieval method.
 
 If such configs from HTTP are used, the end user MUST explicitly confirm the
-config, particularly the resulting second-level domains. See section
-"User approval".
+config, particularly the resulting second-level domains. See section {{<<User approval}}.
 
 ## Configuration updates
 
@@ -1161,7 +1162,7 @@ DNS SRV protocols {{?DNS-SRV=RFC2782}} {{?RFC6186}} are not used here, for 2 rea
 2. DNS SRV does not provide all the necessary configuration parameters. For
    example, we need all of:
 
-* the username form ("fred@example.com", or "fred", or "fred\EXAMPLE", or even
+* the username form (`fred@example.com`, or `fred`, or `fred\EXAMPLE`, or even
   a username with no relation to the email address)
 * authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)
 * authentication method parameters (e.g. OAuth parameters)
