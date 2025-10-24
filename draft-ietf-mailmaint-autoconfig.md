@@ -345,7 +345,7 @@ by number of users, importance to the provider, or alphabethically.
 
 `<domain purpose="mx">` specifies the domain name of the MX server
 of this provider. It is used during the configuration file lookup using MX
-server names, as specified in section {{MX}}. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this configuration is applicable for that email address.
+server names, as specified in section {{mx}}. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this configuration is applicable for that email address.
 Adding the `purpose` attribute is RECOMMENDED.
 
 ### displayName and displayShortName
@@ -446,7 +446,7 @@ server sections, which may contain configs that the client
 understands and supports. The client ignores the file only if there
 is no supported and working configuration found.
 
-## type
+## type {#type}
 
 The `type` attribute on the server section element specifies the
 wire protocol that this server uses.
@@ -522,7 +522,7 @@ The rules as specified in sections {{auth-alternatives}} and
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See section {{Placeholders}}.
+Placeholders MUST be replaced before using the actual value. See section {{placeholders}}.
 
 ## TCP-based protocols
 
@@ -698,9 +698,9 @@ methods.
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See section {{Placeholders}}.
+Placeholders MUST be replaced before using the actual value. See next section {{placeholders}}.
 
-## Placeholders
+## Placeholders {#placeholders}
 
 The `<username>` value may contain placeholders.
 
@@ -797,7 +797,7 @@ based on location, mail proxy servers, or other techniques as necessary, can
 be used to route the traffic and host the mail efficiently.
 
 This mechanism also allows the Autoconfig server to map the email address to
-a username that cannot be expressed using the Placeholders (see section {{Placeholders}}).
+a username that cannot be expressed using the Placeholders (see section {{placeholders}}).
 However, this method is discouraged. Instead, the email server login should
 accept email addresses as username, and doing the mapping to internal
 usernames at login time, which avoids the need for the client to know a
@@ -837,7 +837,7 @@ For example:
 * 2.1. [https://v1.ispdb.net/geologist.com](https://v1.ispdb.net/geologist.com)
 
 
-## MX
+## MX {#mx}
 
 Many companies do not maintain their own mail server, but let their email be
 hosted by a hosting company, which is then responsible for the email of dozens
@@ -924,7 +924,7 @@ account.
 
 # Configuration validation
 
-## User approval
+## User approval {#user-approval}
 
 Independent of the mechanisms used to find the configuration, before using
 that configuration, the mail client SHOULD display that configuration to the end user and
@@ -1051,7 +1051,7 @@ and all TCP-based protocols like IMAP.
 
 # Security Considerations {#security}
 
-## Risk
+## Risk {#risk}
 
 If an attacker can provide a forged configuration, the provided mail hostname
 and authentication server can be controlled by the attacker, and the attacker
@@ -1076,7 +1076,7 @@ multi-factor authentication steps required.
 Any protocol that relies on DNS without further validation, e.g. http, should
 be considered insecure.
 This also applies to the DNS MX lookup and the https calls that base on its
-results, as described in section {{MX}}.
+results, as described in section {{mx}}.
 
 One possible mitigation is to use multiple different DNS servers and verify
 that the results match, e.g. to use the native DNS resolver of the operating
@@ -1084,12 +1084,12 @@ system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.
 
 Nonetheless, the result should be used with care. If such configs are used,
 the end user MUST explicitly confirm the config, particularly the resulting
-second-level domains. See section {{User-approval}}.
+second-level domains. See section {{user-approval}}.
 
 ## HTTP
 
 HTTP requests may be intercepted, redirected, or altered at the network level.
-See section {{Risk}} above.
+See section {{risk}} above.
 
 Even if an http URL redirects to a https URL, and the domain of the https URL
 cannot be validated against the email domain, that is still insecure.
@@ -1098,7 +1098,7 @@ For that reason, clients MUST prefer HTTPS over HTTP during configuration retrie
 within the same retrieval method.
 
 If such configs from HTTP are used, the end user MUST explicitly confirm the
-config, particularly the resulting second-level domains. See section {{User-approval}}.
+config, particularly the resulting second-level domains. See section {{user-approval}}.
 
 ## Configuration updates
 
@@ -1136,7 +1136,7 @@ Server hostnames MUST be compared with the email domain names they are
 serving, and if they differ, the ownership of the server hostnames MUST be
 validated.
 
-The risk is mitigated to some degree by section {{User-approval}}.
+The risk is mitigated to some degree by section {{user-approval}}.
 
 
 # Alternatives considered
