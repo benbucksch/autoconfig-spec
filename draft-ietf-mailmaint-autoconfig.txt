@@ -4,8 +4,8 @@
 
 mailmaint                                                     B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                            24 August 2025
-Expires: 25 February 2026
+Intended status: Informational                           24 October 2025
+Expires: 27 April 2026
 
 
                             Mail Autoconfig
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 February 2026.
+   This Internet-Draft will expire on 27 April 2026.
 
 Copyright Notice
 
@@ -82,53 +82,52 @@ Table of Contents
 
    1.  Introduction
    2.  Conventions and Definitions
-   3.  Data format
-     3.1.  XML config file
-     3.2.  Global elements
-       3.2.1.  clientConfig
-       3.2.2.  emailProvider
-       3.2.3.  domain
-       3.2.4.  displayName and displayShortName
-     3.3.  documentation
-     3.4.  Server sections
-       3.4.1.  Multiple server sections
-     3.5.  type
-     3.6.  URL-based protocols
-       3.6.1.  url
-       3.6.2.  authentication
-       3.6.3.  username
-     3.7.  TCP-based protocols
-       3.7.1.  hostname
-       3.7.2.  port
-       3.7.3.  socketType
-       3.7.4.  authentication
-       3.7.5.  username
-     3.8.  Placeholders
-     3.9.  XML validation
-   4.  Config retrieval by mail clients
-     4.1.  Mail provider
-       4.1.1.  Customzing the config for a specific user
-     4.2.  Central database
-     4.3.  MX
-     4.4.  Local disk
-     4.5.  Other mechanisms
-     4.6.  Manual configuration
-   5.  Config validation
-     5.1.  User approval
-     5.2.  Login test
-     5.3.  OAuth2 windows
-   6.  Config publishing by mail providers
-     6.1.  Config location for single domain
-     6.2.  Config location for domain hosters
-     6.3.  Return config for non-existing email addresses
-     6.4.  No authentication for config
-     6.5.  OAuth2 requirements
-   7.  Implementations
+   3.  Implementations
+   4.  Data format
+     4.1.  XML configuration file example
+     4.2.  Global elements
+       4.2.1.  clientConfig
+       4.2.2.  emailProvider
+       4.2.3.  domain
+       4.2.4.  displayName and displayShortName
+     4.3.  documentation
+     4.4.  Server sections
+       4.4.1.  Multiple server sections
+     4.5.  type
+     4.6.  URL-based protocols
+       4.6.1.  url
+       4.6.2.  authentication
+       4.6.3.  username
+     4.7.  TCP-based protocols
+       4.7.1.  hostname
+       4.7.2.  port
+       4.7.3.  socketType
+       4.7.4.  authentication
+       4.7.5.  username
+     4.8.  Placeholders
+     4.9.  XML validation
+   5.  Configuration retrieval by mail clients
+     5.1.  Mail provider
+       5.1.1.  Customzing the configuration for a specific user
+     5.2.  Central database
+     5.3.  MX
+     5.4.  Local disk
+     5.5.  Other mechanisms
+     5.6.  Manual configuration
+   6.  Configuration validation
+     6.1.  User approval
+     6.2.  Login test
+     6.3.  OAuth2 windows
+   7.  Configuration publishing by mail providers
+     7.1.  Configuration location for single domain
+     7.2.  Configuration location for domain hosters
+     7.3.  No authentication for config
+     7.4.  OAuth2 requirements
    8.  Security Considerations
      8.1.  Risk
      8.2.  DNS
      8.3.  HTTP
-     8.4.  Config updates
+     8.4.  Configuration updates
      8.5.  Server security
    9.  Alternatives considered
      9.1.  DNSSEC
@@ -175,15 +174,15 @@ Table of Contents
    directly support this protocol, or other mechanisms to determine the
    configuration.
 
-   While this AutoConfig protocol was conceived for configuring mail
+   While this Autoconfig protocol was conceived for configuring mail
    clients, it can also be used for accounts of other types, like
    contacts and calendar sync, chat, video conference, or online
    publishing.  The primary concept and limitation here is that these
    accounts need to be hosted by the same provider as the email address.
 
    This protocol is in production use since 15 years by major email
-   clients, and the config database contains configurations for over 80%
-   of all email accounts.
+   clients, and the configuration database contains configurations for
+   over 80% of all email accounts.
 
 2.  Conventions and Definitions
 
@@ -193,7 +192,36 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-3.  Data format
+3.  Implementations
+
+   Currently, this protocol or parts of it has been implemented by:
+
+   *  Thunderbird (https://thunderbird.net)
+
+   *  Parula (https://parula.beonex.com)
+
+   *  Evolution (https://projects.gnome.org/evolution/)
+
+   *  KMail (https://userbase.kde.org/KMail)
+
+   *  Kontact (https://www.kontact.org)
+
+   *  K9 Mail (https://k9mail.app) and Thunderbird Mobile
+      (https://www.thunderbird.net/mobile/)
+
+   *  FairEmail (https://email.faircode.eu)
+
+   *  NextCloud email (https://apps.nextcloud.com/apps/mail)
+
+   *  Delta Chat (https://delta.chat/)
+
+   and likely other mail clients.
+
+   A number of mail servers automatically provide AutoConfig files that
+   follow this specification, including Stalwart (https://stalw.art/),
+   Mailcow (https://mailcow.email/) and many others.
+
+4.  Data format
 
    Whether the ISP or a common central database returns the
    configuration, the resulting document MUST have the following data
@@ -204,9 +232,9 @@ Table of Contents
    The seconds below define the XML and its meaning.  Most sections
    start with a concrete example of the elements that they define.
 
-3.1.  XML config file
+4.1.  XML configuration file example
 
-   The following example shows the syntax of the XML config file.
+   The following example shows the syntax of the XML configuration file.
 
 <?xml version="1.0"?>
 <clientConfig version="1.2">
@@ -241,16 +269,16 @@ Table of Contents
         "none": No authentication
 
         Multiple <authentication> elements per server
-        config are valid. Clients will pick the first
+        configuration are valid. Clients will pick the first
         one that they support.
         -->
       <authentication>password-cleartext</authentication>
       <username>%EMAILADDRESS%</username>
     </incomingServer>
 
-    <!-- You can have multiple incoming servers,
+    <!-- There can be multiple incoming servers,
       and even multiple IMAP server configs.
-      The first config is the preferred one, but the user or
+      The first configuration is the preferred one, but the user or
       or client can choose the alternative configs. -->
     <incomingServer type="pop3">
       <hostname>pop.example.com</hostname>
@@ -343,7 +371,7 @@ Table of Contents
     <username>%EMAILADDRESS%</username>
   </videoConference>
 
-    <!-- OAuth2 config for native public client apps.
+    <!-- OAuth2 configuration for native public client apps.
     Gives e.g. clientID, expiry, and login page.
     The provider MUST adhere to "Open Client OAuth2 profile".
     -->
@@ -361,21 +389,21 @@ Table of Contents
 
 </clientConfig>
 
-3.2.  Global elements
+4.2.  Global elements
 
    The file starts with an XML header, e.g. <?xml version="1.0"?>, and
    is encoded in UTF-8 without BOM.
 
-3.2.1.  clientConfig
+4.2.1.  clientConfig
 
    The root element of the XML file is <clientConfig version="1.2">.
 
    The version is 1.2 for the version defined in this specification. 1.1
    is a compatible previous version of this protocol: [Autoconfig1.1].
    Higher versions are for future specifications.  The client MUST NOT
-   reject a config file solely based on the version number.
+   reject a configuration file solely based on the version number.
 
-3.2.2.  emailProvider
+4.2.2.  emailProvider
 
    <emailProvider id="example.com">
 
@@ -391,28 +419,31 @@ Table of Contents
    <displayShortName>, <documentation>, <incomingServer> and
    <outgoingServer>.
 
-3.2.3.  domain
+4.2.3.  domain
 
    <domain>example.com</domain>
    <domain>example.net</domain>
    <domain purpose="mx">example-hosting.com</domain>
 
    The content of the <domain> element defines which email addresses
-   this config is valid for.  For example, a config with
+   this config is valid for.  For example, a configuration with
    <domain>example.com</domain> is valid for email address
    fred@example.com.
 
    Multiple <domain> elements may be included, which means that the
-   config is valid for all of these domains.  Their order has no meaning
-   - you may sort them by number of users, importance to the provider,
-   or alphabethically.
+   configuration is valid for all of these domains.  Their order has no
+   meaning - they may be sorted by number of users, importance to the
+   provider, or alphabethically.
 
-   A <domain purpose="mx"> specifies the domain name of the MX server of
-   the email address, and is used config file lookup using MX server
-   names, as specified in section MX.  The purpose attribute is mainly
-   informational and may be ignored.
+   <domain purpose="mx"> specifies the domain name of the MX server of
+   this provider.  It is used during the configuration file lookup using
+   MX server names, as specified in section Section 5.3.  If the email
+   address that is to be configured has an MX server that is within the
+   domain given by <domain purpose="mx">, then this configuration is
+   applicable for that email address.  Adding the purpose attribute is
+   RECOMMENDED.
 
-3.2.4.  displayName and displayShortName
+4.2.4.  displayName and displayShortName
 
    <displayName>Google Workspace</displayName>
    <displayShortName>GMail</displayShortName>
@@ -425,7 +456,17 @@ Table of Contents
    typically used by end users.  It SHOULD be no longer than 12
    characters, and it MUST NOT be longer than 20 characters.
 
-3.3.  documentation
+   Both elements may used to display the provider or account name by the
+   mail client UI, which has reasonable expectations on length and
+   expressiveness.
+
+   The <displayShortName> in particular may be used by the mail client
+   together with the email address as partial base for the account name,
+   and during everyday use of the app to represent the account, so it
+   SHOULD be short, distinctive and represent the provider in the way
+   end users refer and think of it.
+
+4.3.  documentation
 
    <documentation url="https://www.example.com/help/mail/">
      <descr lang="en">Configure mail app for IMAP</descr>
@@ -435,10 +476,11 @@ Table of Contents
    This is purely informational and not required for the automatic
    setup.
 
-   Records the user help webpage at the provider that describes the mail
-   server settings.  The config may be based on that page, but does not
-   necessarily have to match it, e.g. when a better config is available
-   than the one described on the webpage.
+   This element contains the end-user help webpage at the provider that
+   describes the mail server settings.  The configuration may be based
+   on that page, but does not necessarily have to match it, e.g. when a
+   better configuration is available than the one described on the
+   webpage.
 
    The url attribute contains the URL of the webpage.  The <descr>
    content describes the content and purpose of the page and why it's
@@ -446,12 +488,12 @@ Table of Contents
    attributes are allowed, whereby the lang attribute contains the
    2-letter ISO language code, like the HTML lang attribute.
 
-3.4.  Server sections
+4.4.  Server sections
 
    <incomingServer type="jmap">, <calendar type="carddav"> etc.
 
    *  The type attribute specifies the wire protocol that this server
-      uses.  See section type below.
+      uses.  See section Section 4.5 below.
 
    *  <incomingServer> specifies the server that the mail client
       retrieves email from and submits changes to.  In many protocols,
@@ -476,33 +518,38 @@ Table of Contents
       and test and use the parts of the protocol needed for their
       functionality.
 
-3.4.1.  Multiple server sections
+4.4.1.  Multiple server sections
 
    Server sections of the same type (like <incomingServer> or
-   <calendar>) may appear multiple times in the same config file.  In
-   this case, the one listed first is preferred by the config provider.
-   Unless the client has specific other requirements, it SHOULD pick the
-   first config.
+   <calendar>) may appear multiple times in the same configuration file.
+   In this case, the one listed first is preferred by the configuration
+   provider.  Unless the client has specific other requirements, it
+   SHOULD pick the first config.
 
-   The client may derivate from this recommendation, because * the
-   client doesn't support a higher-priority protocol, e.g. a JMAP
-   configuraion is listed first and is the most preferred, but the
-   client does not support JMAP yet, or * the client doesn't support a
-   configuration setting, e.g. it doesn't support STARTTLS, or the
-   config specifies only an OAuth2 authentication and the client either
-   doesn't implement OAuth2, or there is a problem in the OAuth2 flow
-   with this provider, or * the client has a specific policy to prefer
-   another configuration, e.g. a STARTTLS config is listed before a
-   direct TLS config, and the client has a policy of preferring direct
-   TLS, or likewise the client prefers IMAP over POP3.
+   The client may deviate from this recommendation, because
+
+   *  the client doesn't support a higher-priority protocol, e.g. a JMAP
+      configuraion is listed first and is the most preferred, but the
+      client does not support JMAP yet, or
+
+   *  the client doesn't support a configuration setting, e.g. it
+      doesn't support STARTTLS, or the configuration specifies only an
+      OAuth2 authentication and the client either doesn't implement
+      OAuth2, or there is a problem in the OAuth2 flow with this
+      provider, or
+
+   *  the client has a specific policy to prefer another configuration,
+      e.g. a STARTTLS configuration is listed before a direct TLS
+      config, and the client has a policy of preferring direct TLS, or
+      likewise the client prefers IMAP over POP3.
 
    Server types, elements and protocols that the client does not support
    MUST be ignored and the client MUST continue to parse the other
    server sections, which may contain configs that the client
    understands and supports.  The client ignores the file only if there
-   is no supported and working config found.
+   is no supported and working configuration found.
 
-3.5.  type
+4.5.  type
 
    The type attribute on the server section element specifies the wire
    protocol that this server uses.
@@ -557,7 +604,7 @@ Table of Contents
    Other protocol names can be added using an IANA registry.  See the
    corresponding section below.
 
-3.6.  URL-based protocols
+4.6.  URL-based protocols
 
    <incomingServer type="jmap">
      <url>https://jmap.example.com/session</url>
@@ -568,18 +615,18 @@ Table of Contents
    For server sections with protocols that are based on HTTPS or other
    URLs, the following elements are supported:
 
-3.6.1.  url
+4.6.1.  url
 
    Example: <url>https://jmap.example.com/session</url>
 
-   The content of the <url> element contains the URL where to contact
+   The content of the <url> element contains the [URL] where to contact
    the server.
 
-   The URL scheme will normally be HTTPS and the URL start with
-   https://. Some protocols may use other schemes, e.g. WebSockets
-   wss://.
+   The URL scheme will normally be HTTPS and the URL starts with
+   https:// ([HTTP], Section 4.2.2).  Some protocols may use other
+   schemes, e.g. WebSockets wss:// ([WebSocket], Section 3).
 
-3.6.2.  authentication
+4.6.2.  authentication
 
    Example: <authentication system="http">basic</authentication> or
    <authentication>OAuth2</authentication>
@@ -597,25 +644,24 @@ Table of Contents
 
    *  OAuth2: Authenticate to the HTTP server using WWW-Authenticate:
       Bearer.  See [OAuth2] Section 3.  The provider MUST adhere to the
-      requirements defined in section OAuth2 in this specification.
+      requirements defined in section Section 7.4 in this specification.
       Note: The XML element for OAuth2 is
       <authentication>OAuth2</authentication> without system attribute.
       <authentication system="http">Bearer</authentication> is invalid.
 
-   The rules as specified in sections "Multiple authentication
-   alternatives" and "Authentication verification and fallback" apply
-   here as well.
+   The rules as specified in sections Section 4.7.4.2 and
+   Section 4.7.4.3 apply here as well.
 
-3.6.3.  username
+4.6.3.  username
 
    <username>%EMAILADDRESS%</username> or <username>fred</username>
 
    The username to use for the authentication method.
 
    Placeholders MUST be replaced before using the actual value.  See
-   section "Placeholders".
+   section Section 4.8.
 
-3.7.  TCP-based protocols
+4.7.  TCP-based protocols
 
    For server sections with protocols that are based on TCP, the
    following elements are supported:
@@ -628,14 +674,14 @@ Table of Contents
      <username>%EMAILADDRESS%</username>
    </incomingServer>
 
-3.7.1.  hostname
+4.7.1.  hostname
 
    <hostname>imap.example.com</hostname>
 
    The content of the <hostname> element contains the fully qualified
    hostname of the server.
 
-3.7.2.  port
+4.7.2.  port
 
    <port>993</port>
 
@@ -643,7 +689,7 @@ Table of Contents
    port number at the hostname.  The port is typically specific to the
    combination of the wire protocol and socketType.
 
-3.7.3.  socketType
+4.7.3.  socketType
 
    <socketType>SSL</socketType>
 
@@ -667,7 +713,7 @@ Table of Contents
    *  plain: Unencrypted connection, with neither TLS nor STARTTLS.  May
       be needed for local servers.  Deprecated.
 
-3.7.3.1.  TLS validation
+4.7.3.1.  TLS validation
 
    In all cases where TLS is used, either directly or using STARTTLS,
    the client MUST validate the TLS certificate and ensure that the
@@ -686,7 +732,7 @@ Table of Contents
    recently, the client MAY choose to not consider that a failure during
    normal connection and MAY use other recovery mechanisms.
 
-3.7.4.  authentication
+4.7.4.  authentication
 
    <authentication>password-cleartext</authentication>
 
@@ -703,7 +749,7 @@ Table of Contents
    *  password-encrypted: An encrypted or hashed password mechanism.
       Includes SASL CRAM-MD5 [CRAM-MD5], DIGEST-MD5 [DIGEST-MD5], SCRAM-
       SHA-256-PLUS [SCRAM], and successors.  TLS by itself does not
-      qualify as "password-encrypted".
+      qualify as password-encrypted.
 
    *  NTLM: Legacy Windows login mechanisms NTLM or NTLMv2.
 
@@ -717,7 +763,7 @@ Table of Contents
 
    *  OAuth: OAuth.  SASL OAUTHBEARER [SASL-OAuth2] (current) or XOAUTH2
       (deprecated) or successors.  The provider MUST adhere to the
-      requirements defined in section OAuth2 in this specification.
+      requirements defined in section Section 7.4 in this specification.
 
    *  client-IP-address: Server can be used without any explicit
       authentication, and the client is admitted based on its IP
@@ -725,7 +771,7 @@ Table of Contents
       networks.  Not supported on the Internet.  Deprecated, because it
       breaks mobile devices.
 
-3.7.4.1.  Recommending specific SASL schemes
+4.7.4.1.  Recommending specific SASL schemes
 
    <authentication system="sasl">SCRAM-SHA-256-PLUS</authentication>
 
@@ -740,7 +786,7 @@ Table of Contents
    mechanism, if they support it, and other clients will use the more
    generic authentication mechanism.
 
-3.7.4.2.  Multiple authentication alternatives
+4.7.4.2.  Multiple authentication alternatives
 
    The <authentication> element may appear multiple times within a
    server section.  In this case, they are ordered from the most to the
@@ -755,7 +801,7 @@ Table of Contents
    the client MUST ignore that server section and use the remaining
    server sections.
 
-3.7.4.3.  Authentication verification and fallback
+4.7.4.3.  Authentication verification and fallback
 
    The client SHOULD test the configuration during setup, with an actual
    authentication attempt.
@@ -795,16 +841,16 @@ Table of Contents
    operation, the client SHOULD NOT fallback nor attempt multiple
    different authentication methods.
 
-3.7.5.  username
+4.7.5.  username
 
    <username>%EMAILADDRESS%</username> or <username>fred</username>
 
    The username to use for the authentication method.
 
    Placeholders MUST be replaced before using the actual value.  See
-   section "Placeholders".
+   next section Section 4.8.
 
-3.8.  Placeholders
+4.8.  Placeholders
 
    The <username> value may contain placeholders.
 
@@ -829,14 +875,14 @@ Table of Contents
    <hostname>, <url>, <authURL>, <tokenURL>, <issuer>, <displayName> and
    <displayShortName>.
 
-3.9.  XML validation
+4.9.  XML validation
 
-   The client SHOULD validate that the config file is valid XML, and if
-   the XML syntax is invalid, the client SHOULD ignore the entire file.
-   In contrast, if there are merely unknown elements or attributes, the
-   client MUST NOT ignore the file.
+   The client SHOULD validate that the configuration file is valid XML,
+   and if the XML syntax is invalid, the client SHOULD ignore the entire
+   file.  In contrast, if there are merely unknown elements or
+   attributes, the client MUST NOT ignore the file.
 
-   The client SHOULD read only the elements and attributes that are
+   The client SHOULD regard only the elements and attributes that are
    supported by the client, and MUST ignore the others that are unknown
    to the client.
 
@@ -847,7 +893,7 @@ Table of Contents
    attributes.  This is required to allow future extensions of the
    format without breaking existing clients.
 
-4.  Config retrieval by mail clients
+5.  Configuration retrieval by mail clients
 
    The mail client application, when it needs the configuration for a
    given email address, will perform several steps to retrieve the
@@ -863,23 +909,23 @@ Table of Contents
    below with the number before the URL or location, with lower numbers
    meaning higher priority, e.g. 1.2 has higher priority than 4.1.
 
-   In the URLs below, %EMAILADDRESS% shall be replaced with the email
+   In the URLs below, %EMAILADDRESS% SHALL be replaced with the email
    address that the user entered and wishes to use, and %EMAILDOMAIN%
-   shall be replaced with the email domain extracted from the email
-   address.  For example, for "fred@example.com", the email domain is
-   "example.com", and for "fred@test.cs.example.net", the email domain
-   is "test.cs.example.net".
+   SHALL be replaced with the email domain extracted from the email
+   address.  For example, for fred@example.com, the email domain is
+   example.com, and for fred@test.cs.example.net, the email domain is
+   test.cs.example.net.
 
    For full support of this specification, all "Required" and
    "Recommended" mechanisms MUST be implemented and working.  For
    partial support of this specification, all "Required" mechanisms MUST
-   be implemented and working, and in this case, you shall make explicit
-   when advertizing or referring to auto config that there is only
-   partial support of this specification.
+   be implemented and working, and in this case, the implementor SHALL
+   make explicit when advertizing or referring to Autoconfig that there
+   is only partial support of this specification.
 
-4.1.  Mail provider
+5.1.  Mail provider
 
-   First step is to directly ask the mail provider and allow it to
+   The first step is to directly ask the mail provider and allow it to
    return the configuration.  This step ensures that the protocol is
    decentralized and the mail provider is in control of the
    configuration issued to mail clients.
@@ -907,13 +953,15 @@ Table of Contents
    Step 1.3. is mainly for legacy servers.  Many current deployments use
    this HTTP URL.
 
-4.1.1.  Customzing the config for a specific user
+5.1.1.  Customzing the configuration for a specific user
 
    To allow the mail provider to return a configuration adjusted for
    that mailbox, the client sends the email address as query parameter
-   in URL 1.1.  This allows the mail provider to e.g. separate mailboxes
-   on geographically local mail servers, e.g. a mail server located in
-   the same office building where an employee works.
+   in URL 1.1.
+
+   For example, a global company might want to locate the mailbox
+   geographically close to the user, in the same country or even in the
+   same office building.
 
    However, while the protocol allows for such heterogenous
    configurations, mail providers are discouraged from doing so, and are
@@ -922,34 +970,39 @@ Table of Contents
    servers, or other techniques as necessary, can be used to route the
    traffic and host the mail efficiently.
 
-   This mechanism also allows the autoconfig server to map the email
+   This mechanism also allows the Autoconfig server to map the email
    address to a username that cannot be expressed using the Placeholders
-   (see section).  However, this method is discouraged.  Instead, the
-   email server login should accept email addresses as username, and
-   doing the mapping to internal usernames at login time, which avoids
-   the need for the client to know a different username.
+   (see section Section 4.8).  However, this method is discouraged.
+   Instead, the email server login should accept email addresses as
+   username, and doing the mapping to internal usernames at login time,
+   which avoids the need for the client to know a different username.
 
-   To avoid that email addresses can be tested for validity, whenever
-   customized configs are returned, the autoconfig server should respond
-   to non-existing email addresses with a configuation that appears to
-   be real and is similar in structure to real configurations, e.g. a
-   random host out of the pool of actual hosts.
+   Autoconfig servers that customize the returned configuration file to
+   the email address should avoid that email addresses can be tested for
+   validity by hostile parties like spammers or attackers.  For that
+   reason, Autoconfig servers SHOULD return a real configuration, even
+   if the email address sent as URL parameter does not exist.  If the
+   query contains a non-existing email address, the server should not
+   return an error nor a fake configuration, but rather a random real
+   configuation, e.g. a random host out of the pool of real hosts.
+   Supporting mail clients should test the login before completing
+   setup, so spelling mistakes in the email address will be signaled to
+   the user as login error in later stages of the setup process.
 
-4.2.  Central database
+5.2.  Central database
 
-   The ISPDB contains the configurations for most mail providers with a
-   market share larger than 0.1%, and contains configurations for half
-   of the email accounts in the world.
+   The ISPDB is a central database that contains the configurations for
+   most mail providers with a market share larger than 0.1%, and
+   contains configurations for half of the email accounts in the world.
 
-   This is a useful fallback for mail providers which do not host a
-   config server described in the previous step.  Using a central
-   database (ISPDB) of mail configurations for the large mail providers
-   will increase the success rate of finding a valid configuration
-   drastically, up to 10-fold.
+   This is a useful fallback that allows mail clients to support mail
+   providers which do not host a configuration server described in the
+   previous step.  This can increase the success rate of finding a valid
+   configuration up to 10-fold.
 
-   The mail client application may choose the mail config database
-   provider.  A public mail config database is available at base URL
-   https://v1.ispdb.net/.
+   The mail client application may choose the mail configuration
+   database provider.  A public mail configuration database is available
+   at base URL https://v1.ispdb.net/.
 
    %ISPDB% below is the base URL of that database.
 
@@ -960,14 +1013,14 @@ Table of Contents
    *  2.1. https://v1.ispdb.net/geologist.com (https://v1.ispdb.net/
       geologist.com)
 
-4.3.  MX
+5.3.  MX
 
    Many companies do not maintain their own mail server, but let their
    email be hosted by a hosting company, which is then responsible for
    the email of dozens or thousands of domains.  For these hosters, it
    may be difficult to set up the configuration server (step 1.1.) with
    valid TLS certificate for each of their customers, and to convince
-   their customers to modify their root DNS specifically for autoconfig.
+   their customers to modify their root DNS specifically for Autoconfig.
    On the other side, the ISPDB can only contain the hosting company and
    cannot know all their customers.  To handle such domains, the
    protocol first needs to find the server hosting the email.
@@ -981,8 +1034,8 @@ Table of Contents
    *  Extract only the second-level domain from the MX hostname, and use
       that as value for %MXBASEDOMAIN%. To determine the second-level
       domain, use the Public Suffic List (https://publicsuffix.org) or a
-      similarly suited method, to correctly handle domains like ".co.uk"
-      and ".com.au".
+      similarly suited method, to correctly handle domains like .co.uk
+      and .com.au.
 
    *  Remove the first component from the MX hostname, i.e. everything
       up to and including the first ., and use that as value for
@@ -990,24 +1043,25 @@ Table of Contents
 
    For example:
 
-   *  For "mx.example.com", the MXFULLDOMAIN and MXBASEDOMAIN are both
-      "example.com".
+   *  For mx.example.com, the MXFULLDOMAIN and MXBASEDOMAIN are both
+      example.com.
 
-   *  For "mx.example.co.uk", the MXFULLDOMAIN and MXBASEDOMAIN are both
-      "example.co.uk".
+   *  For mx.example.co.uk, the MXFULLDOMAIN and MXBASEDOMAIN are both
+      example.co.uk.
 
-   *  For "mx.premium.europe.example.com", the MXFULLDOMAIN is
-      "premium.europe.example.com" and the MXBASEDOMAIN is
-      "example.com".
+   *  For mx.premium.europe.example.com, the MXFULLDOMAIN is
+      premium.europe.example.com and the MXBASEDOMAIN is example.com.
 
-   Then, attempt to retrieve the config for these MX domains, using the
-   previous methods:
+   Then, attempt to retrieve the configuration for these MX domains,
+   using the previous methods:
 
-   *  3.1. https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-
-      v1.xml?emailaddress=%EMAILADDRESS% (Required)
+   *  3.1. https://autoconfig.%MXFULLDOMAIN%/mail/config-
+      v1.1.xml?emailaddress=%EMAILADDRESS% (Required. emailaddress is
+      Optional)
 
-   *  3.2. https://autoconfig.%MXBASEDOMAIN%/.well-known/mail-
-      v1.xml?emailaddress=%EMAILADDRESS% (Recommended)
+   *  3.2. https://autoconfig.%MXBASEDOMAIN%/mail/config-
+      v1.1.xml?emailaddress=%EMAILADDRESS% (Recommended. emailaddress is
+      Optional)
 
    *  3.3. %ISPDB%%MXFULLDOMAIN% (Recommended)
 
@@ -1015,23 +1069,23 @@ Table of Contents
 
    For example:
 
-   *  3.1. https://autoconfig.premium.europe.example.com/.well-known/
-      mail-v1.xml?emailaddress=fred@example.com
+   *  3.1. https://autoconfig.premium.europe.example.com/mail/config-
+      v1.1.xml?emailaddress=fred@example.com
 
-   *  3.2. https://autoconfig.example.com/.well-known/mail-
-      v1.xml?emailaddress=fred@example.com
+   *  3.2. https://autoconfig.example.com/mail/config-
+      v1.1.xml?emailaddress=fred@example.com
 
    *  3.3. https://v1.ispdb.net/premium.europe.example.com
 
    *  3.4. https://v1.ispdb.net/example.com
 
-4.4.  Local disk
+5.4.  Local disk
 
-   For testing purposes, you may want to define a location on the disk,
-   relative to the application installation directory, or relative to
-   the user configuration directory, which may contain a configuration
-   file for a specific domain, and which your application will use, if
-   the above methods fail.
+   For testing purposes, a mail client may want to define a location on
+   the disk, relative to the application installation directory, or
+   relative to the user configuration directory, which may contain a
+   configuration file for a specific domain, and which the mail client
+   will use, if the above methods fail.
 
    *  4.1. %USER_CONFIGURATION_DIR%/isp/%EMAILDOMAIN%.xml (Optional)
 
@@ -1039,35 +1093,36 @@ Table of Contents
 
    For example:
 
-   *  4.1. /home/fred/.config/yourapp/isp/example.com.xml
+   *  4.1. /home/fred/.config/acmemailapp/isp/example.com.xml
 
-   *  4.2. /opt/yourapp/isp/example.com.xml
+   *  4.2. /opt/acmemailapp/isp/example.com.xml
 
-4.5.  Other mechanisms
+5.5.  Other mechanisms
 
-   You may want to implement other mechanisms to find a configuration,
-   for example Exchange AutoDiscover, DNS-SRV [RFC6186], or heuristic
-   guessing.  If you implement such alternative methods, and if they are
-   less secure than some of the mechanisms provided here, the
-   alternative methods SHOULD be considered only with lower priority (as
-   defined above) than the more secure mechanisms defined here.  For
-   evaluating other mechanisms, use similar criteria as outlined in
-   section "Security considerations".
+   A mail client may want to implement other mechanisms to find a
+   configuration, for example Exchange AutoDiscover, DNS-SRV [RFC6186],
+   or heuristic guessing.  If the mail client implements such
+   alternative methods, and if they are less secure than some of the
+   mechanisms provided here, the alternative methods SHOULD be
+   considered only with lower priority (as defined above) than the more
+   secure mechanisms defined here.  For evaluating other mechanisms, use
+   similar criteria as outlined in section Section 8.
 
-4.6.  Manual configuration
+5.6.  Manual configuration
 
    If the above mechanisms fail to provide a working configuration, or
-   if the user explicitly chooses so, you SHOULD give the end user the
-   ability to manually enter a configuration, and use that configuration
-   to configure the account.
+   if the user explicitly chooses so, the mail client SHOULD give the
+   end user the ability to manually enter a configuration, and use that
+   configuration to configure the account.
 
-5.  Config validation
+6.  Configuration validation
 
-5.1.  User approval
+6.1.  User approval
 
    Independent of the mechanisms used to find the configuration, before
-   using that configuration, you SHOULD display that configuration to
-   the end user and let him confirm it.  While doing so:
+   using that configuration, the mail client SHOULD display that
+   configuration to the end user and let him confirm it.  While doing
+   so:
 
    *  At least the second-level domain name(s) of the hostnames involved
       MUST be shown clearly and with high prominence.
@@ -1078,34 +1133,35 @@ Table of Contents
    *  Care SHOULD be taken with international characters that look like
       ASCII characters, but have a different code.
 
-5.2.  Login test
+6.2.  Login test
 
-   After the user confirmed the configuration, you SHOULD test the
-   configuration, by attempting a login to each server configured.  Only
-   if the login succeeded, and the server is working, should the
-   configuration be saved and retrieving and sending mail be started.
+   After the user confirmed the configuration, the mail client SHOULD
+   test the configuration, by attempting a login to each server
+   configured.  Only if the login succeeded, and the server is working,
+   should the configuration be saved and retrieving and sending mail be
+   started.
 
-5.3.  OAuth2 windows
+6.3.  OAuth2 windows
 
    If the configuration contains OAuth2 authentication, or any other
    kind of authentication that uses a web browser with URL redirects,
-   you MUST show the full URL or the second-level domain of the current
-   page to the end user, at all times, including after page changes, URL
-   changes, or redirects.  The authentication start URL may be the email
-   hoster, but it redirects to a corporate server for login, and then
-   back to the hoster.  This allows for setups where the hoster is not
-   allowed to see the plaintext passwords.
+   the mail client MUST show the full URL or the second-level domain of
+   the current page to the end user, at all times, including after page
+   changes, URL changes, or redirects.  The authentication start URL may
+   be the email hoster, but it redirects to a corporate server for
+   login, and then back to the hoster.  This allows for setups where the
+   hoster is not allowed to see the plaintext passwords.
 
    Showing the URL or hostname allows the end user to verify that he is
    logging in at the expected page, e.g. the login server of their
    company, instead of the email hoster's page.  It is important that
    the user verifies that he enters the passwords on the right domain.
 
-6.  Config publishing by mail providers
+7.  Configuration publishing by mail providers
 
    Mail service providers who want to support this specification and
    publish the mail configuration for their own mail service, so that
-   mail client apps can be automatically configured, SHOULD follow this
+   mail client apps can be automatically configured, MUST follow this
    section as guideline and MUST respect the definitions in this
    specification.
 
@@ -1118,68 +1174,52 @@ Table of Contents
    *  Configurations MUST be public and MUST NOT require authentication
       (see below).
 
-6.1.  Config location for single domain
+7.1.  Configuration location for single domain
 
    The configuration file SHOULD be published at the URL for step 1.1.,
    i.e.
 
-   *  https://autoconfig.%EMAILDOMAIN%/.well-known/mail-
-      v1.xml?emailaddress=%EMAILADDRESS%
+   *  https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml
 
    e.g. for fred@example.com
 
-   *  https://autoconfig.example.com/.well-known/mail-
-      v1.xml?emailaddress=fred@example.com
+   *  https://autoconfig.example.com/mail/config-v1.1.xml
 
-   For backwards compatibility with older mail clients, step 1.2. should
-   also be implemented.
-
-6.2.  Config location for domain hosters
+7.2.  Configuration location for domain hosters
 
    For mail providers which host entire domains for their business
    customers, the same URL as listed in the previous section is
    preferred.
 
    Alternatively, the configuration file SHOULD be published at the
-   location for step 3.1., i.e.
+   locations for step 3.1. and 3.2., i.e.
 
-   *  https://autoconfig.%MXFULLDOMAIN%/.well-known/mail-
-      v1.xml?emailaddress=%EMAILADDRESS%
+   *  https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml
+
+   *  https://autoconfig.%MXBASEDOMAIN%/mail/config-v1.1.xml
 
    For example, if the MX server for customer domain example.net is
-   "mx.premium.europe.example.com", then the config file should be at
+   mx.premium.europe.example.com, then the configuration file should be
+   at both
 
-   *  https://autoconfig.premium.europe.example.com/.well-known/mail-
-      v1.xml?emailaddress=fred@example.net
+   *  https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml
 
-   For backwards compatibility with older mail clients, step 3.2. should
-   also be implemented.
+   *  https://autoconfig.example.com/mail/config-v1.1.xml
 
-6.3.  Return config for non-existing email addresses
+7.3.  No authentication for config
 
-   Servers SHOULD return a valid config, even if the email address sent
-   as URL parameter does not exist.  Otherwise, spammers or attackers
-   would be able to test the validity of email addresses.  This is true
-   even if the config server needs the email address to determine which
-   of multiple configurations is correct.  In such a configuration, if
-   the client sends a non-existing email address, the config server
-   SHOULD return one of the valid configuations, so that valid and
-   invalid email addresses are indistiguishable.
+   Any of the above URLs for retrieving the configuration file MUST NOT
+   require authentication, but MUST be public.
 
-6.4.  No authentication for config
-
-   Any of the above URLs for retrieving the config file MUST NOT require
-   authentication, but MUST be public.
-
-   This is because the configuration information in the autoconfig file
-   includes the authentication method.  Without the autoconfig file, the
+   This is because the configuration information in the Autoconfig file
+   includes the authentication method.  Without the Autoconfig file, the
    client does not know which authentication method is required and
-   which username form to use (e.g. username "fred" or
-   "fred@example.com" or "fred\EXAMPLE").  Given that this information
-   is required for authentication, the autoconfig file itself cannot
-   require authentication.
+   which username form to use (e.g. username fred or fred@example.com or
+   fred\EXAMPLE).  Given that this information is required for
+   authentication, the Autoconfig file itself cannot require
+   authentication.
 
-6.5.  OAuth2 requirements
+7.4.  OAuth2 requirements
 
    If OAuth2 is used, the OAuth2 server MUST adhere either to the
    [OAuth2Client] specification, including all SHOULD requirements
@@ -1193,8 +1233,8 @@ Table of Contents
 
    The OAuth2 server MUST
 
-   *  accept the client ID that is given in the config file, or if that
-      is not given,
+   *  accept the client ID that is given in the configuration file, or
+      if that is not given,
 
    *  implement Dynamic Client Registration [RFC7591] in the way as
       defined by [OAuth2Client] and accept the resulting Client ID,
@@ -1208,36 +1248,12 @@ Table of Contents
    the login page, which are needed for mail client applications to
    work, and MUST be followed.
 
-   The OAuth2 scope MUST include all services defined in this config
-   file, so that a single user login is sufficient for all services.
-   The resulting refresh and access tokens MUST be valid for all
-   services defined in the config file, including for all URL-based
-   protocols like CalDAV and all TCP-based protocols like IMAP.
-
-7.  Implementations
-
-   Currently, this protocol or parts of it has been implemented by:
-
-   *  Thunderbird (https://thunderbird.net)
-
-   *  Parula (https://parula.beonex.com)
-
-   *  Evolution (https://projects.gnome.org/evolution/)
-
-   *  KMail (https://userbase.kde.org/KMail)
-
-   *  Kontact (https://www.kontact.org)
-
-   *  K9 Mail (https://k9mail.app) and Thunderbird Mobile
-      (https://www.thunderbird.net/mobile/)
-
-   *  FairEmail (https://email.faircode.eu)
-
-   *  NextCloud email (https://apps.nextcloud.com/apps/mail)
-
-   *  Delta Chat (https://delta.chat/)
-
-   and likely other mail clients.
+   The OAuth2 scope MUST include all services defined in this
+   configuration file, so that a single user login is sufficient for all
+   services.  The resulting refresh and access tokens MUST be valid for
+   all services defined in the configuration file, including for all
+   URL-based protocols like CalDAV and all TCP-based protocols like
+   IMAP.
 
 8.  Security Considerations
 
@@ -1267,7 +1283,7 @@ Table of Contents
    Any protocol that relies on DNS without further validation, e.g.
    http, should be considered insecure.  This also applies to the DNS MX
    lookup and the https calls that base on its results, as described in
-   section "MX".
+   section Section 5.3.
 
    One possible mitigation is to use multiple different DNS servers and
    verify that the results match, e.g. to use the native DNS resolver of
@@ -1276,26 +1292,26 @@ Table of Contents
 
    Nonetheless, the result should be used with care.  If such configs
    are used, the end user MUST explicitly confirm the config,
-   particularly the resulting second-level domains.  See section "User
-   approval".
+   particularly the resulting second-level domains.  See section
+   Section 6.1.
 
 8.3.  HTTP
 
    HTTP requests may be intercepted, redirected, or altered at the
-   network level.  See "Risk" above.
+   network level.  See section Section 8.1 above.
 
    Even if an http URL redirects to a https URL, and the domain of the
    https URL cannot be validated against the email domain, that is still
    insecure.
 
-   For that reason, clients MUST prefer HTTPS over HTTP during config
-   retrieval, within the same retrieval method.
+   For that reason, clients MUST prefer HTTPS over HTTP during
+   configuration retrieval, within the same retrieval method.
 
    If such configs from HTTP are used, the end user MUST explicitly
    confirm the config, particularly the resulting second-level domains.
-   See section "User approval".
+   See section Section 6.1.
 
-8.4.  Config updates
+8.4.  Configuration updates
 
    Part of the security properties of this protocol assume that the
    timeframe of possible attack is limited to the moment when the user
@@ -1309,7 +1325,8 @@ Table of Contents
    this protocol, this security property is no longer given.  For
    regular configuration updates, the mail client MUST use only
    mechanisms that are secure and cannot be tampered with by an active
-   attacker.  Furthermore, the user SHOULD still approve config changes.
+   attacker.  Furthermore, the user SHOULD still approve configuration
+   changes.
 
    But even with all these protections implemented, the mail client
    vendor should make a security assessment for the risks of making such
@@ -1332,7 +1349,7 @@ Table of Contents
    names they are serving, and if they differ, the ownership of the
    server hostnames MUST be validated.
 
-   The risk is mitigated to some degree by section "User approval".
+   The risk is mitigated to some degree by section Section 6.1.
 
 9.  Alternatives considered
 
@@ -1353,15 +1370,15 @@ Table of Contents
    DNS SRV protocols [DNS-SRV] [RFC6186] are not used here, for 2
    reasons:
 
-   1.  DNS SRV relies on insecure DNS and the config can therefore be
-       trivially spoofed by an attacker.  See also DNSSEC above.
+   1.  DNS SRV relies on insecure DNS and the configuration can
+       therefore be trivially spoofed by an attacker.  See also DNSSEC
+       above.
 
    2.  DNS SRV does not provide all the necessary configuration
        parameters.  For example, we need all of:
 
-   *  the username form ("fred@example.com", or "fred", or
-      "fred\EXAMPLE", or even a username with no relation to the email
-      address)
+   *  the username form (fred@example.com, or fred, or fred\EXAMPLE, or
+      even a username with no relation to the email address)
 
    *  authentication method (password, CRAM-MD5, OAuth2, SSL client
       certificate)
@@ -1519,6 +1536,11 @@ Table of Contents
               DOI 10.17487/RFC2822, April 2001,
               <https://www.rfc-editor.org/rfc/rfc2822>.
 
+   [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Semantics", STD 97, RFC 9110,
+              DOI 10.17487/RFC9110, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9110>.
+
    [HTTP-Basic-Auth]
               Reschke, J., "The 'Basic' HTTP Authentication Scheme",
               RFC 7617, DOI 10.17487/RFC7617, September 2015,
@@ -1637,10 +1659,20 @@ Table of Contents
               DOI 10.17487/RFC5246, August 2008,
               <https://www.rfc-editor.org/rfc/rfc5246>.
 
+   [URL]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
+
    [WebDAV]   Dusseault, L., Ed., "HTTP Extensions for Web Distributed
               Authoring and Versioning (WebDAV)", RFC 4918,
               DOI 10.17487/RFC4918, June 2007,
               <https://www.rfc-editor.org/rfc/rfc4918>.
+
+   [WebSocket]
+              Fette, I. and A. Melnikov, "The WebSocket Protocol",
+              RFC 6455, DOI 10.17487/RFC6455, December 2011,
+              <https://www.rfc-editor.org/rfc/rfc6455>.
 
    [XMPP]     Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, DOI 10.17487/RFC6120,
