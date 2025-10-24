@@ -80,7 +80,16 @@ This protocol uses a well-known address and DNS lookups, based on the email addr
 
 # Introduction
 
-Configuring email, calendar and contacts client applications for a given user account at a specific service provider is often a tedious, error-prone and unnerving process. Even technical users struggle to find the right combination of hostname, port number, security protocols, authentication methods and forms of username. Less technical users often abort entirely. This difficulty is one of the primary factors why many users use provider-specific web applications which use proprietary internal protocols instead of generic provider independent client applications that use open protocols specified by the IETF. This in turn leads to significantly less choice for end users in their everyday user experience.
+Configuring email, calendar and contacts client applications for a given user account
+at a specific service provider is often a tedious, error-prone and unnerving process.
+Even technical users struggle to find the right combination of hostname, port number,
+security protocols, authentication methods and forms of username. Less technical users
+often abort entirely. This difficulty is one of the primary factors why many users use
+provider-specific applications which use proprietary internal protocols instead of
+generic provider-independent client applications that use open protocols specified
+by the IETF. This in turn leads to significantly less choice for end users in their
+everyday user experience for communication, already today. Long-term, this leads to an errosion of
+standards support and the ability for end users to use the software of their choice.
 
 This protocol allows users to set up their existing email account in a email client application,
 by entering only their name, email address, and password.
@@ -91,20 +100,20 @@ Calendar, contact and file sync, video conference accounts and other
 accounts that are connected to the same user account can be set up at the same time.
 
 The protocol works by first determining the domain from the email address, and
-the querying well-known URLs at the email provider, which return the
+then querying well-known URLs at the email provider, which return the
 configuration parameters in computer-readable form. Failing that, various
 fallback sources can be applied, like a common database of configurations for
 large email providers who do not directly support this protocol, or other
 mechanisms to determine the configuration.
 
-While this Autoconfig protocol was conceived for configuring mail clients,
+While this Autoconfig protocol was originally conceived for configuring mail clients,
 it can also be used for accounts of other types, like contacts and calendar
 sync, chat, video conference, or online publishing. The primary concept and
-limitation here is that these accounts need to be hosted by the same provider
+limitation here is that these accounts are hosted by the same provider
 as the email address.
 
-This protocol is in production use since 15 years by major email clients, and
-the configuration database contains configurations for over 80% of
+This protocol is in active production use since 15 years by major email clients,
+and the configuration database contains configurations for over 80% of
 all email accounts.
 
 
