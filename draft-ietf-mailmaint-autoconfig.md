@@ -1138,7 +1138,7 @@ Server hostnames MUST be compared with the email domain names they are
 serving, and if they differ, the ownership of the server hostnames MUST be
 validated.
 
-The risk is mitigated to some degree by section {{user-approval}} _User approval_.
+The risk is mitigated to some degree by {{user-approval}} _User approval_.
 
 
 # Alternatives considered
