@@ -345,7 +345,7 @@ by number of users, importance to the provider, or alphabethically.
 
 `<domain purpose="mx">` specifies the domain name of the MX server
 of this provider. It is used during the configuration file lookup using MX
-server names, as specified in section {{mx}}. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this configuration is applicable for that email address.
+server names, as specified in {{mx}} MX. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this configuration is applicable for that email address.
 Adding the `purpose` attribute is RECOMMENDED.
 
 ### displayName and displayShortName
@@ -397,7 +397,7 @@ code, like the HTML `lang` attribute.
 `<incomingServer type="jmap">`, `<calendar type="carddav">` etc.
 
 * The `type` attribute specifies the wire protocol that this server uses. See
-  section {{type}} below.
+  {{type}} "type" below.
 * `<incomingServer>` specifies the server that the mail client retrieves email
   from and submits changes to. In many protocols, this server is also used for
   sending email.
@@ -507,14 +507,14 @@ attribute is optional when a https: or wss: URL is used.
   `WWW-Authenticate: Digest`. See {{!HTTP-Digest-Auth=RFC7616}}
 * `OAuth2`: Authenticate to the HTTP server using
   `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750}} Section 3.
-  The provider MUST adhere to the requirements defined in section {{oauth2}}
-  in this specification.
+  The provider MUST adhere to the requirements defined in {{oauth2}}
+  OAuth2 requirements.
   Note: The XML element for OAuth2 is
   `<authentication>OAuth2</authentication>` without system attribute.
   `<authentication system="http">Bearer</authentication>` is invalid.
 
-The rules as specified in sections {{auth-alternatives}} and
-{{auth-verification}} apply here as well.
+The rules as specified in {{auth-alternatives}} "Multiple authentication alternatives" and
+{{auth-verification}} "Authentication verification and fallback" apply here as well.
 
 ### username
 
@@ -522,7 +522,7 @@ The rules as specified in sections {{auth-alternatives}} and
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See section {{placeholders}}.
+Placeholders MUST be replaced before using the actual value. See {{placeholders}} Placeholders.
 
 ## TCP-based protocols
 
@@ -617,8 +617,7 @@ protocol, or a SASL scheme, or a successor to SASL.
   select confirm it. Uses SASL `EXTERNAL` scheme {{!SASL=RFC4422}}, Appendix A.
 * `OAuth`: OAuth. SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
   `XOAUTH2` (deprecated) or successors.
-  The provider MUST adhere to the requirements defined in section {{oauth2}} in
-  this specification.
+  The provider MUST adhere to the requirements defined in {{oauth2}} OAuth2 requirements.
 * `client-IP-address`: Server can be used without any explicit authentication,
   and the client is admitted based on its IP address.
   This may be the case for some SMTP servers on local networks.
@@ -698,7 +697,7 @@ methods.
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See next section {{placeholders}}.
+Placeholders MUST be replaced before using the actual value. See next {{placeholders}} Placeholders.
 
 ## Placeholders {#placeholders}
 
@@ -797,7 +796,7 @@ based on location, mail proxy servers, or other techniques as necessary, can
 be used to route the traffic and host the mail efficiently.
 
 This mechanism also allows the Autoconfig server to map the email address to
-a username that cannot be expressed using the Placeholders (see section {{placeholders}}).
+a username that cannot be expressed using the Placeholders (see {{placeholders}}).
 However, this method is discouraged. Instead, the email server login should
 accept email addresses as username, and doing the mapping to internal
 usernames at login time, which avoids the need for the client to know a
@@ -911,7 +910,7 @@ implements such alternative methods, and if they are less secure than some of
 the mechanisms provided here, the alternative methods SHOULD be considered
 only with lower priority (as defined above) than the more secure mechanisms
 defined here. For evaluating other mechanisms, use similar criteria as
-outlined in section {{security}}.
+outlined in {{security}} Security consideration.
 
 
 ## Manual configuration
@@ -1076,7 +1075,7 @@ multi-factor authentication steps required.
 Any protocol that relies on DNS without further validation, e.g. http, should
 be considered insecure.
 This also applies to the DNS MX lookup and the https calls that base on its
-results, as described in section {{mx}}.
+results, as described in {{mx}} MX.
 
 One possible mitigation is to use multiple different DNS servers and verify
 that the results match, e.g. to use the native DNS resolver of the operating
@@ -1084,12 +1083,12 @@ system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.
 
 Nonetheless, the result should be used with care. If such configs are used,
 the end user MUST explicitly confirm the config, particularly the resulting
-second-level domains. See section {{user-approval}}.
+second-level domains. See {{user-approval}} User approval.
 
 ## HTTP
 
 HTTP requests may be intercepted, redirected, or altered at the network level.
-See section {{risk}} above.
+See {{risk}} Risk.
 
 Even if an http URL redirects to a https URL, and the domain of the https URL
 cannot be validated against the email domain, that is still insecure.
@@ -1098,7 +1097,7 @@ For that reason, clients MUST prefer HTTPS over HTTP during configuration retrie
 within the same retrieval method.
 
 If such configs from HTTP are used, the end user MUST explicitly confirm the
-config, particularly the resulting second-level domains. See section {{user-approval}}.
+config, particularly the resulting second-level domains. See {{user-approval}} User approval.
 
 ## Configuration updates
 
@@ -1136,7 +1135,7 @@ Server hostnames MUST be compared with the email domain names they are
 serving, and if they differ, the ownership of the server hostnames MUST be
 validated.
 
-The risk is mitigated to some degree by section {{user-approval}}.
+The risk is mitigated to some degree by section {{user-approval}} User approval.
 
 
 # Alternatives considered
