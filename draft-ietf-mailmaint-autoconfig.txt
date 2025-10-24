@@ -1353,8 +1353,7 @@ Table of Contents
    names they are serving, and if they differ, the ownership of the
    server hostnames MUST be validated.
 
-   The risk is mitigated to some degree by section Section 6.1 _User
-   approval_.
+   The risk is mitigated to some degree by Section 6.1 _User approval_.
 
 9.  Alternatives considered
 
