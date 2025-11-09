@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-10T00:21:01.380824+00:00",
+  "timestamp": "2025-11-09T00:19:26.575077+00:00",
   "repo": "benbucksch/autoconfig-spec",
   "labels": [
     {
@@ -841,6 +841,32 @@
       "updatedAt": "2025-08-07T08:56:47Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 18,
+      "id": "I_kwDOKo_bRc7Wb-KF",
+      "title": "should this be an anchor reference for dangerous labels?",
+      "url": "https://github.com/benbucksch/autoconfig-spec/issues/18",
+      "state": "CLOSED",
+      "author": "dkg",
+      "authorAssociation": "NONE",
+      "assignees": [
+        "benbucksch"
+      ],
+      "labels": [],
+      "body": "Over in [`draft-dkg-intarea-dangerous-labels`](https://datatracker.ietf.org/doc/draft-dkg-intarea-dangerous-labels/) i've been trying to keep track of dangerous DNS labels and e-mail localparts.  It currently references https://roll.urown.net/server/mail/autoconfig.html for some of the autoconfig work.  If you think that parts of the `dangerous-labels` draft should reference this internet draft instead of (or in addition to) the existing reference, please [open an issue](https://gitlab.com/dkg/dangerous-labels/-/issues/new).",
+      "createdAt": "2025-11-06T21:07:02Z",
+      "updatedAt": "2025-11-06T21:32:41Z",
+      "closedAt": "2025-11-06T21:32:39Z",
+      "comments": [
+        {
+          "author": "benbucksch",
+          "authorAssociation": "OWNER",
+          "body": "> draft-dkg-intarea-dangerous-labels ... currently references https://roll.urown.net/server/mail/autoconfig.html\n\nYes, the roll.urown.net URL is not authorative.\n\n> please open an issue\n\nDONE: https://gitlab.com/dkg/dangerous-labels/-/issues/2",
+          "createdAt": "2025-11-06T21:32:39Z",
+          "updatedAt": "2025-11-06T21:32:39Z"
+        }
+      ]
     }
   ],
   "pulls": [
