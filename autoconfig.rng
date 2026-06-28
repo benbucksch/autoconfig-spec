@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <ref name="clientConfig"/>
+  </start>
+  <define name="anyAttr">
+    <attribute>
+      <anyName/>
+      <text/>
+    </attribute>
+  </define>
+  <define name="anyElement">
+    <element>
+      <anyName/>
+      <zeroOrMore>
+        <choice>
+          <ref name="anyAttr"/>
+          <text/>
+          <ref name="anyElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="extensionElement">
+    <element>
+      <anyName>
+        <except>
+          <choice>
+            <name ns="">clientConfig</name>
+            <name ns="">emailProvider</name>
+            <name ns="">domain</name>
+            <name ns="">displayName</name>
+            <name ns="">displayShortName</name>
+            <name ns="">documentation</name>
+            <name ns="">descr</name>
+            <name ns="">incomingServer</name>
+            <name ns="">outgoingServer</name>
+            <name ns="">calendar</name>
+            <name ns="">addressbook</name>
+            <name ns="">fileShare</name>
+            <name ns="">chatServer</name>
+            <name ns="">videoConference</name>
+            <name ns="">setupServer</name>
+            <name ns="">url</name>
+            <name ns="">hostname</name>
+            <name ns="">port</name>
+            <name ns="">socketType</name>
+            <name ns="">authentication</name>
+            <name ns="">username</name>
+            <name ns="">oAuth2</name>
+            <name ns="">authURL</name>
+            <name ns="">tokenURL</name>
+            <name ns="">issuer</name>
+            <name ns="">scope</name>
+            <name ns="">clientID</name>
+            <name ns="">clientSecret</name>
+            <name ns="">clientConfigUpdate</name>
+          </choice>
+        </except>
+      </anyName>
+      <zeroOrMore>
+        <choice>
+          <ref name="anyAttr"/>
+          <text/>
+          <ref name="anyElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="clientConfig">
+    <element>
+      <name ns="">clientConfig</name>
+      <attribute>
+        <name ns="">version</name>
+        <text/>
+      </attribute>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name ns="">version</name>
+            </except>
+          </anyName>
+          <text/>
+        </attribute>
+      </zeroOrMore>
+      <zeroOrMore>
+        <choice>
+          <ref name="emailProvider"/>
+          <ref name="calendar"/>
+          <ref name="addressbook"/>
+          <ref name="fileShare"/>
+          <ref name="chatServer"/>
+          <ref name="videoConference"/>
+          <ref name="setupServer"/>
+          <ref name="oAuth2"/>
+          <ref name="clientConfigUpdate"/>
+          <ref name="extensionElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="emailProvider">
+    <element>
+      <name ns="">emailProvider</name>
+      <attribute>
+        <name ns="">id</name>
+        <text/>
+      </attribute>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name ns="">id</name>
+            </except>
+          </anyName>
+          <text/>
+        </attribute>
+      </zeroOrMore>
+      <zeroOrMore>
+        <choice>
+          <ref name="domain"/>
+          <ref name="displayName"/>
+          <ref name="displayShortName"/>
+          <ref name="documentation"/>
+          <ref name="incomingServer"/>
+          <ref name="outgoingServer"/>
+          <ref name="extensionElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="domain">
+    <element>
+      <name ns="">domain</name>
+      <optional>
+        <attribute>
+          <name ns="">purpose</name>
+          <text/>
+        </attribute>
+      </optional>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name ns="">purpose</name>
+            </except>
+          </anyName>
+          <text/>
+        </attribute>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="displayName">
+    <element>
+      <name ns="">displayName</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="displayShortName">
+    <element>
+      <name ns="">displayShortName</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="documentation">
+    <element>
+      <name ns="">documentation</name>
+      <attribute>
+        <name ns="">url</name>
+        <text/>
+      </attribute>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name ns="">url</name>
+            </except>
+          </anyName>
+          <text/>
+        </attribute>
+      </zeroOrMore>
+      <zeroOrMore>
+        <choice>
+          <ref name="descr"/>
+          <ref name="extensionElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="descr">
+    <element>
+      <name ns="">descr</name>
+      <optional>
+        <attribute>
+          <name ns="">lang</name>
+          <text/>
+        </attribute>
+      </optional>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name ns="">lang</name>
+            </except>
+          </anyName>
+          <text/>
+        </attribute>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="serverSection">
+    <attribute>
+      <name ns="">type</name>
+      <text/>
+    </attribute>
+    <zeroOrMore>
+      <attribute>
+        <anyName>
+          <except>
+            <name ns="">type</name>
+          </except>
+        </anyName>
+        <text/>
+      </attribute>
+    </zeroOrMore>
+    <zeroOrMore>
+      <choice>
+        <ref name="url"/>
+        <ref name="hostname"/>
+        <ref name="port"/>
+        <ref name="socketType"/>
+        <ref name="authentication"/>
+        <ref name="username"/>
+        <ref name="extensionElement"/>
+      </choice>
+    </zeroOrMore>
+  </define>
+  <define name="incomingServer">
+    <element>
+      <name ns="">incomingServer</name>
+      <ref name="serverSection"/>
+    </element>
+  </define>
+  <define name="outgoingServer">
+    <element>
+      <name ns="">outgoingServer</name>
+      <ref name="serverSection"/>
+    </element>
+  </define>
+  <define name="calendar">
+    <element>
+      <name ns="">calendar</name>
+      <ref name="serverSection"/>
+    </element>
+  </define>
+  <define name="addressbook">
+    <element>
+      <name ns="">addressbook</name>
+      <ref name="serverSection"/>
+    </element>
+  </define>
+  <define name="fileShare">
+    <element>
+      <name ns="">fileShare</name>
+      <ref name="serverSection"/>
+    </element>
+  </define>
+  <define name="chatServer">
+    <element>
+      <name ns="">chatServer</name>
+      <ref name="serverSection"/>
+    </element>
+  </define>
+  <define name="videoConference">
+    <element>
+      <name ns="">videoConference</name>
+      <ref name="serverSection"/>
+    </element>
+  </define>
+  <define name="setupServer">
+    <element>
+      <name ns="">setupServer</name>
+      <ref name="serverSection"/>
+    </element>
+  </define>
+  <define name="url">
+    <element>
+      <name ns="">url</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="hostname">
+    <element>
+      <name ns="">hostname</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="port">
+    <element>
+      <name ns="">port</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <data type="positiveInteger"/>
+    </element>
+  </define>
+  <define name="socketType">
+    <element>
+      <name ns="">socketType</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="username">
+    <element>
+      <name ns="">username</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="authentication">
+    <element>
+      <name ns="">authentication</name>
+      <optional>
+        <attribute>
+          <name ns="">system</name>
+          <text/>
+        </attribute>
+      </optional>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name ns="">system</name>
+            </except>
+          </anyName>
+          <text/>
+        </attribute>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="oAuth2">
+    <element>
+      <name ns="">oAuth2</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <choice>
+          <ref name="authURL"/>
+          <ref name="tokenURL"/>
+          <ref name="issuer"/>
+          <ref name="scope"/>
+          <ref name="clientID"/>
+          <ref name="clientSecret"/>
+          <ref name="extensionElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="authURL">
+    <element>
+      <name ns="">authURL</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="tokenURL">
+    <element>
+      <name ns="">tokenURL</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="issuer">
+    <element>
+      <name ns="">issuer</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="scope">
+    <element>
+      <name ns="">scope</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="clientID">
+    <element>
+      <name ns="">clientID</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="clientSecret">
+    <element>
+      <name ns="">clientSecret</name>
+      <zeroOrMore>
+        <ref name="anyAttr"/>
+      </zeroOrMore>
+      <text/>
+    </element>
+  </define>
+  <define name="clientConfigUpdate">
+    <element>
+      <name ns="">clientConfigUpdate</name>
+      <attribute>
+        <name ns="">url</name>
+        <text/>
+      </attribute>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name ns="">url</name>
+            </except>
+          </anyName>
+          <text/>
+        </attribute>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="extensionElement"/>
+      </zeroOrMore>
+    </element>
+  </define>
+</grammar>

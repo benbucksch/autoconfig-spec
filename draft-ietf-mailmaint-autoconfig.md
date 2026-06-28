@@ -64,6 +64,14 @@ informative:
         name: Ben Bucksch
         org: Beonex
     date: 2020
+  RELAXNG:
+    target: https://relaxng.org/compact-20021121.html
+    title: "RELAX NG Compact Syntax"
+    author:
+      -
+        ins: J. Clark
+        name: James Clark
+    date: 2002
 
 
 --- abstract
@@ -288,6 +296,9 @@ The following example shows the syntax of the XML configuration file.
 
     </clientConfig>
 
+The formal grammar in the RELAX NG compact syntax {{RELAXNG}} is in
+appendix {{relaxng-schema}} _RELAX NG schema_.
+
 ## Global elements
 
 The file starts with an XML header, e.g. `<?xml version="1.0"?>`,
@@ -317,9 +328,17 @@ Within `<emailProvider>` are `<domain>`, `<displayName>` and
 
 ### domain
 
+Example:
+
     <domain>example.com</domain>
     <domain>example.net</domain>
     <domain purpose="mx">example-hosting.com</domain>
+
+RELAX NG:
+
+    domain = element domain {
+      attribute purpose { text }?,   # the only defined value is "mx"
+      text }
 
 The content of the `<domain>` element defines which email addresses this config
 is valid for. For example, a configuration with `<domain>example.com</domain>` is valid for
@@ -336,8 +355,15 @@ Adding the `purpose` attribute is RECOMMENDED.
 
 ### displayName and displayShortName
 
+Example:
+
     <displayName>Google Workspace</displayName>
     <displayShortName>GMail</displayShortName>
+
+RELAX NG:
+
+    displayName = element displayName { text }
+    displayShortName = element displayShortName { text }
 
 The `<displayName>` element contains the name of the provider, e.g.
 as preferred by the marketing of the provider itself. It SHOULD be no
@@ -358,6 +384,8 @@ SHOULD be short, distinctive and represent the provider in the way
 end users refer and think of it.
 
 ## documentation
+
+Example:
 
     <documentation url="https://www.example.com/help/mail/">
       <descr lang="en">Configure mail app for IMAP</descr>
@@ -470,7 +498,13 @@ URLs, the following elements are supported:
 
 ### url
 
-Example: `<url>https://jmap.example.com/session</url>`
+Example:
+
+    <url>https://jmap.example.com/session</url>
+
+RELAX NG:
+
+    url = element url { text }
 
 The content of the `<url>` element contains the {{!URL=RFC3986}} where to contact the server.
 
@@ -479,8 +513,16 @@ Some protocols may use other schemes, e.g. WebSockets `wss://` ({{!WebSocket=RFC
 
 ### authentication
 
-Example: `<authentication system="http">basic</authentication>` or
-`<authentication>OAuth2</authentication>`
+Examples:
+
+    <authentication>OAuth2</authentication>
+    <authentication system="http">basic</authentication>
+
+RELAX NG:
+
+    authentication = element authentication {
+      attribute system { text }?,   # "http" or "sasl"
+      text }
 
 The content of the `<authentication>` element defines which HTTP
 authentication method to use. The `system="http"` attribute
@@ -504,7 +546,14 @@ The rules as specified in {{auth-alternatives}} _Multiple authentication alterna
 
 ### username
 
-`<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
+Examples (alternatives):
+
+    <username>%EMAILADDRESS%</username>
+    <username>fred</username>
+
+RELAX NG:
+
+    username = element username { text }
 
 The username to use for the authentication method.
 
@@ -525,14 +574,26 @@ the following elements are supported:
 
 ### hostname
 
-`<hostname>imap.example.com</hostname>`
+Example:
+
+    <hostname>imap.example.com</hostname>
+
+RELAX NG:
+
+    hostname = element hostname { text }
 
 The content of the `<hostname>` element contains the fully qualified hostname
 of the server.
 
 ### port
 
-`<port>993</port>`
+Example:
+
+    <port>993</port>
+
+RELAX NG:
+
+    port = element port { xsd:positiveInteger }   # TCP port, 1-65535
 
 The content of the `<port>` element is an integer and contains the TCP port
 number at the hostname. The port is typically specific to the combination of
@@ -540,7 +601,13 @@ the wire protocol and socketType.
 
 ### socketType
 
-`<socketType>SSL</socketType>`
+Example:
+
+    <socketType>SSL</socketType>
+
+RELAX NG:
+
+    socketType = element socketType { text }
 
 The content of the `<socketType>` element specifies whether to use direct TLS,
 STARTTLS, or none of these.
@@ -580,7 +647,15 @@ and MAY use other recovery mechanisms.
 
 ### authentication
 
-`<authentication>password-cleartext</authentication>`
+Example:
+
+    <authentication>password-cleartext</authentication>
+
+RELAX NG:
+
+    authentication = element authentication {
+      attribute system { text }?,   # "http" or "sasl"
+      text }
 
 The content of the `<authentication>` element defines which authentication
 method to use. This can be either an authentication defined by the wire
@@ -611,7 +686,9 @@ protocol, or a SASL scheme, or a successor to SASL.
 
 #### Recommending specific SASL schemes
 
-`<authentication system="sasl">SCRAM-SHA-256-PLUS</authentication>`
+Example:
+
+    <authentication system="sasl">SCRAM-SHA-256-PLUS</authentication>
 
 A specific SASL scheme {{!SASL=RFC4422}} MAY be specified using
 the specific SASL authentication scheme name, e.g.
@@ -679,7 +756,14 @@ methods.
 
 ### username
 
-`<username>%EMAILADDRESS%</username>` or `<username>fred</username>`
+Examples (alternatives):
+
+    <username>%EMAILADDRESS%</username>
+    <username>fred</username>
+
+RELAX NG:
+
+    username = element username { text }
 
 The username to use for the authentication method.
 
@@ -719,6 +803,11 @@ configuration is found in the document, the document as a whole is ignored, but 
 retrieval mechanisms might produce a different document with a valid configuration.
 
 This allows future extensions of the format without breaking existing clients.
+
+The RELAX NG schema in {{relaxng-schema}} _RELAX NG schema_ is written to
+follow these rules: it accepts unknown elements, attributes,
+attribute values and element values, so that a validator does not reject a
+document merely because it uses extensions not defined here.
 
 # Configuration retrieval by mail clients {#retrieval}
 
@@ -1280,3 +1369,173 @@ The Additional Elements field is empty in all of the initial values.
 
 
 --- back
+
+# RELAX NG schema {#relaxng-schema}
+
+This appendix specifies the RELAX NG compact syntax {{RELAXNG}} for the
+configuration file format defined in this document. It is provided for the
+convenience of implementers and not normative. Where the schema and the body
+of this document disagree, the body of this document is normative.
+
+The schema deliberately implements the must-ignore rule of {{xml-validation}}:
+it accepts unknown attributes, unknown child elements, and unknown attribute
+and element values, instead of rejecting them. This is achieved by:
+
+* using `text` for the content of every value-bearing element, so that values
+  that are not defined here still validate, for example a future `socketType` or
+  `authentication` method. The values defined by this document
+  are listed in comments next to the corresponding patterns
+* allowing any attribute whose name is not defined for a given element, using
+  the `attribute * - (...)` and `attribute * { text }` patterns
+* allowing any element whose name is not defined by this schema, at every
+  extension point, using the `extensionElement` pattern.
+
+Known elements are still validated against their own definitions. A malformed
+known element (for example, a `<port>` whose content is not an integer) makes
+that element invalid, and therefore its enclosing server section is invalid as well.
+The remaining server sections and the rest of the document are still processed.
+A document is rejected as a whole only when it is not well-formed XML.
+
+The fragments shown in the body of this document are excerpts of the grammar
+below. The grammar below additionally carries the wildcards that implement the
+must-ignore rule.
+
+    # RELAX NG compact syntax schema for the Mail Autoconfig configuration file.
+    #
+    # This schema implements the must-ignore rule of Section "XML validation":
+    # unknown attributes, unknown child elements and unknown values are accepted
+    # rather than being rejected, so that clients can ignore them.
+
+    default namespace = ""
+    datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+    start = clientConfig
+
+    # --- Wildcards used to implement the must-ignore rule -----------------------
+
+    # Any attribute (used on elements that define no attributes of their own).
+    anyAttr = attribute * { text }
+
+    # Any element at all, with any attributes and any content. Used inside
+    # foreign (extension) subtrees, where everything is unknown and ignored.
+    anyElement = element * { ( anyAttr | text | anyElement )* }
+
+    # Any element whose name is NOT defined by this schema. Placed at every
+    # extension point so that unknown elements validate, while known elements
+    # are still matched (and validated) by their own patterns.
+    extensionElement =
+      element * - ( clientConfig | emailProvider | domain | displayName
+                  | displayShortName | documentation | descr | incomingServer
+                  | outgoingServer | calendar | addressbook | fileShare
+                  | chatServer | videoConference | setupServer | url | hostname
+                  | port | socketType | authentication | username | oAuth2
+                  | authURL | tokenURL | issuer | scope | clientID | clientSecret
+                  | clientConfigUpdate ) {
+        ( anyAttr | text | anyElement )*
+      }
+
+    # --- Global structure -------------------------------------------------------
+
+    clientConfig =
+      element clientConfig {
+        attribute version { text },                  # e.g. "1.1" or "1.2"
+        ( attribute * - version { text } )*,
+        ( emailProvider | calendar | addressbook | fileShare | chatServer
+        | videoConference | setupServer | oAuth2 | clientConfigUpdate
+        | extensionElement )*
+      }
+
+    emailProvider =
+      element emailProvider {
+        attribute id { text },
+        ( attribute * - id { text } )*,
+        ( domain | displayName | displayShortName | documentation
+        | incomingServer | outgoingServer | extensionElement )*
+      }
+
+    domain =
+      element domain {
+        attribute purpose { text }?,                 # the only defined value is "mx"
+        ( attribute * - purpose { text } )*,
+        text
+      }
+
+    displayName      = element displayName      { anyAttr*, text }
+    displayShortName = element displayShortName { anyAttr*, text }
+
+    documentation =
+      element documentation {
+        attribute url { text },
+        ( attribute * - url { text } )*,
+        ( descr | extensionElement )*
+      }
+
+    descr =
+      element descr {
+        attribute lang { text }?,                    # 2-letter ISO language code
+        ( attribute * - lang { text } )*,
+        text
+      }
+
+    # --- Server sections --------------------------------------------------------
+    #
+    # incomingServer, outgoingServer, calendar, addressbook, fileShare,
+    # chatServer, videoConference and setupServer all share the same body.
+    # Every child element is optional and may appear in any order; a section
+    # that lacks the information needed for its protocol is simply ignored by
+    # the client (Section "XML validation").
+
+    serverSection =
+      attribute type { text },                       # see the IANA registry
+      ( attribute * - type { text } )*,
+      ( url | hostname | port | socketType | authentication | username
+      | extensionElement )*
+
+    incomingServer  = element incomingServer  { serverSection }
+    outgoingServer  = element outgoingServer  { serverSection }
+    calendar        = element calendar        { serverSection }
+    addressbook     = element addressbook     { serverSection }
+    fileShare       = element fileShare       { serverSection }
+    chatServer      = element chatServer      { serverSection }
+    videoConference = element videoConference { serverSection }
+    setupServer     = element setupServer     { serverSection }
+
+    # --- Server child elements --------------------------------------------------
+
+    url        = element url        { anyAttr*, text }
+    hostname   = element hostname   { anyAttr*, text }
+    port       = element port       { anyAttr*, xsd:positiveInteger }   # 1-65535
+    socketType = element socketType { anyAttr*, text }   # "SSL" / "STARTTLS" / "plain"
+    username   = element username   { anyAttr*, text }
+
+    authentication =
+      element authentication {
+        attribute system { text }?,                  # "http" or "sasl"
+        ( attribute * - system { text } )*,
+        text                                         # e.g. "password-cleartext", "OAuth2"
+      }
+
+    # --- OAuth2 -----------------------------------------------------------------
+
+    oAuth2 =
+      element oAuth2 {
+        anyAttr*,
+        ( authURL | tokenURL | issuer | scope | clientID | clientSecret
+        | extensionElement )*
+      }
+
+    authURL      = element authURL      { anyAttr*, text }
+    tokenURL     = element tokenURL     { anyAttr*, text }
+    issuer       = element issuer       { anyAttr*, text }
+    scope        = element scope        { anyAttr*, text }
+    clientID     = element clientID     { anyAttr*, text }
+    clientSecret = element clientSecret { anyAttr*, text }
+
+    # --- Configuration update ---------------------------------------------------
+
+    clientConfigUpdate =
+      element clientConfigUpdate {
+        attribute url { text },
+        ( attribute * - url { text } )*,
+        ( extensionElement )*
+      }
