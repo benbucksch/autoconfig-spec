@@ -709,10 +709,16 @@ the XML syntax is invalid, the client SHOULD ignore the entire file. In
 contrast, if there are merely unknown elements or
 attributes, the client MUST NOT ignore the file.
 
-The client MUST disregard those elements and attributes that it does not
-support. The presence of unknown attributes or elements MUST NOT result in an
-error. Instead, they are simply ignored. This allows future extensions of the
-format without breaking existing clients.
+The client MUST disregard those elements, attributes and values that it does not
+support. The presence of unknown elements, attributes or values MUST NOT result
+in an error. Instead, they are simply ignored and treated as if they don't
+exist. Compare the rules for `<authentication>` elements in {{auth-alternatives}}. If a
+server section then becomes invalid due to missing information, only that server section
+is ignored and the other server sections will still be processed. Only if no valid
+configuration is found in the document, the document as a whole is ignored, but other
+retrieval mechanisms might produce a different document with a valid configuration.
+
+This allows future extensions of the format without breaking existing clients.
 
 # Configuration retrieval by mail clients {#retrieval}
 
