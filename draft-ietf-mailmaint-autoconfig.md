@@ -559,8 +559,7 @@ RELAX NG:
 
 The content of the `<authentication>` element defines which HTTP
 authentication method to use. The `system="http"` attribute
-signals that the value refers to a `WWW-Authenticate` mechanism, but the
-attribute is optional when a https: or wss: URL is used.
+signals that the value refers to a `WWW-Authenticate` mechanism.
 
 * `basic`: Authenticate to the HTTP server using
   `WWW-Authenticate: Basic`. See {{!HTTP-Basic-Auth=RFC7617}}.
