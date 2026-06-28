@@ -208,19 +208,19 @@ The following example shows the syntax of the XML configuration file.
         <incomingServer type="jmap">
           <url>https://jmap.example.com</url>
             <!-- Authentication methods
-            "basic": RFC 7617
-            "digest": RFC 7616
+            "Basic": RFC 7617
+            "Digest": RFC 7616
             "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
             -->
           <authentication>OAuth2</authentication>
-          <authentication system="http">basic</authentication>
+          <authentication system="http">Basic</authentication>
           <username>%EMAILADDRESS%</username>
         </incomingServer>
 
         <incomingServer type="ews">
           <url>https://mail.example.com/EWS/Exchange.asmx</url>
           <username>%EMAILADDRESS%</username>
-          <authentication system="http">basic</authentication>
+          <authentication system="http">Basic</authentication>
         </incomingServer>
 
         <incomingServer type="activesync">
@@ -238,13 +238,13 @@ The following example shows the syntax of the XML configuration file.
 
       <addressbook type="carddav">
         <url>https://contacts.example.com/remote.php/dav</url>
-        <authentication system="http">basic</authentication>
+        <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </addressbook>
 
       <calendar type="caldav">
         <url>https://calendar.example.com/remote.php/dav</url>
-        <authentication system="http">basic</authentication>
+        <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </calendar>
 
@@ -254,13 +254,13 @@ The following example shows the syntax of the XML configuration file.
         -->
       <fileShare type="webdav">
         <url>https://share.example.com/remote.php/dav</url>
-        <authentication system="http">basic</authentication>
+        <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </fileShare>
 
       <chatServer type="xmpp">
         <url>wss://example.com:5281/xmpp-websocket</url>
-        <authentication system="http">basic</authentication>
+        <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </chatServer>
 
@@ -522,7 +522,7 @@ corresponding section below.
 
     <incomingServer type="jmap">
       <url>https://jmap.example.com/session</url>
-      <authentication system="http">basic</authentication>
+      <authentication system="http">Basic</authentication>
       <username>%EMAILADDRESS%</username>
     </incomingServer>
 
@@ -549,7 +549,7 @@ Some protocols may use other schemes, e.g. WebSockets `wss://` ({{!WebSocket=RFC
 Examples:
 
     <authentication>OAuth2</authentication>
-    <authentication system="http">basic</authentication>
+    <authentication system="http">Basic</authentication>
 
 RELAX NG:
 
@@ -561,9 +561,9 @@ The content of the `<authentication>` element defines which HTTP
 authentication method to use. The `system="http"` attribute
 signals that the value refers to a `WWW-Authenticate` mechanism.
 
-* `basic`: Authenticate to the HTTP server using
+* `Basic`: Authenticate to the HTTP server using
   `WWW-Authenticate: Basic`. See {{!HTTP-Basic-Auth=RFC7617}}.
-* `digest`: Authenticate to the HTTP server using
+* `Digest`: Authenticate to the HTTP server using
   `WWW-Authenticate: Digest`. See {{!HTTP-Digest-Auth=RFC7616}}
 * `OAuth2`: Authenticate to the HTTP server using
   `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750, Section 3}}.
