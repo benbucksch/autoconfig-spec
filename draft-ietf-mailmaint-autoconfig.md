@@ -113,39 +113,12 @@ limitation here is that these accounts are hosted by the same provider
 as the email address.
 
 This protocol is in active production use since 15 years by major email clients,
-and the configuration database contains configurations for over 80% of
-all email accounts.
+and the configuration database contains configurations for over 80% of all email accounts.
 
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
-
-
-# Implementations
-
-Currently, this protocol or parts of it has been implemented by:
-
-* [Thunderbird](https://thunderbird.net)
-* [Parula](https://parula.beonex.com)
-* [Evolution](https://projects.gnome.org/evolution/)
-* [KMail](https://userbase.kde.org/KMail)
-* [Kontact](https://www.kontact.org)
-* [K9 Mail](https://k9mail.app) and
-  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
-* [FairEmail](https://email.faircode.eu)
-* [NextCloud email](https://apps.nextcloud.com/apps/mail)
-* [Delta Chat](https://delta.chat/)
-
-and likely other mail clients.
-
-A large number of email domains already use AutoConfig to provide
-the configuration to mail clients and allow an automatic setup.
-
-Some mail servers automatically provide AutoConfig files that follow
-this specification, including [Stalwart](https://stalw.art/),
-[Mailcow](https://mailcow.email/) and many others.
-
 
 # Data format
 
@@ -728,25 +701,19 @@ Some clients MAY also support the same placeholders for the fields
 `<hostname>`, `<url>`, `<authURL>`, `<tokenURL>`, `<issuer>`,
 `<displayName>` and `<displayShortName>`.
 
-## XML validation
+## XML validation {#xml-validation}
 
 The client SHOULD validate that the configuration file is valid XML, and if
 the XML syntax is invalid, the client SHOULD ignore the entire file. In
 contrast, if there are merely unknown elements or
 attributes, the client MUST NOT ignore the file.
 
-The client SHOULD regard only the elements and attributes that are
-supported by the client, and MUST ignore the others that are unknown
-to the client.
+The client MUST disregard those elements and attributes that it does not
+support. The presence of unknown attributes or elements MUST NOT result in an
+error. Instead, they are simply ignored. This allows future extensions of the
+format without breaking existing clients.
 
-The client may optionally want to validate the XML before parsing it.
-This is not required. If the client choses to validate, the validation
-MUST ignore unknown elements and attributes and MUST NOT
-drop or ignore a configuration that contains unknown elements and
-attributes. This is required to allow future extensions of the format
-without breaking existing clients.
-
-# Configuration retrieval by mail clients
+# Configuration retrieval by mail clients {#retrieval}
 
 The mail client application, when it needs the configuration for a given email
 address, will perform several steps to retrieve the configuration from various
@@ -774,7 +741,7 @@ in this case, the implementor SHALL make explicit when advertizing or referring
 to Autoconfig that there is only partial support of this specification.
 
 
-## Mail provider
+## Mail provider {#mail-provider}
 
 The first step is to directly ask the mail provider and allow it to return the
 configuration. This step ensures that the protocol is decentralized and the
@@ -826,7 +793,7 @@ Supporting mail clients should test the login before completing setup,
 so spelling mistakes in the email address will be signaled to the user
 as login error in later stages of the setup process.
 
-## Central database
+## Central database {#ispdb}
 
 The ISPDB is a central database that contains the configurations for most
 mail providers with a market share larger than 0.1%, and contains configurations
@@ -834,7 +801,8 @@ for half of the email accounts in the world.
 
 This is a useful fallback that allows mail clients to support mail providers
 which do not host a configuration server described in the previous step.
-This can increase the success rate of finding a valid configuration up to 10-fold.
+In practice, this step is required to find a working configuration for most
+email accounts, and increases the success rate by an order of magnitude.
 
 The mail client application may choose the mail configuration database provider. A
 public mail configuration database is available at base URL `https://v1.ispdb.net/`.
@@ -897,7 +865,7 @@ For example:
 * 3.4. `https://v1.ispdb.net/example.com`
 
 
-## Local disk
+## Local disk {#disk}
 
 For testing purposes, a mail client may want to define a location on the disk, relative
 to the application installation directory, or relative to the user
@@ -925,7 +893,7 @@ defined here. For evaluating other mechanisms, use similar criteria as
 outlined in {{security}} _Security considerations_.
 
 
-## Manual configuration
+## Manual configuration {#manual}
 
 If the above mechanisms fail to provide a working configuration, or if the
 user explicitly chooses so, the mail client SHOULD give the end user the ability to
@@ -955,7 +923,7 @@ by attempting a login to each server configured. Only if the login succeeded,
 and the server is working, should the configuration be saved and retrieving
 and sending mail be started.
 
-## OAuth2 windows
+## OAuth2 windows {#auth-windows}
 
 If the configuration contains OAuth2 authentication, or any other kind of
 authentication that uses a web browser with URL redirects,
@@ -971,7 +939,7 @@ logging in at the expected page, e.g. the login server of their company,
 instead of the email hoster's page. It is important that the user verifies
 that he enters the passwords on the right domain.
 
-# Configuration publishing by mail providers
+# Configuration publishing by mail providers {#mail-provider}
 
 Mail service providers who want to support this specification
 and publish the mail configuration for their own mail service,
@@ -986,7 +954,7 @@ definitions in this specification.
 * Configurations MUST be public and MUST NOT require
   authentication (see below).
 
-## Configuration location for single domain
+## Configuration location for single domain {#single-domain}
 
 The configuration file SHOULD be published at the URL for
 step 1.1., i.e.
@@ -997,7 +965,7 @@ e.g. for `fred@example.com`
 
 * `https://autoconfig.example.com/mail/config-v1.1.xml`
 
-## Configuration location for domain hosters
+## Configuration location for domain hosters {#hoster}
 
 For mail providers which host entire domains for their business
 customers, the same URL as listed in the previous section is
@@ -1030,7 +998,17 @@ the Autoconfig file itself cannot require authentication.
 
 ## OAuth2 requirements {#oauth2}
 
-If OAuth2 is used, the OAuth2 server MUST adhere either to the [OAuth2Client] specification, including all SHOULD requirements stated in those.
+If OAuth2 is used, the OAuth2 server MUST adhere to the [OAuth2Client] specification,
+including all SHOULD requirements. Given that
+* authURL
+* tokenURL
+* client ID
+* scope
+are provided in the AutoConfig response, steps "Fetching the Authorization Server Metadata"
+and "Dynamic Client Registration" as well as scope names MAY be skipped in favor of
+the values in the Autoconfig response. The remaining guarantees in the
+[OAuth2Client] specification that the OAuth2 server gives to the mail client stay in force,
+including refresh token validity times.
 
 The provider MUST allow any client application that acts on behalf of the end
 user who the mailbox is for.
@@ -1082,7 +1060,7 @@ Multi-factor authentication might not defend against such attacks, because the
 user may believe to be logging into his email and therefore comply with any
 multi-factor authentication steps required.
 
-## DNS
+## DNS {#dns}
 
 Any protocol that relies on DNS without further validation, e.g. http, should
 be considered insecure.
@@ -1150,9 +1128,9 @@ validated.
 The risk is mitigated to some degree by {{user-approval}} _User approval_.
 
 
-# Alternatives considered
+# Alternatives considered {#alternatives-considered}
 
-## DNSSEC
+## DNSSEC {#dnssec}
 
 Due to their top-level domain, some domains do not have {{?DNSSEC=RFC9364}}
 available to them, even if they would like to deploy it.
@@ -1164,7 +1142,7 @@ difficulties of administrating it correctly.
 Therefore, DNSSEC cannot be relied on in this specification, and DNS must be
 considered insecure for the purposes of this specification.
 
-## DNS SRV
+## DNS SRV {#dnssrv}
 
 DNS SRV protocols {{?DNS-SRV=RFC2782}} {{?RFC6186}} are not used here, for 2 reasons:
 
@@ -1188,7 +1166,7 @@ Therefore, it does not solve the problem.
 This specification was created as an answer to these deficiencies and provides
 an alternative to DNS SRV.
 
-## CAPABILITIES
+## CAPABILITIES {#inline-protocol}
 
 Deployments in the wild from actual ISPs show that protocol-specific commands
 to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3
@@ -1218,6 +1196,31 @@ in multiple different ways.
 
 Finally, some non-mail protocols may not support capabilties commands that
 include authentication methods.
+
+
+# Implementations {#implementations}
+
+Currently, this protocol or parts of it has been implemented by:
+
+* [Thunderbird](https://thunderbird.net)
+* [Parula](https://parula.beonex.com)
+* [Evolution](https://projects.gnome.org/evolution/)
+* [KMail](https://userbase.kde.org/KMail)
+* [Kontact](https://www.kontact.org)
+* [K9 Mail](https://k9mail.app) and
+  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
+* [FairEmail](https://email.faircode.eu)
+* [NextCloud email](https://apps.nextcloud.com/apps/mail)
+* [Delta Chat](https://delta.chat/)
+
+and likely other mail clients.
+
+A large number of email domains already use AutoConfig to provide
+the configuration to mail clients and allow an automatic setup.
+
+Some mail servers automatically provide AutoConfig files that follow
+this specification, including [Stalwart](https://stalw.art/),
+[Mailcow](https://mailcow.email/) and many others.
 
 
 # IANA Considerations
