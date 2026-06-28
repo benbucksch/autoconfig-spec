@@ -1508,19 +1508,19 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
     &lt;incomingServer type="jmap"&gt;
       &lt;url&gt;https://jmap.example.com&lt;/url&gt;
         &lt;!-- Authentication methods
-        "basic": RFC 7617
-        "digest": RFC 7616
+        "Basic": RFC 7617
+        "Digest": RFC 7616
         "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
         --&gt;
       &lt;authentication&gt;OAuth2&lt;/authentication&gt;
-      &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+      &lt;authentication system="http"&gt;Basic&lt;/authentication&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
     &lt;/incomingServer&gt;
 
     &lt;incomingServer type="ews"&gt;
       &lt;url&gt;https://mail.example.com/EWS/Exchange.asmx&lt;/url&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+      &lt;authentication system="http"&gt;Basic&lt;/authentication&gt;
     &lt;/incomingServer&gt;
 
     &lt;incomingServer type="activesync"&gt;
@@ -1538,13 +1538,13 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
 
   &lt;addressbook type="carddav"&gt;
     &lt;url&gt;https://contacts.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+    &lt;authentication system="http"&gt;Basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/addressbook&gt;
 
   &lt;calendar type="caldav"&gt;
     &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+    &lt;authentication system="http"&gt;Basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/calendar&gt;
 
@@ -1554,13 +1554,13 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
     --&gt;
   &lt;fileShare type="webdav"&gt;
     &lt;url&gt;https://share.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+    &lt;authentication system="http"&gt;Basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/fileShare&gt;
 
   &lt;chatServer type="xmpp"&gt;
     &lt;url&gt;wss://example.com:5281/xmpp-websocket&lt;/url&gt;
-    &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+    &lt;authentication system="http"&gt;Basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/chatServer&gt;
 
@@ -2031,7 +2031,7 @@ corresponding section below.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 <pre>
 &lt;incomingServer type="jmap"&gt;
   &lt;url&gt;https://jmap.example.com/session&lt;/url&gt;
-  &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+  &lt;authentication system="http"&gt;Basic&lt;/authentication&gt;
   &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
 &lt;/incomingServer&gt;
 </pre><a href="#section-3.6-1" class="pilcrow">¶</a>
@@ -2069,7 +2069,7 @@ Some protocols may use other schemes, e.g. WebSockets <code>wss://</code> (<span
 <div class="alignLeft art-text artwork" id="section-3.6.2-2">
 <pre>
 &lt;authentication&gt;OAuth2&lt;/authentication&gt;
-&lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+&lt;authentication system="http"&gt;Basic&lt;/authentication&gt;
 </pre><a href="#section-3.6.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-3.6.2-3">RELAX NG:<a href="#section-3.6.2-3" class="pilcrow">¶</a></p>
@@ -2085,11 +2085,11 @@ authentication method to use. The <code>system="http"</code> attribute
 signals that the value refers to a <code>WWW-Authenticate</code> mechanism.<a href="#section-3.6.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.6.2-6.1">
-              <p id="section-3.6.2-6.1.1"><code>basic</code>: Authenticate to the HTTP server using
+              <p id="section-3.6.2-6.1.1"><code>Basic</code>: Authenticate to the HTTP server using
 <code>WWW-Authenticate: Basic</code>. See <span>[<a href="#HTTP-Basic-Auth" class="cite xref">HTTP-Basic-Auth</a>]</span>.<a href="#section-3.6.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.6.2-6.2">
-              <p id="section-3.6.2-6.2.1"><code>digest</code>: Authenticate to the HTTP server using
+              <p id="section-3.6.2-6.2.1"><code>Digest</code>: Authenticate to the HTTP server using
 <code>WWW-Authenticate: Digest</code>. See <span>[<a href="#HTTP-Digest-Auth" class="cite xref">HTTP-Digest-Auth</a>]</span><a href="#section-3.6.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.6.2-6.3">
