@@ -1,6 +1,6 @@
 1. git push
 2. Check https://github.com/benbucksch/autoconfig-spec/actions
-3. Check https://benbucksch.github.io/autoconfig-spec/draft-autoconfig-1.html
+3. Check https://benbucksch.github.io/autoconfig-spec/draft-ietf-mailmaint-autoconfig.html
 4. Go to https://author-tools.ietf.org/
 5. Upload the `draft-bucksch-autoconfig.md` file from git repo
 6. Click [XML], then [Download], and save it as

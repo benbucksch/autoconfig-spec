@@ -296,8 +296,7 @@ The following example shows the syntax of the XML configuration file.
 
     </clientConfig>
 
-The formal grammar in the RELAX NG compact syntax {{RELAXNG}} is in
-appendix {{relaxng-schema}} _RELAX NG schema_.
+The formal grammar is in appendix {{relaxng-schema}} _RELAX NG schema_.
 
 ## Global elements
 
@@ -314,7 +313,16 @@ The client MUST NOT reject a configuration file solely based on the version numb
 
 ### emailProvider
 
-`<emailProvider id="example.com">`
+Example:
+
+    <emailProvider id="example.com">
+
+RELAX NG:
+
+    emailProvider = element emailProvider {
+      attribute id { text },
+      ( domain | displayName | displayShortName | documentation
+      | incomingServer | outgoingServer )* }
 
 Element `<emailProvider>` is within the root element.
 This element has no semantic purpose and exists for legacy reasons only,
@@ -392,6 +400,16 @@ Example:
       <descr lang="de">Email mit IMAP konfigurieren</descr>
     </documentation>
 
+RELAX NG:
+
+    documentation = element documentation {
+      attribute url { text },
+      descr* }
+
+    descr = element descr {
+      attribute lang { text }?,   # 2-letter ISO language code
+      text }
+
 This is purely informational and not required for the automatic setup.
 
 This element contains the end-user help webpage at the provider that describes the mail
@@ -409,6 +427,22 @@ code, like the HTML `lang` attribute.
 ## Server sections
 
 `<incomingServer type="jmap">`, `<calendar type="carddav">` etc.
+
+RELAX NG:
+
+    serverSection =
+      attribute type { text },   # see the IANA registry
+      ( url | hostname | port | socketType | authentication
+      | username )*
+
+    incomingServer  = element incomingServer  { serverSection }
+    outgoingServer  = element outgoingServer  { serverSection }
+    calendar        = element calendar        { serverSection }
+    addressbook     = element addressbook     { serverSection }
+    fileShare       = element fileShare       { serverSection }
+    chatServer      = element chatServer      { serverSection }
+    videoConference = element videoConference { serverSection }
+    setupServer     = element setupServer     { serverSection }
 
 * The `type` attribute specifies the wire protocol that this server uses. See
   {{type}} _type_ below.
