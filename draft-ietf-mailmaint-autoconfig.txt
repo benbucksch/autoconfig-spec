@@ -133,6 +133,8 @@ Table of Contents
      8.2.  DNS SRV
      8.3.  CAPABILITIES
    9.  Implementations
+     9.1.  Clients
+     9.2.  Servers
    10. IANA Considerations
      10.1.  Registration
      10.2.  Contents
@@ -1529,6 +1531,8 @@ Table of Contents
 
 9.  Implementations
 
+9.1.  Clients
+
    Currently, this protocol or parts of it has been implemented by:
 
    *  Thunderbird (https://thunderbird.net)
@@ -1551,6 +1555,8 @@ Table of Contents
    *  Delta Chat (https://delta.chat/)
 
    and likely other mail clients.
+
+9.2.  Servers
 
    A large number of email domains already use AutoConfig to provide the
    configuration to mail clients and allow an automatic setup.
