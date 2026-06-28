@@ -1367,7 +1367,10 @@ svg {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-relax-ng-schema" class="internal xref">RELAX NG schema</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1594,6 +1597,8 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
 &lt;/clientConfig&gt;
 </pre><a href="#section-3.1-2" class="pilcrow">¶</a>
 </div>
+<p id="section-3.1-3">The formal grammar in the RELAX NG compact syntax <span>[<a href="#RELAXNG" class="cite xref">RELAXNG</a>]</span> is in
+appendix <a href="#relaxng-schema" class="auto internal xref">Appendix A</a> <em>RELAX NG schema</em>.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="global-elements">
@@ -1634,23 +1639,32 @@ but its content is significant.<a href="#section-3.2.2-2" class="pilcrow">¶</a>
           <h4 id="name-domain">
 <a href="#section-3.2.3" class="section-number selfRef">3.2.3. </a><a href="#name-domain" class="section-name selfRef">domain</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-3.2.3-1">
+<p id="section-3.2.3-1">Example:<a href="#section-3.2.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2.3-2">
 <pre>
 &lt;domain&gt;example.com&lt;/domain&gt;
 &lt;domain&gt;example.net&lt;/domain&gt;
 &lt;domain purpose="mx"&gt;example-hosting.com&lt;/domain&gt;
-</pre><a href="#section-3.2.3-1" class="pilcrow">¶</a>
+</pre><a href="#section-3.2.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.2.3-2">The content of the <code>&lt;domain&gt;</code> element defines which email addresses this config
+<p id="section-3.2.3-3">RELAX NG:<a href="#section-3.2.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2.3-4">
+<pre>
+domain = element domain {
+  attribute purpose { text }?,   # the only defined value is "mx"
+  text }
+</pre><a href="#section-3.2.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2.3-5">The content of the <code>&lt;domain&gt;</code> element defines which email addresses this config
 is valid for. For example, a configuration with <code>&lt;domain&gt;example.com&lt;/domain&gt;</code> is valid for
-email address <code>fred@example.com</code>.<a href="#section-3.2.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.3-3">Multiple <code>&lt;domain&gt;</code> elements may be included, which means that the configuration is
+email address <code>fred@example.com</code>.<a href="#section-3.2.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-6">Multiple <code>&lt;domain&gt;</code> elements may be included, which means that the configuration is
 valid for all of these domains. Their order has no meaning - they may be sorted
-by number of users, importance to the provider, or alphabethically.<a href="#section-3.2.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.3-4"><code>&lt;domain purpose="mx"&gt;</code> specifies the domain name of the MX server
+by number of users, importance to the provider, or alphabethically.<a href="#section-3.2.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-7"><code>&lt;domain purpose="mx"&gt;</code> specifies the domain name of the MX server
 of this provider. It is used during the configuration file lookup using MX
 server names, as specified in <a href="#mx" class="auto internal xref">Section 4.3</a> <em>MX</em>. If the email address that is to be configured has an MX server that is within the domain given by <code>&lt;domain purpose="mx"&gt;</code>, then this configuration is applicable for that email address.
-Adding the <code>purpose</code> attribute is <span class="bcp14">RECOMMENDED</span>.<a href="#section-3.2.3-4" class="pilcrow">¶</a></p>
+Adding the <code>purpose</code> attribute is <span class="bcp14">RECOMMENDED</span>.<a href="#section-3.2.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="displayname-and-displayshortname">
@@ -1658,26 +1672,34 @@ Adding the <code>purpose</code> attribute is <span class="bcp14">RECOMMENDED</sp
           <h4 id="name-displayname-and-displayshor">
 <a href="#section-3.2.4" class="section-number selfRef">3.2.4. </a><a href="#name-displayname-and-displayshor" class="section-name selfRef">displayName and displayShortName</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-3.2.4-1">
+<p id="section-3.2.4-1">Example:<a href="#section-3.2.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2.4-2">
 <pre>
 &lt;displayName&gt;Google Workspace&lt;/displayName&gt;
 &lt;displayShortName&gt;GMail&lt;/displayShortName&gt;
-</pre><a href="#section-3.2.4-1" class="pilcrow">¶</a>
+</pre><a href="#section-3.2.4-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.2.4-2">The <code>&lt;displayName&gt;</code> element contains the name of the provider, e.g.
+<p id="section-3.2.4-3">RELAX NG:<a href="#section-3.2.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2.4-4">
+<pre>
+displayName = element displayName { text }
+displayShortName = element displayShortName { text }
+</pre><a href="#section-3.2.4-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2.4-5">The <code>&lt;displayName&gt;</code> element contains the name of the provider, e.g.
 as preferred by the marketing of the provider itself. It <span class="bcp14">SHOULD</span> be no
-longer than 30 characters, but <span class="bcp14">MUST</span> be no longer than 60 characters.<a href="#section-3.2.4-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-3">The <code>&lt;displayShortName&gt;</code> element contains the name of the provider, as
+longer than 30 characters, but <span class="bcp14">MUST</span> be no longer than 60 characters.<a href="#section-3.2.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-6">The <code>&lt;displayShortName&gt;</code> element contains the name of the provider, as
 typically used by end users. It <span class="bcp14">SHOULD</span> be no longer than 12
-characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 characters.<a href="#section-3.2.4-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-4">Both elements may used to display the provider or account name by the
+characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 characters.<a href="#section-3.2.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-7">Both elements may used to display the provider or account name by the
 mail client UI, which has reasonable expectations on length and
-expressiveness.<a href="#section-3.2.4-4" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-5">The <code>&lt;displayShortName&gt;</code> in particular may be used by the mail client
+expressiveness.<a href="#section-3.2.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-8">The <code>&lt;displayShortName&gt;</code> in particular may be used by the mail client
 together with the email address as partial base for the account name,
 and during everyday use of the app to represent the account, so it
 <span class="bcp14">SHOULD</span> be short, distinctive and represent the provider in the way
-end users refer and think of it.<a href="#section-3.2.4-5" class="pilcrow">¶</a></p>
+end users refer and think of it.<a href="#section-3.2.4-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1687,25 +1709,26 @@ end users refer and think of it.<a href="#section-3.2.4-5" class="pilcrow">¶</a
         <h3 id="name-documentation">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-documentation" class="section-name selfRef">documentation</a>
         </h3>
-<div class="alignLeft art-text artwork" id="section-3.3-1">
+<p id="section-3.3-1">Example:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-2">
 <pre>
 &lt;documentation url="https://www.example.com/help/mail/"&gt;
   &lt;descr lang="en"&gt;Configure mail app for IMAP&lt;/descr&gt;
   &lt;descr lang="de"&gt;Email mit IMAP konfigurieren&lt;/descr&gt;
 &lt;/documentation&gt;
-</pre><a href="#section-3.3-1" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-2">This is purely informational and not required for the automatic setup.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.3-3">This element contains the end-user help webpage at the provider that describes the mail
+<p id="section-3.3-3">This is purely informational and not required for the automatic setup.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">This element contains the end-user help webpage at the provider that describes the mail
 server settings. The configuration may be based on that page, but does not
 necessarily have to match it, e.g. when a better configuration is available
-than the one described on the webpage.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.3-4">The <code>url</code> attribute contains the URL of the webpage. The <code>&lt;descr&gt;</code>
+than the one described on the webpage.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">The <code>url</code> attribute contains the URL of the webpage. The <code>&lt;descr&gt;</code>
 content describes the content and purpose of the page and why it's
 referenced here.
 Multiple <code>&lt;descr&gt;</code> elements with different <code>lang</code> attributes are
 allowed, whereby the <code>lang</code> attribute contains the 2-letter ISO language
-code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="server-sections">
@@ -1978,10 +2001,21 @@ URLs, the following elements are supported:<a href="#section-3.6-2" class="pilcr
           <h4 id="name-url">
 <a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-url" class="section-name selfRef">url</a>
           </h4>
-<p id="section-3.6.1-1">Example: <code>&lt;url&gt;https://jmap.example.com/session&lt;/url&gt;</code><a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.6.1-2">The content of the <code>&lt;url&gt;</code> element contains the <span>[<a href="#URL" class="cite xref">URL</a>]</span> where to contact the server.<a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.6.1-3">The URL scheme will normally be HTTPS and the URL starts with <code>https://</code> (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-4.2.2" class="relref">Section 4.2.2</a></span>).
-Some protocols may use other schemes, e.g. WebSockets <code>wss://</code> (<span>[<a href="#WebSocket" class="cite xref">WebSocket</a>], <a href="https://rfc-editor.org/rfc/rfc6455#section-3" class="relref">Section 3</a></span>).<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-1">Example:<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6.1-2">
+<pre>
+&lt;url&gt;https://jmap.example.com/session&lt;/url&gt;
+</pre><a href="#section-3.6.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.6.1-3">RELAX NG:<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6.1-4">
+<pre>
+url = element url { text }
+</pre><a href="#section-3.6.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.6.1-5">The content of the <code>&lt;url&gt;</code> element contains the <span>[<a href="#URL" class="cite xref">URL</a>]</span> where to contact the server.<a href="#section-3.6.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-6">The URL scheme will normally be HTTPS and the URL starts with <code>https://</code> (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-4.2.2" class="relref">Section 4.2.2</a></span>).
+Some protocols may use other schemes, e.g. WebSockets <code>wss://</code> (<span>[<a href="#WebSocket" class="cite xref">WebSocket</a>], <a href="https://rfc-editor.org/rfc/rfc6455#section-3" class="relref">Section 3</a></span>).<a href="#section-3.6.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authentication">
@@ -1989,33 +2023,46 @@ Some protocols may use other schemes, e.g. WebSockets <code>wss://</code> (<span
           <h4 id="name-authentication">
 <a href="#section-3.6.2" class="section-number selfRef">3.6.2. </a><a href="#name-authentication" class="section-name selfRef">authentication</a>
           </h4>
-<p id="section-3.6.2-1">Example: <code>&lt;authentication system="http"&gt;basic&lt;/authentication&gt;</code> or
-<code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code><a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.6.2-2">The content of the <code>&lt;authentication&gt;</code> element defines which HTTP
+<p id="section-3.6.2-1">Examples:<a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6.2-2">
+<pre>
+&lt;authentication&gt;OAuth2&lt;/authentication&gt;
+&lt;authentication system="http"&gt;basic&lt;/authentication&gt;
+</pre><a href="#section-3.6.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.6.2-3">RELAX NG:<a href="#section-3.6.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6.2-4">
+<pre>
+authentication = element authentication {
+  attribute system { text }?,   # "http" or "sasl"
+  text }
+</pre><a href="#section-3.6.2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.6.2-5">The content of the <code>&lt;authentication&gt;</code> element defines which HTTP
 authentication method to use. The <code>system="http"</code> attribute
 signals that the value refers to a <code>WWW-Authenticate</code> mechanism, but the
-attribute is optional when a https: or wss: URL is used.<a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
+attribute is optional when a https: or wss: URL is used.<a href="#section-3.6.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.6.2-3.1">
-              <p id="section-3.6.2-3.1.1"><code>basic</code>: Authenticate to the HTTP server using
-<code>WWW-Authenticate: Basic</code>. See <span>[<a href="#HTTP-Basic-Auth" class="cite xref">HTTP-Basic-Auth</a>]</span>.<a href="#section-3.6.2-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.6.2-6.1">
+              <p id="section-3.6.2-6.1.1"><code>basic</code>: Authenticate to the HTTP server using
+<code>WWW-Authenticate: Basic</code>. See <span>[<a href="#HTTP-Basic-Auth" class="cite xref">HTTP-Basic-Auth</a>]</span>.<a href="#section-3.6.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.2-3.2">
-              <p id="section-3.6.2-3.2.1"><code>digest</code>: Authenticate to the HTTP server using
-<code>WWW-Authenticate: Digest</code>. See <span>[<a href="#HTTP-Digest-Auth" class="cite xref">HTTP-Digest-Auth</a>]</span><a href="#section-3.6.2-3.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.6.2-6.2">
+              <p id="section-3.6.2-6.2.1"><code>digest</code>: Authenticate to the HTTP server using
+<code>WWW-Authenticate: Digest</code>. See <span>[<a href="#HTTP-Digest-Auth" class="cite xref">HTTP-Digest-Auth</a>]</span><a href="#section-3.6.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.6.2-3.3">
-              <p id="section-3.6.2-3.3.1"><code>OAuth2</code>: Authenticate to the HTTP server using
+            <li class="normal" id="section-3.6.2-6.3">
+              <p id="section-3.6.2-6.3.1"><code>OAuth2</code>: Authenticate to the HTTP server using
 <code>WWW-Authenticate: Bearer</code>. See <span>[<a href="#OAuth2" class="cite xref">OAuth2</a>], <a href="https://rfc-editor.org/rfc/rfc6750#section-3" class="relref">Section 3</a></span>.
 The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2" class="auto internal xref">Section 6.4</a>
                 <em>OAuth2 requirements</em>.
 Note: The XML element for OAuth2 is
 <code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code> without system attribute.
-<code>&lt;authentication system="http"&gt;Bearer&lt;/authentication&gt;</code> is invalid.<a href="#section-3.6.2-3.3.1" class="pilcrow">¶</a></p>
+<code>&lt;authentication system="http"&gt;Bearer&lt;/authentication&gt;</code> is invalid.<a href="#section-3.6.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.6.2-4">The rules as specified in <a href="#auth-alternatives" class="auto internal xref">Section 3.7.4.2</a> <em>Multiple authentication alternatives</em> and
-<a href="#auth-verification" class="auto internal xref">Section 3.7.4.3</a> <em>Authentication verification and fallback</em> apply here as well.<a href="#section-3.6.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-7">The rules as specified in <a href="#auth-alternatives" class="auto internal xref">Section 3.7.4.2</a> <em>Multiple authentication alternatives</em> and
+<a href="#auth-verification" class="auto internal xref">Section 3.7.4.3</a> <em>Authentication verification and fallback</em> apply here as well.<a href="#section-3.6.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="username">
@@ -2023,9 +2070,21 @@ Note: The XML element for OAuth2 is
           <h4 id="name-username">
 <a href="#section-3.6.3" class="section-number selfRef">3.6.3. </a><a href="#name-username" class="section-name selfRef">username</a>
           </h4>
-<p id="section-3.6.3-1"><code>&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;</code> or <code>&lt;username&gt;fred&lt;/username&gt;</code><a href="#section-3.6.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.6.3-2">The username to use for the authentication method.<a href="#section-3.6.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.6.3-3">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See <a href="#placeholders" class="auto internal xref">Section 3.8</a> <em>Placeholders</em>.<a href="#section-3.6.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.6.3-1">Examples (alternatives):<a href="#section-3.6.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6.3-2">
+<pre>
+&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+&lt;username&gt;fred&lt;/username&gt;
+</pre><a href="#section-3.6.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.6.3-3">RELAX NG:<a href="#section-3.6.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6.3-4">
+<pre>
+username = element username { text }
+</pre><a href="#section-3.6.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.6.3-5">The username to use for the authentication method.<a href="#section-3.6.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.6.3-6">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See <a href="#placeholders" class="auto internal xref">Section 3.8</a> <em>Placeholders</em>.<a href="#section-3.6.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2053,9 +2112,20 @@ the following elements are supported:<a href="#section-3.7-1" class="pilcrow">¶
           <h4 id="name-hostname">
 <a href="#section-3.7.1" class="section-number selfRef">3.7.1. </a><a href="#name-hostname" class="section-name selfRef">hostname</a>
           </h4>
-<p id="section-3.7.1-1"><code>&lt;hostname&gt;imap.example.com&lt;/hostname&gt;</code><a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.7.1-2">The content of the <code>&lt;hostname&gt;</code> element contains the fully qualified hostname
-of the server.<a href="#section-3.7.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-1">Example:<a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.1-2">
+<pre>
+&lt;hostname&gt;imap.example.com&lt;/hostname&gt;
+</pre><a href="#section-3.7.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.1-3">RELAX NG:<a href="#section-3.7.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.1-4">
+<pre>
+hostname = element hostname { text }
+</pre><a href="#section-3.7.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.1-5">The content of the <code>&lt;hostname&gt;</code> element contains the fully qualified hostname
+of the server.<a href="#section-3.7.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="port">
@@ -2063,10 +2133,21 @@ of the server.<a href="#section-3.7.1-2" class="pilcrow">¶</a></p>
           <h4 id="name-port">
 <a href="#section-3.7.2" class="section-number selfRef">3.7.2. </a><a href="#name-port" class="section-name selfRef">port</a>
           </h4>
-<p id="section-3.7.2-1"><code>&lt;port&gt;993&lt;/port&gt;</code><a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.7.2-2">The content of the <code>&lt;port&gt;</code> element is an integer and contains the TCP port
+<p id="section-3.7.2-1">Example:<a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.2-2">
+<pre>
+&lt;port&gt;993&lt;/port&gt;
+</pre><a href="#section-3.7.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.2-3">RELAX NG:<a href="#section-3.7.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.2-4">
+<pre>
+port = element port { xsd:positiveInteger }   # TCP port, 1-65535
+</pre><a href="#section-3.7.2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.2-5">The content of the <code>&lt;port&gt;</code> element is an integer and contains the TCP port
 number at the hostname. The port is typically specific to the combination of
-the wire protocol and socketType.<a href="#section-3.7.2-2" class="pilcrow">¶</a></p>
+the wire protocol and socketType.<a href="#section-3.7.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sockettype">
@@ -2074,28 +2155,39 @@ the wire protocol and socketType.<a href="#section-3.7.2-2" class="pilcrow">¶</
           <h4 id="name-sockettype">
 <a href="#section-3.7.3" class="section-number selfRef">3.7.3. </a><a href="#name-sockettype" class="section-name selfRef">socketType</a>
           </h4>
-<p id="section-3.7.3-1"><code>&lt;socketType&gt;SSL&lt;/socketType&gt;</code><a href="#section-3.7.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.7.3-2">The content of the <code>&lt;socketType&gt;</code> element specifies whether to use direct TLS,
-STARTTLS, or none of these.<a href="#section-3.7.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.3-1">Example:<a href="#section-3.7.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.3-2">
+<pre>
+&lt;socketType&gt;SSL&lt;/socketType&gt;
+</pre><a href="#section-3.7.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.3-3">RELAX NG:<a href="#section-3.7.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.3-4">
+<pre>
+socketType = element socketType { text }
+</pre><a href="#section-3.7.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.3-5">The content of the <code>&lt;socketType&gt;</code> element specifies whether to use direct TLS,
+STARTTLS, or none of these.<a href="#section-3.7.3-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.7.3-3.1">
-              <p id="section-3.7.3-3.1.1"><code>SSL</code>: Directly contact the TCP port using TLS. TLS version 1.2
+<li class="normal" id="section-3.7.3-6.1">
+              <p id="section-3.7.3-6.1.1"><code>SSL</code>: Directly contact the TCP port using TLS. TLS version 1.2
 <span>[<a href="#TLSv1.2" class="cite xref">TLSv1.2</a>]</span>
 or higher <span class="bcp14">SHOULD</span> be used. Higher versions may be required based on security
-situation, server support, and client policy decisions.<a href="#section-3.7.3-3.1.1" class="pilcrow">¶</a></p>
+situation, server support, and client policy decisions.<a href="#section-3.7.3-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.7.3-3.2">
-              <p id="section-3.7.3-3.2.1"><code>STARTTLS</code>: Contact the TCP port first using an unencrypted plain socket,
+            <li class="normal" id="section-3.7.3-6.2">
+              <p id="section-3.7.3-6.2.1"><code>STARTTLS</code>: Contact the TCP port first using an unencrypted plain socket,
 then upgrade to TLS using the protocol-specific STARTTLS specification
 <span>[<a href="#STARTTLS" class="cite xref">STARTTLS</a>]</span>. With this configuration,
 STARTTLS <span class="bcp14">MUST</span> be used and TLS <span class="bcp14">MUST</span> be used after the STARTTLS upgrade. If
 the upgrade to TLS fails for whatever reason, the client <span class="bcp14">MUST</span>
 disconnect and <span class="bcp14">MUST NOT</span> try to authenticate. This prevents downgrade attacks
-that could otherwise steal passwords, user data, and impersonate users.<a href="#section-3.7.3-3.2.1" class="pilcrow">¶</a></p>
+that could otherwise steal passwords, user data, and impersonate users.<a href="#section-3.7.3-6.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.7.3-3.3">
-              <p id="section-3.7.3-3.3.1"><code>plain</code>: Unencrypted connection, with neither TLS nor STARTTLS. May be
-needed for local servers. Deprecated.<a href="#section-3.7.3-3.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.3-6.3">
+              <p id="section-3.7.3-6.3.1"><code>plain</code>: Unencrypted connection, with neither TLS nor STARTTLS. May be
+needed for local servers. Deprecated.<a href="#section-3.7.3-6.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <div id="tls-validation">
@@ -2126,46 +2218,59 @@ and <span class="bcp14">MAY</span> use other recovery mechanisms.<a href="#secti
           <h4 id="name-authentication-2">
 <a href="#section-3.7.4" class="section-number selfRef">3.7.4. </a><a href="#name-authentication-2" class="section-name selfRef">authentication</a>
           </h4>
-<p id="section-3.7.4-1"><code>&lt;authentication&gt;password-cleartext&lt;/authentication&gt;</code><a href="#section-3.7.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.7.4-2">The content of the <code>&lt;authentication&gt;</code> element defines which authentication
+<p id="section-3.7.4-1">Example:<a href="#section-3.7.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.4-2">
+<pre>
+&lt;authentication&gt;password-cleartext&lt;/authentication&gt;
+</pre><a href="#section-3.7.4-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.4-3">RELAX NG:<a href="#section-3.7.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.4-4">
+<pre>
+authentication = element authentication {
+  attribute system { text }?,   # "http" or "sasl"
+  text }
+</pre><a href="#section-3.7.4-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.4-5">The content of the <code>&lt;authentication&gt;</code> element defines which authentication
 method to use. This can be either an authentication defined by the wire
-protocol, or a SASL scheme, or a successor to SASL.<a href="#section-3.7.4-2" class="pilcrow">¶</a></p>
+protocol, or a SASL scheme, or a successor to SASL.<a href="#section-3.7.4-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.7.4-3.1">
-              <p id="section-3.7.4-3.1.1"><code>password-cleartext</code>: Send password in the clear.
+<li class="normal" id="section-3.7.4-6.1">
+              <p id="section-3.7.4-6.1.1"><code>password-cleartext</code>: Send password in the clear.
 Uses either the native authentication method defined by the wire protocol
 (if that is based on plaintext passwords), or a SASL authentication scheme
-like SASL <code>PLAIN</code> or SASL <code>LOGIN</code>, or a successor.<a href="#section-3.7.4-3.1.1" class="pilcrow">¶</a></p>
+like SASL <code>PLAIN</code> or SASL <code>LOGIN</code>, or a successor.<a href="#section-3.7.4-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.7.4-3.2">
-              <p id="section-3.7.4-3.2.1"><code>password-encrypted</code>: An encrypted or hashed password mechanism.
+            <li class="normal" id="section-3.7.4-6.2">
+              <p id="section-3.7.4-6.2.1"><code>password-encrypted</code>: An encrypted or hashed password mechanism.
 Includes SASL <code>CRAM-MD5</code> <span>[<a href="#CRAM-MD5" class="cite xref">CRAM-MD5</a>]</span>,
 <code>DIGEST-MD5</code> <span>[<a href="#DIGEST-MD5" class="cite xref">DIGEST-MD5</a>]</span>,
 <code>SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>, and successors.
-TLS by itself does not qualify as <code>password-encrypted</code>.<a href="#section-3.7.4-3.2.1" class="pilcrow">¶</a></p>
+TLS by itself does not qualify as <code>password-encrypted</code>.<a href="#section-3.7.4-6.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.7.4-3.3">
-              <p id="section-3.7.4-3.3.1"><code>NTLM</code>: Legacy Windows login mechanisms NTLM or NTLMv2.<a href="#section-3.7.4-3.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.4-6.3">
+              <p id="section-3.7.4-6.3.1"><code>NTLM</code>: Legacy Windows login mechanisms NTLM or NTLMv2.<a href="#section-3.7.4-6.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.7.4-3.4">
-              <p id="section-3.7.4-3.4.1"><code>GSSAPI</code>: <span>[<a href="#Kerberos" class="cite xref">Kerberos</a>]</span> or <span>[<a href="#GSSAPI" class="cite xref">GSSAPI</a>]</span>,
- a single-signon mechanism based on TCP.<a href="#section-3.7.4-3.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.7.4-6.4">
+              <p id="section-3.7.4-6.4.1"><code>GSSAPI</code>: <span>[<a href="#Kerberos" class="cite xref">Kerberos</a>]</span> or <span>[<a href="#GSSAPI" class="cite xref">GSSAPI</a>]</span>,
+ a single-signon mechanism based on TCP.<a href="#section-3.7.4-6.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.7.4-3.5">
-              <p id="section-3.7.4-3.5.1"><code>TLS-client-cert</code>: On the SSL/TLS layer, after server request, the client
+            <li class="normal" id="section-3.7.4-6.5">
+              <p id="section-3.7.4-6.5.1"><code>TLS-client-cert</code>: On the SSL/TLS layer, after server request, the client
 sends a TLS client certificate for the user, possibly after letting the user
-select confirm it. Uses SASL <code>EXTERNAL</code> scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span>, Appendix A.<a href="#section-3.7.4-3.5.1" class="pilcrow">¶</a></p>
+select confirm it. Uses SASL <code>EXTERNAL</code> scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span>, Appendix A.<a href="#section-3.7.4-6.5.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.7.4-3.6">
-              <p id="section-3.7.4-3.6.1"><code>OAuth</code>: OAuth. SASL <code>OAUTHBEARER</code> <span>[<a href="#SASL-OAuth2" class="cite xref">SASL-OAuth2</a>]</span> (current) or
+            <li class="normal" id="section-3.7.4-6.6">
+              <p id="section-3.7.4-6.6.1"><code>OAuth</code>: OAuth. SASL <code>OAUTHBEARER</code> <span>[<a href="#SASL-OAuth2" class="cite xref">SASL-OAuth2</a>]</span> (current) or
 <code>XOAUTH2</code> (deprecated) or successors.
-The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2" class="auto internal xref">Section 6.4</a> <em>OAuth2 requirements</em>.<a href="#section-3.7.4-3.6.1" class="pilcrow">¶</a></p>
+The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2" class="auto internal xref">Section 6.4</a> <em>OAuth2 requirements</em>.<a href="#section-3.7.4-6.6.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.7.4-3.7">
-              <p id="section-3.7.4-3.7.1"><code>client-IP-address</code>: Server can be used without any explicit authentication,
+            <li class="normal" id="section-3.7.4-6.7">
+              <p id="section-3.7.4-6.7.1"><code>client-IP-address</code>: Server can be used without any explicit authentication,
 and the client is admitted based on its IP address.
 This may be the case for some SMTP servers on local networks.
-Not supported on the Internet. Deprecated, because it breaks mobile devices.<a href="#section-3.7.4-3.7.1" class="pilcrow">¶</a></p>
+Not supported on the Internet. Deprecated, because it breaks mobile devices.<a href="#section-3.7.4-6.7.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <div id="recommending-specific-sasl-schemes">
@@ -2173,17 +2278,22 @@ Not supported on the Internet. Deprecated, because it breaks mobile devices.<a h
             <h5 id="name-recommending-specific-sasl-">
 <a href="#section-3.7.4.1" class="section-number selfRef">3.7.4.1. </a><a href="#name-recommending-specific-sasl-" class="section-name selfRef">Recommending specific SASL schemes</a>
             </h5>
-<p id="section-3.7.4.1-1"><code>&lt;authentication system="sasl"&gt;SCRAM-SHA-256-PLUS&lt;/authentication&gt;</code><a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.1-2">A specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> <span class="bcp14">MAY</span> be specified using
+<p id="section-3.7.4.1-1">Example:<a href="#section-3.7.4.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.4.1-2">
+<pre>
+&lt;authentication system="sasl"&gt;SCRAM-SHA-256-PLUS&lt;/authentication&gt;
+</pre><a href="#section-3.7.4.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.4.1-3">A specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> <span class="bcp14">MAY</span> be specified using
 the specific SASL authentication scheme name, e.g.
 <code>SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>. To signal that, the
 <code>&lt;authentication&gt;</code> element <span class="bcp14">SHOULD</span> have the <code>system</code> attribute set
-to value <code>sasl</code>, i.e. <code>&lt;authentication system="sasl"&gt;</code>.<a href="#section-3.7.4.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.1-3">In such a case, the server configuration section <span class="bcp14">SHOULD</span> also
+to value <code>sasl</code>, i.e. <code>&lt;authentication system="sasl"&gt;</code>.<a href="#section-3.7.4.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.7.4.1-4">In such a case, the server configuration section <span class="bcp14">SHOULD</span> also
 specify a more generic authentication mechanism as a lower priority
 alternative. That would make clients use the specific authentication
 mechanism, if they support it, and other clients will use the more generic
-authentication mechanism.<a href="#section-3.7.4.1-3" class="pilcrow">¶</a></p>
+authentication mechanism.<a href="#section-3.7.4.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="auth-alternatives">
@@ -2257,9 +2367,21 @@ methods.<a href="#section-3.7.4.3-7" class="pilcrow">¶</a></p>
           <h4 id="name-username-2">
 <a href="#section-3.7.5" class="section-number selfRef">3.7.5. </a><a href="#name-username-2" class="section-name selfRef">username</a>
           </h4>
-<p id="section-3.7.5-1"><code>&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;</code> or <code>&lt;username&gt;fred&lt;/username&gt;</code><a href="#section-3.7.5-1" class="pilcrow">¶</a></p>
-<p id="section-3.7.5-2">The username to use for the authentication method.<a href="#section-3.7.5-2" class="pilcrow">¶</a></p>
-<p id="section-3.7.5-3">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See next <a href="#placeholders" class="auto internal xref">Section 3.8</a> <em>Placeholders</em>.<a href="#section-3.7.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.7.5-1">Examples (alternatives):<a href="#section-3.7.5-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.5-2">
+<pre>
+&lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
+&lt;username&gt;fred&lt;/username&gt;
+</pre><a href="#section-3.7.5-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.5-3">RELAX NG:<a href="#section-3.7.5-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.5-4">
+<pre>
+username = element username { text }
+</pre><a href="#section-3.7.5-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.5-5">The username to use for the authentication method.<a href="#section-3.7.5-5" class="pilcrow">¶</a></p>
+<p id="section-3.7.5-6">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See next <a href="#placeholders" class="auto internal xref">Section 3.8</a> <em>Placeholders</em>.<a href="#section-3.7.5-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2325,10 +2447,19 @@ replaced by the client, before the value is actually used.<a href="#section-3.8-
 the XML syntax is invalid, the client <span class="bcp14">SHOULD</span> ignore the entire file. In
 contrast, if there are merely unknown elements or
 attributes, the client <span class="bcp14">MUST NOT</span> ignore the file.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
-<p id="section-3.9-2">The client <span class="bcp14">MUST</span> disregard those elements and attributes that it does not
-support. The presence of unknown attributes or elements <span class="bcp14">MUST NOT</span> result in an
-error. Instead, they are simply ignored. This allows future extensions of the
-format without breaking existing clients.<a href="#section-3.9-2" class="pilcrow">¶</a></p>
+<p id="section-3.9-2">The client <span class="bcp14">MUST</span> disregard those elements, attributes and values that it does not
+support. The presence of unknown elements, attributes or values <span class="bcp14">MUST NOT</span> result
+in an error. Instead, they are simply ignored and treated as if they don't
+exist. Compare the rules for <code>&lt;authentication&gt;</code> elements in <a href="#auth-alternatives" class="auto internal xref">Section 3.7.4.2</a>. If a
+server section then becomes invalid due to missing information, only that server section
+is ignored and the other server sections will still be processed. Only if no valid
+configuration is found in the document, the document as a whole is ignored, but other
+retrieval mechanisms might produce a different document with a valid configuration.<a href="#section-3.9-2" class="pilcrow">¶</a></p>
+<p id="section-3.9-3">This allows future extensions of the format without breaking existing clients.<a href="#section-3.9-3" class="pilcrow">¶</a></p>
+<p id="section-3.9-4">The RELAX NG schema in <a href="#relaxng-schema" class="auto internal xref">Appendix A</a> <em>RELAX NG schema</em> is written to
+follow these rules: it accepts unknown elements, attributes,
+attribute values and element values, so that a validator does not reject a
+document merely because it uses extensions not defined here.<a href="#section-3.9-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3421,6 +3552,10 @@ their meaning.<a href="#section-10.2-3.6.1" class="pilcrow">¶</a></p>
         <dd>
 <span class="refAuthor">Neuman, C.</span>, <span class="refAuthor">Yu, T.</span>, <span class="refAuthor">Hartman, S.</span>, and <span class="refAuthor">K. Raeburn</span>, <span class="refTitle">"The Kerberos Network Authentication Service (V5)"</span>, <span class="seriesInfo">RFC 4120</span>, <span class="seriesInfo">DOI 10.17487/RFC4120</span>, <time datetime="2005-07" class="refDate">July 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4120">https://www.rfc-editor.org/rfc/rfc4120</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RELAXNG">[RELAXNG]</dt>
+        <dd>
+<span class="refAuthor">Clark, J.</span>, <span class="refTitle">"RELAX NG Compact Syntax"</span>, <time datetime="2002" class="refDate">2002</time>, <span>&lt;<a href="https://relaxng.org/compact-20021121.html">https://relaxng.org/compact-20021121.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC6186">[RFC6186]</dt>
         <dd>
 <span class="refAuthor">Daboo, C.</span>, <span class="refTitle">"Use of SRV Records for Locating Email Submission/Access Services"</span>, <span class="seriesInfo">RFC 6186</span>, <span class="seriesInfo">DOI 10.17487/RFC6186</span>, <time datetime="2011-03" class="refDate">March 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6186">https://www.rfc-editor.org/rfc/rfc6186</a>&gt;</span>. </dd>
@@ -3438,8 +3573,189 @@ their meaning.<a href="#section-10.2-3.6.1" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="authors-addresses">
+<div id="relaxng-schema">
 <section id="appendix-A">
+      <h2 id="name-relax-ng-schema">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-relax-ng-schema" class="section-name selfRef">RELAX NG schema</a>
+      </h2>
+<p id="appendix-A-1">This appendix specifies the RELAX NG compact syntax <span>[<a href="#RELAXNG" class="cite xref">RELAXNG</a>]</span> for the
+configuration file format defined in this document. It is provided for the
+convenience of implementers and not normative. Where the schema and the body
+of this document disagree, the body of this document is normative.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">The schema deliberately implements the must-ignore rule of <a href="#xml-validation" class="auto internal xref">Section 3.9</a>:
+it accepts unknown attributes, unknown child elements, and unknown attribute
+and element values, instead of rejecting them. This is achieved by:<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-3.1">
+          <p id="appendix-A-3.1.1">using <code>text</code> for the content of every value-bearing element, so that values
+that are not defined here still validate, for example a future <code>socketType</code> or
+<code>authentication</code> method. The values defined by this document
+are listed in comments next to the corresponding patterns<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-3.2">
+          <p id="appendix-A-3.2.1">allowing any attribute whose name is not defined for a given element, using
+the <code>attribute * - (...)</code> and <code>attribute * { text }</code> patterns<a href="#appendix-A-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-3.3">
+          <p id="appendix-A-3.3.1">allowing any element whose name is not defined by this schema, at every
+extension point, using the <code>extensionElement</code> pattern.<a href="#appendix-A-3.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-4">Known elements are still validated against their own definitions. A malformed
+known element (for example, a <code>&lt;port&gt;</code> whose content is not an integer) makes
+that element invalid, and therefore its enclosing server section is invalid as well.
+The remaining server sections and the rest of the document are still processed.
+A document is rejected as a whole only when it is not well-formed XML.<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<p id="appendix-A-5">The fragments shown in the body of this document are excerpts of the grammar
+below. The grammar below additionally carries the wildcards that implement the
+must-ignore rule.<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A-6">
+<pre>
+# RELAX NG compact syntax schema for the Mail Autoconfig configuration file.
+#
+# This schema implements the must-ignore rule of Section "XML validation":
+# unknown attributes, unknown child elements and unknown values are accepted
+# rather than being rejected, so that clients can ignore them.
+
+default namespace = ""
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+start = clientConfig
+
+# --- Wildcards used to implement the must-ignore rule -----------------------
+
+# Any attribute (used on elements that define no attributes of their own).
+anyAttr = attribute * { text }
+
+# Any element at all, with any attributes and any content. Used inside
+# foreign (extension) subtrees, where everything is unknown and ignored.
+anyElement = element * { ( anyAttr | text | anyElement )* }
+
+# Any element whose name is NOT defined by this schema. Placed at every
+# extension point so that unknown elements validate, while known elements
+# are still matched (and validated) by their own patterns.
+extensionElement =
+  element * - ( clientConfig | emailProvider | domain | displayName
+              | displayShortName | documentation | descr | incomingServer
+              | outgoingServer | calendar | addressbook | fileShare
+              | chatServer | videoConference | setupServer | url | hostname
+              | port | socketType | authentication | username | oAuth2
+              | authURL | tokenURL | issuer | scope | clientID | clientSecret
+              | clientConfigUpdate ) {
+    ( anyAttr | text | anyElement )*
+  }
+
+# --- Global structure -------------------------------------------------------
+
+clientConfig =
+  element clientConfig {
+    attribute version { text },                  # e.g. "1.1" or "1.2"
+    ( attribute * - version { text } )*,
+    ( emailProvider | calendar | addressbook | fileShare | chatServer
+    | videoConference | setupServer | oAuth2 | clientConfigUpdate
+    | extensionElement )*
+  }
+
+emailProvider =
+  element emailProvider {
+    attribute id { text },
+    ( attribute * - id { text } )*,
+    ( domain | displayName | displayShortName | documentation
+    | incomingServer | outgoingServer | extensionElement )*
+  }
+
+domain =
+  element domain {
+    attribute purpose { text }?,                 # the only defined value is "mx"
+    ( attribute * - purpose { text } )*,
+    text
+  }
+
+displayName      = element displayName      { anyAttr*, text }
+displayShortName = element displayShortName { anyAttr*, text }
+
+documentation =
+  element documentation {
+    attribute url { text },
+    ( attribute * - url { text } )*,
+    ( descr | extensionElement )*
+  }
+
+descr =
+  element descr {
+    attribute lang { text }?,                    # 2-letter ISO language code
+    ( attribute * - lang { text } )*,
+    text
+  }
+
+# --- Server sections --------------------------------------------------------
+#
+# incomingServer, outgoingServer, calendar, addressbook, fileShare,
+# chatServer, videoConference and setupServer all share the same body.
+# Every child element is optional and may appear in any order; a section
+# that lacks the information needed for its protocol is simply ignored by
+# the client (Section "XML validation").
+
+serverSection =
+  attribute type { text },                       # see the IANA registry
+  ( attribute * - type { text } )*,
+  ( url | hostname | port | socketType | authentication | username
+  | extensionElement )*
+
+incomingServer  = element incomingServer  { serverSection }
+outgoingServer  = element outgoingServer  { serverSection }
+calendar        = element calendar        { serverSection }
+addressbook     = element addressbook     { serverSection }
+fileShare       = element fileShare       { serverSection }
+chatServer      = element chatServer      { serverSection }
+videoConference = element videoConference { serverSection }
+setupServer     = element setupServer     { serverSection }
+
+# --- Server child elements --------------------------------------------------
+
+url        = element url        { anyAttr*, text }
+hostname   = element hostname   { anyAttr*, text }
+port       = element port       { anyAttr*, xsd:positiveInteger }   # 1-65535
+socketType = element socketType { anyAttr*, text }   # "SSL" / "STARTTLS" / "plain"
+username   = element username   { anyAttr*, text }
+
+authentication =
+  element authentication {
+    attribute system { text }?,                  # "http" or "sasl"
+    ( attribute * - system { text } )*,
+    text                                         # e.g. "password-cleartext", "OAuth2"
+  }
+
+# --- OAuth2 -----------------------------------------------------------------
+
+oAuth2 =
+  element oAuth2 {
+    anyAttr*,
+    ( authURL | tokenURL | issuer | scope | clientID | clientSecret
+    | extensionElement )*
+  }
+
+authURL      = element authURL      { anyAttr*, text }
+tokenURL     = element tokenURL     { anyAttr*, text }
+issuer       = element issuer       { anyAttr*, text }
+scope        = element scope        { anyAttr*, text }
+clientID     = element clientID     { anyAttr*, text }
+clientSecret = element clientSecret { anyAttr*, text }
+
+# --- Configuration update ---------------------------------------------------
+
+clientConfigUpdate =
+  element clientConfigUpdate {
+    attribute url { text },
+    ( attribute * - url { text } )*,
+    ( extensionElement )*
+  }
+</pre><a href="#appendix-A-6" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
       <h2 id="name-authors-address">
 <a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
