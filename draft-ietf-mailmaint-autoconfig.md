@@ -1329,6 +1329,8 @@ include authentication methods.
 
 # Implementations {#implementations}
 
+## Clients
+
 Currently, this protocol or parts of it has been implemented by:
 
 * [Thunderbird](https://thunderbird.net)
@@ -1343,6 +1345,8 @@ Currently, this protocol or parts of it has been implemented by:
 * [Delta Chat](https://delta.chat/)
 
 and likely other mail clients.
+
+## Servers
 
 A large number of email domains already use AutoConfig to provide
 the configuration to mail clients and allow an automatic setup.
