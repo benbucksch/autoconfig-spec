@@ -363,8 +363,7 @@ Table of Contents
 
 </clientConfig>
 
-   The formal grammar in the RELAX NG compact syntax [RELAXNG] is in
-   appendix Appendix A _RELAX NG schema_.
+   The formal grammar is in appendix Appendix A _RELAX NG schema_.
 
 3.2.  Global elements
 
@@ -382,7 +381,16 @@ Table of Contents
 
 3.2.2.  emailProvider
 
+   Example:
+
    <emailProvider id="example.com">
+
+   RELAX NG:
+
+   emailProvider = element emailProvider {
+     attribute id { text },
+     ( domain | displayName | displayShortName | documentation
+     | incomingServer | outgoingServer )* }
 
    Element <emailProvider> is within the root element.  This element has
    no semantic purpose and exists for legacy reasons only, but its
@@ -467,6 +475,16 @@ Table of Contents
      <descr lang="de">Email mit IMAP konfigurieren</descr>
    </documentation>
 
+   RELAX NG:
+
+   documentation = element documentation {
+     attribute url { text },
+     descr* }
+
+   descr = element descr {
+     attribute lang { text }?,   # 2-letter ISO language code
+     text }
+
    This is purely informational and not required for the automatic
    setup.
 
@@ -485,6 +503,22 @@ Table of Contents
 3.4.  Server sections
 
    <incomingServer type="jmap">, <calendar type="carddav"> etc.
+
+   RELAX NG:
+
+   serverSection =
+     attribute type { text },   # see the IANA registry
+     ( url | hostname | port | socketType | authentication
+     | username )*
+
+   incomingServer  = element incomingServer  { serverSection }
+   outgoingServer  = element outgoingServer  { serverSection }
+   calendar        = element calendar        { serverSection }
+   addressbook     = element addressbook     { serverSection }
+   fileShare       = element fileShare       { serverSection }
+   chatServer      = element chatServer      { serverSection }
+   videoConference = element videoConference { serverSection }
+   setupServer     = element setupServer     { serverSection }
 
    *  The type attribute specifies the wire protocol that this server
       uses.  See Section 3.5 _type_ below.

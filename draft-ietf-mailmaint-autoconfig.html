@@ -1597,8 +1597,7 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
 &lt;/clientConfig&gt;
 </pre><a href="#section-3.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1-3">The formal grammar in the RELAX NG compact syntax <span>[<a href="#RELAXNG" class="cite xref">RELAXNG</a>]</span> is in
-appendix <a href="#relaxng-schema" class="auto internal xref">Appendix A</a> <em>RELAX NG schema</em>.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">The formal grammar is in appendix <a href="#relaxng-schema" class="auto internal xref">Appendix A</a> <em>RELAX NG schema</em>.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="global-elements">
@@ -1624,14 +1623,28 @@ The client <span class="bcp14">MUST NOT</span> reject a configuration file solel
           <h4 id="name-emailprovider">
 <a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-emailprovider" class="section-name selfRef">emailProvider</a>
           </h4>
-<p id="section-3.2.2-1"><code>&lt;emailProvider id="example.com"&gt;</code><a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-2">Element <code>&lt;emailProvider&gt;</code> is within the root element.
+<p id="section-3.2.2-1">Example:<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2.2-2">
+<pre>
+&lt;emailProvider id="example.com"&gt;
+</pre><a href="#section-3.2.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2.2-3">RELAX NG:<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2.2-4">
+<pre>
+emailProvider = element emailProvider {
+  attribute id { text },
+  ( domain | displayName | displayShortName | documentation
+  | incomingServer | outgoingServer )* }
+</pre><a href="#section-3.2.2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2.2-5">Element <code>&lt;emailProvider&gt;</code> is within the root element.
 This element has no semantic purpose and exists for legacy reasons only,
-but its content is significant.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-3">The <code>id</code> is a unique string that typically matches the primary domain of the provider. The syntax of the ID is the same as for domain and hostname.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-4">Within <code>&lt;emailProvider&gt;</code> are <code>&lt;domain&gt;</code>, <code>&lt;displayName&gt;</code> and
+but its content is significant.<a href="#section-3.2.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-6">The <code>id</code> is a unique string that typically matches the primary domain of the provider. The syntax of the ID is the same as for domain and hostname.<a href="#section-3.2.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-7">Within <code>&lt;emailProvider&gt;</code> are <code>&lt;domain&gt;</code>, <code>&lt;displayName&gt;</code> and
 <code>&lt;displayShortName&gt;</code>, <code>&lt;documentation&gt;</code>, <code>&lt;incomingServer&gt;</code> and
-<code>&lt;outgoingServer&gt;</code>.<a href="#section-3.2.2-4" class="pilcrow">¶</a></p>
+<code>&lt;outgoingServer&gt;</code>.<a href="#section-3.2.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="domain">
@@ -1718,17 +1731,29 @@ end users refer and think of it.<a href="#section-3.2.4-8" class="pilcrow">¶</a
 &lt;/documentation&gt;
 </pre><a href="#section-3.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-3">This is purely informational and not required for the automatic setup.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.3-4">This element contains the end-user help webpage at the provider that describes the mail
+<p id="section-3.3-3">RELAX NG:<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-4">
+<pre>
+documentation = element documentation {
+  attribute url { text },
+  descr* }
+
+descr = element descr {
+  attribute lang { text }?,   # 2-letter ISO language code
+  text }
+</pre><a href="#section-3.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3-5">This is purely informational and not required for the automatic setup.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-6">This element contains the end-user help webpage at the provider that describes the mail
 server settings. The configuration may be based on that page, but does not
 necessarily have to match it, e.g. when a better configuration is available
-than the one described on the webpage.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.3-5">The <code>url</code> attribute contains the URL of the webpage. The <code>&lt;descr&gt;</code>
+than the one described on the webpage.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.3-7">The <code>url</code> attribute contains the URL of the webpage. The <code>&lt;descr&gt;</code>
 content describes the content and purpose of the page and why it's
 referenced here.
 Multiple <code>&lt;descr&gt;</code> elements with different <code>lang</code> attributes are
 allowed, whereby the <code>lang</code> attribute contains the 2-letter ISO language
-code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="server-sections">
@@ -1737,37 +1762,55 @@ code, like the HTML <code>lang</code> attribute.<a href="#section-3.3-5" class="
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-server-sections" class="section-name selfRef">Server sections</a>
         </h3>
 <p id="section-3.4-1"><code>&lt;incomingServer type="jmap"&gt;</code>, <code>&lt;calendar type="carddav"&gt;</code> etc.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">RELAX NG:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.4-3">
+<pre>
+serverSection =
+  attribute type { text },   # see the IANA registry
+  ( url | hostname | port | socketType | authentication
+  | username )*
+
+incomingServer  = element incomingServer  { serverSection }
+outgoingServer  = element outgoingServer  { serverSection }
+calendar        = element calendar        { serverSection }
+addressbook     = element addressbook     { serverSection }
+fileShare       = element fileShare       { serverSection }
+chatServer      = element chatServer      { serverSection }
+videoConference = element videoConference { serverSection }
+setupServer     = element setupServer     { serverSection }
+</pre><a href="#section-3.4-3" class="pilcrow">¶</a>
+</div>
 <ul class="normal">
-<li class="normal" id="section-3.4-2.1">
-            <p id="section-3.4-2.1.1">The <code>type</code> attribute specifies the wire protocol that this server uses. See
-<a href="#type" class="auto internal xref">Section 3.5</a> <em>type</em> below.<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.4-4.1">
+            <p id="section-3.4-4.1.1">The <code>type</code> attribute specifies the wire protocol that this server uses. See
+<a href="#type" class="auto internal xref">Section 3.5</a> <em>type</em> below.<a href="#section-3.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.4-2.2">
-            <p id="section-3.4-2.2.1"><code>&lt;incomingServer&gt;</code> specifies the server that the mail client retrieves email
+          <li class="normal" id="section-3.4-4.2">
+            <p id="section-3.4-4.2.1"><code>&lt;incomingServer&gt;</code> specifies the server that the mail client retrieves email
 from and submits changes to. In many protocols, this server is also used for
-sending email.<a href="#section-3.4-2.2.1" class="pilcrow">¶</a></p>
+sending email.<a href="#section-3.4-4.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.4-2.3">
-            <p id="section-3.4-2.3.1"><code>&lt;outgoingServer&gt;</code> is used for sending, if <code>&lt;incomingServer&gt;</code> does not
+          <li class="normal" id="section-3.4-4.3">
+            <p id="section-3.4-4.3.1"><code>&lt;outgoingServer&gt;</code> is used for sending, if <code>&lt;incomingServer&gt;</code> does not
 support that directly.
-This is currently used only for SMTP in combination with IMAP and POP3.<a href="#section-3.4-2.3.1" class="pilcrow">¶</a></p>
+This is currently used only for SMTP in combination with IMAP and POP3.<a href="#section-3.4-4.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.4-2.4">
-            <p id="section-3.4-2.4.1"><code>&lt;incomingServer&gt;</code> and <code>&lt;outgoingServer&gt;</code> are within element
+          <li class="normal" id="section-3.4-4.4">
+            <p id="section-3.4-4.4.1"><code>&lt;incomingServer&gt;</code> and <code>&lt;outgoingServer&gt;</code> are within element
 <code>&lt;emailProvider&gt;</code>, whereas <code>&lt;calendar&gt;</code>, <code>&lt;addressbook&gt;</code>, <code>&lt;fileShare&gt;</code>,
 <code>&lt;chatServer&gt;</code> and <code>&lt;videoConference&gt;</code> are within the
 root element <code>&lt;clientConfig&gt;</code>, i.e. one level higher.
-Other than that, they work the same.<a href="#section-3.4-2.4.1" class="pilcrow">¶</a></p>
+Other than that, they work the same.<a href="#section-3.4-4.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.4-2.5">
-            <p id="section-3.4-2.5.1">In some protocols, the <code>&lt;incomingServer&gt;</code> server additionally provides
+          <li class="normal" id="section-3.4-4.5">
+            <p id="section-3.4-4.5.1">In some protocols, the <code>&lt;incomingServer&gt;</code> server additionally provides
 calendars, addressbooks, and other data. For such protocols, the same server
 is not repeated in other specific server sections like <code>&lt;calendar&gt;</code>.
 Calendar-only clients supporting such multi-purpose protocols <span class="bcp14">MUST</span> read the
 <code>&lt;incomingServer&gt;</code> (nonewithstanding that it's within legacy element
 <code>&lt;emailProvider&gt;</code>)
 and test and use the parts of the protocol needed for their
-functionality.<a href="#section-3.4-2.5.1" class="pilcrow">¶</a></p>
+functionality.<a href="#section-3.4-4.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div id="multiple-server-sections">
