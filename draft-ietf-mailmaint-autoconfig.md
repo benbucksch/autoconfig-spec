@@ -213,14 +213,14 @@ The following example shows the syntax of the XML configuration file.
             "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
             -->
           <authentication>OAuth2</authentication>
-          <authentication>basic</authentication>
+          <authentication system="http">basic</authentication>
           <username>%EMAILADDRESS%</username>
         </incomingServer>
 
         <incomingServer type="ews">
           <url>https://mail.example.com/EWS/Exchange.asmx</url>
           <username>%EMAILADDRESS%</username>
-          <authentication>basic</authentication>
+          <authentication system="http">basic</authentication>
         </incomingServer>
 
         <incomingServer type="activesync">
@@ -238,13 +238,13 @@ The following example shows the syntax of the XML configuration file.
 
       <addressbook type="carddav">
         <url>https://contacts.example.com/remote.php/dav</url>
-        <authentication>basic</authentication>
+        <authentication system="http">basic</authentication>
         <username>%EMAILADDRESS%</username>
       </addressbook>
 
       <calendar type="caldav">
         <url>https://calendar.example.com/remote.php/dav</url>
-        <authentication>basic</authentication>
+        <authentication system="http">basic</authentication>
         <username>%EMAILADDRESS%</username>
       </calendar>
 
@@ -254,13 +254,13 @@ The following example shows the syntax of the XML configuration file.
         -->
       <fileShare type="webdav">
         <url>https://share.example.com/remote.php/dav</url>
-        <authentication>basic</authentication>
+        <authentication system="http">basic</authentication>
         <username>%EMAILADDRESS%</username>
       </fileShare>
 
       <chatServer type="xmpp">
         <url>wss://example.com:5281/xmpp-websocket</url>
-        <authentication>basic</authentication>
+        <authentication system="http">basic</authentication>
         <username>%EMAILADDRESS%</username>
       </chatServer>
 
@@ -405,7 +405,6 @@ RELAX NG:
     documentation = element documentation {
       attribute url { text },
       descr* }
-
     descr = element descr {
       attribute lang { text }?,   # 2-letter ISO language code
       text }
@@ -523,7 +522,7 @@ corresponding section below.
 
     <incomingServer type="jmap">
       <url>https://jmap.example.com/session</url>
-      <authentication>basic</authentication>
+      <authentication system="http">basic</authentication>
       <username>%EMAILADDRESS%</username>
     </incomingServer>
 
@@ -571,9 +570,10 @@ attribute is optional when a https: or wss: URL is used.
   `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750, Section 3}}.
   The provider MUST adhere to the requirements defined in {{oauth2}}
   _OAuth2 requirements_.
-  Note: The XML element for OAuth2 is
-  `<authentication>OAuth2</authentication>` without system attribute.
-  `<authentication system="http">Bearer</authentication>` is invalid.
+
+Note: The XML element for OAuth2 is
+`<authentication>OAuth2</authentication>` without system attribute.
+`<authentication system="http">Bearer</authentication>` is invalid.
 
 The rules as specified in {{auth-alternatives}} _Multiple authentication alternatives_ and
 {{auth-verification}} _Authentication verification and fallback_ apply here as well.
