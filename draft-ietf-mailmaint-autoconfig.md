@@ -113,7 +113,8 @@ limitation here is that these accounts are hosted by the same provider
 as the email address.
 
 This protocol is in active production use since 15 years by major email clients,
-and the configuration database contains configurations for over 80% of all email accounts.
+and the configuration database contains configurations for over 80% of
+all email accounts.
 
 
 # Conventions and Definitions
@@ -939,7 +940,7 @@ logging in at the expected page, e.g. the login server of their company,
 instead of the email hoster's page. It is important that the user verifies
 that he enters the passwords on the right domain.
 
-# Configuration publishing by mail providers {#mail-provider}
+# Configuration publishing by mail providers {#mail-provider-publish}
 
 Mail service providers who want to support this specification
 and publish the mail configuration for their own mail service,
