@@ -1513,14 +1513,14 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
         "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
         --&gt;
       &lt;authentication&gt;OAuth2&lt;/authentication&gt;
-      &lt;authentication&gt;basic&lt;/authentication&gt;
+      &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
     &lt;/incomingServer&gt;
 
     &lt;incomingServer type="ews"&gt;
       &lt;url&gt;https://mail.example.com/EWS/Exchange.asmx&lt;/url&gt;
       &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
-      &lt;authentication&gt;basic&lt;/authentication&gt;
+      &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
     &lt;/incomingServer&gt;
 
     &lt;incomingServer type="activesync"&gt;
@@ -1538,13 +1538,13 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
 
   &lt;addressbook type="carddav"&gt;
     &lt;url&gt;https://contacts.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication&gt;basic&lt;/authentication&gt;
+    &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/addressbook&gt;
 
   &lt;calendar type="caldav"&gt;
     &lt;url&gt;https://calendar.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication&gt;basic&lt;/authentication&gt;
+    &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/calendar&gt;
 
@@ -1554,13 +1554,13 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
     --&gt;
   &lt;fileShare type="webdav"&gt;
     &lt;url&gt;https://share.example.com/remote.php/dav&lt;/url&gt;
-    &lt;authentication&gt;basic&lt;/authentication&gt;
+    &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/fileShare&gt;
 
   &lt;chatServer type="xmpp"&gt;
     &lt;url&gt;wss://example.com:5281/xmpp-websocket&lt;/url&gt;
-    &lt;authentication&gt;basic&lt;/authentication&gt;
+    &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
     &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
   &lt;/chatServer&gt;
 
@@ -1737,7 +1737,6 @@ end users refer and think of it.<a href="#section-3.2.4-8" class="pilcrow">¶</a
 documentation = element documentation {
   attribute url { text },
   descr* }
-
 descr = element descr {
   attribute lang { text }?,   # 2-letter ISO language code
   text }
@@ -2032,7 +2031,7 @@ corresponding section below.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 <pre>
 &lt;incomingServer type="jmap"&gt;
   &lt;url&gt;https://jmap.example.com/session&lt;/url&gt;
-  &lt;authentication&gt;basic&lt;/authentication&gt;
+  &lt;authentication system="http"&gt;basic&lt;/authentication&gt;
   &lt;username&gt;%EMAILADDRESS%&lt;/username&gt;
 &lt;/incomingServer&gt;
 </pre><a href="#section-3.6-1" class="pilcrow">¶</a>
@@ -2098,14 +2097,14 @@ attribute is optional when a https: or wss: URL is used.<a href="#section-3.6.2-
               <p id="section-3.6.2-6.3.1"><code>OAuth2</code>: Authenticate to the HTTP server using
 <code>WWW-Authenticate: Bearer</code>. See <span>[<a href="#OAuth2" class="cite xref">OAuth2</a>], <a href="https://rfc-editor.org/rfc/rfc6750#section-3" class="relref">Section 3</a></span>.
 The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2" class="auto internal xref">Section 6.4</a>
-                <em>OAuth2 requirements</em>.
-Note: The XML element for OAuth2 is
-<code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code> without system attribute.
-<code>&lt;authentication system="http"&gt;Bearer&lt;/authentication&gt;</code> is invalid.<a href="#section-3.6.2-6.3.1" class="pilcrow">¶</a></p>
+                <em>OAuth2 requirements</em>.<a href="#section-3.6.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.6.2-7">The rules as specified in <a href="#auth-alternatives" class="auto internal xref">Section 3.7.4.2</a> <em>Multiple authentication alternatives</em> and
-<a href="#auth-verification" class="auto internal xref">Section 3.7.4.3</a> <em>Authentication verification and fallback</em> apply here as well.<a href="#section-3.6.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-7">Note: The XML element for OAuth2 is
+<code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code> without system attribute.
+<code>&lt;authentication system="http"&gt;Bearer&lt;/authentication&gt;</code> is invalid.<a href="#section-3.6.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-8">The rules as specified in <a href="#auth-alternatives" class="auto internal xref">Section 3.7.4.2</a> <em>Multiple authentication alternatives</em> and
+<a href="#auth-verification" class="auto internal xref">Section 3.7.4.3</a> <em>Authentication verification and fallback</em> apply here as well.<a href="#section-3.6.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="username">
