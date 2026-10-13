@@ -4,8 +4,8 @@
 
 mailmaint                                                     B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                              28 June 2026
-Expires: 30 December 2026
+Intended status: Informational                           13 October 2026
+Expires: 16 April 2027
 
 
                             Mail Autoconfig
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 December 2026.
+   This Internet-Draft will expire on 16 April 2027.
 
 Copyright Notice
 
@@ -1024,25 +1024,32 @@ Table of Contents
    decentralized and the mail provider is in control of the
    configuration issued to mail clients.
 
-   *  1.1. https://autoconfig.%EMAILDOMAIN%/mail/config-
-      v1.1.xml?emailaddress=%EMAILADDRESS% (Required. emailaddress is
+   *  1.1. https://autoconfig.%EMAILDOMAIN%/client-
+      autoconfig.xml?emailaddress=%EMAILADDRESS% (Required. emailaddress
+      is Optional)
+
+   *  1.2. https://autoconfig.%EMAILDOMAIN%/mail/config-
+      v1.1.xml?emailaddress=%EMAILADDRESS% (Deprecated. emailaddress is
       Optional)
 
-   *  1.2. https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-
-      v1.1.xml (Optional)
+   *  1.3. https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-
+      v1.1.xml (Deprecated)
 
-   *  1.3. http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml
-      (Optional)
+   *  1.4. http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml
+      (Deprecated)
 
    For example:
 
-   *  1.1. https://autoconfig.example.com/mail/config-
+   *  1.1. https://autoconfig.example.com/client-
+      autoconfig.xml?emailaddress=fred@example.com
+
+   *  1.2. https://autoconfig.example.com/mail/config-
       v1.1.xml?emailaddress=fred@example.com
 
-   *  1.2. https://example.com/.well-known/autoconfig/mail/config-
+   *  1.3. https://example.com/.well-known/autoconfig/mail/config-
       v1.1.xml
 
-   *  1.3. http://autoconfig.example.com/mail/config-v1.1.xml
+   *  1.4. http://autoconfig.example.com/mail/config-v1.1.xml
 
    Step 1.3. is mainly for legacy servers.  Many current deployments use
    this HTTP URL.
