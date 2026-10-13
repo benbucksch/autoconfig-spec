@@ -876,15 +876,17 @@ The first step is to directly ask the mail provider and allow it to return the
 configuration. This step ensures that the protocol is decentralized and the
 mail provider is in control of the configuration issued to mail clients.
 
-* 1.1. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Required. `emailaddress` is Optional)
-* 1.2. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Optional)
-* 1.3. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Optional)
+* 1.1. `https://autoconfig.%EMAILDOMAIN%/.well-known/client-autoconfig.xml?emailaddress=%EMAILADDRESS%` (Required. `emailaddress` is Optional)
+* 1.2. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated. `emailaddress` is Optional)
+* 1.3. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Deprecated)
+* 1.4. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Deprecated)
 
 For example:
 
-* 1.1. `https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
-* 1.2. `https://example.com/.well-known/autoconfig/mail/config-v1.1.xml`
-* 1.3. `http://autoconfig.example.com/mail/config-v1.1.xml`
+* 1.1. `https://autoconfig.example.com/.well-known/client-autoconfig.xml?emailaddress=fred@example.com`
+* 1.2. `https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
+* 1.3. `https://example.com/.well-known/autoconfig/mail/config-v1.1.xml`
+* 1.4. `http://autoconfig.example.com/mail/config-v1.1.xml`
 
 Step 1.3. is mainly for legacy servers. Many current deployments
 use this HTTP URL.
