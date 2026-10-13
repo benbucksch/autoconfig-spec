@@ -1024,7 +1024,7 @@ Table of Contents
    decentralized and the mail provider is in control of the
    configuration issued to mail clients.
 
-   *  1.1. https://autoconfig.%EMAILDOMAIN%/client-
+   *  1.1. https://autoconfig.%EMAILDOMAIN%/.well-known/client-
       autoconfig.xml?emailaddress=%EMAILADDRESS% (Required. emailaddress
       is Optional)
 
@@ -1040,7 +1040,7 @@ Table of Contents
 
    For example:
 
-   *  1.1. https://autoconfig.example.com/client-
+   *  1.1. https://autoconfig.example.com/.well-known/client-
       autoconfig.xml?emailaddress=fred@example.com
 
    *  1.2. https://autoconfig.example.com/mail/config-
