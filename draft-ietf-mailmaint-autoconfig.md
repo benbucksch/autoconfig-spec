@@ -283,9 +283,9 @@ The following example shows the syntax of the XML configuration file.
         The provider MUST adhere to "Open Client OAuth2 profile".
         -->
       <oAuth2>
+        <issuer>login.example.com</issuer>
         <authURL>https://login.example.com/auth</authURL>
         <tokenURL>https://login.example.com/token</tokenURL>
-        <issuer>login.example.com</issuer>
         <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
         <clientID>open</clientID>
         <!-- optional -->
@@ -1127,18 +1127,19 @@ which username form to use
 Given that this information is required for authentication,
 the Autoconfig file itself cannot require authentication.
 
-## OAuth2 requirements {#oauth2}
+## OAuth2 server requirements {#oauth2server}
 
 If OAuth2 is used, the OAuth2 server MUST adhere to the [OAuth2Client] specification,
-including all SHOULD requirements. Given that
+including all SHOULD requirements. However, given that
 * authURL
 * tokenURL
 * client ID
 * scope
-are provided in the AutoConfig response, steps "Fetching the Authorization Server Metadata"
+are provided in the AutoConfig response, the steps "Fetching the Authorization Server Metadata"
 and "Dynamic Client Registration" as well as scope names MAY be skipped in favor of
-the values in the Autoconfig response. The remaining guarantees in the
-[OAuth2Client] specification that the OAuth2 server gives to the mail client stay in force,
+the values in the Autoconfig response.
+What stays in force from [OAuth2Client] are the remaining guarantees in the
+[OAuth2Client] specification that the OAuth2 server gives to the mail client,
 including refresh token validity times.
 
 The provider MUST allow any client application that acts on behalf of the end
@@ -1168,6 +1169,15 @@ The resulting refresh and access tokens MUST be valid for all services defined
 in the configuration file, including for all URL-based protocols like CalDAV
 and all TCP-based protocols like IMAP.
 
+## OAuth2 client requirements {#oauth2client}
+
+The client can decide whether to use the `<authURL>` and `<tokenURL>` from this AutoConfig
+document, or to use the `<issuer>` to fetch the OAuth2 server metadata from
+`https://<issuer>/...TODO` and get the authURL and tokenURL from there, or to combine
+both methods and verify that the URLs match. Either way, the client MUST check whether
+the authURL and tokenURL match either the email address domain or the server domain,
+and if not, MUST show that domain when the end user approves the servers,
+or alternatively abort the process.
 
 # Security Considerations {#security}
 
