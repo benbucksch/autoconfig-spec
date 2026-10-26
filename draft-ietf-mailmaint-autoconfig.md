@@ -876,10 +876,12 @@ The first step is to directly ask the mail provider and allow it to return the
 configuration. This step ensures that the protocol is decentralized and the
 mail provider is in control of the configuration issued to mail clients.
 
-* 1.1. `https://autoconfig.%EMAILDOMAIN%/.well-known/client-autoconfig.xml?emailaddress=%EMAILADDRESS%` (Required. `emailaddress` is Optional)
-* 1.2. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated. `emailaddress` is Optional)
+* 1.1. `https://autoconfig.%EMAILDOMAIN%/.well-known/client-autoconfig.xml?emailaddress=%EMAILADDRESS%` (Required)
+* 1.2. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated)
 * 1.3. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Deprecated)
 * 1.4. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Deprecated)
+
+The `emailaddress` URL parameter is Optional.
 
 For example:
 
@@ -888,8 +890,20 @@ For example:
 * 1.3. `https://example.com/.well-known/autoconfig/mail/config-v1.1.xml`
 * 1.4. `http://autoconfig.example.com/mail/config-v1.1.xml`
 
-Step 1.3. is mainly for legacy servers. Many current deployments
-use this HTTP URL.
+### Explanations for the URLs
+
+URL 1.1. follows RFC 8615 for well-known URLs. Servers adhering to this version of the specification
+MUST support URL 1.1 and MUST have a valid TLS certificate for that hostname.
+
+URLs 1.2., 1.3. and 1.4. were used in the original protocol from around 2008, before RFC 8615
+and predecessors existed.
+
+URL 1.4. is used by many current deployments, particularly email hosting companies that
+use DNS CNAME to redirect the customer email domain to a central provider autoconfig server,
+which has a TLS certificate only for the provider domain and not every customer domain.
+Although HTTP is insecure, a large number of existing domains use it at the time of this writing,
+and ignoring it may lead to no result for many domains. The alternatives like guessing hostnames
+might be worse. See Security Considerations for more detail.
 
 ### Customzing the configuration for a specific user
 
@@ -981,19 +995,25 @@ For example:
    `premium.europe.example.com` and the MXBASEDOMAIN is `example.com`.
 
 Then, attempt to retrieve the configuration for these MX domains, using the previous
-methods:
+methods, starting with:
 
-* 3.1. `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Required. `emailaddress` is Optional)
-* 3.2. `https://autoconfig.%MXBASEDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Recommended. `emailaddress` is Optional)
-* 3.3. `%ISPDB%%MXFULLDOMAIN%` (Recommended)
-* 3.4. `%ISPDB%%MXBASEDOMAIN%` (Recommended)
+* 3.1. `https://autoconfig.%MXFULLDOMAIN%/.well-known/client-autoconfig.xml?emailaddress=%EMAILADDRESS%` (Required)
+* 3.2. `https://autoconfig.%MXBASEDOMAIN%/.well-known/client-autoconfig.xml?emailaddress=%EMAILADDRESS%` (Recommended)
+* 3.3. `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated)
+* 3.4. `https://autoconfig.%MXBASEDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated)
+* 3.5. `%ISPDB%%MXFULLDOMAIN%` (Recommended)
+* 3.6. `%ISPDB%%MXBASEDOMAIN%` (Recommended)
+
+The `emailaddress` URL parameter is Optional.
 
 For example:
 
-* 3.1. `https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
-* 3.2. `https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
-* 3.3. `https://v1.ispdb.net/premium.europe.example.com`
-* 3.4. `https://v1.ispdb.net/example.com`
+* 3.1. `https://autoconfig.premium.europe.example.com/.well-known/client-autoconfig.xml?emailaddress=fred@example.com`
+* 3.2. `https://autoconfig.example.com/.well-known/client-autoconfig.xml?emailaddress=fred@example.com`
+* 3.3. `https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
+* 3.4. `https://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com`
+* 3.5. `https://v1.ispdb.net/premium.europe.example.com`
+* 3.6. `https://v1.ispdb.net/example.com`
 
 
 ## Local disk {#disk}
@@ -1085,16 +1105,16 @@ definitions in this specification.
 * Configurations MUST be public and MUST NOT require
   authentication (see below).
 
-## Configuration location for single domain {#single-domain}
+## Configuration location for a single domain {#single-domain}
 
 The configuration file SHOULD be published at the URL for
 step 1.1., i.e.
 
-* `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml`
+* `https://autoconfig.%EMAILDOMAIN%/.well-known/client-autoconfig.xml`
 
 e.g. for `fred@example.com`
 
-* `https://autoconfig.example.com/mail/config-v1.1.xml`
+* `https://autoconfig.example.com/.well-known/client-autoconfig.xml`
 
 ## Configuration location for domain hosters {#hoster}
 
@@ -1105,14 +1125,14 @@ preferred.
 Alternatively, the configuration file SHOULD be published at
 the locations for step 3.1. and 3.2., i.e.
 
-* `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml`
-* `https://autoconfig.%MXBASEDOMAIN%/mail/config-v1.1.xml`
+* `https://autoconfig.%MXFULLDOMAIN%/.well-known/client-autoconfig.xml`
+* `https://autoconfig.%MXBASEDOMAIN%/.well-known/client-autoconfig.xml`
 
 For example, if the MX server for customer domain example.net is
 `mx.premium.europe.example.com`, then the configuration file should be at both
 
-* `https://autoconfig.premium.europe.example.com/mail/config-v1.1.xml`
-* `https://autoconfig.example.com/mail/config-v1.1.xml`
+* `https://autoconfig.premium.europe.example.com/.well-known/client-autoconfig.xml`
+* `https://autoconfig.example.com/.well-known/client-autoconfig.xml`
 
 ## No authentication for config
 
