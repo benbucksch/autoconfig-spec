@@ -910,9 +910,9 @@ configuration. This step ensures that the protocol is decentralized and the
 mail provider is in control of the configuration issued to mail clients.
 
 * 1.1. `https://autoconfig.%EMAILDOMAIN%/.well-known/client-autoconfig.xml?emailaddress=%EMAILADDRESS%` (Required)
-* 1.2. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated)
-* 1.3. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Deprecated)
-* 1.4. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Deprecated)
+* 1.2. `https://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated, but deployed)
+* 1.3. `https://%EMAILDOMAIN%/.well-known/autoconfig/mail/config-v1.1.xml` (Deprecated, but deployed)
+* 1.4. `http://autoconfig.%EMAILDOMAIN%/mail/config-v1.1.xml` (Deprecated, but deployed)
 
 The `emailaddress` URL parameter is Optional.
 
@@ -1032,8 +1032,8 @@ methods, starting with:
 
 * 3.1. `https://autoconfig.%MXFULLDOMAIN%/.well-known/client-autoconfig.xml?emailaddress=%EMAILADDRESS%` (Required)
 * 3.2. `https://autoconfig.%MXBASEDOMAIN%/.well-known/client-autoconfig.xml?emailaddress=%EMAILADDRESS%` (Recommended)
-* 3.3. `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated)
-* 3.4. `https://autoconfig.%MXBASEDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated)
+* 3.3. `https://autoconfig.%MXFULLDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated, but deployed)
+* 3.4. `https://autoconfig.%MXBASEDOMAIN%/mail/config-v1.1.xml?emailaddress=%EMAILADDRESS%` (Deprecated, but deployed)
 * 3.5. `%ISPDB%%MXFULLDOMAIN%` (Recommended)
 * 3.6. `%ISPDB%%MXBASEDOMAIN%` (Recommended)
 
