@@ -834,7 +834,7 @@ which has a TLS certificate only for the provider domain and not every customer 
 Although HTTP is insecure, a large number of existing domains use it at the time of this writing,
 and ignoring it may lead to no result for many domains. Implementors need to balance this risk
 with the alternatives like guessing hostnames or users searching the Internet.
-The section {#security} contains more detail on what an implementor needs to consider.
+{#security} _Security considerations_ contains more detail on what an implementor needs to consider.
 
 ### Customzing the configuration for a specific user
 
@@ -1170,8 +1170,8 @@ multi-factor authentication steps required.
 
 ## DNS {#dns}
 
-Any protocol that relies on DNS without further validation, e.g. http, should
-be considered insecure.
+Any protocol that relies on DNS without further validation, e.g. HTTP or DNS SRV,
+should be considered insecure.
 This also applies to the DNS MX lookup and the https calls that base on its
 results, as described in {{mx}} _MX_.
 
@@ -1185,17 +1185,16 @@ second-level domains. See {{user-approval}} _User approval_.
 
 ## HTTP
 
-HTTP requests may be intercepted, redirected, or altered at the network level.
-See {{risk}} _Risk_ above.
-
-Even if an http URL redirects to a https URL, and the domain of the https URL
-cannot be validated against the email domain, that is still insecure.
+HTTP requests may be intercepted, redirected, or altered at the network level,
+as may DNS SRV. See {{risk}} _Risk_ above.
+Even if an http: URL redirects to a https: URL, that is still insecure.
 
 For that reason, clients MUST prefer HTTPS over HTTP during configuration retrieval,
 within the same retrieval method.
 
 If such configs from HTTP are used, the end user MUST explicitly confirm the
-config, particularly the resulting second-level domains. See {{user-approval}} _User approval_.
+config, particularly the resulting second-level domains.
+See {{user-approval}} _User approval_.
 
 ## Configuration updates
 
