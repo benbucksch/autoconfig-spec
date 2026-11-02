@@ -229,7 +229,7 @@ The following example shows the syntax of the XML configuration file.
         Gives e.g. clientID, expiry, and login page.
         The provider MUST adhere to "OAuth2 server requirements". -->
       <oAuth2>
-        <issuer>login.example.com</issuer>
+        <issuer>https://login.example.com</issuer>
         <authURL>https://login.example.com/auth</authURL>
         <tokenURL>https://login.example.com/token</tokenURL>
         <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
@@ -330,7 +330,7 @@ and during everyday use of the app to represent the account, so it
 should be short, distinctive and represent the provider in the way
 end users refer and think of it.
 
-The mail client might concatinate either value with the email address,
+The mail client might concatenate either value with the email address,
 so these values should not be the email address.
 
 
@@ -380,24 +380,20 @@ Example:
 
 RELAX NG:
 
-    oAuth2 =
-      element oAuth2 {
-        anyAttr*,
-        ( authURL | tokenURL | issuer | scope | clientID | clientSecret
-        | extensionElement )*
-      }
+    oAuth2 = element oAuth2 {
+        ( authURL | tokenURL | issuer | scope | clientID | clientSecret )* }
 
-    authURL      = element authURL      { anyAttr*, text }
-    tokenURL     = element tokenURL     { anyAttr*, text }
-    issuer       = element issuer       { anyAttr*, text }
-    scope        = element scope        { anyAttr*, text }
-    clientID     = element clientID     { anyAttr*, text }
-    clientSecret = element clientSecret { anyAttr*, text }
+    authURL      = element authURL      { text }
+    tokenURL     = element tokenURL     { text }
+    issuer       = element issuer       { text }
+    scope        = element scope        { text }
+    clientID     = element clientID     { text }
+    clientSecret = element clientSecret { text }
 
 Element `<oAuth2>` is within the root element.
 
 It contains all necessary information to find and contact the OAuth2 authentication server
-to get an auth token, which can be used to login directly to the servers marked with
+to get an auth token, which can be used to log in directly to the servers marked with
 `<authentication>OAuth2</authentication>`.
 
 See {{<<oauth2-server}} and {{<<oauth2-client}}.
@@ -432,7 +428,7 @@ RELAX NG:
   This is currently used only for SMTP in combination with IMAP and POP3.
 * `<incomingServer>` and `<outgoingServer>` are within element
   `<emailProvider>`, whereas `<calendar>`, `<addressbook>`, `<fileShare>`,
-  `<chatServer>`, `<videoConference>` and  `<setupServer>` are within the
+  `<chatServer>`, `<videoConference>` and `<setupServer>` are within the
   root element `<clientConfig>`, i.e. one level higher.
   Other than that, they work the same.
 * In some protocols, the `<incomingServer>` server additionally provides
@@ -483,7 +479,7 @@ wire protocol that this server uses.
 | incomingServer | `pop3`        | TCP  | POP3         | {{!POP3=RFC1939}}, {{!POP3-SASL=RFC5034}}
 | outgoingServer | `smtp`        | TCP  | SMTP         | {{!SMTP=RFC5321}}, {{!EMail=RFC5322}}
 | calendar       | `caldav`      | URL  | CalDAV       | {{!CalDAV=RFC4791}}
-| addressbook    | `carddav`     | URL  | CardDAV      | {{!CardDav=RFC6352}}
+| addressbook    | `carddav`     | URL  | CardDAV      | {{!CardDAV=RFC6352}}
 | fileShare      | `webdav`      | URL  | WebDAV       | {{!WebDAV=RFC4918}}
 | chatServer     | `xmpp`        | URL  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}, {{!XMPP-WebSocket=RFC7395}}
 | chatServer     | `xmpp-tcp`     | TCP  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}
@@ -1078,8 +1074,8 @@ to enter the password on the right domain.
 The client can decide whether to
 
 * use the `<issuer>` to fetch the OAuth2 server metadata using RFC 8414
-(e.g. `https://<issuer>/.well-known/oauth-authorization-server`) or
-OpenID Connect (e.g. `https://<issuer>/.well-known/openid-configuration`)
+(e.g. `<issuer>/.well-known/oauth-authorization-server`) or
+OpenID Connect (e.g. `<issuer>/.well-known/openid-configuration`)
 and get the `authorization_endpoint` and `token_endpoint` values and
 other parameters from that JSON document,
 and compare the `issuer` value as specified by RFC 8414, or
@@ -1190,7 +1186,7 @@ end users, which may be contrary to laws in multiple countries.
 The OAuth2 server MUST
 
 * accept the client ID that is given in the configuration file, or if that is not given,
-* implement Dynamic Client Registration {{!RFC7591}} in the way
+* implement Dynamic Client Registration {{!RFC7591}} or {{!CMID}} in the way
   as defined by [OAuth2Client] and accept the resulting Client ID,
 
 without client secret. It MAY support multiple of those methods.
@@ -1299,7 +1295,7 @@ validated.
 
 The risk is mitigated to some degree by {{<<user-approval}}.
 
-## User testing with emailAddress {#user-testing}
+## User testing with emailaddress {#user-testing}
 
 If the provider returns different configurations based on the `emailaddress`
 parameter of the URL, then attackers can find out whether a given email address is valid.
@@ -1451,7 +1447,7 @@ Currently, this protocol or parts of it have been implemented by:
 * [K-9 Mail](https://k9mail.app) and
   [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
 * [FairEmail](https://email.faircode.eu)
-* [Nextcloud email](https://apps.nextcloud.com/apps/mail)
+* [Nextcloud Mail](https://apps.nextcloud.com/apps/mail)
 * [Delta Chat](https://delta.chat/)
 
 and likely other mail clients.
