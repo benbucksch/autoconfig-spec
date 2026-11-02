@@ -278,7 +278,7 @@ RELAX NG:
       attribute purpose { text }?,   # the only defined value is "mx"
       text }
 
-The content of the `<domain>` element defines which email addresses this config
+The content of the `<domain>` element defines which email addresses this configuration
 is valid for. For example, a configuration with `<domain>example.com</domain>` is valid for
 email address `fred@example.com`.
 
@@ -401,7 +401,7 @@ Server sections of the same type (like `<incomingServer>` or `<calendar>`)
 may appear multiple times in the same configuration file.
 In this case, the one listed first is preferred by the configuration provider.
 Unless the client has specific other requirements, it SHOULD pick the first
-config.
+configuration.
 
 The client may deviate from this recommendation, because
 
@@ -413,7 +413,7 @@ The client may deviate from this recommendation, because
   authentication and the client either doesn't implement OAuth2, or
   there is a problem in the OAuth2 flow with this provider, or
 * the client has a specific policy to prefer another configuration,
-  e.g. a STARTTLS configuration is listed before a direct TLS config, and
+  e.g. a STARTTLS configuration is listed before a direct TLS configuration, and
   the client has a policy of preferring direct TLS, or likewise
   the client prefers IMAP over POP3.
 
@@ -593,7 +593,7 @@ STARTTLS, or none of these.
 
 In all cases where TLS is used, either directly or using STARTTLS,
 the client MUST validate the TLS certificate and ensure that the
-certificate is valid for the hostname given in this config. If not,
+certificate is valid for the hostname given in this configuration. If not,
 or if the TLS certificate is otherwise invalid, the client MUST
 either disconnect or MAY warn the user of the
 dangers and ask for user confirmation. Such fallback with warning and
@@ -1066,7 +1066,7 @@ For example, if the MX server for customer domain example.net is
 * `https://autoconfig.premium.europe.example.com/.well-known/client-autoconfig.xml`
 * `https://autoconfig.example.com/.well-known/client-autoconfig.xml`
 
-## No authentication for config
+## No authentication for configuration
 
 Any of the above URLs for retrieving the configuration file MUST NOT
 require authentication, but MUST be public.
@@ -1183,7 +1183,7 @@ that the results match, e.g. to use the native DNS resolver of the operating
 system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.
 
 Nonetheless, the result should be used with care. If such configs are used,
-the end user MUST explicitly confirm the config, particularly the resulting
+the end user MUST explicitly confirm the configuration, particularly the resulting
 second-level domains. See {{user-approval}} _User approval_.
 
 ## HTTP
@@ -1196,7 +1196,7 @@ For that reason, clients MUST prefer HTTPS over HTTP during configuration retrie
 within the same retrieval method.
 
 If such configs from HTTP are used, the end user MUST explicitly confirm the
-config, particularly the resulting second-level domains.
+configuration, particularly the resulting second-level domains.
 See {{user-approval}} _User approval_.
 
 ## Configuration updates
