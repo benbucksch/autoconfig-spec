@@ -185,33 +185,22 @@ The following example shows the syntax of the XML configuration file.
         <displayName>Google Workspace</displayName>
         <displayShortName>GMail</displayShortName>
 
-          <!-- type=
-          "imap": IMAP
-          "pop3": POP3
-          "jmap": JMAP
-          "ews": Microsoft Exchange Web Services
-          "activesync": Microsoft ActiveSync
-          -->
         <incomingServer type="imap">
           <hostname>imap.example.com</hostname>
           <port>993</port>
-            <!--
+            <!-- One of:
             "plain": no encryption
             "SSL": TLS on TLS-specific port
-            "STARTTLS": mandatory upgrade to TLS via STARTTLS
-            -->
+            "STARTTLS": mandatory upgrade to TLS via STARTTLS -->
           <socketType>SSL</socketType>
-            <!-- Authentication methods:
+            <!-- Common authentication methods:
             "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
             "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
-            "TLS-client-cert": TLS client certificate on TLS layer
             "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
-            "none": No authentication
 
             Multiple <authentication> elements per server
             configuration are valid. Clients will pick the first
-            one that they support.
-            -->
+            one that they support. -->
           <authentication>password-cleartext</authentication>
           <username>%EMAILADDRESS%</username>
         </incomingServer>
@@ -233,18 +222,13 @@ The following example shows the syntax of the XML configuration file.
           <hostname>smtp.googlemail.com</hostname>
           <port>587</port>
           <socketType>STARTTLS</socketType>
-            <!-- smtp-auth (RFC 2554, 4954) or other auth mechanism. -->
           <authentication>password-cleartext</authentication>
           <username>%EMAILADDRESS%</username>
         </outgoingServer>
 
         <incomingServer type="jmap">
           <url>https://jmap.example.com</url>
-            <!-- Authentication methods
-            "Basic": RFC 7617
-            "Digest": RFC 7616
-            "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
-            -->
+          <!-- For "OAuth2", the provider MUST adhere to "OAuth2 server requirements". -->
           <authentication>OAuth2</authentication>
           <authentication system="http">Basic</authentication>
           <username>%EMAILADDRESS%</username>
@@ -271,22 +255,24 @@ The following example shows the syntax of the XML configuration file.
 
       <addressbook type="carddav">
         <url>https://contacts.example.com/remote.php/dav</url>
+        <authentication>OAuth2</authentication>
         <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </addressbook>
 
       <calendar type="caldav">
         <url>https://calendar.example.com/remote.php/dav</url>
+        <authentication>OAuth2</authentication>
         <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </calendar>
 
         <!-- Upload files, allowing the user to share them.
         This can be used to send links instead of attachments,
-        or to set up a file sync folder on the user's desktop.
-        -->
+        or to set up a file sync folder on the user's desktop. -->
       <fileShare type="webdav">
         <url>https://share.example.com/remote.php/dav</url>
+        <authentication>OAuth2</authentication>
         <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </fileShare>
@@ -297,7 +283,7 @@ The following example shows the syntax of the XML configuration file.
         <username>%EMAILADDRESS%</username>
       </chatServer>
 
-      <chatServer type="xmpp">
+      <chatServer type="xmpp-tcp">
         <hostname>xmpp.example.com</hostname>
         <port>5223</port>
         <socketType>TLS</socketType>
@@ -313,20 +299,16 @@ The following example shows the syntax of the XML configuration file.
 
         <!-- OAuth2 configuration for native public client apps.
         Gives e.g. clientID, expiry, and login page.
-        The provider MUST adhere to "Open Client OAuth2 profile".
-        -->
+        The provider MUST adhere to "OAuth2 server requirements". -->
       <oAuth2>
         <issuer>login.example.com</issuer>
         <authURL>https://login.example.com/auth</authURL>
         <tokenURL>https://login.example.com/token</tokenURL>
         <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
         <clientID>open</clientID>
-        <!-- optional -->
-        <clientSecret>give-me-your-password</clientSecret>
       </oAuth2>
 
       <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
-
     </clientConfig>
 
 The formal grammar is in appendix {{relaxng-schema}} _RELAX NG schema_.
@@ -541,7 +523,7 @@ wire protocol that this server uses.
 | addressbook    | `carddav`     | URL  | CardDav      | {{!CardDav=RFC6352}}
 | fileShare      | `webdav`      | URL  | WebDAV       | {{!WebDAV=RFC4918}}
 | chatServer     | `xmpp`        | URL  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}, {{!XMPP-WebSocket=RFC7395}}
-| chatServer     | `xmpptcp`     | TCP  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}
+| chatServer     | `xmpp-tcp`     | TCP  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}
 | chatServer     | `matrix`      | URL  | Matrix       | [Matrix]
 | setupServer    | `managesieve` | TCP  | ManageSieve  | {{!ManageSieve=RFC5804}}, {{!Sieve=RFC5228}}
 | incomingServer | `ews`         | URL  | Exchange Web Services |
@@ -1224,13 +1206,29 @@ and all TCP-based protocols like IMAP.
 
 ## OAuth2 client requirements {#oauth2client}
 
-The client can decide whether to use the `<authURL>` and `<tokenURL>` from this AutoConfig
-document, or to use the `<issuer>` to fetch the OAuth2 server metadata from
-`https://<issuer>/...TODO` and get the authURL and tokenURL from there, or to combine
-both methods and verify that the URLs match. Either way, the client MUST check whether
-the authURL and tokenURL match either the email address domain or the server domain,
-and if not, MUST show that domain when the end user approves the servers,
-or alternatively abort the process.
+The client can decide whether to
+* use the `<issuer>` to fetch the OAuth2 server metadata using RFC 8414
+(e.g. `https://<issuer>/.well-known/oauth-authorization-server`) or
+OpenID Connect (e.g. `https://<issuer>/.well-known/openid-configuration`)
+and get the `authorization_endpoint` and `token_endpoint` values and
+other parameters from that JSON document,
+and compare the `issuer` value as specified by RFC 8414, or
+* use the `<authURL>` and `<tokenURL>` from this AutoConfig document, or
+* combine both methods and verify that the URLs match.
+
+Not all OAuth2 servers might publish the metadata according to RFC 8414 or
+OpenID Connect.
+
+Particular care must be taken when authURL and tokenURL are not on the same hostname,
+because it means that a user might be logging in at the real login page, the app
+gets the auth token, and then sends the auth token to the tokenURL server by an attacker.
+Currently, one large mail provider uses such a split configuration, but the client
+application must handle this case with particular caution.
+
+Either way, the client MUST check whether both the authURL and the tokenURL
+match either the email address domain or the server domain,
+and if not, MUST show that OAuth2 domain to the end user when the end user
+approves the servers, or alternatively abort the process.
 
 # Security Considerations {#security}
 
@@ -1431,7 +1429,7 @@ The registrations need to define:
 | addressbook    | `carddav`     | URL  | CardDav      | RFC 6352 |
 | fileShare      | `webdav`      | URL  | WebDAV       | RFC 4918 |
 | chatServer     | `xmpp`        | URL  | XMPP         | RFC 6120, RFC 6121, RFC 7395 |
-| chatServer     | `xmpptcp`     | TCP  | XMPP         | RFC 6120, RFC 6121 |
+| chatServer     | `xmpp-tcp`     | TCP  | XMPP         | RFC 6120, RFC 6121 |
 | chatServer     | `matrix`      | URL  | Matrix       | <https://spec.matrix.org> |
 | setupServer    | `managesieve` | TCP  | ManageSieve  | RFC 5804, RFC 5228 |
 | incomingServer | `ews`         | URL  | Exchange Web Services | |
