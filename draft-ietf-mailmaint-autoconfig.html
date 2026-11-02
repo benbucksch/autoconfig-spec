@@ -1324,10 +1324,13 @@ svg {
                 <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-server-security" class="internal xref">Server security</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.6">
-                <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-user-testing-with-emailaddr" class="internal xref">User testing with emailAddress parameter</a></p>
+                <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-isbdb" class="internal xref">ISBDB</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.7">
-                <p id="section-toc.1-1.7.2.7.1"><a href="#section-7.7" class="auto internal xref">7.7</a>.  <a href="#name-rate-limits" class="internal xref">Rate-limits</a></p>
+                <p id="section-toc.1-1.7.2.7.1"><a href="#section-7.7" class="auto internal xref">7.7</a>.  <a href="#name-user-testing-with-emailaddr" class="internal xref">User testing with emailAddress</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.8">
+                <p id="section-toc.1-1.7.2.8.1"><a href="#section-7.8" class="auto internal xref">7.8</a>.  <a href="#name-rate-limits" class="internal xref">Rate-limits</a></p>
 </li>
             </ul>
 </li>
@@ -1650,20 +1653,20 @@ displayName = element displayName { text }
 displayShortName = element displayShortName { text }
 </pre><a href="#section-3.2.4-4" class="pilcrow">¶</a>
 </div>
-<p id="section-3.2.4-5">The <code>&lt;displayName&gt;</code> element contains the name of the provider, e.g.
-as preferred by the marketing of the provider itself. It <span class="bcp14">SHOULD</span> be no
-longer than 30 characters, but <span class="bcp14">MUST</span> be no longer than 60 characters.<a href="#section-3.2.4-5" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-6">The <code>&lt;displayShortName&gt;</code> element contains the name of the provider, as
-typically used by end users. It <span class="bcp14">SHOULD</span> be no longer than 12
-characters, and it <span class="bcp14">MUST NOT</span> be longer than 20 characters.<a href="#section-3.2.4-6" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-7">Both elements may be used to display the provider or account name by the
-mail client UI, which has reasonable expectations on length and
-expressiveness.<a href="#section-3.2.4-7" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-8">The <code>&lt;displayShortName&gt;</code> in particular may be used by the mail client
-together with the email address as partial base for the account name,
+<p id="section-3.2.4-5">Both elements may be used to display the provider or account name by the
+mail client UI, which therefore has expectations on length and expressiveness.<a href="#section-3.2.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-6">The <code>&lt;displayName&gt;</code> element contains the name of the provider, e.g.
+as preferred by the marketing of the provider itself. It should be no
+longer than 30 characters, to be meaningful to the user and to fit in
+the UI fields.<a href="#section-3.2.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-7">The <code>&lt;displayShortName&gt;</code> element contains the name of the provider, as
+typically used by end users. It should be no longer than 12
+characters. It may be used by the mail client as base for the account name,
 and during everyday use of the app to represent the account, so it
-<span class="bcp14">SHOULD</span> be short, distinctive and represent the provider in the way
-end users refer and think of it.<a href="#section-3.2.4-8" class="pilcrow">¶</a></p>
+should be short, distinctive and represent the provider in the way
+end users refer and think of it.<a href="#section-3.2.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.2.4-8">The mail client might concatinate either values with the email address,
+so these values should not be the email address.<a href="#section-3.2.4-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2260,7 +2263,7 @@ select confirm it. Uses SASL <code>EXTERNAL</code> scheme <span>[<a href="#SASL"
 The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2-server" class="internal xref">OAuth2 server requirements</a>.<a href="#section-3.7.4-6.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-6.7">
-              <p id="section-3.7.4-6.7.1"><code>client-IP-address</code>: Server can be used without any explicit authentication,
+              <p id="section-3.7.4-6.7.1"><code>client-IP-address</code>: The server can be used without any explicit authentication,
 and the client is admitted based on its IP address.
 This may be the case for some SMTP servers on local networks.
 Not supported on the Internet. Deprecated, because it breaks mobile devices.<a href="#section-3.7.4-6.7.1" class="pilcrow">¶</a></p>
@@ -2280,13 +2283,13 @@ Not supported on the Internet. Deprecated, because it breaks mobile devices.<a h
 <p id="section-3.7.4.1-3">A specific SASL scheme <span>[<a href="#SASL" class="cite xref">SASL</a>]</span> <span class="bcp14">MAY</span> be specified using
 the specific SASL authentication scheme name, e.g.
 <code>SCRAM-SHA-256-PLUS</code> <span>[<a href="#SCRAM" class="cite xref">SCRAM</a>]</span>. To signal that, the
-<code>&lt;authentication&gt;</code> element <span class="bcp14">SHOULD</span> have the <code>system</code> attribute set
+<code>&lt;authentication&gt;</code> element <span class="bcp14">MUST</span> have the <code>system</code> attribute set
 to value <code>sasl</code>, i.e. <code>&lt;authentication system="sasl"&gt;</code>.<a href="#section-3.7.4.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.1-4">In such a case, the server configuration section <span class="bcp14">SHOULD</span> also
+<p id="section-3.7.4.1-4">In such a case, the server configuration section should also
 specify a more generic authentication mechanism as a lower priority
-alternative. That would make clients use the specific authentication
-mechanism, if they support it, and other clients will use the more generic
-authentication mechanism.<a href="#section-3.7.4.1-4" class="pilcrow">¶</a></p>
+alternative. Clients that support the specific authentication
+mechanism will use that, and other clients will use the more generic
+authentication mechanism. Without such fallback, the latter clients would fail.<a href="#section-3.7.4.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="auth-alternatives">
@@ -2312,17 +2315,17 @@ sections.<a href="#section-3.7.4.2-3" class="pilcrow">¶</a></p>
             <h5 id="name-authentication-verification">
 <a href="#section-3.7.4.3" class="section-number selfRef">3.7.4.3. </a><a href="#name-authentication-verification" class="section-name selfRef">Authentication verification and fallback</a>
             </h5>
-<p id="section-3.7.4.3-1">The client <span class="bcp14">SHOULD</span> test the configuration during setup, with an actual
+<p id="section-3.7.4.3-1">The client should test the configuration during setup, with an actual
 authentication attempt.<a href="#section-3.7.4.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.4.3-2">If the authentication fails, the client decides based on the
 authentication error code how to proceed. For example, if the authentiocation
 method itself failed, or the error code indicates a systemic failure,
-the client <span class="bcp14">SHOULD</span> use a lower-priority authentication method from the
+the client should use a lower-priority authentication method from the
 list.<a href="#section-3.7.4.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.7.4.3-3">If the authentication method is working, but the error code indicated
 that the username or password was wrong, then the client <span class="bcp14">MAY</span> ask the
 user to correct the password.<a href="#section-3.7.4.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.3-4">For that reason, the server <span class="bcp14">SHOULD</span> be specific in the error codes and
+<p id="section-3.7.4.3-4">For that reason, the server should be specific in the error codes and
 allow the client to distinguish between<a href="#section-3.7.4.3-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7.4.3-5.1">
@@ -2346,11 +2349,11 @@ systemic failures<a href="#section-3.7.4.3-5.1.1" class="pilcrow">¶</a></p>
 client might tell the user that the password is wrong, and the user starts
 attempting other passwords, potentially revealing passwords to other
 higher-value assets, which is highly dangerous.<a href="#section-3.7.4.3-6" class="pilcrow">¶</a></p>
-<p id="section-3.7.4.3-7">If the authentication succeeded, the client <span class="bcp14">SHOULD</span> take note of the
-working configutation and use that for all subsequent connections,
+<p id="section-3.7.4.3-7">If the authentication succeeded, the client <span class="bcp14">MUST</span> remember the
+working configuration and use that for all subsequent connections,
 until an explicit reconfiguration occurs. During normal everyday operation,
 the client <span class="bcp14">SHOULD NOT</span> fallback nor attempt multiple different authentication
-methods.<a href="#section-3.7.4.3-7" class="pilcrow">¶</a></p>
+methods. See <a href="#configuration-updates" class="internal xref">Configuration updates</a> for the reasons.<a href="#section-3.7.4.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2436,9 +2439,8 @@ replaced by the client, before the value is actually used.<a href="#section-3.8-
         <h3 id="name-xml-validation">
 <a href="#section-3.9" class="section-number selfRef">3.9. </a><a href="#name-xml-validation" class="section-name selfRef">XML validation</a>
         </h3>
-<p id="section-3.9-1">The client <span class="bcp14">SHOULD</span> validate that the configuration file is valid XML, and if
-the XML syntax is invalid, the client <span class="bcp14">SHOULD</span> ignore the entire file. In
-contrast, if there are merely unknown elements or
+<p id="section-3.9-1">If the XML syntax is invalid, the client <span class="bcp14">MUST</span> ignore the entire file.
+In contrast, if there are merely unknown elements or
 attributes, the client <span class="bcp14">MUST NOT</span> ignore the file.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
 <p id="section-3.9-2">The client <span class="bcp14">MUST</span> disregard those elements, attributes and values that it does not
 support. The presence of unknown elements, attributes or values <span class="bcp14">MUST NOT</span> result
@@ -2449,7 +2451,7 @@ is ignored and the other server sections will still be processed. Only if no val
 configuration is found in the document, the document as a whole is ignored, but other
 retrieval mechanisms might produce a different document with a valid configuration.<a href="#section-3.9-2" class="pilcrow">¶</a></p>
 <p id="section-3.9-3">This allows future extensions of the format without breaking existing clients.<a href="#section-3.9-3" class="pilcrow">¶</a></p>
-<p id="section-3.9-4">The RELAX NG schema in <a href="#relaxng-schema" class="internal xref">RELAX NG schema</a> is written to
+<p id="section-3.9-4">The <a href="#relaxng-schema" class="internal xref">RELAX NG schema</a> is written to
 follow these rules: it accepts unknown elements, attributes,
 attribute values and element values, so that a validator does not reject a
 document merely because it uses extensions not defined here.<a href="#section-3.9-4" class="pilcrow">¶</a></p>
@@ -2466,7 +2468,7 @@ document merely because it uses extensions not defined here.<a href="#section-3.
 address, will perform several steps to retrieve the configuration from various
 sources.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">The steps are ordered by priority. They may all be requested at the same time,
-but a higher priorty result that is available <span class="bcp14">SHOULD</span> be preferred over a lower
+but a higher priorty result that is available should be preferred over a lower
 priority one, even if the lower priority one is available earlier. Exceptions
 apply when a higher priority result is either invalid or outdated,
 e.g. it doesn't work anymore, or the fetch method is less secure,
@@ -2615,10 +2617,10 @@ customers, and to convince their customers to modify their root DNS
 specifically for AutoConfig. On the other side, the ISPDB can only contain the
 hosting company and cannot know all their customers. To handle such domains,
 the protocol first needs to find the server hosting the email.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">If the previous mechanisms yield no result, the client <span class="bcp14">SHOULD</span> perform a DNS MX
-lookup on the email domain, and retrieve the MX server (incoming SMTP server)
+<p id="section-4.3-2">If the previous mechanisms yield no result, the client performs a DNS MX
+lookup on the email domain, and retrieves the MX server (incoming SMTP server)
 for that domain. Only the highest priority MX hostname is considered. From
-that MX hostname, 2 values are extracted:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+that MX hostname, two values are extracted:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-3.1">
             <p id="section-4.3-3.1.1">Extract only the second-level domain from the MX hostname, and use that as
@@ -2742,7 +2744,7 @@ outlined in <a href="#security" class="internal xref">Security Considerations</a
 <a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-manual-configuration" class="section-name selfRef">Manual configuration</a>
         </h3>
 <p id="section-4.6-1">If the above mechanisms fail to provide a working configuration, or if the
-user explicitly chooses so, the mail client <span class="bcp14">SHOULD</span> give the end user the ability to
+user explicitly chooses so, the mail client should give the end user the ability to
 manually enter a configuration, and use that configuration to configure the
 account.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
 </section>
@@ -2761,19 +2763,21 @@ account.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-5.1-1">Independent of the mechanisms used to find the configuration, before using
 that configuration, the mail client <span class="bcp14">SHOULD</span> display that configuration to the end user and
-let him confirm it. While doing so:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+let him confirm it. This is an important <span><a href="#security" class="internal xref">security precaution</a> (<a href="#security" class="auto internal xref">Section 7</a>)</span>,
+a client not asking for user approval needs to consider all security properties.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">When displaying the configuration for approval:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1">At least the second-level domain name(s) of the hostnames involved <span class="bcp14">MUST</span> be
-shown clearly and with high prominence.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.1-3.1">
+            <p id="section-5.1-3.1.1">At least the second-level domain name(s) of the hostnames involved <span class="bcp14">MUST</span> be
+shown clearly and with high prominence.<a href="#section-5.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">To avoid spoofing, the client <span class="bcp14">MUST NOT</span> cut off parts of long
-second-level domains. At least 63 characters <span class="bcp14">MUST</span> be displayed.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-3.2">
+            <p id="section-5.1-3.2.1">To avoid spoofing, the client <span class="bcp14">MUST NOT</span> cut off parts of long
+second-level domains. At least 63 characters <span class="bcp14">MUST</span> be displayed.<a href="#section-5.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-2.3">
-            <p id="section-5.1-2.3.1">Care <span class="bcp14">SHOULD</span> be taken with international characters that look like ASCII
-characters, but have a different code.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-3.3">
+            <p id="section-5.1-3.3.1">Care should be taken with international characters that look like ASCII
+characters, but have a different code.<a href="#section-5.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2783,7 +2787,7 @@ characters, but have a different code.<a href="#section-5.1-2.3.1" class="pilcro
         <h3 id="name-login-test">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-login-test" class="section-name selfRef">Login test</a>
         </h3>
-<p id="section-5.2-1">After the user confirmed the configuration, the mail client <span class="bcp14">SHOULD</span> test the configuration,
+<p id="section-5.2-1">After the user confirmed the configuration, the mail client should test the configuration,
 by attempting a login to each server configured. Only if the login succeeded,
 and the server is working, should the configuration be saved and retrieving
 and sending mail be started.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
@@ -2839,7 +2843,7 @@ authentication (see below).<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
         <h3 id="name-configuration-location-for-">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-configuration-location-for-" class="section-name selfRef">Configuration location for a single domain</a>
         </h3>
-<p id="section-6.1-1">The configuration file <span class="bcp14">SHOULD</span> be published at the URL for
+<p id="section-6.1-1">The configuration file should be published at the URL for
 step 1.1., i.e.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.1-2.1">
@@ -2860,9 +2864,9 @@ step 1.1., i.e.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-configuration-location-for-d" class="section-name selfRef">Configuration location for domain hosters</a>
         </h3>
 <p id="section-6.2-1">For mail providers which host entire domains for their business
-customers, the same URL as listed in the previous section is
-preferred.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
-<p id="section-6.2-2">Alternatively, the configuration file <span class="bcp14">SHOULD</span> be published at
+customers, the same URL 1.1., as listed in the previous section, is
+recommended.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">If that URL is not used, the configuration file should be published at
 the locations for step 3.1. and 3.2., i.e.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.2-3.1">
@@ -2882,6 +2886,8 @@ the locations for step 3.1. and 3.2., i.e.<a href="#section-6.2-2" class="pilcro
             <p id="section-6.2-5.2.1"><code>https://autoconfig.example.com/.well-known/client-autoconfig.xml</code><a href="#section-6.2-5.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+<p id="section-6.2-6">If the MX server hostname is directly in the email domain, e.g. <code>mail.example.com</code>,
+then URL 3.1 would of course be the same URL as 3.2.<a href="#section-6.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="no-authentication-for-configuration">
@@ -3016,10 +3022,10 @@ multi-factor authentication steps required.<a href="#section-7.1-3" class="pilcr
         <h3 id="name-dns">
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-dns" class="section-name selfRef">DNS</a>
         </h3>
-<p id="section-7.2-1">Any protocol that relies on DNS without further validation, e.g. HTTP or DNS SRV,
+<p id="section-7.2-1">Any protocol that relies on DNS without further validation, e.g. <a href="#sec-http" class="internal xref">HTTP</a> or <a href="#dnssrv" class="internal xref">DNS SRV</a>,
 should be considered insecure.
-This also applies to the DNS MX lookup and the https calls that base on its
-results, as described in <a href="#mx" class="internal xref">MX</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+This also applies to the <a href="#mx" class="internal xref">MX</a> lookup and the HTTPS calls that base on its
+results.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2">One possible mitigation is to use multiple different DNS servers and verify
 that the results match, e.g. to use the native DNS resolver of the operating
 system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
@@ -3028,19 +3034,19 @@ the end user <span class="bcp14">MUST</span> explicitly confirm the configuratio
 second-level domains. See <a href="#user-approval" class="internal xref">User approval</a>.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="http">
+<div id="sec-http">
 <section id="section-7.3">
         <h3 id="name-http">
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-http" class="section-name selfRef">HTTP</a>
         </h3>
-<p id="section-7.3-1">HTTP requests may be intercepted, redirected, or altered at the network level,
-as may <a href="#dnssec" class="internal xref">DNSSEC</a>. See <a href="#risk" class="internal xref">Risk</a> above.
-Even if an http: URL redirects to a https: URL, that is still insecure.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<p id="section-7.3-2">For that reason, clients <span class="bcp14">MUST</span> prefer HTTPS over HTTP during configuration retrieval,
-within the same retrieval method.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-1">HTTP requests may be intercepted, redirected, or altered at the network level. See <a href="#risk" class="internal xref">Risk</a> above.
+Even if an http: URL redirects to an https: URL, that is still insecure.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">For that reason, clients <span class="bcp14">MUST</span> prefer HTTPS (URLs 1.1. to 1.3.) over HTTP (URL 1.4.)
+during configuration retrieval, within the same retrieval method.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 <p id="section-7.3-3">If such configs from HTTP are used, the end user <span class="bcp14">MUST</span> explicitly confirm the
 configuration, particularly the resulting second-level domains.
 See <a href="#user-approval" class="internal xref">User approval</a>.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.3-4">As mentioned <a href="&lt;&lt;dns">above</a>, <a href="#dnssrv" class="internal xref">DNS SRV</a> suffers from similar weaknesses.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="configuration-updates">
@@ -3057,7 +3063,7 @@ own, this reduces the risk significantly.<a href="#section-7.4-1" class="pilcrow
 <p id="section-7.4-2">However, if the mail client does regular configuration updates using this
 protocol, this security property is no longer given. For regular configuration
 updates, the mail client <span class="bcp14">MUST</span> use only mechanisms that are secure and cannot
-be tampered with by an active attacker. Furthermore, the user <span class="bcp14">SHOULD</span> still
+be tampered with by an active attacker. Furthermore, the user should still
 approve configuration changes.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 <p id="section-7.4-3">But even with all these protections implemented, the mail client vendor should
 make a security assessment for the risks of making such regular updates. The
@@ -3073,38 +3079,46 @@ protection.<a href="#section-7.4-3" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-7.5-1">Given that mail clients will trust the configuration, the server delivering
 the configuration file needs to be secure. A static web server offers better
-security. The server software <span class="bcp14">SHOULD</span> be updated regularly and hosted on a
+security. The server software should be updated regularly and hosted on a
 dedicated secure server with all unnecessary services and server features
 turned off.<a href="#section-7.5-1" class="pilcrow">¶</a></p>
-<p id="section-7.5-2">For the ISPDB, additions and modifications to the configurations are
+</section>
+</div>
+<div id="ispdb-security">
+<section id="section-7.6">
+        <h3 id="name-isbdb">
+<a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-isbdb" class="section-name selfRef">ISBDB</a>
+        </h3>
+<p id="section-7.6-1">For the <a href="#ispdb" class="internal xref">Central database</a>, additions and modifications to the configurations are
 applicable to all respective users and must be made with care. The
 authenticity of the configuration <span class="bcp14">MUST</span> be verified from authorative sources.
 Server hostnames <span class="bcp14">MUST</span> be compared with the email domain names they are
 serving, and if they differ, the ownership of the server hostnames <span class="bcp14">MUST</span> be
-validated.<a href="#section-7.5-2" class="pilcrow">¶</a></p>
-<p id="section-7.5-3">The risk is mitigated to some degree by <a href="#user-approval" class="internal xref">User approval</a>.<a href="#section-7.5-3" class="pilcrow">¶</a></p>
+validated.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
+<p id="section-7.6-2">The risk is mitigated to some degree by <a href="#user-approval" class="internal xref">User approval</a>.<a href="#section-7.6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="user-testing-with-emailaddress-parameter">
-<section id="section-7.6">
+<div id="user-testing">
+<section id="section-7.7">
         <h3 id="name-user-testing-with-emailaddr">
-<a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-user-testing-with-emailaddr" class="section-name selfRef">User testing with emailAddress parameter</a>
+<a href="#section-7.7" class="section-number selfRef">7.7. </a><a href="#name-user-testing-with-emailaddr" class="section-name selfRef">User testing with emailAddress</a>
         </h3>
-<p id="section-7.6-1">If the provider returns different configurations based on the <code>emailAddress</code>
+<p id="section-7.7-1">If the provider returns different configurations based on the <code>emailAddress</code>
 parameter of the URL, then attackers can find out whether a given email address is valid.
-See <a href="#email-address-parameter" class="auto internal xref">Section 4.1.2</a> for mitigations.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
+See <a href="#email-address-parameter" class="auto internal xref">Section 4.1.2</a> for mitigations.
+It is recommended to return the same configurating for all users, which avoids this problem.<a href="#section-7.7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="rate-limits">
-<section id="section-7.7">
+<section id="section-7.8">
         <h3 id="name-rate-limits">
-<a href="#section-7.7" class="section-number selfRef">7.7. </a><a href="#name-rate-limits" class="section-name selfRef">Rate-limits</a>
+<a href="#section-7.8" class="section-number selfRef">7.8. </a><a href="#name-rate-limits" class="section-name selfRef">Rate-limits</a>
         </h3>
-<p id="section-7.7-1">If rate-limiting is used, the limits should be high enough
+<p id="section-7.8-1">If rate-limits are used, the limits should be high enough
 for at least 100 requests per minute from the same client,
 given that normal clients routinely make 10 or more requests at once, and
-might repeat that process multiple times after user mistakes or configuration errors.<a href="#section-7.7-1" class="pilcrow">¶</a></p>
-<p id="section-7.7-2">A static configuration file served by a static web server is recommended.<a href="#section-7.7-2" class="pilcrow">¶</a></p>
+might repeat that process multiple times after user mistakes or configuration errors.<a href="#section-7.8-1" class="pilcrow">¶</a></p>
+<p id="section-7.8-2">A static configuration file served by a static web server is recommended.<a href="#section-7.8-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3616,7 +3630,7 @@ considered insecure for the purposes of this specification.<a href="#appendix-B.
         <h3 id="name-dns-srv">
 <a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-dns-srv" class="section-name selfRef">DNS SRV</a>
         </h3>
-<p id="appendix-B.2-1">DNS SRV protocols <span>[<a href="#DNS-SRV" class="cite xref">DNS-SRV</a>]</span> <span>[<a href="#RFC6186" class="cite xref">RFC6186</a>]</span> are not used here, for 2 reasons:<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-1">DNS SRV protocols <span>[<a href="#DNS-SRV" class="cite xref">DNS-SRV</a>]</span> <span>[<a href="#RFC6186" class="cite xref">RFC6186</a>]</span> are not used here, for two reasons:<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="appendix-B.2-2">
 <li id="appendix-B.2-2.1">
             <p id="appendix-B.2-2.1.1">DNS SRV relies on insecure DNS and the configuration can therefore be trivially
