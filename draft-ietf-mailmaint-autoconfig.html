@@ -2966,26 +2966,37 @@ and all TCP-based protocols like IMAP.<a href="#section-6.4-10" class="pilcrow">
         <h3 id="name-oauth2-client-requirements">
 <a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-oauth2-client-requirements" class="section-name selfRef">OAuth2 client requirements</a>
         </h3>
-<p id="section-6.5-1">The client can decide whether to
-* use the <code>&lt;issuer&gt;</code> to fetch the OAuth2 server metadata using RFC 8414
+<p id="section-6.5-1">The client can decide whether to<a href="#section-6.5-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.5-2.1">
+            <p id="section-6.5-2.1.1">use the <code>&lt;issuer&gt;</code> to fetch the OAuth2 server metadata using RFC 8414
 (e.g. <code>https://&lt;issuer&gt;/.well-known/oauth-authorization-server</code>) or
 OpenID Connect (e.g. <code>https://&lt;issuer&gt;/.well-known/openid-configuration</code>)
 and get the <code>authorization_endpoint</code> and <code>token_endpoint</code> values and
 other parameters from that JSON document,
-and compare the <code>issuer</code> value as specified by RFC 8414, or
-* use the <code>&lt;authURL&gt;</code> and <code>&lt;tokenURL&gt;</code> from this AutoConfig document, or
-* combine both methods and verify that the URLs match.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
-<p id="section-6.5-2">Not all OAuth2 servers might publish the metadata according to RFC 8414 or
-OpenID Connect.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
-<p id="section-6.5-3">Particular care must be taken when <code>authURL</code> and <code>tokenURL</code> are not on the same hostname,
-because it means that a user might be logging in at the real login page, the app
-gets the auth token, and then sends the auth token to the <code>tokenURL</code> server by an attacker.
-Currently, one large mail provider uses such a split configuration, but the client
-application must handle this case with particular caution.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
-<p id="section-6.5-4">Either way, the client <span class="bcp14">MUST</span> check whether both the <code>authURL</code> and the <code>tokenURL</code>
+and compare the <code>issuer</code> value as specified by RFC 8414, or<a href="#section-6.5-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.5-2.2">
+            <p id="section-6.5-2.2.1">use the <code>&lt;authURL&gt;</code> and <code>&lt;tokenURL&gt;</code> from this AutoConfig document, or<a href="#section-6.5-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.5-2.3">
+            <p id="section-6.5-2.3.1">combine both methods and verify that the URLs match.<a href="#section-6.5-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.5-3">Not all OAuth2 servers publish the metadata according to RFC 8414 or
+OpenID Connect.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
+<p id="section-6.5-4">Particular care must be taken when <code>authURL</code> and <code>tokenURL</code> are on different hostnames,
+because it means that a user might be logging in at the correct login page, the app
+gets the auth token from the real auth server, and then sends the working auth token
+to the <code>tokenURL</code> server by an attacker.
+The client application must handle this case with particular caution,
+e.g. by warning the user or aborting.
+Currently, one large mail provider uses such a split configuration,
+which could be worked around by hardcoding a whitelist or other methods.<a href="#section-6.5-4" class="pilcrow">¶</a></p>
+<p id="section-6.5-5">Either way, the client <span class="bcp14">MUST</span> check whether both the <code>authURL</code> and the <code>tokenURL</code>
 match either the email address domain or the server domain,
 and if not, <span class="bcp14">MUST</span> show that OAuth2 domain to the end user when the end user
-approves the servers, or alternatively abort the process.<a href="#section-6.5-4" class="pilcrow">¶</a></p>
+approves the servers, or alternatively abort the process.<a href="#section-6.5-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
