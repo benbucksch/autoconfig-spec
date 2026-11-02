@@ -324,7 +324,8 @@ The root element of the XML file is `<clientConfig version="1.2">`.
 
 The `version` is `1.2` for the version defined in this specification. `1.1` is
 a compatible previous version of this protocol: {{Autoconfig1.1}}. Higher versions are for future specifications.
-The client MUST NOT reject a configuration file solely based on the version number.
+The client MUST NOT reject a configuration file solely based on the version number, and MUST accept configurations
+with an unknown version number that are otherwise adhering to this specification.
 
 ### emailProvider
 
@@ -340,8 +341,6 @@ RELAX NG:
       | incomingServer | outgoingServer )* }
 
 Element `<emailProvider>` is within the root element.
-This element has no semantic purpose and exists for legacy reasons only,
-but its content is significant.
 
 The `id` is a unique string that typically matches the primary domain of the provider. The syntax of the ID is the same as for domain and hostname.
 
