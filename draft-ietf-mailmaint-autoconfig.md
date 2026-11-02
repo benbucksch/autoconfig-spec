@@ -239,7 +239,7 @@ The following example shows the syntax of the XML configuration file.
       <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
     </clientConfig>
 
-The formal grammar is in appendix {{relaxng-schema}} _RELAX NG schema_.
+The formal grammar is in appendix {{<<relaxng-schema}}.
 
 ## Global elements
 
@@ -300,7 +300,7 @@ by number of users, importance to the provider, or alphabethically.
 
 `<domain purpose="mx">` specifies the domain name of the MX server
 of this provider. It is used during the configuration file lookup using MX
-server names, as specified in {{mx}} _MX_. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this configuration is applicable for that email address.
+server names, as specified in {{<<mx}} _MX_. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this configuration is applicable for that email address.
 Adding the `purpose` attribute is RECOMMENDED.
 
 ### displayName and displayShortName
@@ -386,7 +386,7 @@ RELAX NG:
     setupServer     = element setupServer     { serverSection }
 
 * The `type` attribute specifies the wire protocol that this server uses. See
-  {{type}} _type_ below.
+  {{<<type}} below.
 * `<incomingServer>` specifies the server that the mail client retrieves email
   from and submits changes to. In many protocols, this server is also used for
   sending email.
@@ -510,15 +510,13 @@ signals that the value refers to a `WWW-Authenticate` mechanism.
   potentially with a `Negotiate` before.
 * `OAuth2`: Authenticate to the HTTP server using
   `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750, Section 3}}.
-  The provider MUST adhere to the requirements defined in {{oauth2-server}}
-  _OAuth2 requirements_.
+  The provider MUST adhere to the requirements defined in {{<<oauth2-server}}.
 
 Note: The XML element for OAuth2 is
 `<authentication>OAuth2</authentication>` without system attribute.
 `<authentication system="http">Bearer</authentication>` is invalid.
 
-The rules as specified in {{auth-alternatives}} _Multiple authentication alternatives_ and
-{{auth-verification}} _Authentication verification and fallback_ apply here as well.
+The rules as specified in {{<<auth-alternatives}} and {{<<auth-verification}} apply here as well.
 
 ### username {#username-for-url}
 
@@ -533,7 +531,7 @@ RELAX NG:
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See {{placeholders}} _Placeholders_.
+Placeholders MUST be replaced before using the actual value. See {{<<placeholders}}.
 
 ## TCP-based protocols
 
@@ -654,7 +652,7 @@ protocol, or a SASL scheme, or a successor to SASL.
   select confirm it. Uses SASL `EXTERNAL` scheme {{!SASL=RFC4422}}, Appendix A.
 * `OAuth2`: SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
   `XOAUTH2` (deprecated) or successors.
-  The provider MUST adhere to the requirements defined in {{oauth2-server}} _OAuth2 requirements_.
+  The provider MUST adhere to the requirements defined in {{<<oauth2-server}}.
 * `client-IP-address`: Server can be used without any explicit authentication,
   and the client is admitted based on its IP address.
   This may be the case for some SMTP servers on local networks.
@@ -743,7 +741,7 @@ RELAX NG:
 
 The username to use for the authentication method.
 
-Placeholders MUST be replaced before using the actual value. See next {{placeholders}} _Placeholders_.
+Placeholders MUST be replaced before using the actual value. See next {{<<placeholders}}.
 
 ## Placeholders {#placeholders}
 
@@ -772,7 +770,7 @@ attributes, the client MUST NOT ignore the file.
 The client MUST disregard those elements, attributes and values that it does not
 support. The presence of unknown elements, attributes or values MUST NOT result
 in an error. Instead, they are simply ignored and treated as if they don't
-exist. Compare the rules for `<authentication>` elements in {{auth-alternatives}}. If a
+exist. Compare the rules for `<authentication>` elements in {{<<auth-alternatives}}. If a
 server section then becomes invalid due to missing information, only that server section
 is ignored and the other server sections will still be processed. Only if no valid
 configuration is found in the document, the document as a whole is ignored, but other
@@ -780,7 +778,7 @@ retrieval mechanisms might produce a different document with a valid configurati
 
 This allows future extensions of the format without breaking existing clients.
 
-The RELAX NG schema in {{relaxng-schema}} _RELAX NG schema_ is written to
+The RELAX NG schema in {{<<relaxng-schema}} is written to
 follow these rules: it accepts unknown elements, attributes,
 attribute values and element values, so that a validator does not reject a
 document merely because it uses extensions not defined here.
@@ -851,7 +849,7 @@ which has a TLS certificate only for the provider domain and not every customer 
 Although HTTP is insecure, a large number of existing domains use it at the time of this writing,
 and ignoring it may lead to no result for many domains. Implementors need to balance this risk
 with the alternatives like guessing hostnames or users searching the Internet.
-{{security}} _Security considerations_ contains more detail on what an implementor needs to consider.
+{{<<security}} contains more detail on what an implementor needs to consider.
 
 ### Customizing the configuration for a specific user {#email-address-parameter}
 
@@ -987,7 +985,7 @@ implements such alternative methods, and if they are less secure than some of
 the mechanisms provided here, the alternative methods SHOULD be considered
 only with lower priority (as defined above) than the more secure mechanisms
 defined here. For evaluating other mechanisms, use similar criteria as
-outlined in {{security}} _Security considerations_.
+outlined in {{<<security}}.
 
 
 ## Manual configuration {#manual}
@@ -1190,7 +1188,7 @@ multi-factor authentication steps required.
 Any protocol that relies on DNS without further validation, e.g. HTTP or DNS SRV,
 should be considered insecure.
 This also applies to the DNS MX lookup and the https calls that base on its
-results, as described in {{mx}} _MX_.
+results, as described in {{<<mx}}.
 
 One possible mitigation is to use multiple different DNS servers and verify
 that the results match, e.g. to use the native DNS resolver of the operating
@@ -1198,12 +1196,12 @@ system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.
 
 Nonetheless, the result should be used with care. If such configs are used,
 the end user MUST explicitly confirm the configuration, particularly the resulting
-second-level domains. See {{user-approval}} _User approval_.
+second-level domains. See {{<<user-approval}}.
 
 ## HTTP
 
 HTTP requests may be intercepted, redirected, or altered at the network level,
-as may DNS SRV {{dnssec}}. See {{risk}} _Risk_ above.
+as may {{<<dnssec}}. See {{<<risk}} above.
 Even if an http: URL redirects to a https: URL, that is still insecure.
 
 For that reason, clients MUST prefer HTTPS over HTTP during configuration retrieval,
@@ -1211,7 +1209,7 @@ within the same retrieval method.
 
 If such configs from HTTP are used, the end user MUST explicitly confirm the
 configuration, particularly the resulting second-level domains.
-See {{user-approval}} _User approval_.
+See {{<<user-approval}}.
 
 ## Configuration updates
 
@@ -1249,13 +1247,13 @@ Server hostnames MUST be compared with the email domain names they are
 serving, and if they differ, the ownership of the server hostnames MUST be
 validated.
 
-The risk is mitigated to some degree by {{user-approval}} _User approval_.
+The risk is mitigated to some degree by {{<<user-approval}}.
 
 ## User testing with emailAddress parameter
 
 If the provider returns different configurations based on the `emailAddress`
 parameter of the URL, then attackers can find out whether a given email address is valid.
-See section {{email-address-parameter}} for mitigations.
+See {{email-address-parameter}} for mitigations.
 
 ## Rate-limits
 
@@ -1425,7 +1423,7 @@ configuration file format defined in this document. It is provided for the
 convenience of implementers and not normative. Where the schema and the body
 of this document disagree, the body of this document is normative.
 
-The schema deliberately implements the must-ignore rule of {{xml-validation}}:
+The schema deliberately implements the must-ignore rule of {{<<xml-validation}}:
 it accepts unknown attributes, unknown child elements, and unknown attribute
 and element values, instead of rejecting them. This is achieved by:
 
