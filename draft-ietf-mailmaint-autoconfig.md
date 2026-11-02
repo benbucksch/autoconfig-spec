@@ -1186,7 +1186,7 @@ second-level domains. See {{user-approval}} _User approval_.
 ## HTTP
 
 HTTP requests may be intercepted, redirected, or altered at the network level,
-as may DNS SRV. See {{risk}} _Risk_ above.
+as may DNS SRV {#dnssec}. See {{risk}} _Risk_ above.
 Even if an http: URL redirects to a https: URL, that is still insecure.
 
 For that reason, clients MUST prefer HTTPS over HTTP during configuration retrieval,
@@ -1233,6 +1233,88 @@ serving, and if they differ, the ownership of the server hostnames MUST be
 validated.
 
 The risk is mitigated to some degree by {{user-approval}} _User approval_.
+
+
+# IANA Considerations
+
+## Registration
+
+IANA will create the following registry in a new registry group called
+"Mail Autoconfig":
+
+Registry Name: "Autoconfig Protocol Type Names"
+
+Registration Procedure: Specification Required, per {{?RFC8126, Section 4}}
+
+Designated Expert: The author of this document.
+
+## Contents
+
+Table, with fields Element (alphanumeric), Type (alphanumeric), Base (URL or TCP or URL/TCP), Name, Specification, and Additional Elements
+
+The registrations need to define:
+
+* Element: The XML element wrapping the server section.
+* Type: The `type` attribute value of the server section.
+* Base: Whether the protocol is URL-based or TCP-based,
+* Name: The commonly used name of the protocol
+* Specification: Which RFCs or document specifies the protocol, and
+* Additional Elements: (Optional) Protocol-specific XML elements and
+  their meaning.
+
+## Initial registration
+
+| Element        | Type          | Base | Name         | Specification | Additional Elements
+| ------------- | -------------- | ---- | ------------ | ------------- | ---
+| incomingServer | `jmap`        | URL  | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al |
+| incomingServer | `imap`        | TCP  | IMAP         | RFC 9051 or RFC 3501, et al |
+| incomingServer | `pop3`        | TCP  | POP3         | RFC 1939, RFC 5034 |
+| outgoingServer | `smtp`        | TCP  | SMTP         | RFC 5321, RFC 2822 |
+| calendar       | `caldav`      | URL  | CalDAV       | RFC 4791 |
+| addressbook    | `carddav`     | URL  | CardDav      | RFC 6352 |
+| fileShare      | `webdav`      | URL  | WebDAV       | RFC 4918 |
+| chatServer     | `xmpp`        | URL  | XMPP         | RFC 6120, RFC 6121, RFC 7395 |
+| chatServer     | `xmpp-tcp`     | TCP  | XMPP         | RFC 6120, RFC 6121 |
+| chatServer     | `matrix`      | URL  | Matrix       | <https://spec.matrix.org> |
+| setupServer    | `managesieve` | TCP  | ManageSieve  | RFC 5804, RFC 5228 |
+| incomingServer | `ews`         | URL  | Exchange Web Services | |
+| incomingServer | `activeSync`  | URL  | ActiveSync            | |
+| incomingServer | `graph`       | URL  | Microsoft Graph       | |
+
+The Additional Elements field is empty in all of the initial values.
+
+
+--- back
+
+# Implementations {#implementations}
+
+## Clients
+
+Currently, this protocol or parts of it has been implemented by:
+
+* [Thunderbird](https://thunderbird.net)
+* [Parula](https://parula.beonex.com)
+* [Evolution](https://projects.gnome.org/evolution/)
+* [KMail](https://userbase.kde.org/KMail)
+* [Kontact](https://www.kontact.org)
+* [K9 Mail](https://k9mail.app) and
+  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
+* [FairEmail](https://email.faircode.eu)
+* [NextCloud email](https://apps.nextcloud.com/apps/mail)
+* [Delta Chat](https://delta.chat/)
+
+and likely other mail clients.
+
+## Servers
+
+At the time of this writing, this specification is the most widely
+supported protocol for email client configuration.
+A large number of email domains use AutoConfig to provide
+the configuration to mail clients and allow an automatic setup.
+
+Some mail servers automatically provide AutoConfig files that follow
+this specification, including [Stalwart](https://stalw.art/),
+[Mailcow](https://mailcow.email/) and many others.
 
 
 # Alternatives considered {#alternatives-considered}
@@ -1304,88 +1386,6 @@ in multiple different ways.
 Finally, some non-mail protocols may not support capabilties commands that
 include authentication methods.
 
-
-# Implementations {#implementations}
-
-## Clients
-
-Currently, this protocol or parts of it has been implemented by:
-
-* [Thunderbird](https://thunderbird.net)
-* [Parula](https://parula.beonex.com)
-* [Evolution](https://projects.gnome.org/evolution/)
-* [KMail](https://userbase.kde.org/KMail)
-* [Kontact](https://www.kontact.org)
-* [K9 Mail](https://k9mail.app) and
-  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
-* [FairEmail](https://email.faircode.eu)
-* [NextCloud email](https://apps.nextcloud.com/apps/mail)
-* [Delta Chat](https://delta.chat/)
-
-and likely other mail clients.
-
-## Servers
-
-At the time of this writing, this specification is the most widely
-supported protocol for email client configuration.
-A large number of email domains use AutoConfig to provide
-the configuration to mail clients and allow an automatic setup.
-
-Some mail servers automatically provide AutoConfig files that follow
-this specification, including [Stalwart](https://stalw.art/),
-[Mailcow](https://mailcow.email/) and many others.
-
-
-# IANA Considerations
-
-## Registration
-
-IANA will create the following registry in a new registry group called
-"Mail Autoconfig":
-
-Registry Name: "Autoconfig Protocol Type Names"
-
-Registration Procedure: Specification Required, per {{?RFC8126, Section 4}}
-
-Designated Expert: The author of this document.
-
-## Contents
-
-Table, with fields Element (alphanumeric), Type (alphanumeric), Base (URL or TCP or URL/TCP), Name, Specification, and Additional Elements
-
-The registrations need to define:
-
-* Element: The XML element wrapping the server section.
-* Type: The `type` attribute value of the server section.
-* Base: Whether the protocol is URL-based or TCP-based,
-* Name: The commonly used name of the protocol
-* Specification: Which RFCs or document specifies the protocol, and
-* Additional Elements: (Optional) Protocol-specific XML elements and
-  their meaning.
-
-## Initial registration
-
-| Element        | Type          | Base | Name         | Specification | Additional Elements
-| ------------- | -------------- | ---- | ------------ | ------------- | ---
-| incomingServer | `jmap`        | URL  | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al |
-| incomingServer | `imap`        | TCP  | IMAP         | RFC 9051 or RFC 3501, et al |
-| incomingServer | `pop3`        | TCP  | POP3         | RFC 1939, RFC 5034 |
-| outgoingServer | `smtp`        | TCP  | SMTP         | RFC 5321, RFC 2822 |
-| calendar       | `caldav`      | URL  | CalDAV       | RFC 4791 |
-| addressbook    | `carddav`     | URL  | CardDav      | RFC 6352 |
-| fileShare      | `webdav`      | URL  | WebDAV       | RFC 4918 |
-| chatServer     | `xmpp`        | URL  | XMPP         | RFC 6120, RFC 6121, RFC 7395 |
-| chatServer     | `xmpp-tcp`     | TCP  | XMPP         | RFC 6120, RFC 6121 |
-| chatServer     | `matrix`      | URL  | Matrix       | <https://spec.matrix.org> |
-| setupServer    | `managesieve` | TCP  | ManageSieve  | RFC 5804, RFC 5228 |
-| incomingServer | `ews`         | URL  | Exchange Web Services | |
-| incomingServer | `activeSync`  | URL  | ActiveSync            | |
-| incomingServer | `graph`       | URL  | Microsoft Graph       | |
-
-The Additional Elements field is empty in all of the initial values.
-
-
---- back
 
 # RELAX NG schema {#relaxng-schema}
 
