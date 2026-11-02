@@ -8,8 +8,8 @@
 7. Open the XML file, and in `<rfc docname="">`, change name and
   add new version in form "-02" (starts with -00), e.g.
   `<rfc docName="draft-bucksch-autoconfig-02">`.
+  Put the same string including "-02" in <seriesInfo value="">.
   Do not change the the file format version `<rfc version="3">`.
-  Put the same string including "-02" in <seriesInfo value="">
 8. Go to https://author-tools.ietf.org/idnits and check the XML file
 9. Go to https://datatracker.ietf.org/submit/ and upload the XML file.
 10. In the following page form, click [Ben Bucksch] button,

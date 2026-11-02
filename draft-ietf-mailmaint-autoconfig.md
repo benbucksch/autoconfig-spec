@@ -550,12 +550,13 @@ Examples:
 RELAX NG:
 
     authentication = element authentication {
-      attribute system { text }?,   # "http" or "sasl"
+      attribute system { text }?,   # "http" or none
       text }
 
 The content of the `<authentication>` element defines which HTTP
 authentication method to use. The `system="http"` attribute
-signals that the value refers to a `WWW-Authenticate` mechanism.
+signals that the value refers to a specific `WWW-Authenticate` mechanism.
+The `OAuth2` value is generic and has no `system` attribute.
 
 * `Basic`: Authenticate to the HTTP server using
   `WWW-Authenticate: Basic`. See {{!HTTP-Basic-Auth=RFC7617}}.
@@ -683,12 +684,13 @@ Example:
 RELAX NG:
 
     authentication = element authentication {
-      attribute system { text }?,   # "http" or "sasl"
+      attribute system { text }?,   # "sasl" or none
       text }
 
 The content of the `<authentication>` element defines which authentication
 method to use. This can be either an authentication defined by the wire
-protocol, or a SASL scheme, or a successor to SASL.
+protocol, or a SASL scheme, or a successor to SASL. If any of the generic
+methods in the list below is used, the `system` attribute is omited.
 
 * `password-cleartext`: Send password in the clear.
   Uses either the native authentication method defined by the wire protocol
