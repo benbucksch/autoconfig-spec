@@ -1186,7 +1186,7 @@ end users, which may be contrary to laws in multiple countries.
 The OAuth2 server MUST
 
 * accept the client ID that is given in the configuration file, or if that is not given,
-* implement Dynamic Client Registration {{!RFC7591}} or {{!CMID}} in the way
+* implement Dynamic Client Registration {{!RFC7591}} or [CMID] in the way
   as defined by [OAuth2Client] and accept the resulting Client ID,
 
 without client secret. It MAY support multiple of those methods.
