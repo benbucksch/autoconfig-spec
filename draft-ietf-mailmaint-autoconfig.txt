@@ -137,13 +137,13 @@ Table of Contents
    9.  References
      9.1.  Normative References
      9.2.  Informative References
-   Appendix A.  Implementations
-     A.1.  Clients
-     A.2.  Servers
-   Appendix B.  Alternatives considered
-     B.1.  DNSSEC
-     B.2.  DNS SRV
-     B.3.  CAPABILITIES
+   Appendix A.  Alternatives considered
+     A.1.  DNSSEC
+     A.2.  DNS SRV
+     A.3.  CAPABILITIES
+   Appendix B.  Implementations
+     B.1.  Clients
+     B.2.  Servers
    Appendix C.  RELAX NG schema
    Author's Address
 
@@ -1819,47 +1819,9 @@ Table of Contents
               Protocols", BCP 70, RFC 3470, DOI 10.17487/RFC3470,
               January 2003, <https://www.rfc-editor.org/rfc/rfc3470>.
 
-Appendix A.  Implementations
+Appendix A.  Alternatives considered
 
-A.1.  Clients
-
-   Currently, this protocol or parts of it has been implemented by:
-
-   *  Thunderbird (https://thunderbird.net)
-
-   *  Parula (https://parula.beonex.com)
-
-   *  Evolution (https://projects.gnome.org/evolution/)
-
-   *  KMail (https://userbase.kde.org/KMail)
-
-   *  Kontact (https://www.kontact.org)
-
-   *  K9 Mail (https://k9mail.app) and Thunderbird Mobile
-      (https://www.thunderbird.net/mobile/)
-
-   *  FairEmail (https://email.faircode.eu)
-
-   *  NextCloud email (https://apps.nextcloud.com/apps/mail)
-
-   *  Delta Chat (https://delta.chat/)
-
-   and likely other mail clients.
-
-A.2.  Servers
-
-   At the time of this writing, this specification is the most widely
-   supported protocol for email client configuration.  A large number of
-   email domains use AutoConfig to provide the configuration to mail
-   clients and allow an automatic setup.
-
-   Some mail servers automatically provide AutoConfig files that follow
-   this specification, including Stalwart (https://stalw.art/), Mailcow
-   (https://mailcow.email/) and many others.
-
-Appendix B.  Alternatives considered
-
-B.1.  DNSSEC
+A.1.  DNSSEC
 
    Due to their top-level domain, some domains do not have [DNSSEC]
    available to them, even if they would like to deploy it.
@@ -1871,7 +1833,7 @@ B.1.  DNSSEC
    Therefore, DNSSEC cannot be relied on in this specification, and DNS
    must be considered insecure for the purposes of this specification.
 
-B.2.  DNS SRV
+A.2.  DNS SRV
 
    DNS SRV protocols [DNS-SRV] [RFC6186] are not used here, for two
    reasons:
@@ -1902,7 +1864,7 @@ B.2.  DNS SRV
    This specification was created as an answer to these deficiencies and
    provides an alternative to DNS SRV.
 
-B.3.  CAPABILITIES
+A.3.  CAPABILITIES
 
    Deployments in the wild from actual ISPs show that protocol-specific
    commands to find available authentication methods, e.g. IMAP
@@ -1933,6 +1895,44 @@ B.3.  CAPABILITIES
 
    Finally, some non-mail protocols may not support capabilties commands
    that include authentication methods.
+
+Appendix B.  Implementations
+
+B.1.  Clients
+
+   Currently, this protocol or parts of it has been implemented by:
+
+   *  Thunderbird (https://thunderbird.net)
+
+   *  Parula (https://parula.beonex.com)
+
+   *  Evolution (https://projects.gnome.org/evolution/)
+
+   *  KMail (https://userbase.kde.org/KMail)
+
+   *  Kontact (https://www.kontact.org)
+
+   *  K9 Mail (https://k9mail.app) and Thunderbird Mobile
+      (https://www.thunderbird.net/mobile/)
+
+   *  FairEmail (https://email.faircode.eu)
+
+   *  NextCloud email (https://apps.nextcloud.com/apps/mail)
+
+   *  Delta Chat (https://delta.chat/)
+
+   and likely other mail clients.
+
+B.2.  Servers
+
+   At the time of this writing, this specification is the most widely
+   supported protocol for email client configuration.  A large number of
+   email domains use AutoConfig to provide the configuration to mail
+   clients and allow an automatic setup.
+
+   Some mail servers automatically provide AutoConfig files that follow
+   this specification, including Stalwart (https://stalw.art/), Mailcow
+   (https://mailcow.email/) and many others.
 
 Appendix C.  RELAX NG schema
 
