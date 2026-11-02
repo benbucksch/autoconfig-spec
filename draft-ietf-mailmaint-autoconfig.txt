@@ -86,22 +86,22 @@ Table of Contents
        3.2.2.  emailProvider
        3.2.3.  domain
        3.2.4.  displayName and displayShortName
-     3.3.  documentation
-     3.4.  Server sections
-       3.4.1.  Multiple server sections
-     3.5.  type
-     3.6.  URL-based protocols
-       3.6.1.  url
-       3.6.2.  authentication
-       3.6.3.  username
-     3.7.  TCP-based protocols
-       3.7.1.  hostname
-       3.7.2.  port
-       3.7.3.  socketType
-       3.7.4.  authentication
-       3.7.5.  username
-     3.8.  Placeholders
-     3.9.  XML validation
+       3.2.5.  documentation
+     3.3.  Server sections
+       3.3.1.  Multiple server sections
+     3.4.  type
+     3.5.  URL-based protocols
+       3.5.1.  url
+       3.5.2.  authentication
+       3.5.3.  username
+     3.6.  TCP-based protocols
+       3.6.1.  hostname
+       3.6.2.  port
+       3.6.3.  socketType
+       3.6.4.  authentication
+       3.6.5.  username
+     3.7.  Placeholders
+     3.8.  XML validation
    4.  Configuration retrieval by mail clients
      4.1.  Mail provider
        4.1.1.  Explanations for the URLs
@@ -127,7 +127,7 @@ Table of Contents
      7.3.  HTTP
      7.4.  Configuration updates
      7.5.  Server security
-     7.6.  ISBDB
+     7.6.  ISPDB
      7.7.  User testing with emailAddress
      7.8.  Rate-limits
    8.  IANA Considerations
@@ -168,8 +168,8 @@ Table of Contents
    as it is used in the wild.  Some of it, such as falling back to an
    HTTP URL, is not advisable from a security viewpoint.  This document
    describes the protocol as compatible with running code, and another
-   document will describe a potentionally not backwards compatible
-   process following today's best security practices.
+   document will describe a potentially not backwards compatible process
+   following today's best security practices.
 
 2.  Conventions and Definitions
 
@@ -187,7 +187,7 @@ Table of Contents
 
    The format is in [XML].  The MIME type is text/xml.
 
-   The seconds below define the XML and its meaning.  Most sections
+   The sections below define the XML and its meaning.  Most sections
    start with a concrete example of the elements that they define.
 
 3.1.  XML configuration file example
@@ -213,7 +213,7 @@ Table of Contents
 
     <!-- There can be multiple incoming servers,
       and even multiple IMAP server configs.
-      The first configuration is the preferred one, but the user or or client
+      The first configuration is the preferred one, but the user or client
       can choose the alternative configs based on their own preferences. -->
     <incomingServer type="imap">
       <hostname>imap.example.com</hostname>
@@ -226,7 +226,7 @@ Table of Contents
         <!-- Common authentication methods for TCP-based protocols:
         "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
         "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
-        "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
+        "OAuth2": Provider MUST adhere to section "OAuth2 server requirements".
 
         Multiple <authentication> elements per server
         configuration are valid. Clients will pick the first
@@ -245,7 +245,7 @@ Table of Contents
 
     <!-- Only for IMAP and POP3 -->
     <outgoingServer type="smtp">
-      <hostname>smtp.googlemail.com</hostname>
+      <hostname>smtp.example.com</hostname>
       <port>587</port>
       <socketType>STARTTLS</socketType>
       <authentication>password-cleartext</authentication>
@@ -376,7 +376,7 @@ Table of Contents
    Multiple <domain> elements may be included, which means that the
    configuration is valid for all of these domains.  Their order has no
    meaning - they may be sorted by number of users, importance to the
-   provider, or alphabethically.
+   provider, or alphabetically.
 
    <domain purpose="mx"> specifies the domain name of the MX server of
    this provider.  It is used during the configuration file lookup using
@@ -413,10 +413,10 @@ Table of Contents
    account, so it should be short, distinctive and represent the
    provider in the way end users refer and think of it.
 
-   The mail client might concatinate either values with the email
+   The mail client might concatinate either value with the email
    address, so these values should not be the email address.
 
-3.3.  documentation
+3.2.5.  documentation
 
    Example:
 
@@ -449,9 +449,9 @@ Table of Contents
    attributes are allowed, whereby the lang attribute contains the
    2-letter ISO language code, like the HTML lang attribute.
 
-3.4.  Server sections
+3.3.  Server sections
 
-   <incomingServer type="jmap">, <calendar type="carddav"> etc.
+   <incomingServer type="jmap">, <calendar type="caldav"> etc.
 
    RELAX NG:
 
@@ -482,20 +482,20 @@ Table of Contents
 
    *  <incomingServer> and <outgoingServer> are within element
       <emailProvider>, whereas <calendar>, <addressbook>, <fileShare>,
-      <chatServer> and <videoConference> are within the root element
-      <clientConfig>, i.e. one level higher.  Other than that, they work
-      the same.
+      <chatServer>, <videoConference> and <setupServer> are within the
+      root element <clientConfig>, i.e. one level higher.  Other than
+      that, they work the same.
 
    *  In some protocols, the <incomingServer> server additionally
       provides calendars, addressbooks, and other data.  For such
       protocols, the same server is not repeated in other specific
       server sections like <calendar>.  Calendar-only clients supporting
       such multi-purpose protocols MUST read the <incomingServer>
-      (nonewithstanding that it's within legacy element <emailProvider>)
+      (notwithstanding that it's within legacy element <emailProvider>)
       and test and use the parts of the protocol needed for their
       functionality.
 
-3.4.1.  Multiple server sections
+3.3.1.  Multiple server sections
 
    Server sections of the same type (like <incomingServer> or
    <calendar>) may appear multiple times in the same configuration file.
@@ -507,7 +507,7 @@ Table of Contents
    configurations, because
 
    *  the client doesn't support a higher-priority protocol, e.g. a JMAP
-      configuraion is listed first and is the most preferred, but the
+      configuration is listed first and is the most preferred, but the
       client does not support JMAP yet, or
 
    *  the client doesn't support a configuration setting, e.g. it
@@ -527,7 +527,7 @@ Table of Contents
    understands and supports.  The client ignores the file only if there
    is no supported and working configuration found.
 
-3.5.  type
+3.4.  type
 
    The type attribute on the server section element specifies the wire
    protocol that this server uses.
@@ -552,7 +552,7 @@ Table of Contents
     +----------------+-----------+----+-----------+-------------------+
     | calendar       |caldav     |URL |CalDAV     | [CalDAV]          |
     +----------------+-----------+----+-----------+-------------------+
-    | addressbook    |carddav    |URL |CardDav    | [CardDav]         |
+    | addressbook    |carddav    |URL |CardDAV    | [CardDav]         |
     +----------------+-----------+----+-----------+-------------------+
     | fileShare      |webdav     |URL |WebDAV     | [WebDAV]          |
     +----------------+-----------+----+-----------+-------------------+
@@ -571,7 +571,7 @@ Table of Contents
     |                |           |    |Web        |                   |
     |                |           |    |Services   |                   |
     +----------------+-----------+----+-----------+-------------------+
-    | incomingServer |activeSync |URL |ActiveSync |                   |
+    | incomingServer |activesync |URL |ActiveSync |                   |
     +----------------+-----------+----+-----------+-------------------+
     | incomingServer |graph      |URL |Microsoft  |                   |
     |                |           |    |Graph      |                   |
@@ -582,7 +582,7 @@ Table of Contents
    Other protocol names can be added using an IANA registry.  See the
    corresponding section below.
 
-3.6.  URL-based protocols
+3.5.  URL-based protocols
 
    <incomingServer type="jmap">
      <url>https://jmap.example.com/session</url>
@@ -593,7 +593,7 @@ Table of Contents
    For server sections with protocols that are based on HTTPS or other
    URLs, the following elements are supported:
 
-3.6.1.  url
+3.5.1.  url
 
    Example:
 
@@ -610,7 +610,7 @@ Table of Contents
    https:// ([HTTP], Section 4.2.2).  Some protocols may use other
    schemes, e.g. WebSockets wss:// ([WebSocket], Section 3).
 
-3.6.2.  authentication
+3.5.2.  authentication
 
    Examples:
 
@@ -647,7 +647,7 @@ Table of Contents
    The rules as specified in Multiple authentication alternatives and
    Authentication verification and fallback apply here as well.
 
-3.6.3.  username
+3.5.3.  username
 
    Examples (alternatives):
 
@@ -663,7 +663,7 @@ Table of Contents
    Placeholders MUST be replaced before using the actual value.  See
    Placeholders.
 
-3.7.  TCP-based protocols
+3.6.  TCP-based protocols
 
    For server sections with protocols that are based on TCP, the
    following elements are supported:
@@ -676,7 +676,7 @@ Table of Contents
      <username>%EMAILADDRESS%</username>
    </incomingServer>
 
-3.7.1.  hostname
+3.6.1.  hostname
 
    Example:
 
@@ -689,7 +689,7 @@ Table of Contents
    The content of the <hostname> element contains the fully qualified
    hostname of the server.
 
-3.7.2.  port
+3.6.2.  port
 
    Example:
 
@@ -703,7 +703,7 @@ Table of Contents
    port number at the hostname.  The port is typically specific to the
    combination of the wire protocol and socketType.
 
-3.7.3.  socketType
+3.6.3.  socketType
 
    Example:
 
@@ -733,7 +733,7 @@ Table of Contents
    *  plain: Unencrypted connection, with neither TLS nor STARTTLS.  May
       be needed for local servers.  Deprecated.
 
-3.7.3.1.  TLS validation
+3.6.3.1.  TLS validation
 
    In all cases where TLS is used, either directly or using STARTTLS,
    the client MUST validate the TLS certificate and ensure that the
@@ -752,7 +752,7 @@ Table of Contents
    recently, the client MAY choose to not consider that a failure during
    normal connection and MAY use other recovery mechanisms.
 
-3.7.4.  authentication
+3.6.4.  authentication
 
    Example:
 
@@ -781,12 +781,12 @@ Table of Contents
 
    *  NTLM: Legacy Windows login mechanisms NTLM or NTLMv2.
 
-   *  GSSAPI: [Kerberos] or [GSSAPI], a single-signon mechanism based on
-      TCP.
+   *  GSSAPI: [Kerberos] or [GSSAPI], a single sign-on mechanism based
+      on TCP.
 
    *  TLS-client-cert: On the SSL/TLS layer, after server request, the
       client sends a TLS client certificate for the user, possibly after
-      letting the user select confirm it.  Uses SASL EXTERNAL scheme
+      letting the user select or confirm it.  Uses SASL EXTERNAL scheme
       [SASL], Appendix A.
 
    *  OAuth2: SASL OAUTHBEARER [SASL-OAuth2] (current) or XOAUTH2
@@ -799,7 +799,7 @@ Table of Contents
       networks.  Not supported on the Internet.  Deprecated, because it
       breaks mobile devices.
 
-3.7.4.1.  Recommending specific SASL schemes
+3.6.4.1.  Recommending specific SASL schemes
 
    Example:
 
@@ -817,7 +817,7 @@ Table of Contents
    authentication mechanism.  Without such fallback, the latter clients
    would fail.
 
-3.7.4.2.  Multiple authentication alternatives
+3.6.4.2.  Multiple authentication alternatives
 
    The <authentication> element may appear multiple times within a
    server section.  In this case, they are ordered from the most to the
@@ -832,14 +832,14 @@ Table of Contents
    the client MUST ignore that server section and use the remaining
    server sections.
 
-3.7.4.3.  Authentication verification and fallback
+3.6.4.3.  Authentication verification and fallback
 
    The client should test the configuration during setup, with an actual
    authentication attempt.
 
    If the authentication fails, the client decides based on the
    authentication error code how to proceed.  For example, if the
-   authentiocation method itself failed, or the error code indicates a
+   authentication method itself failed, or the error code indicates a
    systemic failure, the client should use a lower-priority
    authentication method from the list.
 
@@ -869,10 +869,10 @@ Table of Contents
    If the authentication succeeded, the client MUST remember the working
    configuration and use that for all subsequent connections, until an
    explicit reconfiguration occurs.  During normal everyday operation,
-   the client SHOULD NOT fallback nor attempt multiple different
+   the client SHOULD NOT fall back nor attempt multiple different
    authentication methods.  See Configuration updates for the reasons.
 
-3.7.5.  username
+3.6.5.  username
 
    Examples (alternatives):
 
@@ -888,7 +888,7 @@ Table of Contents
    Placeholders MUST be replaced before using the actual value.  See
    next Placeholders.
 
-3.8.  Placeholders
+3.7.  Placeholders
 
    The <username> value may contain placeholders.
 
@@ -913,7 +913,7 @@ Table of Contents
    <hostname>, <url>, <authURL>, <tokenURL>, <issuer>, <displayName> and
    <displayShortName>.
 
-3.9.  XML validation
+3.8.  XML validation
 
    If the XML syntax is invalid, the client MUST ignore the entire file.
    In contrast, if there are merely unknown elements or attributes, the
@@ -946,7 +946,7 @@ Table of Contents
    configuration from various sources.
 
    The steps are ordered by priority.  They may all be requested at the
-   same time, but a higher priorty result that is available should be
+   same time, but a higher priority result that is available should be
    preferred over a lower priority one, even if the lower priority one
    is available earlier.  Exceptions apply when a higher priority result
    is either invalid or outdated, e.g. it doesn't work anymore, or the
@@ -967,7 +967,7 @@ Table of Contents
    "Recommended" mechanisms MUST be implemented and working.  For
    partial support of this specification in clients, all "Required"
    mechanisms MUST be implemented and working, and in this case, the
-   implementor SHALL make explicit when advertizing or referring to
+   implementor SHALL make explicit when advertising or referring to
    AutoConfig that there is only partial support of this specification.
 
    In servers, at least URL 1.1.  MUST be implemented and working.  If
@@ -1039,7 +1039,7 @@ Table of Contents
    geographically close to the user, in the same country or even in the
    same office building.
 
-   However, while the protocol allows for such heterogenous
+   However, while the protocol allows for such heterogeneous
    configurations, mail providers are discouraged from doing so, and are
    instead encouraged to provide one single configuration for all their
    users.  For example, DNS resolution based on location, mail proxy
@@ -1048,10 +1048,10 @@ Table of Contents
 
    This mechanism also allows the AutoConfig server to map the email
    address to a username that cannot be expressed using the Placeholders
-   (see Section 3.8).  However, this method is discouraged.  Instead,
+   (see Section 3.7).  However, this method is discouraged.  Instead,
    the email server login should accept email addresses as username, and
-   doing the mapping to internal usernames at login time, which avoids
-   the need for the client to know a different username.
+   do the mapping to internal usernames at login time, which avoids the
+   need for the client to know a different username.
 
    AutoConfig servers that customize the returned configuration file to
    the email address should avoid that email addresses can be tested for
@@ -1108,7 +1108,7 @@ Table of Contents
 
    *  Extract only the second-level domain from the MX hostname, and use
       that as value for %MXBASEDOMAIN%. To determine the second-level
-      domain, use the Public Suffic List (https://publicsuffix.org) or a
+      domain, use the Public Suffix List (https://publicsuffix.org) or a
       similarly suited method, to correctly handle domains like .co.uk
       and .com.au.
 
@@ -1340,7 +1340,7 @@ Table of Contents
 
    The provider MUST allow any client application that acts on behalf of
    the end user who the mailbox is for.  Failure to do so implies a
-   cartell or monopolistic behavior to lock out competing email
+   cartel or monopolistic behavior to lock out competing email
    applications from fulfilling their purpose on behalf of end users,
    which may be contrary to laws in multiple countries.
 
@@ -1355,7 +1355,7 @@ Table of Contents
    without client secret.  It MAY support multiple of those methods.
 
    The server MUST NOT employ any methods at any point to block or
-   hinder clients applications that are acting on behalf of end users.
+   hinder client applications that are acting on behalf of end users.
 
    The specifications above contain requirements for expiry times and
    the login page, which are needed for mail client applications to
@@ -1389,18 +1389,19 @@ Table of Contents
 
    Particular care must be taken when authURL and tokenURL are on
    different hostnames, because it means that a user might be logging in
-   at the correct login page, the app gets the auth token from the real
-   auth server, and then sends the working auth token to the tokenURL
-   server by an attacker.  The client application must handle this case
-   with particular caution, e.g. by warning the user or aborting.
+   at the correct login page, the app gets the auth code from the real
+   auth server, and then sends the working auth code to the tokenURL
+   server run by an attacker.  The client application must handle this
+   case with particular caution, e.g. by warning the user or aborting.
    Currently, one large mail provider uses such a split configuration,
    which could be worked around by hardcoding a whitelist or other
    methods.
 
    Either way, the client MUST check whether both the authURL and the
    tokenURL match either the email address domain or the server domain,
-   and if not, MUST show that OAuth2 domain to the end user when the end
-   user approves the servers, or alternatively abort the process.
+   and if not, MUST show that OAuth2 domain to the end user while the
+   end user approves the servers (Section 5.1), or alternatively abort
+   the process.
 
 7.  Security Considerations
 
@@ -1418,7 +1419,7 @@ Table of Contents
    within the organization that have wide-ranging impact, but given
    single-sign-on solutions, the same username and password may give
    access to other resources at the organization, including other
-   computers or, in the case of admin users, even adminstrative access
+   computers or, in the case of admin users, even administrative access
    to the core of the entire organization.
 
    Multi-factor authentication might not defend against such attacks,
@@ -1454,7 +1455,8 @@ Table of Contents
    confirm the configuration, particularly the resulting second-level
    domains.  See User approval.
 
-   As mentioned above (<<dns), DNS SRV suffers from similar weaknesses.
+   As mentioned above (Section 7.2), DNS SRV suffers from similar
+   weaknesses.
 
 7.4.  Configuration updates
 
@@ -1487,23 +1489,23 @@ Table of Contents
    regularly and hosted on a dedicated secure server with all
    unnecessary services and server features turned off.
 
-7.6.  ISBDB
+7.6.  ISPDB
 
    For the Central database, additions and modifications to the
    configurations are applicable to all respective users and must be
    made with care.  The authenticity of the configuration MUST be
-   verified from authorative sources.  Server hostnames MUST be compared
-   with the email domain names they are serving, and if they differ, the
-   ownership of the server hostnames MUST be validated.
+   verified from authoritative sources.  Server hostnames MUST be
+   compared with the email domain names they are serving, and if they
+   differ, the ownership of the server hostnames MUST be validated.
 
    The risk is mitigated to some degree by User approval.
 
 7.7.  User testing with emailAddress
 
    If the provider returns different configurations based on the
-   emailAddress parameter of the URL, then attackers can find out
+   emailaddress parameter of the URL, then attackers can find out
    whether a given email address is valid.  See Section 4.1.2 for
-   mitigations.  It is recommended to return the same configurating for
+   mitigations.  It is recommended to return the same configuration for
    all users, which avoids this problem.
 
 7.8.  Rate-limits
@@ -1565,11 +1567,11 @@ Table of Contents
    +--------------+-----------+----+-----------+-------------------------+----------+
    |incomingServer|pop3       |TCP |POP3       |RFC 1939, RFC 5034       |          |
    +--------------+-----------+----+-----------+-------------------------+----------+
-   |outgoingServer|smtp       |TCP |SMTP       |RFC 5321, RFC 2822       |          |
+   |outgoingServer|smtp       |TCP |SMTP       |RFC 5321, RFC 5322       |          |
    +--------------+-----------+----+-----------+-------------------------+----------+
    |calendar      |caldav     |URL |CalDAV     |RFC 4791                 |          |
    +--------------+-----------+----+-----------+-------------------------+----------+
-   |addressbook   |carddav    |URL |CardDav    |RFC 6352                 |          |
+   |addressbook   |carddav    |URL |CardDAV    |RFC 6352                 |          |
    +--------------+-----------+----+-----------+-------------------------+----------+
    |fileShare     |webdav     |URL |WebDAV     |RFC 4918                 |          |
    +--------------+-----------+----+-----------+-------------------------+----------+
@@ -1587,7 +1589,7 @@ Table of Contents
    |              |           |    |Web        |                         |          |
    |              |           |    |Services   |                         |          |
    +--------------+-----------+----+-----------+-------------------------+----------+
-   |incomingServer|activeSync |URL |ActiveSync |                         |          |
+   |incomingServer|activesync |URL |ActiveSync |                         |          |
    +--------------+-----------+----+-----------+-------------------------+----------+
    |incomingServer|graph      |URL |Microsoft  |                         |          |
    |              |           |    |Graph      |                         |          |
@@ -1625,9 +1627,9 @@ Table of Contents
               SASL Mechanism", RFC 2831, DOI 10.17487/RFC2831, May 2000,
               <https://www.rfc-editor.org/rfc/rfc2831>.
 
-   [EMail]    Resnick, P., Ed., "Internet Message Format", RFC 2822,
-              DOI 10.17487/RFC2822, April 2001,
-              <https://www.rfc-editor.org/rfc/rfc2822>.
+   [EMail]    Resnick, P., Ed., "Internet Message Format", RFC 5322,
+              DOI 10.17487/RFC5322, October 2008,
+              <https://www.rfc-editor.org/rfc/rfc5322>.
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
@@ -1691,7 +1693,7 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc6750>.
 
    [OAuth2Client]
-              Jenkis, N. and B. Bucksch, "OAuth Profile for Open Public
+              Jenkins, N. and B. Bucksch, "OAuth Profile for Open Public
               Clients", 2026, <https://datatracker.ietf.org/doc/draft-
               ietf-mailmaint-oauth-public/>.
 
@@ -1876,12 +1878,12 @@ A.3.  CAPABILITIES
 
    Deployments in the wild from actual ISPs show that protocol-specific
    commands to find available authentication methods, e.g. IMAP
-   CAPABILITIES or POP3 CAPA, are not reliable.  Many email servers
-   advertize authentication methods that do not work.
+   CAPABILITY or POP3 CAPA, are not reliable.  Many email servers
+   advertise authentication methods that do not work.
 
    Some IMAP servers are default configured to list all SASL
    authentication methods that have corresponding libraries installed on
-   the system, independent on whether they are actually configured to
+   the system, independent of whether they are actually configured to
    work.  The client receives a long list of authentication methods, and
    many of them do not work.  Additionally, the server response may be
    only "authentication failed" and may not indicate whether the method
@@ -1893,7 +1895,7 @@ A.3.  CAPABILITIES
    So, simply attempting all methods and seeing which one works is not
    an option for the email client.
 
-   Additionally, some email servers advertize [Kerberos] / [GSSAPI], but
+   Additionally, some email servers advertise [Kerberos] / [GSSAPI], but
    when trying to use it, the method fails, and also runs into a long 2
    minute timeout in some cases.  End users consider that to be a broken
    app.
@@ -1901,14 +1903,14 @@ A.3.  CAPABILITIES
    Additionally, such commands are protocol specific and have to be
    implemented in multiple different ways.
 
-   Finally, some non-mail protocols may not support capabilties commands
-   that include authentication methods.
+   Finally, some non-mail protocols may not support capabilities
+   commands that include authentication methods.
 
 Appendix B.  Implementations
 
 B.1.  Clients
 
-   Currently, this protocol or parts of it has been implemented by:
+   Currently, this protocol or parts of it have been implemented by:
 
    *  Thunderbird (https://thunderbird.net)
 
@@ -1920,12 +1922,12 @@ B.1.  Clients
 
    *  Kontact (https://www.kontact.org)
 
-   *  K9 Mail (https://k9mail.app) and Thunderbird Mobile
+   *  K-9 Mail (https://k9mail.app) and Thunderbird Mobile
       (https://www.thunderbird.net/mobile/)
 
    *  FairEmail (https://email.faircode.eu)
 
-   *  NextCloud email (https://apps.nextcloud.com/apps/mail)
+   *  Nextcloud email (https://apps.nextcloud.com/apps/mail)
 
    *  Delta Chat (https://delta.chat/)
 
