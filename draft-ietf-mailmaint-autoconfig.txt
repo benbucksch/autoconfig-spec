@@ -312,7 +312,7 @@ Table of Contents
   <clientConfigUpdate url="https://www.example.com/config/mail.xml" />
 </clientConfig>
 
-   The formal grammar is in appendix Appendix C _RELAX NG schema_.
+   The formal grammar is in appendix RELAX NG schema.
 
 3.2.  Global elements
 
@@ -379,11 +379,10 @@ Table of Contents
 
    <domain purpose="mx"> specifies the domain name of the MX server of
    this provider.  It is used during the configuration file lookup using
-   MX server names, as specified in Section 4.3 _MX_. If the email
-   address that is to be configured has an MX server that is within the
-   domain given by <domain purpose="mx">, then this configuration is
-   applicable for that email address.  Adding the purpose attribute is
-   RECOMMENDED.
+   MX server names, as specified in MX _MX_. If the email address that
+   is to be configured has an MX server that is within the domain given
+   by <domain purpose="mx">, then this configuration is applicable for
+   that email address.  Adding the purpose attribute is RECOMMENDED.
 
 3.2.4.  displayName and displayShortName
 
@@ -469,7 +468,7 @@ Table of Contents
    setupServer     = element setupServer     { serverSection }
 
    *  The type attribute specifies the wire protocol that this server
-      uses.  See Section 3.5 _type_ below.
+      uses.  See type below.
 
    *  <incomingServer> specifies the server that the mail client
       retrieves email from and submits changes to.  In many protocols,
@@ -637,15 +636,14 @@ Table of Contents
 
    *  OAuth2: Authenticate to the HTTP server using WWW-Authenticate:
       Bearer.  See [OAuth2], Section 3.  The provider MUST adhere to the
-      requirements defined in Section 6.4 _OAuth2 requirements_.
+      requirements defined in OAuth2 server requirements.
 
    Note: The XML element for OAuth2 is
    <authentication>OAuth2</authentication> without system attribute.
    <authentication system="http">Bearer</authentication> is invalid.
 
-   The rules as specified in Section 3.7.4.2 _Multiple authentication
-   alternatives_ and Section 3.7.4.3 _Authentication verification and
-   fallback_ apply here as well.
+   The rules as specified in Multiple authentication alternatives and
+   Authentication verification and fallback apply here as well.
 
 3.6.3.  username
 
@@ -661,7 +659,7 @@ Table of Contents
    The username to use for the authentication method.
 
    Placeholders MUST be replaced before using the actual value.  See
-   Section 3.8 _Placeholders_.
+   Placeholders.
 
 3.7.  TCP-based protocols
 
@@ -791,7 +789,7 @@ Table of Contents
 
    *  OAuth2: SASL OAUTHBEARER [SASL-OAuth2] (current) or XOAUTH2
       (deprecated) or successors.  The provider MUST adhere to the
-      requirements defined in Section 6.4 _OAuth2 requirements_.
+      requirements defined in OAuth2 server requirements.
 
    *  client-IP-address: Server can be used without any explicit
       authentication, and the client is admitted based on its IP
@@ -885,7 +883,7 @@ Table of Contents
    The username to use for the authentication method.
 
    Placeholders MUST be replaced before using the actual value.  See
-   next Section 3.8 _Placeholders_.
+   next Placeholders.
 
 3.8.  Placeholders
 
@@ -923,20 +921,21 @@ Table of Contents
    it does not support.  The presence of unknown elements, attributes or
    values MUST NOT result in an error.  Instead, they are simply ignored
    and treated as if they don't exist.  Compare the rules for
-   <authentication> elements in Section 3.7.4.2.  If a server section
-   then becomes invalid due to missing information, only that server
-   section is ignored and the other server sections will still be
-   processed.  Only if no valid configuration is found in the document,
-   the document as a whole is ignored, but other retrieval mechanisms
-   might produce a different document with a valid configuration.
+   <authentication> elements in Multiple authentication alternatives.
+   If a server section then becomes invalid due to missing information,
+   only that server section is ignored and the other server sections
+   will still be processed.  Only if no valid configuration is found in
+   the document, the document as a whole is ignored, but other retrieval
+   mechanisms might produce a different document with a valid
+   configuration.
 
    This allows future extensions of the format without breaking existing
    clients.
 
-   The RELAX NG schema in Appendix C _RELAX NG schema_ is written to
-   follow these rules: it accepts unknown elements, attributes,
-   attribute values and element values, so that a validator does not
-   reject a document merely because it uses extensions not defined here.
+   The RELAX NG schema in RELAX NG schema is written to follow these
+   rules: it accepts unknown elements, attributes, attribute values and
+   element values, so that a validator does not reject a document merely
+   because it uses extensions not defined here.
 
 4.  Configuration retrieval by mail clients
 
@@ -1025,8 +1024,8 @@ Table of Contents
    domains use it at the time of this writing, and ignoring it may lead
    to no result for many domains.  Implementors need to balance this
    risk with the alternatives like guessing hostnames or users searching
-   the Internet.  Section 7 _Security considerations_ contains more
-   detail on what an implementor needs to consider.
+   the Internet.  Security Considerations contains more detail on what
+   an implementor needs to consider.
 
 4.1.2.  Customizing the configuration for a specific user
 
@@ -1193,7 +1192,7 @@ Table of Contents
    mechanisms provided here, the alternative methods SHOULD be
    considered only with lower priority (as defined above) than the more
    secure mechanisms defined here.  For evaluating other mechanisms, use
-   similar criteria as outlined in Section 7 _Security considerations_.
+   similar criteria as outlined in Security Considerations.
 
 4.6.  Manual configuration
 
@@ -1415,7 +1414,7 @@ Table of Contents
    Any protocol that relies on DNS without further validation, e.g. HTTP
    or DNS SRV, should be considered insecure.  This also applies to the
    DNS MX lookup and the https calls that base on its results, as
-   described in Section 4.3 _MX_.
+   described in MX.
 
    One possible mitigation is to use multiple different DNS servers and
    verify that the results match, e.g. to use the native DNS resolver of
@@ -1424,22 +1423,20 @@ Table of Contents
 
    Nonetheless, the result should be used with care.  If such configs
    are used, the end user MUST explicitly confirm the configuration,
-   particularly the resulting second-level domains.  See Section 5.1
-   _User approval_.
+   particularly the resulting second-level domains.  See User approval.
 
 7.3.  HTTP
 
    HTTP requests may be intercepted, redirected, or altered at the
-   network level, as may DNS SRV Appendix B.1.  See Section 7.1 _Risk_
-   above.  Even if an http: URL redirects to a https: URL, that is still
-   insecure.
+   network level, as may DNSSEC.  See Risk above.  Even if an http: URL
+   redirects to a https: URL, that is still insecure.
 
    For that reason, clients MUST prefer HTTPS over HTTP during
    configuration retrieval, within the same retrieval method.
 
    If such configs from HTTP are used, the end user MUST explicitly
    confirm the configuration, particularly the resulting second-level
-   domains.  See Section 5.1 _User approval_.
+   domains.  See User approval.
 
 7.4.  Configuration updates
 
@@ -1479,14 +1476,14 @@ Table of Contents
    names they are serving, and if they differ, the ownership of the
    server hostnames MUST be validated.
 
-   The risk is mitigated to some degree by Section 5.1 _User approval_.
+   The risk is mitigated to some degree by User approval.
 
 7.6.  User testing with emailAddress parameter
 
    If the provider returns different configurations based on the
    emailAddress parameter of the URL, then attackers can find out
-   whether a given email address is valid.  See section Section 4.1.2
-   for mitigations.
+   whether a given email address is valid.  See Section 4.1.2 for
+   mitigations.
 
 7.7.  Rate-limits
 
@@ -1932,8 +1929,8 @@ Appendix C.  RELAX NG schema
    schema and the body of this document disagree, the body of this
    document is normative.
 
-   The schema deliberately implements the must-ignore rule of
-   Section 3.9: it accepts unknown attributes, unknown child elements,
+   The schema deliberately implements the must-ignore rule of XML
+   validation: it accepts unknown attributes, unknown child elements,
    and unknown attribute and element values, instead of rejecting them.
    This is achieved by:
 

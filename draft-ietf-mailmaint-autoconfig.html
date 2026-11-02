@@ -1549,7 +1549,7 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
 &lt;/clientConfig&gt;
 </pre><a href="#section-3.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1-3">The formal grammar is in appendix <a href="#relaxng-schema" class="auto internal xref">Appendix C</a> <em>RELAX NG schema</em>.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">The formal grammar is in appendix <a href="#relaxng-schema" class="internal xref">RELAX NG schema</a>.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="global-elements">
@@ -1627,7 +1627,7 @@ valid for all of these domains. Their order has no meaning - they may be sorted
 by number of users, importance to the provider, or alphabethically.<a href="#section-3.2.3-6" class="pilcrow">¶</a></p>
 <p id="section-3.2.3-7"><code>&lt;domain purpose="mx"&gt;</code> specifies the domain name of the MX server
 of this provider. It is used during the configuration file lookup using MX
-server names, as specified in <a href="#mx" class="auto internal xref">Section 4.3</a> <em>MX</em>. If the email address that is to be configured has an MX server that is within the domain given by <code>&lt;domain purpose="mx"&gt;</code>, then this configuration is applicable for that email address.
+server names, as specified in <a href="#mx" class="internal xref">MX</a> <em>MX</em>. If the email address that is to be configured has an MX server that is within the domain given by <code>&lt;domain purpose="mx"&gt;</code>, then this configuration is applicable for that email address.
 Adding the <code>purpose</code> attribute is <span class="bcp14">RECOMMENDED</span>.<a href="#section-3.2.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1733,7 +1733,7 @@ setupServer     = element setupServer     { serverSection }
 <ul class="normal">
 <li class="normal" id="section-3.4-4.1">
             <p id="section-3.4-4.1.1">The <code>type</code> attribute specifies the wire protocol that this server uses. See
-<a href="#type" class="auto internal xref">Section 3.5</a> <em>type</em> below.<a href="#section-3.4-4.1.1" class="pilcrow">¶</a></p>
+<a href="#type" class="internal xref">type</a> below.<a href="#section-3.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-4.2">
             <p id="section-3.4-4.2.1"><code>&lt;incomingServer&gt;</code> specifies the server that the mail client retrieves email
@@ -2049,15 +2049,13 @@ potentially with a <code>Negotiate</code> before.<a href="#section-3.6.2-6.3.1" 
             <li class="normal" id="section-3.6.2-6.4">
               <p id="section-3.6.2-6.4.1"><code>OAuth2</code>: Authenticate to the HTTP server using
 <code>WWW-Authenticate: Bearer</code>. See <span>[<a href="#OAuth2" class="cite xref">OAuth2</a>], <a href="https://rfc-editor.org/rfc/rfc6750#section-3" class="relref">Section 3</a></span>.
-The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2-server" class="auto internal xref">Section 6.4</a>
-                <em>OAuth2 requirements</em>.<a href="#section-3.6.2-6.4.1" class="pilcrow">¶</a></p>
+The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2-server" class="internal xref">OAuth2 server requirements</a>.<a href="#section-3.6.2-6.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-3.6.2-7">Note: The XML element for OAuth2 is
 <code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code> without system attribute.
 <code>&lt;authentication system="http"&gt;Bearer&lt;/authentication&gt;</code> is invalid.<a href="#section-3.6.2-7" class="pilcrow">¶</a></p>
-<p id="section-3.6.2-8">The rules as specified in <a href="#auth-alternatives" class="auto internal xref">Section 3.7.4.2</a> <em>Multiple authentication alternatives</em> and
-<a href="#auth-verification" class="auto internal xref">Section 3.7.4.3</a> <em>Authentication verification and fallback</em> apply here as well.<a href="#section-3.6.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-8">The rules as specified in <a href="#auth-alternatives" class="internal xref">Multiple authentication alternatives</a> and <a href="#auth-verification" class="internal xref">Authentication verification and fallback</a> apply here as well.<a href="#section-3.6.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="username-for-url">
@@ -2079,7 +2077,7 @@ username = element username { text }
 </pre><a href="#section-3.6.3-4" class="pilcrow">¶</a>
 </div>
 <p id="section-3.6.3-5">The username to use for the authentication method.<a href="#section-3.6.3-5" class="pilcrow">¶</a></p>
-<p id="section-3.6.3-6">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See <a href="#placeholders" class="auto internal xref">Section 3.8</a> <em>Placeholders</em>.<a href="#section-3.6.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.6.3-6">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See <a href="#placeholders" class="internal xref">Placeholders</a>.<a href="#section-3.6.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2259,7 +2257,7 @@ select confirm it. Uses SASL <code>EXTERNAL</code> scheme <span>[<a href="#SASL"
             <li class="normal" id="section-3.7.4-6.6">
               <p id="section-3.7.4-6.6.1"><code>OAuth2</code>: SASL <code>OAUTHBEARER</code> <span>[<a href="#SASL-OAuth2" class="cite xref">SASL-OAuth2</a>]</span> (current) or
 <code>XOAUTH2</code> (deprecated) or successors.
-The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2-server" class="auto internal xref">Section 6.4</a> <em>OAuth2 requirements</em>.<a href="#section-3.7.4-6.6.1" class="pilcrow">¶</a></p>
+The provider <span class="bcp14">MUST</span> adhere to the requirements defined in <a href="#oauth2-server" class="internal xref">OAuth2 server requirements</a>.<a href="#section-3.7.4-6.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.4-6.7">
               <p id="section-3.7.4-6.7.1"><code>client-IP-address</code>: Server can be used without any explicit authentication,
@@ -2376,7 +2374,7 @@ username = element username { text }
 </pre><a href="#section-3.7.5-4" class="pilcrow">¶</a>
 </div>
 <p id="section-3.7.5-5">The username to use for the authentication method.<a href="#section-3.7.5-5" class="pilcrow">¶</a></p>
-<p id="section-3.7.5-6">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See next <a href="#placeholders" class="auto internal xref">Section 3.8</a> <em>Placeholders</em>.<a href="#section-3.7.5-6" class="pilcrow">¶</a></p>
+<p id="section-3.7.5-6">Placeholders <span class="bcp14">MUST</span> be replaced before using the actual value. See next <a href="#placeholders" class="internal xref">Placeholders</a>.<a href="#section-3.7.5-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2445,13 +2443,13 @@ attributes, the client <span class="bcp14">MUST NOT</span> ignore the file.<a hr
 <p id="section-3.9-2">The client <span class="bcp14">MUST</span> disregard those elements, attributes and values that it does not
 support. The presence of unknown elements, attributes or values <span class="bcp14">MUST NOT</span> result
 in an error. Instead, they are simply ignored and treated as if they don't
-exist. Compare the rules for <code>&lt;authentication&gt;</code> elements in <a href="#auth-alternatives" class="auto internal xref">Section 3.7.4.2</a>. If a
+exist. Compare the rules for <code>&lt;authentication&gt;</code> elements in <a href="#auth-alternatives" class="internal xref">Multiple authentication alternatives</a>. If a
 server section then becomes invalid due to missing information, only that server section
 is ignored and the other server sections will still be processed. Only if no valid
 configuration is found in the document, the document as a whole is ignored, but other
 retrieval mechanisms might produce a different document with a valid configuration.<a href="#section-3.9-2" class="pilcrow">¶</a></p>
 <p id="section-3.9-3">This allows future extensions of the format without breaking existing clients.<a href="#section-3.9-3" class="pilcrow">¶</a></p>
-<p id="section-3.9-4">The RELAX NG schema in <a href="#relaxng-schema" class="auto internal xref">Appendix C</a> <em>RELAX NG schema</em> is written to
+<p id="section-3.9-4">The RELAX NG schema in <a href="#relaxng-schema" class="internal xref">RELAX NG schema</a> is written to
 follow these rules: it accepts unknown elements, attributes,
 attribute values and element values, so that a validator does not reject a
 document merely because it uses extensions not defined here.<a href="#section-3.9-4" class="pilcrow">¶</a></p>
@@ -2542,7 +2540,7 @@ which has a TLS certificate only for the provider domain and not every customer 
 Although HTTP is insecure, a large number of existing domains use it at the time of this writing,
 and ignoring it may lead to no result for many domains. Implementors need to balance this risk
 with the alternatives like guessing hostnames or users searching the Internet.
-<a href="#security" class="auto internal xref">Section 7</a> <em>Security considerations</em> contains more detail on what an implementor needs to consider.<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
+<a href="#security" class="internal xref">Security Considerations</a> contains more detail on what an implementor needs to consider.<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="email-address-parameter">
@@ -2735,7 +2733,7 @@ implements such alternative methods, and if they are less secure than some of
 the mechanisms provided here, the alternative methods <span class="bcp14">SHOULD</span> be considered
 only with lower priority (as defined above) than the more secure mechanisms
 defined here. For evaluating other mechanisms, use similar criteria as
-outlined in <a href="#security" class="auto internal xref">Section 7</a> <em>Security considerations</em>.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+outlined in <a href="#security" class="internal xref">Security Considerations</a>.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="manual">
@@ -3021,13 +3019,13 @@ multi-factor authentication steps required.<a href="#section-7.1-3" class="pilcr
 <p id="section-7.2-1">Any protocol that relies on DNS without further validation, e.g. HTTP or DNS SRV,
 should be considered insecure.
 This also applies to the DNS MX lookup and the https calls that base on its
-results, as described in <a href="#mx" class="auto internal xref">Section 4.3</a> <em>MX</em>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+results, as described in <a href="#mx" class="internal xref">MX</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2">One possible mitigation is to use multiple different DNS servers and verify
 that the results match, e.g. to use the native DNS resolver of the operating
 system, and additionally also query a hardcoded DoH (DNS over HTTPS) server.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 <p id="section-7.2-3">Nonetheless, the result should be used with care. If such configs are used,
 the end user <span class="bcp14">MUST</span> explicitly confirm the configuration, particularly the resulting
-second-level domains. See <a href="#user-approval" class="auto internal xref">Section 5.1</a> <em>User approval</em>.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+second-level domains. See <a href="#user-approval" class="internal xref">User approval</a>.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="http">
@@ -3036,13 +3034,13 @@ second-level domains. See <a href="#user-approval" class="auto internal xref">Se
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-http" class="section-name selfRef">HTTP</a>
         </h3>
 <p id="section-7.3-1">HTTP requests may be intercepted, redirected, or altered at the network level,
-as may DNS SRV <a href="#dnssec" class="auto internal xref">Appendix B.1</a>. See <a href="#risk" class="auto internal xref">Section 7.1</a> <em>Risk</em> above.
+as may <a href="#dnssec" class="internal xref">DNSSEC</a>. See <a href="#risk" class="internal xref">Risk</a> above.
 Even if an http: URL redirects to a https: URL, that is still insecure.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 <p id="section-7.3-2">For that reason, clients <span class="bcp14">MUST</span> prefer HTTPS over HTTP during configuration retrieval,
 within the same retrieval method.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 <p id="section-7.3-3">If such configs from HTTP are used, the end user <span class="bcp14">MUST</span> explicitly confirm the
 configuration, particularly the resulting second-level domains.
-See <a href="#user-approval" class="auto internal xref">Section 5.1</a> <em>User approval</em>.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+See <a href="#user-approval" class="internal xref">User approval</a>.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="configuration-updates">
@@ -3084,7 +3082,7 @@ authenticity of the configuration <span class="bcp14">MUST</span> be verified fr
 Server hostnames <span class="bcp14">MUST</span> be compared with the email domain names they are
 serving, and if they differ, the ownership of the server hostnames <span class="bcp14">MUST</span> be
 validated.<a href="#section-7.5-2" class="pilcrow">¶</a></p>
-<p id="section-7.5-3">The risk is mitigated to some degree by <a href="#user-approval" class="auto internal xref">Section 5.1</a> <em>User approval</em>.<a href="#section-7.5-3" class="pilcrow">¶</a></p>
+<p id="section-7.5-3">The risk is mitigated to some degree by <a href="#user-approval" class="internal xref">User approval</a>.<a href="#section-7.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="user-testing-with-emailaddress-parameter">
@@ -3094,7 +3092,7 @@ validated.<a href="#section-7.5-2" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-7.6-1">If the provider returns different configurations based on the <code>emailAddress</code>
 parameter of the URL, then attackers can find out whether a given email address is valid.
-See section <a href="#email-address-parameter" class="auto internal xref">Section 4.1.2</a> for mitigations.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
+See <a href="#email-address-parameter" class="auto internal xref">Section 4.1.2</a> for mitigations.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="rate-limits">
@@ -3693,7 +3691,7 @@ include authentication methods.<a href="#appendix-B.3-5" class="pilcrow">¶</a><
 configuration file format defined in this document. It is provided for the
 convenience of implementers and not normative. Where the schema and the body
 of this document disagree, the body of this document is normative.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
-<p id="appendix-C-2">The schema deliberately implements the must-ignore rule of <a href="#xml-validation" class="auto internal xref">Section 3.9</a>:
+<p id="appendix-C-2">The schema deliberately implements the must-ignore rule of <a href="#xml-validation" class="internal xref">XML validation</a>:
 it accepts unknown attributes, unknown child elements, and unknown attribute
 and element values, instead of rejecting them. This is achieved by:<a href="#appendix-C-2" class="pilcrow">¶</a></p>
 <ul class="normal">
