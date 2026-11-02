@@ -311,7 +311,7 @@ The `<displayShortName>` element contains the name of the provider, as
 typically used by end users. It SHOULD be no longer than 12
 characters, and it MUST NOT be longer than 20 characters.
 
-Both elements may used to display the provider or account name by the
+Both elements may be used to display the provider or account name by the
 mail client UI, which has reasonable expectations on length and
 expressiveness.
 
@@ -399,11 +399,10 @@ RELAX NG:
 
 Server sections of the same type (like `<incomingServer>` or `<calendar>`)
 may appear multiple times in the same configuration file.
-In this case, the one listed first is preferred by the configuration provider.
-Unless the client has specific other requirements, it SHOULD pick the first
-configuration.
+In this case, they are listed in the order of preference by the configuration provider.
+The client should pick the first configuration that matches the client's requirements.
 
-The client may deviate from this recommendation, because
+The client may choose a different order or ignore some configurations, because
 
 * the client doesn't support a higher-priority protocol, e.g. a JMAP
   configuraion is listed first and is the most preferred, but the
@@ -495,6 +494,8 @@ signals that the value refers to a `WWW-Authenticate` mechanism.
   `WWW-Authenticate: Basic`. See {{!HTTP-Basic-Auth=RFC7617}}.
 * `Digest`: Authenticate to the HTTP server using
   `WWW-Authenticate: Digest`. See {{!HTTP-Digest-Auth=RFC7616}}
+* `NTLM`: Legacy Windows login mechanisms NTLM or NTLMv2,
+  potentially with a `Negotiate` before.
 * `OAuth2`: Authenticate to the HTTP server using
   `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750, Section 3}}.
   The provider MUST adhere to the requirements defined in {{oauth2}}
@@ -639,7 +640,7 @@ protocol, or a SASL scheme, or a successor to SASL.
 * `TLS-client-cert`: On the SSL/TLS layer, after server request, the client
   sends a TLS client certificate for the user, possibly after letting the user
   select confirm it. Uses SASL `EXTERNAL` scheme {{!SASL=RFC4422}}, Appendix A.
-* `OAuth`: OAuth. SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
+* `OAuth2`: SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
   `XOAUTH2` (deprecated) or successors.
   The provider MUST adhere to the requirements defined in {{oauth2}} _OAuth2 requirements_.
 * `client-IP-address`: Server can be used without any explicit authentication,
@@ -711,7 +712,7 @@ client might tell the user that the password is wrong, and the user starts
 attempting other passwords, potentially revealing passwords to other
 higher-value assets, which is highly dangerous.
 
-If the authentification succeeded, the client SHOULD take note of the
+If the authentication succeeded, the client SHOULD take note of the
 working configutation and use that for all subsequent connections,
 until an explicit reconfiguration occurs. During normal everyday operation,
 the client SHOULD NOT fallback nor attempt multiple different authentication
@@ -781,8 +782,9 @@ sources.
 The steps are ordered by priority. They may all be requested at the same time,
 but a higher priorty result that is available SHOULD be preferred over a lower
 priority one, even if the lower priority one is available earlier. Exceptions
-apply when a higher priority result is either invalid or outdated, or the
-fetch method is less secure. Lower priority requests MAY be cancelled, if a
+apply when a higher priority result is either invalid or outdated,
+e.g. it doesn't work anymore, or the fetch method is less secure,
+according to the client's assessment. Lower priority requests MAY be cancelled, if a
 valid higher priority result has been successfully received. The priority is
 expressed below with the number before the URL or location, with lower numbers
 meaning higher priority, e.g. 1.2 has higher priority than 4.1.
@@ -793,12 +795,15 @@ with the email domain extracted from the email address. For example, for
 `fred@example.com`, the email domain is `example.com`, and for
 `fred@test.cs.example.net`, the email domain is `test.cs.example.net`.
 
-For full support of this specification, all "Required" and "Recommended"
+For full support of this specification in clients, all "Required" and "Recommended"
 mechanisms MUST be implemented and working. For partial support of this
-specification, all "Required" mechanisms MUST be implemented and working, and
+specification in clients, all "Required" mechanisms MUST be implemented and working, and
 in this case, the implementor SHALL make explicit when advertizing or referring
 to AutoConfig that there is only partial support of this specification.
 
+In servers, at least URL 1.1. MUST be implemented and working.
+If the email address parameter is not passed by the client, the server MUST return a
+configuration that works for all accounts or at least for a large part of accounts.
 
 ## Mail provider {#mail-provider}
 
@@ -836,7 +841,7 @@ and ignoring it may lead to no result for many domains. Implementors need to bal
 with the alternatives like guessing hostnames or users searching the Internet.
 {#security} _Security considerations_ contains more detail on what an implementor needs to consider.
 
-### Customzing the configuration for a specific user
+### Customizing the configuration for a specific user {#email-address-parameter}
 
 To allow the mail provider to return a configuration adjusted for that mailbox,
 the client sends the email address as query parameter in URL 1.1.
@@ -860,25 +865,22 @@ different username.
 AutoConfig servers that customize the returned configuration file to the
 email address should avoid that email addresses can be tested for validity
 by hostile parties like spammers or attackers.
-For that reason, AutoConfig servers SHOULD return a real configuration,
-even if the email address sent as URL parameter does not exist.
-If the query contains a non-existing email address,
-the server should not return an error nor a fake configuration, but rather
-a random real configuation, e.g. a random host out of the pool of real hosts.
-Supporting mail clients should test the login before completing setup,
-so spelling mistakes in the email address will be signaled to the user
-as login error in later stages of the setup process.
+
+Returning an error or a fake configuration for non-existing email addresses would
+allow the attacker to differentiate valid email addresses.
+A mitigation is to answer requests for non-existing email addresses with a random
+configuration from the set of valid configurations.
+
+A static configuration that works for all users is the preferred deployment method.
 
 ## Central database {#ispdb}
 
 The ISPDB (Internet service provider database)
-is a central database that contains the configurations for most
-mail providers with a market share larger than 0.1%, and contains configurations
-for half of the email accounts in the world.
+is a central database that contains the configurations for large mail providers.
 
 This is a useful fallback that allows mail clients to support mail providers
 which do not host a configuration server described in the previous step.
-In practice, this step is required to find a working configuration for most
+This step is often necessary to find a working configuration for many
 email accounts.
 
 The mail client application chooses the mail configuration database provider. A
@@ -1017,10 +1019,10 @@ it redirects to a corporate server for login, and then back to the hoster.
 This allows for setups where the hoster is not allowed to see the
 plaintext passwords.
 
-Showing the URL or hostname allows the end user to verify that he is
+Showing the URL or hostname allows the end user to verify to be
 logging in at the expected page, e.g. the login server of their company,
 instead of the email hoster's page. It is important that the user verifies
-that he enters the passwords on the right domain.
+to enter the password on the right domain.
 
 # Configuration publishing by mail providers {#mail-provider-publish}
 
@@ -1237,6 +1239,20 @@ validated.
 
 The risk is mitigated to some degree by {{user-approval}} _User approval_.
 
+## User testing with emailAddress parameter
+
+If the provider returns different configurations based on the `emailAddress`
+parameter of the URL, then attackers can find out whether a given email address is valid.
+See section {#email-address-parameter} for mitigations.
+
+## Rate-limits
+
+If rate-limiting is used, the limits should be high enough
+for at least 100 requests per minute from the same client,
+given that normal clients routinely make 10 or more requests at once, and
+might repeat that process multiple times after user mistakes or configuration errors.
+
+A static configuration file served by a static web server is recommended.
 
 # IANA Considerations
 
@@ -1346,7 +1362,7 @@ DNS SRV protocols {{?DNS-SRV=RFC2782}} {{?RFC6186}} are not used here, for 2 rea
 * the username form (`fred@example.com`, or `fred`, or `fred\EXAMPLE`, or even
   a username with no relation to the email address)
 * authentication method (password, CRAM-MD5, OAuth2, SSL client certificate)
-* authentication method parameters (e.g. OAuth parameters)
+* authentication method parameters (e.g. OAuth2 parameters)
 
 and other parameters. If any of these parameters are not configured right, the
 configuration won't work. While these parameters could theoretically be added
