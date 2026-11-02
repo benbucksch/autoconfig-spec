@@ -1249,7 +1249,7 @@ turned off.
 
 ## ISBDB {#ispdb-security}
 
-For the {{<<ISPDB}}, additions and modifications to the configurations are
+For the {{<<ispdb}}, additions and modifications to the configurations are
 applicable to all respective users and must be made with care. The
 authenticity of the configuration MUST be verified from authorative sources.
 Server hostnames MUST be compared with the email domain names they are
