@@ -366,6 +366,42 @@ Multiple `<descr>` elements with different `lang` attributes are
 allowed, whereby the `lang` attribute contains the 2-letter ISO language
 code, like the HTML `lang` attribute.
 
+### oAuth2
+
+Example:
+
+    <oAuth2>
+      <issuer>login.example.com</issuer>
+      <authURL>https://login.example.com/auth</authURL>
+      <tokenURL>https://login.example.com/token</tokenURL>
+      <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
+      <clientID>open</clientID>
+    </oAuth2>
+
+RELAX NG:
+
+    oAuth2 =
+      element oAuth2 {
+        anyAttr*,
+        ( authURL | tokenURL | issuer | scope | clientID | clientSecret
+        | extensionElement )*
+      }
+
+    authURL      = element authURL      { anyAttr*, text }
+    tokenURL     = element tokenURL     { anyAttr*, text }
+    issuer       = element issuer       { anyAttr*, text }
+    scope        = element scope        { anyAttr*, text }
+    clientID     = element clientID     { anyAttr*, text }
+    clientSecret = element clientSecret { anyAttr*, text }
+
+Element `<oAuth2>` is within the root element.
+
+It contains all necessary information to find and contact the OAuth2 authentication server
+to get an auth token, which can be used to login directly to the servers marked with
+`<authentication>OAuth2</authentication>`.
+
+See {{<<oauth2-server}} and {{<<oauth2-client}}.
+
 ## Server sections
 
 `<incomingServer type="jmap">`, `<calendar type="caldav">` etc.
@@ -435,7 +471,7 @@ server sections, which may contain configs that the client
 understands and supports. The client ignores the file only if there
 is no supported and working configuration found.
 
-## type {#type}
+### type {#type}
 
 The `type` attribute on the server section element specifies the
 wire protocol that this server uses.
@@ -1037,6 +1073,37 @@ logging in at the expected page, e.g. the login server of their company,
 instead of the email hoster's page. It is important that the user verifies
 to enter the password on the right domain.
 
+## OAuth2 client requirements {#oauth2-client}
+
+The client can decide whether to
+
+* use the `<issuer>` to fetch the OAuth2 server metadata using RFC 8414
+(e.g. `https://<issuer>/.well-known/oauth-authorization-server`) or
+OpenID Connect (e.g. `https://<issuer>/.well-known/openid-configuration`)
+and get the `authorization_endpoint` and `token_endpoint` values and
+other parameters from that JSON document,
+and compare the `issuer` value as specified by RFC 8414, or
+* use the `<authURL>` and `<tokenURL>` from this AutoConfig document, or
+* combine both methods and verify that the URLs match.
+
+Not all OAuth2 servers publish the metadata according to RFC 8414 or
+OpenID Connect.
+
+Particular care must be taken when `authURL` and `tokenURL` are on different hostnames,
+because it means that a user might be logging in at the correct login page, the app
+gets the auth code from the real auth server, and then sends the working auth code
+to the `tokenURL` server run by an attacker.
+The client application must handle this case with particular caution,
+e.g. by warning the user or aborting.
+Currently, one large mail provider uses such a split configuration,
+which could be worked around by hardcoding a whitelist or other methods.
+
+Either way, the client MUST check whether both the `authURL` and the `tokenURL`
+match either the email address domain or the server domain,
+and if not, MUST show that OAuth2 domain to the end user while the end user
+[approves the servers](#user-approval), or alternatively abort the process.
+
+
 # Configuration publishing by mail providers {#mail-provider-publish}
 
 Mail service providers who want to support this specification
@@ -1140,36 +1207,6 @@ so that a single user login is sufficient for all services.
 The resulting refresh and access tokens MUST be valid for all services defined
 in the configuration file, including for all URL-based protocols like CalDAV
 and all TCP-based protocols like IMAP.
-
-## OAuth2 client requirements {#oauth2-client}
-
-The client can decide whether to
-
-* use the `<issuer>` to fetch the OAuth2 server metadata using RFC 8414
-(e.g. `https://<issuer>/.well-known/oauth-authorization-server`) or
-OpenID Connect (e.g. `https://<issuer>/.well-known/openid-configuration`)
-and get the `authorization_endpoint` and `token_endpoint` values and
-other parameters from that JSON document,
-and compare the `issuer` value as specified by RFC 8414, or
-* use the `<authURL>` and `<tokenURL>` from this AutoConfig document, or
-* combine both methods and verify that the URLs match.
-
-Not all OAuth2 servers publish the metadata according to RFC 8414 or
-OpenID Connect.
-
-Particular care must be taken when `authURL` and `tokenURL` are on different hostnames,
-because it means that a user might be logging in at the correct login page, the app
-gets the auth code from the real auth server, and then sends the working auth code
-to the `tokenURL` server run by an attacker.
-The client application must handle this case with particular caution,
-e.g. by warning the user or aborting.
-Currently, one large mail provider uses such a split configuration,
-which could be worked around by hardcoding a whitelist or other methods.
-
-Either way, the client MUST check whether both the `authURL` and the `tokenURL`
-match either the email address domain or the server domain,
-and if not, MUST show that OAuth2 domain to the end user while the end user
-[approves the servers](#user-approval), or alternatively abort the process.
 
 # Security Considerations {#security}
 
