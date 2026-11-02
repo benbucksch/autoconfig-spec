@@ -52,7 +52,7 @@ normative:
     date: 2026
   CMID:
     target: https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/
-    title: OAuth Client ID Metadata
+    title: OAuth Client ID Metadata Document
     author:
       -
         ins: A. Parecki
@@ -371,7 +371,7 @@ code, like the HTML `lang` attribute.
 Example:
 
     <oAuth2>
-      <issuer>login.example.com</issuer>
+      <issuer>https://login.example.com</issuer>
       <authURL>https://login.example.com/auth</authURL>
       <tokenURL>https://login.example.com/token</tokenURL>
       <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
@@ -381,7 +381,7 @@ Example:
 RELAX NG:
 
     oAuth2 = element oAuth2 {
-        ( authURL | tokenURL | issuer | scope | clientID | clientSecret )* }
+      ( authURL | tokenURL | issuer | scope | clientID | clientSecret )* }
 
     authURL      = element authURL      { text }
     tokenURL     = element tokenURL     { text }
@@ -394,7 +394,9 @@ Element `<oAuth2>` is within the root element.
 
 It contains all necessary information to find and contact the OAuth2 authentication server
 to get an auth token, which can be used to log in directly to the servers marked with
-`<authentication>OAuth2</authentication>`.
+```
+<authentication>OAuth2</authentication>
+```
 
 See {{<<oauth2-server}} and {{<<oauth2-client}}.
 
@@ -785,9 +787,9 @@ replaced by the client, before the value is actually used.
 
 | Placeholder        | Replace with                          | Example            |
 | ------------------ | ------------------------------------- | ------------------ |
-| `%EMAILADDRESS%`   | E-Mail-Address of the user            | `fred@example.com` |
-| `%EMAILLOCALPART%` | Part before `@` in the E-Mail-Address | `fred`             |
-| `%EMAILDOMAIN%`    | Part after `@` in the E-Mail-Address  | `example.com`      |
+| `%EMAILADDRESS%`   | Email address of the user            | `fred@example.com` |
+| `%EMAILLOCALPART%` | Part before `@` in the email address | `fred`             |
+| `%EMAILDOMAIN%`    | Part after `@` in the email address  | `example.com`      |
 
 Some clients MAY also support the same placeholders for the fields
 `<hostname>`, `<url>`, `<authURL>`, `<tokenURL>`, `<issuer>`,
@@ -869,10 +871,10 @@ For example:
 
 ### Explanations for the URLs
 
-URL 1.1. follows RFC 8615 for well-known URLs. Servers adhering to this version of the specification
+URL 1.1. follows {{?RFC8615}} for well-known URLs. Servers adhering to this version of the specification
 MUST support URL 1.1 and MUST have a valid TLS certificate for that hostname.
 
-URLs 1.2., 1.3. and 1.4. were used in the original protocol from around 2008, before RFC 8615
+URLs 1.2., 1.3. and 1.4. were used in the original protocol from around 2008, before {{?RFC8615}}
 and predecessors existed.
 
 URL 1.4. is used by many current deployments, particularly email hosting companies that
@@ -1073,16 +1075,18 @@ to enter the password on the right domain.
 
 The client can decide whether to
 
-* use the `<issuer>` to fetch the OAuth2 server metadata using RFC 8414
+* use the `<issuer>` to fetch the OAuth2 server metadata using {{!RFC8414}}
 (e.g. `<issuer>/.well-known/oauth-authorization-server`) or
 OpenID Connect (e.g. `<issuer>/.well-known/openid-configuration`)
 and get the `authorization_endpoint` and `token_endpoint` values and
 other parameters from that JSON document,
-and compare the `issuer` value as specified by RFC 8414, or
+and compare the `issuer` value as specified by {{!RFC8414}}, or
 * use the `<authURL>` and `<tokenURL>` from this AutoConfig document, or
 * combine both methods and verify that the URLs match.
 
-Not all OAuth2 servers publish the metadata according to RFC 8414 or
+If the issuer is used, no path is allowed. Clients MUST ignore an issuer with path.
+
+Not all OAuth2 servers publish the metadata according to {{!RFC8414}} or
 OpenID Connect.
 
 Particular care must be taken when `authURL` and `tokenURL` are on different hostnames,
@@ -1320,7 +1324,7 @@ IANA will create the following registry in a new registry group called
 
 Registry Name: "AutoConfig Protocol Type Names"
 
-Registration Procedure: Specification Required, per {{?RFC8126, Section 4}}
+Registration Procedure: Specification Required, per {{?RFC8126, Section 4.6}}
 
 Designated Expert: The author of this document.
 
