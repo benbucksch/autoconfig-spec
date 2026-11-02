@@ -78,9 +78,9 @@ informative:
 
 This document describes a protocol that allows client applications to set up mail accounts and related services like calendar, contact and file sync, chat and video conference accounts, using only the email address and password.
 
-It describes an existing protocol that lets service providers publish the account configuration, so that client applications can find a working configuration automatically. The configuration is based on an email address, but is not limited to configuring email service.
+This existing protocol is used by service providers to publish the account configuration, so that client applications can find a working configuration automatically. The configuration is based on an email address, but is not limited to configuring email service.
 
-It describes running code and deployments that in some cases are no longer in line with security best-practices. Implementers are urged to study the security considerations attentively.
+The running code and deployments documented here are in some cases no longer in line with security best-practices. Implementers are urged to study the security considerations attentively.
 
 --- middle
 
@@ -871,7 +871,8 @@ as login error in later stages of the setup process.
 
 ## Central database {#ispdb}
 
-The ISPDB is a central database that contains the configurations for most
+The ISPDB (Internet service provider database)
+is a central database that contains the configurations for most
 mail providers with a market share larger than 0.1%, and contains configurations
 for half of the email accounts in the world.
 
@@ -1082,10 +1083,12 @@ the AutoConfig file itself cannot require authentication.
 
 If OAuth2 is used, the OAuth2 server MUST adhere to the [OAuth2Client] specification,
 including all SHOULD requirements. However, given that
+
 * authURL
 * tokenURL
 * client ID
 * scope
+
 are provided in the AutoConfig response, the steps "Fetching the Authorization Server Metadata"
 and "Dynamic Client Registration" as well as scope names MAY be skipped in favor of
 the values in the AutoConfig response.
