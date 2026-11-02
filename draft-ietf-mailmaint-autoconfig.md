@@ -878,9 +878,9 @@ for half of the email accounts in the world.
 This is a useful fallback that allows mail clients to support mail providers
 which do not host a configuration server described in the previous step.
 In practice, this step is required to find a working configuration for most
-email accounts, and increases the success rate by an order of magnitude.
+email accounts.
 
-The mail client application may choose the mail configuration database provider. A
+The mail client application chooses the mail configuration database provider. A
 public mail configuration database is available at base URL `https://v1.ispdb.net/`.
 
 `%ISPDB%` below is the base URL of that database.
