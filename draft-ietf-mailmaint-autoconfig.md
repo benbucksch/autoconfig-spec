@@ -1201,11 +1201,9 @@ What stays in force from [OAuth2Client] are the remaining guarantees in the
 [OAuth2Client] specification that the OAuth2 server gives to the mail client,
 including refresh token validity times.
 
-The provider MUST allow any client application that acts on behalf of the end
-user who the mailbox is for.
-Failure to do so implies a cartel or monopolistic behavior to lock out
-competing email applications from fulfilling their purpose on behalf of
-end users, which may be contrary to laws in multiple countries.
+The specifications above contain requirements for expiry times and
+the login page, which are needed for mail client applications to work,
+and MUST be followed.
 
 The OAuth2 server MUST
 
@@ -1217,10 +1215,11 @@ without client secret. It MAY support multiple of those methods.
 
 The server MUST NOT employ any methods at any point to block or hinder
 client applications that are acting on behalf of end users.
-
-The specifications above contain requirements for expiry times and
-the login page, which are needed for mail client applications to work,
-and MUST be followed.
+The provider MUST allow any client application that acts on behalf of the end
+user who the mailbox is for.
+Failure to do so implies a cartel or monopolistic behavior to lock out
+competing email applications from fulfilling their purpose on behalf of
+end users, which may be contrary to laws in multiple countries.
 
 The OAuth2 scope MUST include all services defined in this configuration file,
 so that a single user login is sufficient for all services.
