@@ -1,5 +1,5 @@
 ---
-title: "Mail Autoconfig"
+title: "Mail AutoConfig"
 abbrev: "autoconfig"
 category: info
 
@@ -55,9 +55,9 @@ normative:
     title: Matrix protocol specification
 
 informative:
-  Autoconfig1.1:
+  AutoConfig1.1:
     target: https://www.bucksch.org/1/projects/autoconfiguration/config-file-format.html
-    title: Autoconfig version 1.1
+    title: AutoConfig version 1.1
     author:
       -
         ins: B. Bucksch
@@ -76,9 +76,9 @@ informative:
 
 --- abstract
 
-A protocol that allows client applications to set up mail accounts and related services like calendar, contact and file sync, chat and video conference accounts, using only the email address and password.
+This document describes a protocol that allows client applications to set up mail accounts and related services like calendar, contact and file sync, chat and video conference accounts, using only the email address and password.
 
-This document describes an existing protocol that lets service providers publish the account configuration, so that client applications can find a working configuration automatically. The configuration is based on an email address, but is not limited to configuring email service.
+It describes an existing protocol that lets service providers publish the account configuration, so that client applications can find a working configuration automatically. The configuration is based on an email address, but is not limited to configuring email service.
 
 It describes running code and deployments that in some cases are no longer in line with security best-practices. Implementers are urged to study the security considerations attentively.
 
@@ -88,7 +88,7 @@ It describes running code and deployments that in some cases are no longer in li
 
 Configuring email, calendar and contacts client applications for a given user account at a specific service provider is often a tedious, error-prone and unnerving process. This document describes an automatic configuration protocol, originally defined in 2008 and in wide use since. As of 2026, about 80% of email accounts can be automatically configured using this protocol.
 
-The protocol works by first determining the domain from the email address, and then querying well-known URLs, which return the configuration parameters in computer-readable form. Failing that, various fallback sources can be applied, including a database of configurations for some major domains. While this protocol was originally conceived for configuring mail clients, it is also used for other kinds of services accessible to the user at the same provider, like calendar, contact and file sync, chat and video conference accounts. This document describes the autoconfig protocol as it is used in the wild. Some of it, such as falling back to an HTTP URL, is not advisable from a security viewpoint. This document describes the protocol as compatible with running code, and another document will describe a potentionally not backwards compatible process following today's best security practices.
+The protocol works by first determining the domain from the email address, and then querying well-known URLs, which return the configuration parameters in computer-readable form. Failing that, various fallback sources can be applied, including a database of configurations for some major domains. While this protocol was originally conceived for configuring mail clients, it is also used for other kinds of services accessible to the user at the same provider, like calendar, contact and file sync, chat and video conference accounts. This document describes the AutoConfig protocol as it is used in the wild. Some of it, such as falling back to an HTTP URL, is not advisable from a security viewpoint. This document describes the protocol as compatible with running code, and another document will describe a potentionally not backwards compatible process following today's best security practices.
 
 # Conventions and Definitions
 
@@ -239,7 +239,7 @@ and is encoded in UTF-8 without BOM.
 The root element of the XML file is `<clientConfig version="1.2">`.
 
 The `version` is `1.2` for the version defined in this specification. `1.1` is
-a compatible previous version of this protocol: {{Autoconfig1.1}}. Higher versions are for future specifications.
+a compatible previous version of this protocol: {{AutoConfig1.1}}. Higher versions are for future specifications.
 The client MUST NOT reject a configuration file solely based on the version number, and MUST accept configurations
 with an unknown version number that are otherwise adhering to this specification.
 
@@ -797,7 +797,7 @@ For full support of this specification, all "Required" and "Recommended"
 mechanisms MUST be implemented and working. For partial support of this
 specification, all "Required" mechanisms MUST be implemented and working, and
 in this case, the implementor SHALL make explicit when advertizing or referring
-to Autoconfig that there is only partial support of this specification.
+to AutoConfig that there is only partial support of this specification.
 
 
 ## Mail provider {#mail-provider}
@@ -829,7 +829,7 @@ URLs 1.2., 1.3. and 1.4. were used in the original protocol from around 2008, be
 and predecessors existed.
 
 URL 1.4. is used by many current deployments, particularly email hosting companies that
-use DNS CNAME to redirect the customer email domain to a central provider autoconfig server,
+use DNS CNAME to redirect the customer email domain to a central provider AutoConfig server,
 which has a TLS certificate only for the provider domain and not every customer domain.
 Although HTTP is insecure, a large number of existing domains use it at the time of this writing,
 and ignoring it may lead to no result for many domains. Implementors need to balance this risk
@@ -850,17 +850,17 @@ one single configuration for all their users. For example, DNS resolution
 based on location, mail proxy servers, or other techniques as necessary, can
 be used to route the traffic and host the mail efficiently.
 
-This mechanism also allows the Autoconfig server to map the email address to
+This mechanism also allows the AutoConfig server to map the email address to
 a username that cannot be expressed using the Placeholders (see {{placeholders}}).
 However, this method is discouraged. Instead, the email server login should
 accept email addresses as username, and doing the mapping to internal
 usernames at login time, which avoids the need for the client to know a
 different username.
 
-Autoconfig servers that customize the returned configuration file to the
+AutoConfig servers that customize the returned configuration file to the
 email address should avoid that email addresses can be tested for validity
 by hostile parties like spammers or attackers.
-For that reason, Autoconfig servers SHOULD return a real configuration,
+For that reason, AutoConfig servers SHOULD return a real configuration,
 even if the email address sent as URL parameter does not exist.
 If the query contains a non-existing email address,
 the server should not return an error nor a fake configuration, but rather
@@ -899,7 +899,7 @@ hosted by a hosting company, which is then responsible for the email of dozens
 or thousands of domains. For these hosters, it may be difficult to set up the
 configuration server (step 1.1.) with valid TLS certificate for each of their
 customers, and to convince their customers to modify their root DNS
-specifically for Autoconfig. On the other side, the ISPDB can only contain the
+specifically for AutoConfig. On the other side, the ISPDB can only contain the
 hosting company and cannot know all their customers. To handle such domains,
 the protocol first needs to find the server hosting the email.
 
@@ -1070,13 +1070,13 @@ For example, if the MX server for customer domain example.net is
 Any of the above URLs for retrieving the configuration file MUST NOT
 require authentication, but MUST be public.
 
-This is because the configuration information in the Autoconfig file
-includes the authentication method. Without the Autoconfig file,
+This is because the configuration information in the AutoConfig file
+includes the authentication method. Without the AutoConfig file,
 the client does not know which authentication method is required and
 which username form to use
 (e.g. username `fred` or `fred@example.com` or `fred\EXAMPLE`).
 Given that this information is required for authentication,
-the Autoconfig file itself cannot require authentication.
+the AutoConfig file itself cannot require authentication.
 
 ## OAuth2 server requirements {#oauth2server}
 
@@ -1088,7 +1088,7 @@ including all SHOULD requirements. However, given that
 * scope
 are provided in the AutoConfig response, the steps "Fetching the Authorization Server Metadata"
 and "Dynamic Client Registration" as well as scope names MAY be skipped in favor of
-the values in the Autoconfig response.
+the values in the AutoConfig response.
 What stays in force from [OAuth2Client] are the remaining guarantees in the
 [OAuth2Client] specification that the OAuth2 server gives to the mail client,
 including refresh token validity times.
@@ -1240,9 +1240,9 @@ The risk is mitigated to some degree by {{user-approval}} _User approval_.
 ## Registration
 
 IANA will create the following registry in a new registry group called
-"Mail Autoconfig":
+"Mail AutoConfig":
 
-Registry Name: "Autoconfig Protocol Type Names"
+Registry Name: "AutoConfig Protocol Type Names"
 
 Registration Procedure: Specification Required, per {{?RFC8126, Section 4}}
 
@@ -1417,7 +1417,7 @@ The fragments shown in the body of this document are excerpts of the grammar
 below. The grammar below additionally carries the wildcards that implement the
 must-ignore rule.
 
-    # RELAX NG compact syntax schema for the Mail Autoconfig configuration file.
+    # RELAX NG compact syntax schema for the Mail AutoConfig configuration file.
     #
     # This schema implements the must-ignore rule of Section "XML validation":
     # unknown attributes, unknown child elements and unknown values are accepted
