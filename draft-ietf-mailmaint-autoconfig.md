@@ -1168,8 +1168,8 @@ which could be worked around by hardcoding a whitelist or other methods.
 
 Either way, the client MUST check whether both the `authURL` and the `tokenURL`
 match either the email address domain or the server domain,
-and if not, MUST show that OAuth2 domain to the end user when the end user
-approves the servers, or alternatively abort the process.
+and if not, MUST show that OAuth2 domain to the end user while the end user
+[approves the servers](#user-approval), or alternatively abort the process.
 
 # Security Considerations {#security}
 
