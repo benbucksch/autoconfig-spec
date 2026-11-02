@@ -49,7 +49,19 @@ normative:
         ins: B. Bucksch
         name: Ben Bucksch
         org: Beonex
-    date: 2025
+    date: 2026
+  CMID:
+    target: https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/
+    title: OAuth Client ID Metadata
+    author:
+      -
+        ins: A. Parecki
+        name: Aaron Parecki
+        org: Okta
+      -
+        ins: E. Smith
+        name: Emelia Smith
+    date: 2026
   Matrix:
     target: https://spec.matrix.org
     title: Matrix protocol specification
@@ -473,7 +485,7 @@ The content of the `<url>` element contains the {{!URL=RFC3986}} where to contac
 The URL scheme will normally be HTTPS and the URL starts with `https://` ({{!HTTP=RFC9110, Section 4.2.2}}).
 Some protocols may use other schemes, e.g. WebSockets `wss://` ({{!WebSocket=RFC6455, Section 3}}).
 
-### authentication
+### authentication {#authentication-for-url}
 
 Examples:
 
@@ -498,7 +510,7 @@ signals that the value refers to a `WWW-Authenticate` mechanism.
   potentially with a `Negotiate` before.
 * `OAuth2`: Authenticate to the HTTP server using
   `WWW-Authenticate: Bearer`. See {{!OAuth2=RFC6750, Section 3}}.
-  The provider MUST adhere to the requirements defined in {{oauth2}}
+  The provider MUST adhere to the requirements defined in {{oauth2-server}}
   _OAuth2 requirements_.
 
 Note: The XML element for OAuth2 is
@@ -508,7 +520,7 @@ Note: The XML element for OAuth2 is
 The rules as specified in {{auth-alternatives}} _Multiple authentication alternatives_ and
 {{auth-verification}} _Authentication verification and fallback_ apply here as well.
 
-### username
+### username {#username-for-url}
 
 Examples (alternatives):
 
@@ -609,7 +621,7 @@ As an exception, if the problem is that the TLS certificate expired recently,
 the client MAY choose to not consider that a failure during normal connection
 and MAY use other recovery mechanisms.
 
-### authentication
+### authentication {#authentication-for-tcp}
 
 Example:
 
@@ -642,7 +654,7 @@ protocol, or a SASL scheme, or a successor to SASL.
   select confirm it. Uses SASL `EXTERNAL` scheme {{!SASL=RFC4422}}, Appendix A.
 * `OAuth2`: SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
   `XOAUTH2` (deprecated) or successors.
-  The provider MUST adhere to the requirements defined in {{oauth2}} _OAuth2 requirements_.
+  The provider MUST adhere to the requirements defined in {{oauth2-server}} _OAuth2 requirements_.
 * `client-IP-address`: Server can be used without any explicit authentication,
   and the client is admitted based on its IP address.
   This may be the case for some SMTP servers on local networks.
@@ -718,7 +730,7 @@ until an explicit reconfiguration occurs. During normal everyday operation,
 the client SHOULD NOT fallback nor attempt multiple different authentication
 methods.
 
-### username
+### username {#username-for-tcp}
 
 Examples (alternatives):
 
@@ -839,7 +851,7 @@ which has a TLS certificate only for the provider domain and not every customer 
 Although HTTP is insecure, a large number of existing domains use it at the time of this writing,
 and ignoring it may lead to no result for many domains. Implementors need to balance this risk
 with the alternatives like guessing hostnames or users searching the Internet.
-{#security} _Security considerations_ contains more detail on what an implementor needs to consider.
+{{security}} _Security considerations_ contains more detail on what an implementor needs to consider.
 
 ### Customizing the configuration for a specific user {#email-address-parameter}
 
@@ -1081,7 +1093,7 @@ which username form to use
 Given that this information is required for authentication,
 the AutoConfig file itself cannot require authentication.
 
-## OAuth2 server requirements {#oauth2server}
+## OAuth2 server requirements {#oauth2-server}
 
 If OAuth2 is used, the OAuth2 server MUST adhere to the [OAuth2Client] specification,
 including all SHOULD requirements. However, given that
@@ -1125,7 +1137,7 @@ The resulting refresh and access tokens MUST be valid for all services defined
 in the configuration file, including for all URL-based protocols like CalDAV
 and all TCP-based protocols like IMAP.
 
-## OAuth2 client requirements {#oauth2client}
+## OAuth2 client requirements {#oauth2-client}
 
 The client can decide whether to
 * use the `<issuer>` to fetch the OAuth2 server metadata using RFC 8414
@@ -1191,7 +1203,7 @@ second-level domains. See {{user-approval}} _User approval_.
 ## HTTP
 
 HTTP requests may be intercepted, redirected, or altered at the network level,
-as may DNS SRV {#dnssec}. See {{risk}} _Risk_ above.
+as may DNS SRV {{dnssec}}. See {{risk}} _Risk_ above.
 Even if an http: URL redirects to a https: URL, that is still insecure.
 
 For that reason, clients MUST prefer HTTPS over HTTP during configuration retrieval,
@@ -1243,7 +1255,7 @@ The risk is mitigated to some degree by {{user-approval}} _User approval_.
 
 If the provider returns different configurations based on the `emailAddress`
 parameter of the URL, then attackers can find out whether a given email address is valid.
-See section {#email-address-parameter} for mitigations.
+See section {{email-address-parameter}} for mitigations.
 
 ## Rate-limits
 
