@@ -1325,36 +1325,6 @@ The Additional Elements field is empty in all of the initial values.
 
 --- back
 
-# Implementations {#implementations}
-
-## Clients
-
-Currently, this protocol or parts of it has been implemented by:
-
-* [Thunderbird](https://thunderbird.net)
-* [Parula](https://parula.beonex.com)
-* [Evolution](https://projects.gnome.org/evolution/)
-* [KMail](https://userbase.kde.org/KMail)
-* [Kontact](https://www.kontact.org)
-* [K9 Mail](https://k9mail.app) and
-  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
-* [FairEmail](https://email.faircode.eu)
-* [NextCloud email](https://apps.nextcloud.com/apps/mail)
-* [Delta Chat](https://delta.chat/)
-
-and likely other mail clients.
-
-## Servers
-
-At the time of this writing, this specification is the most widely
-supported protocol for email client configuration.
-A large number of email domains use AutoConfig to provide
-the configuration to mail clients and allow an automatic setup.
-
-Some mail servers automatically provide AutoConfig files that follow
-this specification, including [Stalwart](https://stalw.art/),
-[Mailcow](https://mailcow.email/) and many others.
-
 
 # Alternatives considered {#alternatives-considered}
 
@@ -1424,6 +1394,37 @@ in multiple different ways.
 
 Finally, some non-mail protocols may not support capabilties commands that
 include authentication methods.
+
+
+# Implementations {#implementations}
+
+## Clients
+
+Currently, this protocol or parts of it has been implemented by:
+
+* [Thunderbird](https://thunderbird.net)
+* [Parula](https://parula.beonex.com)
+* [Evolution](https://projects.gnome.org/evolution/)
+* [KMail](https://userbase.kde.org/KMail)
+* [Kontact](https://www.kontact.org)
+* [K9 Mail](https://k9mail.app) and
+  [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
+* [FairEmail](https://email.faircode.eu)
+* [NextCloud email](https://apps.nextcloud.com/apps/mail)
+* [Delta Chat](https://delta.chat/)
+
+and likely other mail clients.
+
+## Servers
+
+At the time of this writing, this specification is the most widely
+supported protocol for email client configuration.
+A large number of email domains use AutoConfig to provide
+the configuration to mail clients and allow an automatic setup.
+
+Some mail servers automatically provide AutoConfig files that follow
+this specification, including [Stalwart](https://stalw.art/),
+[Mailcow](https://mailcow.email/) and many others.
 
 
 # RELAX NG schema {#relaxng-schema}
