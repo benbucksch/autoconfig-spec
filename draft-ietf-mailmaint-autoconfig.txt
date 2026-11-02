@@ -129,7 +129,7 @@ Table of Contents
      7.4.  Configuration updates
      7.5.  Server security
      7.6.  ISPDB
-     7.7.  User testing with emailAddress
+     7.7.  User testing with emailaddress
      7.8.  Rate-limits
    8.  IANA Considerations
      8.1.  Registration
@@ -304,7 +304,7 @@ Table of Contents
     Gives e.g. clientID, expiry, and login page.
     The provider MUST adhere to "OAuth2 server requirements". -->
   <oAuth2>
-    <issuer>login.example.com</issuer>
+    <issuer>https://login.example.com</issuer>
     <authURL>https://login.example.com/auth</authURL>
     <tokenURL>https://login.example.com/token</tokenURL>
     <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
@@ -414,7 +414,7 @@ Table of Contents
    account, so it should be short, distinctive and represent the
    provider in the way end users refer and think of it.
 
-   The mail client might concatinate either value with the email
+   The mail client might concatenate either value with the email
    address, so these values should not be the email address.
 
 3.2.5.  documentation
@@ -464,25 +464,21 @@ Table of Contents
 
    RELAX NG:
 
-   oAuth2 =
-     element oAuth2 {
-       anyAttr*,
-       ( authURL | tokenURL | issuer | scope | clientID | clientSecret
-       | extensionElement )*
-     }
+oAuth2 = element oAuth2 {
+    ( authURL | tokenURL | issuer | scope | clientID | clientSecret )* }
 
-   authURL      = element authURL      { anyAttr*, text }
-   tokenURL     = element tokenURL     { anyAttr*, text }
-   issuer       = element issuer       { anyAttr*, text }
-   scope        = element scope        { anyAttr*, text }
-   clientID     = element clientID     { anyAttr*, text }
-   clientSecret = element clientSecret { anyAttr*, text }
+authURL      = element authURL      { text }
+tokenURL     = element tokenURL     { text }
+issuer       = element issuer       { text }
+scope        = element scope        { text }
+clientID     = element clientID     { text }
+clientSecret = element clientSecret { text }
 
    Element <oAuth2> is within the root element.
 
    It contains all necessary information to find and contact the OAuth2
-   authentication server to get an auth token, which can be used to
-   login directly to the servers marked with
+   authentication server to get an auth token, which can be used to log
+   in directly to the servers marked with
    <authentication>OAuth2</authentication>.
 
    See OAuth2 server requirements and OAuth2 client requirements.
@@ -590,7 +586,7 @@ Table of Contents
     +----------------+-----------+----+-----------+-------------------+
     | calendar       |caldav     |URL |CalDAV     | [CalDAV]          |
     +----------------+-----------+----+-----------+-------------------+
-    | addressbook    |carddav    |URL |CardDAV    | [CardDav]         |
+    | addressbook    |carddav    |URL |CardDAV    | [CardDAV]         |
     +----------------+-----------+----+-----------+-------------------+
     | fileShare      |webdav     |URL |WebDAV     | [WebDAV]          |
     +----------------+-----------+----+-----------+-------------------+
@@ -1290,12 +1286,11 @@ Table of Contents
    The client can decide whether to
 
    *  use the <issuer> to fetch the OAuth2 server metadata using RFC
-      8414 (e.g. https://<issuer>/.well-known/oauth-authorization-
-      server) or OpenID Connect (e.g. https://<issuer>/.well-known/
-      openid-configuration) and get the authorization_endpoint and
-      token_endpoint values and other parameters from that JSON
-      document, and compare the issuer value as specified by RFC 8414,
-      or
+      8414 (e.g. <issuer>/.well-known/oauth-authorization-server) or
+      OpenID Connect (e.g. <issuer>/.well-known/openid-configuration)
+      and get the authorization_endpoint and token_endpoint values and
+      other parameters from that JSON document, and compare the issuer
+      value as specified by RFC 8414, or
 
    *  use the <authURL> and <tokenURL> from this AutoConfig document, or
 
@@ -1422,8 +1417,9 @@ Table of Contents
    *  accept the client ID that is given in the configuration file, or
       if that is not given,
 
-   *  implement Dynamic Client Registration [RFC7591] in the way as
-      defined by [OAuth2Client] and accept the resulting Client ID,
+   *  implement Dynamic Client Registration [RFC7591] or [CMID] in the
+      way as defined by [OAuth2Client] and accept the resulting Client
+      ID,
 
    without client secret.  It MAY support multiple of those methods.
 
@@ -1538,7 +1534,7 @@ Table of Contents
 
    The risk is mitigated to some degree by User approval.
 
-7.7.  User testing with emailAddress
+7.7.  User testing with emailaddress
 
    If the provider returns different configurations based on the
    emailaddress parameter of the URL, then attackers can find out
@@ -1646,7 +1642,7 @@ Table of Contents
               DOI 10.17487/RFC4791, March 2007,
               <https://www.rfc-editor.org/rfc/rfc4791>.
 
-   [CardDav]  Daboo, C., "CardDAV: vCard Extensions to Web Distributed
+   [CardDAV]  Daboo, C., "CardDAV: vCard Extensions to Web Distributed
               Authoring and Versioning (WebDAV)", RFC 6352,
               DOI 10.17487/RFC6352, August 2011,
               <https://www.rfc-editor.org/rfc/rfc6352>.
@@ -1965,7 +1961,7 @@ B.1.  Clients
 
    *  FairEmail (https://email.faircode.eu)
 
-   *  Nextcloud email (https://apps.nextcloud.com/apps/mail)
+   *  Nextcloud Mail (https://apps.nextcloud.com/apps/mail)
 
    *  Delta Chat (https://delta.chat/)
 

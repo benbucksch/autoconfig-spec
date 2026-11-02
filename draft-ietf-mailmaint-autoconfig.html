@@ -1330,7 +1330,7 @@ svg {
                 <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-ispdb" class="internal xref">ISPDB</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.7">
-                <p id="section-toc.1-1.7.2.7.1"><a href="#section-7.7" class="auto internal xref">7.7</a>.  <a href="#name-user-testing-with-emailaddr" class="internal xref">User testing with emailAddress</a></p>
+                <p id="section-toc.1-1.7.2.7.1"><a href="#section-7.7" class="auto internal xref">7.7</a>.  <a href="#name-user-testing-with-emailaddr" class="internal xref">User testing with emailaddress</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.8">
                 <p id="section-toc.1-1.7.2.8.1"><a href="#section-7.8" class="auto internal xref">7.8</a>.  <a href="#name-rate-limits" class="internal xref">Rate-limits</a></p>
@@ -1544,7 +1544,7 @@ with a concrete example of the elements that they define.<a href="#section-3-3" 
     Gives e.g. clientID, expiry, and login page.
     The provider MUST adhere to "OAuth2 server requirements". --&gt;
   &lt;oAuth2&gt;
-    &lt;issuer&gt;login.example.com&lt;/issuer&gt;
+    &lt;issuer&gt;https://login.example.com&lt;/issuer&gt;
     &lt;authURL&gt;https://login.example.com/auth&lt;/authURL&gt;
     &lt;tokenURL&gt;https://login.example.com/token&lt;/tokenURL&gt;
     &lt;scope&gt;IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access&lt;/scope&gt;
@@ -1668,7 +1668,7 @@ characters. It may be used by the mail client as base for the account name,
 and during everyday use of the app to represent the account, so it
 should be short, distinctive and represent the provider in the way
 end users refer and think of it.<a href="#section-3.2.4-7" class="pilcrow">¶</a></p>
-<p id="section-3.2.4-8">The mail client might concatinate either value with the email address,
+<p id="section-3.2.4-8">The mail client might concatenate either value with the email address,
 so these values should not be the email address.<a href="#section-3.2.4-8" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1730,24 +1730,20 @@ code, like the HTML <code>lang</code> attribute.<a href="#section-3.2.5-7" class
 <p id="section-3.2.6-3">RELAX NG:<a href="#section-3.2.6-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.2.6-4">
 <pre>
-oAuth2 =
-  element oAuth2 {
-    anyAttr*,
-    ( authURL | tokenURL | issuer | scope | clientID | clientSecret
-    | extensionElement )*
-  }
+oAuth2 = element oAuth2 {
+    ( authURL | tokenURL | issuer | scope | clientID | clientSecret )* }
 
-authURL      = element authURL      { anyAttr*, text }
-tokenURL     = element tokenURL     { anyAttr*, text }
-issuer       = element issuer       { anyAttr*, text }
-scope        = element scope        { anyAttr*, text }
-clientID     = element clientID     { anyAttr*, text }
-clientSecret = element clientSecret { anyAttr*, text }
+authURL      = element authURL      { text }
+tokenURL     = element tokenURL     { text }
+issuer       = element issuer       { text }
+scope        = element scope        { text }
+clientID     = element clientID     { text }
+clientSecret = element clientSecret { text }
 </pre><a href="#section-3.2.6-4" class="pilcrow">¶</a>
 </div>
 <p id="section-3.2.6-5">Element <code>&lt;oAuth2&gt;</code> is within the root element.<a href="#section-3.2.6-5" class="pilcrow">¶</a></p>
 <p id="section-3.2.6-6">It contains all necessary information to find and contact the OAuth2 authentication server
-to get an auth token, which can be used to login directly to the servers marked with
+to get an auth token, which can be used to log in directly to the servers marked with
 <code>&lt;authentication&gt;OAuth2&lt;/authentication&gt;</code>.<a href="#section-3.2.6-6" class="pilcrow">¶</a></p>
 <p id="section-3.2.6-7">See <a href="#oauth2-server" class="internal xref">OAuth2 server requirements</a> and <a href="#oauth2-client" class="internal xref">OAuth2 client requirements</a>.<a href="#section-3.2.6-7" class="pilcrow">¶</a></p>
 </section>
@@ -1796,7 +1792,7 @@ This is currently used only for SMTP in combination with IMAP and POP3.<a href="
           <li class="normal" id="section-3.3-4.4">
             <p id="section-3.3-4.4.1"><code>&lt;incomingServer&gt;</code> and <code>&lt;outgoingServer&gt;</code> are within element
 <code>&lt;emailProvider&gt;</code>, whereas <code>&lt;calendar&gt;</code>, <code>&lt;addressbook&gt;</code>, <code>&lt;fileShare&gt;</code>,
-<code>&lt;chatServer&gt;</code>, <code>&lt;videoConference&gt;</code> and  <code>&lt;setupServer&gt;</code> are within the
+<code>&lt;chatServer&gt;</code>, <code>&lt;videoConference&gt;</code> and <code>&lt;setupServer&gt;</code> are within the
 root element <code>&lt;clientConfig&gt;</code>, i.e. one level higher.
 Other than that, they work the same.<a href="#section-3.3-4.4.1" class="pilcrow">¶</a></p>
 </li>
@@ -1927,7 +1923,7 @@ wire protocol that this server uses.<a href="#section-3.3.2-1" class="pilcrow">�
                 <td class="text-left" rowspan="1" colspan="1">URL</td>
                 <td class="text-left" rowspan="1" colspan="1">CardDAV</td>
                 <td class="text-left" rowspan="1" colspan="1">
-                  <span>[<a href="#CardDav" class="cite xref">CardDav</a>]</span>
+                  <span>[<a href="#CardDAV" class="cite xref">CardDAV</a>]</span>
 </td>
               </tr>
               <tr>
@@ -2866,8 +2862,8 @@ to enter the password on the right domain.<a href="#section-5.3-2" class="pilcro
 <ul class="normal">
 <li class="normal" id="section-5.4-2.1">
             <p id="section-5.4-2.1.1">use the <code>&lt;issuer&gt;</code> to fetch the OAuth2 server metadata using RFC 8414
-(e.g. <code>https://&lt;issuer&gt;/.well-known/oauth-authorization-server</code>) or
-OpenID Connect (e.g. <code>https://&lt;issuer&gt;/.well-known/openid-configuration</code>)
+(e.g. <code>&lt;issuer&gt;/.well-known/oauth-authorization-server</code>) or
+OpenID Connect (e.g. <code>&lt;issuer&gt;/.well-known/openid-configuration</code>)
 and get the <code>authorization_endpoint</code> and <code>token_endpoint</code> values and
 other parameters from that JSON document,
 and compare the <code>issuer</code> value as specified by RFC 8414, or<a href="#section-5.4-2.1.1" class="pilcrow">¶</a></p>
@@ -3027,7 +3023,7 @@ end users, which may be contrary to laws in multiple countries.<a href="#section
             <p id="section-6.4-6.1.1">accept the client ID that is given in the configuration file, or if that is not given,<a href="#section-6.4-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.4-6.2">
-            <p id="section-6.4-6.2.1">implement Dynamic Client Registration <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span> in the way
+            <p id="section-6.4-6.2.1">implement Dynamic Client Registration <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span> or <span>[<a href="#CMID" class="cite xref">CMID</a>]</span> in the way
 as defined by <span>[<a href="#OAuth2Client" class="cite xref">OAuth2Client</a>]</span> and accept the resulting Client ID,<a href="#section-6.4-6.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
@@ -3157,7 +3153,7 @@ validated.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
 <div id="user-testing">
 <section id="section-7.7">
         <h3 id="name-user-testing-with-emailaddr">
-<a href="#section-7.7" class="section-number selfRef">7.7. </a><a href="#name-user-testing-with-emailaddr" class="section-name selfRef">User testing with emailAddress</a>
+<a href="#section-7.7" class="section-number selfRef">7.7. </a><a href="#name-user-testing-with-emailaddr" class="section-name selfRef">User testing with emailaddress</a>
         </h3>
 <p id="section-7.7-1">If the provider returns different configurations based on the <code>emailaddress</code>
 parameter of the URL, then attackers can find out whether a given email address is valid.
@@ -3408,7 +3404,7 @@ their meaning.<a href="#section-8.2-3.6.1" class="pilcrow">¶</a></p>
         <dd>
 <span class="refAuthor">Daboo, C.</span>, <span class="refAuthor">Desruisseaux, B.</span>, and <span class="refAuthor">L. Dusseault</span>, <span class="refTitle">"Calendaring Extensions to WebDAV (CalDAV)"</span>, <span class="seriesInfo">RFC 4791</span>, <span class="seriesInfo">DOI 10.17487/RFC4791</span>, <time datetime="2007-03" class="refDate">March 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4791">https://www.rfc-editor.org/rfc/rfc4791</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="CardDav">[CardDav]</dt>
+<dt id="CardDAV">[CardDAV]</dt>
         <dd>
 <span class="refAuthor">Daboo, C.</span>, <span class="refTitle">"CardDAV: vCard Extensions to Web Distributed Authoring and Versioning (WebDAV)"</span>, <span class="seriesInfo">RFC 6352</span>, <span class="seriesInfo">DOI 10.17487/RFC6352</span>, <time datetime="2011-08" class="refDate">August 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6352">https://www.rfc-editor.org/rfc/rfc6352</a>&gt;</span>. </dd>
 <dd class="break"></dd>
@@ -3727,7 +3723,7 @@ include authentication methods.<a href="#appendix-A.3-5" class="pilcrow">¶</a><
             <p id="appendix-B.1-2.7.1"><a href="https://email.faircode.eu">FairEmail</a><a href="#appendix-B.1-2.7.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.1-2.8">
-            <p id="appendix-B.1-2.8.1"><a href="https://apps.nextcloud.com/apps/mail">Nextcloud email</a><a href="#appendix-B.1-2.8.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.1-2.8.1"><a href="https://apps.nextcloud.com/apps/mail">Nextcloud Mail</a><a href="#appendix-B.1-2.8.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.1-2.9">
             <p id="appendix-B.1-2.9.1"><a href="https://delta.chat/">Delta Chat</a><a href="#appendix-B.1-2.9.1" class="pilcrow">¶</a></p>
