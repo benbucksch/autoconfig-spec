@@ -148,6 +148,18 @@ The following example shows the syntax of the XML configuration file.
         <displayName>Google Workspace</displayName>
         <displayShortName>GMail</displayShortName>
 
+        <incomingServer type="jmap">
+          <url>https://jmap.example.com</url>
+          <!-- For "OAuth2", the provider MUST adhere to "OAuth2 server requirements". -->
+          <authentication>OAuth2</authentication>
+          <authentication system="http">Basic</authentication>
+          <username>%EMAILADDRESS%</username>
+        </incomingServer>
+
+        <!-- There can be multiple incoming servers,
+          and even multiple IMAP server configs.
+          The first configuration is the preferred one, but the user or or client
+          can choose the alternative configs based on their own preferences. -->
         <incomingServer type="imap">
           <hostname>imap.example.com</hostname>
           <port>993</port>
@@ -156,7 +168,7 @@ The following example shows the syntax of the XML configuration file.
             "SSL": TLS on TLS-specific port
             "STARTTLS": mandatory upgrade to TLS via STARTTLS -->
           <socketType>SSL</socketType>
-            <!-- Common authentication methods:
+            <!-- Common authentication methods for TCP-based protocols:
             "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
             "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
             "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
@@ -168,10 +180,6 @@ The following example shows the syntax of the XML configuration file.
           <username>%EMAILADDRESS%</username>
         </incomingServer>
 
-        <!-- There can be multiple incoming servers,
-          and even multiple IMAP server configs.
-          The first configuration is the preferred one, but the user or
-          or client can choose the alternative configs. -->
         <incomingServer type="pop3">
           <hostname>pop.example.com</hostname>
           <port>995</port>
@@ -180,7 +188,7 @@ The following example shows the syntax of the XML configuration file.
           <username>%EMAILADDRESS%</username>
         </incomingServer>
 
-        <!-- Needed only for IMAP or POP3 -->
+        <!-- Only for IMAP and POP3 -->
         <outgoingServer type="smtp">
           <hostname>smtp.googlemail.com</hostname>
           <port>587</port>
@@ -188,20 +196,6 @@ The following example shows the syntax of the XML configuration file.
           <authentication>password-cleartext</authentication>
           <username>%EMAILADDRESS%</username>
         </outgoingServer>
-
-        <incomingServer type="jmap">
-          <url>https://jmap.example.com</url>
-          <!-- For "OAuth2", the provider MUST adhere to "OAuth2 server requirements". -->
-          <authentication>OAuth2</authentication>
-          <authentication system="http">Basic</authentication>
-          <username>%EMAILADDRESS%</username>
-        </incomingServer>
-
-        <incomingServer type="ews">
-          <url>https://mail.example.com/EWS/Exchange.asmx</url>
-          <username>%EMAILADDRESS%</username>
-          <authentication system="http">Basic</authentication>
-        </incomingServer>
 
         <incomingServer type="activesync">
           <url>https://mail.example.com/Microsoft-Server-ActiveSync</url>
@@ -218,14 +212,12 @@ The following example shows the syntax of the XML configuration file.
 
       <addressbook type="carddav">
         <url>https://contacts.example.com/remote.php/dav</url>
-        <authentication>OAuth2</authentication>
         <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </addressbook>
 
       <calendar type="caldav">
         <url>https://calendar.example.com/remote.php/dav</url>
-        <authentication>OAuth2</authentication>
         <authentication system="http">Basic</authentication>
         <username>%EMAILADDRESS%</username>
       </calendar>
@@ -243,14 +235,6 @@ The following example shows the syntax of the XML configuration file.
       <chatServer type="xmpp">
         <url>wss://example.com:5281/xmpp-websocket</url>
         <authentication system="http">Basic</authentication>
-        <username>%EMAILADDRESS%</username>
-      </chatServer>
-
-      <chatServer type="xmpp-tcp">
-        <hostname>xmpp.example.com</hostname>
-        <port>5223</port>
-        <socketType>TLS</socketType>
-        <authentication>password-cleartext</authentication>
         <username>%EMAILADDRESS%</username>
       </chatServer>
 
