@@ -111,7 +111,7 @@ informative:
 
 This document describes a protocol that allows client applications to set up mail accounts and related services like calendar, contact and file sync, chat and video conference accounts, using only the email address and password.
 
-This existing protocol is used by service providers to publish the account configuration, so that client applications can find a working configuration automatically. The configuration is based on an email address, but is not limited to configuring email service.
+This existing protocol is currently used by service providers to publish the account configuration, so that client applications can find a working configuration automatically. The configuration is based on an email address, but is not limited to configuring email service.
 
 The running code and deployments documented here are in some cases no longer in line with security best-practices. Implementers are urged to study the security considerations attentively.
 
