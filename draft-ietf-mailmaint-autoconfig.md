@@ -62,6 +62,27 @@ normative:
         ins: E. Smith
         name: Emelia Smith
     date: 2026
+  OpenIDConnect:
+    target: https://openid.net/specs/openid-connect-discovery-1_0.html
+    title: OpenID Connect Discovery
+    author:
+      -
+        ins: N. Sakimura
+        name: Nat Sakimura
+        org: NAT.Consulting
+      -
+        ins: J. Bradley
+        name: John Bradley
+        org: Yubico
+      -
+        ins: M. Jones
+        name: Michael B. Jones
+        org: Self-Issued Consulting
+      -
+        ins: E. Jay
+        name: Edmund Jay
+        org: Illumila
+    date: 2023-12-15
   Matrix:
     target: https://spec.matrix.org
     title: Matrix protocol specification
@@ -394,9 +415,8 @@ Element `<oAuth2>` is within the root element.
 
 It contains all necessary information to find and contact the OAuth2 authentication server
 to get an auth token, which can be used to log in directly to the servers marked with
-```
-<authentication>OAuth2</authentication>
-```
+
+    <authentication>OAuth2</authentication>
 
 See {{<<oauth2-server}} and {{<<oauth2-client}}.
 
@@ -907,7 +927,7 @@ usernames at login time, which avoids the need for the client to know a
 different username.
 
 AutoConfig servers that customize the returned configuration file to the
-email address should avoid that email addresses can be tested for validity
+email address should prevent email addresses from being tested for validity
 by hostile parties like spammers or attackers.
 
 Returning an error or a fake configuration for non-existing email addresses would
@@ -1066,8 +1086,8 @@ it redirects to a corporate server for login, and then back to the hoster.
 This allows for setups where the hoster is not allowed to see the
 plaintext passwords.
 
-Showing the URL or hostname allows the end user to verify to be
-logging in at the expected page, e.g. the login server of their company,
+Showing the URL or hostname allows the end user to verify to be at the
+expected page while logging in, e.g. the login server of their company,
 instead of the email hoster's page. It is important that the user verifies
 to enter the password on the right domain.
 
@@ -1076,18 +1096,16 @@ to enter the password on the right domain.
 The client can decide whether to
 
 * use the `<issuer>` to fetch the OAuth2 server metadata using {{!RFC8414}}
-(e.g. `<issuer>/.well-known/oauth-authorization-server`) or
-OpenID Connect (e.g. `<issuer>/.well-known/openid-configuration`)
+(e.g. `<issuer>/.well-known/oauth-authorization-server`, see spec for issuer with path) or
+[OpenID Connect Discovery](#OpenIDConnect) (e.g. `<issuer>/.well-known/openid-configuration`)
 and get the `authorization_endpoint` and `token_endpoint` values and
 other parameters from that JSON document,
 and compare the `issuer` value as specified by {{!RFC8414}}, or
 * use the `<authURL>` and `<tokenURL>` from this AutoConfig document, or
 * combine both methods and verify that the URLs match.
 
-If the issuer is used, no path is allowed. Clients MUST ignore an issuer with path.
-
 Not all OAuth2 servers publish the metadata according to {{!RFC8414}} or
-OpenID Connect.
+[OpenID Connect Discovery](#OpenIDConnect).
 
 Particular care must be taken when `authURL` and `tokenURL` are on different hostnames,
 because it means that a user might be logging in at the correct login page, the app
@@ -1234,7 +1252,7 @@ multi-factor authentication steps required.
 
 Any protocol that relies on DNS without further validation, e.g. {{<<sec-http}} or {{<<dnssrv}},
 should be considered insecure.
-This also applies to the {{<<mx}} lookup and the HTTPS calls that base on its
+This also applies to the {{<<mx}} lookup and the HTTPS calls that are based on its
 results.
 
 One possible mitigation is to use multiple different DNS servers and verify
