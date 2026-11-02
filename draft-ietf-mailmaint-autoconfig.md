@@ -668,14 +668,14 @@ Example:
 A specific SASL scheme {{!SASL=RFC4422}} MAY be specified using
 the specific SASL authentication scheme name, e.g.
 `SCRAM-SHA-256-PLUS` {{!SCRAM=RFC7677}}. To signal that, the
-`<authentication>` element SHOULD have the `system` attribute set
+`<authentication>` element MUST have the `system` attribute set
 to value `sasl`, i.e. `<authentication system="sasl">`.
 
-In such a case, the server configuration section SHOULD also
+In such a case, the server configuration section should also
 specify a more generic authentication mechanism as a lower priority
-alternative. That would make clients use the specific authentication
-mechanism, if they support it, and other clients will use the more generic
-authentication mechanism.
+alternative. Clients that support the specific authentication
+mechanism will use that, and other clients will use the more generic
+authentication mechanism. Without such fallback, the latter clients would fail.
 
 #### Multiple authentication alternatives {#auth-alternatives}
 
@@ -695,20 +695,20 @@ sections.
 
 #### Authentication verification and fallback {#auth-verification}
 
-The client SHOULD test the configuration during setup, with an actual
+The client should test the configuration during setup, with an actual
 authentication attempt.
 
 If the authentication fails, the client decides based on the
 authentication error code how to proceed. For example, if the authentiocation
 method itself failed, or the error code indicates a systemic failure,
-the client SHOULD use a lower-priority authentication method from the
+the client should use a lower-priority authentication method from the
 list.
 
 If the authentication method is working, but the error code indicated
 that the username or password was wrong, then the client MAY ask the
 user to correct the password.
 
-For that reason, the server SHOULD be specific in the error codes and
+For that reason, the server should be specific in the error codes and
 allow the client to distinguish between
 
 * an unsupported or non-working authentication method or other
@@ -723,11 +723,11 @@ client might tell the user that the password is wrong, and the user starts
 attempting other passwords, potentially revealing passwords to other
 higher-value assets, which is highly dangerous.
 
-If the authentication succeeded, the client SHOULD take note of the
-working configutation and use that for all subsequent connections,
+If the authentication succeeded, the client MUST remember the
+working configuration and use that for all subsequent connections,
 until an explicit reconfiguration occurs. During normal everyday operation,
 the client SHOULD NOT fallback nor attempt multiple different authentication
-methods.
+methods. See {{<<configuration-updates}} for the reasons.
 
 ### username {#username-for-tcp}
 
@@ -763,9 +763,8 @@ Some clients MAY also support the same placeholders for the fields
 
 ## XML validation {#xml-validation}
 
-The client SHOULD validate that the configuration file is valid XML, and if
-the XML syntax is invalid, the client SHOULD ignore the entire file. In
-contrast, if there are merely unknown elements or
+If the XML syntax is invalid, the client MUST ignore the entire file.
+In contrast, if there are merely unknown elements or
 attributes, the client MUST NOT ignore the file.
 
 The client MUST disregard those elements, attributes and values that it does not
@@ -791,7 +790,7 @@ address, will perform several steps to retrieve the configuration from various
 sources.
 
 The steps are ordered by priority. They may all be requested at the same time,
-but a higher priorty result that is available SHOULD be preferred over a lower
+but a higher priorty result that is available should be preferred over a lower
 priority one, even if the lower priority one is available earlier. Exceptions
 apply when a higher priority result is either invalid or outdated,
 e.g. it doesn't work anymore, or the fetch method is less secure,
@@ -917,10 +916,10 @@ specifically for AutoConfig. On the other side, the ISPDB can only contain the
 hosting company and cannot know all their customers. To handle such domains,
 the protocol first needs to find the server hosting the email.
 
-If the previous mechanisms yield no result, the client SHOULD perform a DNS MX
-lookup on the email domain, and retrieve the MX server (incoming SMTP server)
+If the previous mechanisms yield no result, the client performs a DNS MX
+lookup on the email domain, and retrieves the MX server (incoming SMTP server)
 for that domain. Only the highest priority MX hostname is considered. From
-that MX hostname, 2 values are extracted:
+that MX hostname, two values are extracted:
 
 * Extract only the second-level domain from the MX hostname, and use that as
   value for `%MXBASEDOMAIN%`. To determine the second-level domain, use the
@@ -992,7 +991,7 @@ outlined in {{<<security}}.
 ## Manual configuration {#manual}
 
 If the above mechanisms fail to provide a working configuration, or if the
-user explicitly chooses so, the mail client SHOULD give the end user the ability to
+user explicitly chooses so, the mail client should give the end user the ability to
 manually enter a configuration, and use that configuration to configure the
 account.
 
@@ -1003,18 +1002,21 @@ account.
 
 Independent of the mechanisms used to find the configuration, before using
 that configuration, the mail client SHOULD display that configuration to the end user and
-let him confirm it. While doing so:
+let him confirm it. This is an important [security precaution](#security),
+a client not asking for user approval needs to consider all security properties.
+
+When displaying the configuration for approval:
 
 * At least the second-level domain name(s) of the hostnames involved MUST be
   shown clearly and with high prominence.
 * To avoid spoofing, the client MUST NOT cut off parts of long
   second-level domains. At least 63 characters MUST be displayed.
-* Care SHOULD be taken with international characters that look like ASCII
+* Care should be taken with international characters that look like ASCII
   characters, but have a different code.
 
 ## Login test
 
-After the user confirmed the configuration, the mail client SHOULD test the configuration,
+After the user confirmed the configuration, the mail client should test the configuration,
 by attempting a login to each server configured. Only if the login succeeded,
 and the server is working, should the configuration be saved and retrieving
 and sending mail be started.
@@ -1052,7 +1054,7 @@ definitions in this specification.
 
 ## Configuration location for a single domain {#single-domain}
 
-The configuration file SHOULD be published at the URL for
+The configuration file should be published at the URL for
 step 1.1., i.e.
 
 * `https://autoconfig.%EMAILDOMAIN%/.well-known/client-autoconfig.xml`
@@ -1064,10 +1066,10 @@ e.g. for `fred@example.com`
 ## Configuration location for domain hosters {#hoster}
 
 For mail providers which host entire domains for their business
-customers, the same URL as listed in the previous section is
-preferred.
+customers, the same URL 1.1., as listed in the previous section, is
+recommended.
 
-Alternatively, the configuration file SHOULD be published at
+If that URL is not used, the configuration file should be published at
 the locations for step 3.1. and 3.2., i.e.
 
 * `https://autoconfig.%MXFULLDOMAIN%/.well-known/client-autoconfig.xml`
@@ -1078,6 +1080,9 @@ For example, if the MX server for customer domain example.net is
 
 * `https://autoconfig.premium.europe.example.com/.well-known/client-autoconfig.xml`
 * `https://autoconfig.example.com/.well-known/client-autoconfig.xml`
+
+If the MX server hostname is directly in the email domain, e.g. `mail.example.com`,
+then URL 3.1 would of course be the same URL as 3.2.
 
 ## No authentication for configuration
 
@@ -1186,10 +1191,10 @@ multi-factor authentication steps required.
 
 ## DNS {#dns}
 
-Any protocol that relies on DNS without further validation, e.g. HTTP or DNS SRV,
+Any protocol that relies on DNS without further validation, e.g. {{<<sec-http}} or {{<<dnssrv}},
 should be considered insecure.
-This also applies to the DNS MX lookup and the https calls that base on its
-results, as described in {{<<mx}}.
+This also applies to the {{<<mx}} lookup and the HTTPS calls that base on its
+results.
 
 One possible mitigation is to use multiple different DNS servers and verify
 that the results match, e.g. to use the native DNS resolver of the operating
@@ -1199,20 +1204,21 @@ Nonetheless, the result should be used with care. If such configs are used,
 the end user MUST explicitly confirm the configuration, particularly the resulting
 second-level domains. See {{<<user-approval}}.
 
-## HTTP
+## HTTP {#sec-http}
 
-HTTP requests may be intercepted, redirected, or altered at the network level,
-as may {{<<dnssec}}. See {{<<risk}} above.
-Even if an http: URL redirects to a https: URL, that is still insecure.
+HTTP requests may be intercepted, redirected, or altered at the network level. See {{<<risk}} above.
+Even if an http: URL redirects to an https: URL, that is still insecure.
 
-For that reason, clients MUST prefer HTTPS over HTTP during configuration retrieval,
-within the same retrieval method.
+For that reason, clients MUST prefer HTTPS (URLs 1.1. to 1.3.) over HTTP (URL 1.4.)
+during configuration retrieval, within the same retrieval method.
 
 If such configs from HTTP are used, the end user MUST explicitly confirm the
 configuration, particularly the resulting second-level domains.
 See {{<<user-approval}}.
 
-## Configuration updates
+As mentioned [above](<<dns), {{<<dnssrv}} suffers from similar weaknesses.
+
+## Configuration updates {#configuration-updates}
 
 Part of the security properties of this protocol assume that the timeframe of
 possible attack is limited to the moment when the user manually sets up a new
@@ -1224,7 +1230,7 @@ own, this reduces the risk significantly.
 However, if the mail client does regular configuration updates using this
 protocol, this security property is no longer given. For regular configuration
 updates, the mail client MUST use only mechanisms that are secure and cannot
-be tampered with by an active attacker. Furthermore, the user SHOULD still
+be tampered with by an active attacker. Furthermore, the user should still
 approve configuration changes.
 
 But even with all these protections implemented, the mail client vendor should
@@ -1233,15 +1239,17 @@ mail client vendor should consider that servers can be hacked, and most users
 simply approve changes proposed by the app, so these give only a limited
 protection.
 
-## Server security
+## Server security {#server-security}
 
 Given that mail clients will trust the configuration, the server delivering
 the configuration file needs to be secure. A static web server offers better
-security. The server software SHOULD be updated regularly and hosted on a
+security. The server software should be updated regularly and hosted on a
 dedicated secure server with all unnecessary services and server features
 turned off.
 
-For the ISPDB, additions and modifications to the configurations are
+## ISBDB {#ispdb-security}
+
+For the {{<<ISPDB}}, additions and modifications to the configurations are
 applicable to all respective users and must be made with care. The
 authenticity of the configuration MUST be verified from authorative sources.
 Server hostnames MUST be compared with the email domain names they are
@@ -1250,14 +1258,14 @@ validated.
 
 The risk is mitigated to some degree by {{<<user-approval}}.
 
-## User testing with emailAddress
+## User testing with emailAddress {#user-testing}
 
 If the provider returns different configurations based on the `emailAddress`
 parameter of the URL, then attackers can find out whether a given email address is valid.
 See {{email-address-parameter}} for mitigations.
 It is recommended to return the same configurating for all users, which avoids this problem.
 
-## Rate-limits
+## Rate-limits {#rate-limits}
 
 If rate-limits are used, the limits should be high enough
 for at least 100 requests per minute from the same client,
@@ -1364,7 +1372,7 @@ considered insecure for the purposes of this specification.
 
 ## DNS SRV {#dnssrv}
 
-DNS SRV protocols {{?DNS-SRV=RFC2782}} {{?RFC6186}} are not used here, for 2 reasons:
+DNS SRV protocols {{?DNS-SRV=RFC2782}} {{?RFC6186}} are not used here, for two reasons:
 
 1. DNS SRV relies on insecure DNS and the configuration can therefore be trivially
    spoofed by an attacker. See also DNSSEC above.
