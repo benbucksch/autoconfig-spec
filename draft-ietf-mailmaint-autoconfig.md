@@ -863,8 +863,9 @@ URL 1.4. is used by many current deployments, particularly email hosting compani
 use DNS CNAME to redirect the customer email domain to a central provider autoconfig server,
 which has a TLS certificate only for the provider domain and not every customer domain.
 Although HTTP is insecure, a large number of existing domains use it at the time of this writing,
-and ignoring it may lead to no result for many domains. The alternatives like guessing hostnames
-might be worse. See Security Considerations for more detail.
+and ignoring it may lead to no result for many domains. Implementors need to balance this risk
+with the alternatives like guessing hostnames or users searching the Internet.
+The section {#security} contains more detail on what an implementor needs to consider.
 
 ### Customzing the configuration for a specific user
 
@@ -1165,13 +1166,13 @@ and compare the `issuer` value as specified by RFC 8414, or
 Not all OAuth2 servers might publish the metadata according to RFC 8414 or
 OpenID Connect.
 
-Particular care must be taken when authURL and tokenURL are not on the same hostname,
+Particular care must be taken when `authURL` and `tokenURL` are not on the same hostname,
 because it means that a user might be logging in at the real login page, the app
-gets the auth token, and then sends the auth token to the tokenURL server by an attacker.
+gets the auth token, and then sends the auth token to the `tokenURL` server by an attacker.
 Currently, one large mail provider uses such a split configuration, but the client
 application must handle this case with particular caution.
 
-Either way, the client MUST check whether both the authURL and the tokenURL
+Either way, the client MUST check whether both the `authURL` and the `tokenURL`
 match either the email address domain or the server domain,
 and if not, MUST show that OAuth2 domain to the end user when the end user
 approves the servers, or alternatively abort the process.
