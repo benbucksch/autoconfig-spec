@@ -1144,6 +1144,7 @@ and all TCP-based protocols like IMAP.
 ## OAuth2 client requirements {#oauth2-client}
 
 The client can decide whether to
+
 * use the `<issuer>` to fetch the OAuth2 server metadata using RFC 8414
 (e.g. `https://<issuer>/.well-known/oauth-authorization-server`) or
 OpenID Connect (e.g. `https://<issuer>/.well-known/openid-configuration`)
@@ -1153,14 +1154,17 @@ and compare the `issuer` value as specified by RFC 8414, or
 * use the `<authURL>` and `<tokenURL>` from this AutoConfig document, or
 * combine both methods and verify that the URLs match.
 
-Not all OAuth2 servers might publish the metadata according to RFC 8414 or
+Not all OAuth2 servers publish the metadata according to RFC 8414 or
 OpenID Connect.
 
-Particular care must be taken when `authURL` and `tokenURL` are not on the same hostname,
-because it means that a user might be logging in at the real login page, the app
-gets the auth token, and then sends the auth token to the `tokenURL` server by an attacker.
-Currently, one large mail provider uses such a split configuration, but the client
-application must handle this case with particular caution.
+Particular care must be taken when `authURL` and `tokenURL` are on different hostnames,
+because it means that a user might be logging in at the correct login page, the app
+gets the auth token from the real auth server, and then sends the working auth token
+to the `tokenURL` server by an attacker.
+The client application must handle this case with particular caution,
+e.g. by warning the user or aborting.
+Currently, one large mail provider uses such a split configuration,
+which could be worked around by hardcoding a whitelist or other methods.
 
 Either way, the client MUST check whether both the `authURL` and the `tokenURL`
 match either the email address domain or the server domain,
