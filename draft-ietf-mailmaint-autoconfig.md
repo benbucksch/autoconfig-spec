@@ -315,23 +315,24 @@ RELAX NG:
     displayName = element displayName { text }
     displayShortName = element displayShortName { text }
 
+Both elements may be used to display the provider or account name by the
+mail client UI, which therefore has expectations on length and expressiveness.
+
 The `<displayName>` element contains the name of the provider, e.g.
-as preferred by the marketing of the provider itself. It SHOULD be no
-longer than 30 characters, but MUST be no longer than 60 characters.
+as preferred by the marketing of the provider itself. It should be no
+longer than 30 characters, to be meaningful to the user and to fit in
+the UI fields.
 
 The `<displayShortName>` element contains the name of the provider, as
-typically used by end users. It SHOULD be no longer than 12
-characters, and it MUST NOT be longer than 20 characters.
-
-Both elements may be used to display the provider or account name by the
-mail client UI, which has reasonable expectations on length and
-expressiveness.
-
-The `<displayShortName>` in particular may be used by the mail client
-together with the email address as partial base for the account name,
+typically used by end users. It should be no longer than 12
+characters. It may be used by the mail client as base for the account name,
 and during everyday use of the app to represent the account, so it
-SHOULD be short, distinctive and represent the provider in the way
+should be short, distinctive and represent the provider in the way
 end users refer and think of it.
+
+The mail client might concatinate either values with the email address,
+so these values should not be the email address.
+
 
 ## documentation
 
