@@ -87,21 +87,22 @@ Table of Contents
        3.2.3.  domain
        3.2.4.  displayName and displayShortName
        3.2.5.  documentation
+       3.2.6.  oAuth2
      3.3.  Server sections
        3.3.1.  Multiple server sections
-     3.4.  type
-     3.5.  URL-based protocols
-       3.5.1.  url
-       3.5.2.  authentication
-       3.5.3.  username
-     3.6.  TCP-based protocols
-       3.6.1.  hostname
-       3.6.2.  port
-       3.6.3.  socketType
-       3.6.4.  authentication
-       3.6.5.  username
-     3.7.  Placeholders
-     3.8.  XML validation
+       3.3.2.  type
+     3.4.  URL-based protocols
+       3.4.1.  url
+       3.4.2.  authentication
+       3.4.3.  username
+     3.5.  TCP-based protocols
+       3.5.1.  hostname
+       3.5.2.  port
+       3.5.3.  socketType
+       3.5.4.  authentication
+       3.5.5.  username
+     3.6.  Placeholders
+     3.7.  XML validation
    4.  Configuration retrieval by mail clients
      4.1.  Mail provider
        4.1.1.  Explanations for the URLs
@@ -115,12 +116,12 @@ Table of Contents
      5.1.  User approval
      5.2.  Login test
      5.3.  OAuth2 windows
+     5.4.  OAuth2 client requirements
    6.  Configuration publishing by mail providers
      6.1.  Configuration location for a single domain
      6.2.  Configuration location for domain hosters
      6.3.  No authentication for configuration
      6.4.  OAuth2 server requirements
-     6.5.  OAuth2 client requirements
    7.  Security Considerations
      7.1.  Risk
      7.2.  DNS
@@ -449,6 +450,43 @@ Table of Contents
    attributes are allowed, whereby the lang attribute contains the
    2-letter ISO language code, like the HTML lang attribute.
 
+3.2.6.  oAuth2
+
+   Example:
+
+   <oAuth2>
+     <issuer>login.example.com</issuer>
+     <authURL>https://login.example.com/auth</authURL>
+     <tokenURL>https://login.example.com/token</tokenURL>
+     <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
+     <clientID>open</clientID>
+   </oAuth2>
+
+   RELAX NG:
+
+   oAuth2 =
+     element oAuth2 {
+       anyAttr*,
+       ( authURL | tokenURL | issuer | scope | clientID | clientSecret
+       | extensionElement )*
+     }
+
+   authURL      = element authURL      { anyAttr*, text }
+   tokenURL     = element tokenURL     { anyAttr*, text }
+   issuer       = element issuer       { anyAttr*, text }
+   scope        = element scope        { anyAttr*, text }
+   clientID     = element clientID     { anyAttr*, text }
+   clientSecret = element clientSecret { anyAttr*, text }
+
+   Element <oAuth2> is within the root element.
+
+   It contains all necessary information to find and contact the OAuth2
+   authentication server to get an auth token, which can be used to
+   login directly to the servers marked with
+   <authentication>OAuth2</authentication>.
+
+   See OAuth2 server requirements and OAuth2 client requirements.
+
 3.3.  Server sections
 
    <incomingServer type="jmap">, <calendar type="caldav"> etc.
@@ -527,7 +565,7 @@ Table of Contents
    understands and supports.  The client ignores the file only if there
    is no supported and working configuration found.
 
-3.4.  type
+3.3.2.  type
 
    The type attribute on the server section element specifies the wire
    protocol that this server uses.
@@ -582,7 +620,7 @@ Table of Contents
    Other protocol names can be added using an IANA registry.  See the
    corresponding section below.
 
-3.5.  URL-based protocols
+3.4.  URL-based protocols
 
    <incomingServer type="jmap">
      <url>https://jmap.example.com/session</url>
@@ -593,7 +631,7 @@ Table of Contents
    For server sections with protocols that are based on HTTPS or other
    URLs, the following elements are supported:
 
-3.5.1.  url
+3.4.1.  url
 
    Example:
 
@@ -610,7 +648,7 @@ Table of Contents
    https:// ([HTTP], Section 4.2.2).  Some protocols may use other
    schemes, e.g. WebSockets wss:// ([WebSocket], Section 3).
 
-3.5.2.  authentication
+3.4.2.  authentication
 
    Examples:
 
@@ -647,7 +685,7 @@ Table of Contents
    The rules as specified in Multiple authentication alternatives and
    Authentication verification and fallback apply here as well.
 
-3.5.3.  username
+3.4.3.  username
 
    Examples (alternatives):
 
@@ -663,7 +701,7 @@ Table of Contents
    Placeholders MUST be replaced before using the actual value.  See
    Placeholders.
 
-3.6.  TCP-based protocols
+3.5.  TCP-based protocols
 
    For server sections with protocols that are based on TCP, the
    following elements are supported:
@@ -676,7 +714,7 @@ Table of Contents
      <username>%EMAILADDRESS%</username>
    </incomingServer>
 
-3.6.1.  hostname
+3.5.1.  hostname
 
    Example:
 
@@ -689,7 +727,7 @@ Table of Contents
    The content of the <hostname> element contains the fully qualified
    hostname of the server.
 
-3.6.2.  port
+3.5.2.  port
 
    Example:
 
@@ -703,7 +741,7 @@ Table of Contents
    port number at the hostname.  The port is typically specific to the
    combination of the wire protocol and socketType.
 
-3.6.3.  socketType
+3.5.3.  socketType
 
    Example:
 
@@ -733,7 +771,7 @@ Table of Contents
    *  plain: Unencrypted connection, with neither TLS nor STARTTLS.  May
       be needed for local servers.  Deprecated.
 
-3.6.3.1.  TLS validation
+3.5.3.1.  TLS validation
 
    In all cases where TLS is used, either directly or using STARTTLS,
    the client MUST validate the TLS certificate and ensure that the
@@ -752,7 +790,7 @@ Table of Contents
    recently, the client MAY choose to not consider that a failure during
    normal connection and MAY use other recovery mechanisms.
 
-3.6.4.  authentication
+3.5.4.  authentication
 
    Example:
 
@@ -799,7 +837,7 @@ Table of Contents
       networks.  Not supported on the Internet.  Deprecated, because it
       breaks mobile devices.
 
-3.6.4.1.  Recommending specific SASL schemes
+3.5.4.1.  Recommending specific SASL schemes
 
    Example:
 
@@ -817,7 +855,7 @@ Table of Contents
    authentication mechanism.  Without such fallback, the latter clients
    would fail.
 
-3.6.4.2.  Multiple authentication alternatives
+3.5.4.2.  Multiple authentication alternatives
 
    The <authentication> element may appear multiple times within a
    server section.  In this case, they are ordered from the most to the
@@ -832,7 +870,7 @@ Table of Contents
    the client MUST ignore that server section and use the remaining
    server sections.
 
-3.6.4.3.  Authentication verification and fallback
+3.5.4.3.  Authentication verification and fallback
 
    The client should test the configuration during setup, with an actual
    authentication attempt.
@@ -872,7 +910,7 @@ Table of Contents
    the client SHOULD NOT fall back nor attempt multiple different
    authentication methods.  See Configuration updates for the reasons.
 
-3.6.5.  username
+3.5.5.  username
 
    Examples (alternatives):
 
@@ -888,7 +926,7 @@ Table of Contents
    Placeholders MUST be replaced before using the actual value.  See
    next Placeholders.
 
-3.7.  Placeholders
+3.6.  Placeholders
 
    The <username> value may contain placeholders.
 
@@ -913,7 +951,7 @@ Table of Contents
    <hostname>, <url>, <authURL>, <tokenURL>, <issuer>, <displayName> and
    <displayShortName>.
 
-3.8.  XML validation
+3.7.  XML validation
 
    If the XML syntax is invalid, the client MUST ignore the entire file.
    In contrast, if there are merely unknown elements or attributes, the
@@ -1048,7 +1086,7 @@ Table of Contents
 
    This mechanism also allows the AutoConfig server to map the email
    address to a username that cannot be expressed using the Placeholders
-   (see Section 3.7).  However, this method is discouraged.  Instead,
+   (see Section 3.6).  However, this method is discouraged.  Instead,
    the email server login should accept email addresses as username, and
    do the mapping to internal usernames at login time, which avoids the
    need for the client to know a different username.
@@ -1247,6 +1285,41 @@ Table of Contents
    company, instead of the email hoster's page.  It is important that
    the user verifies to enter the password on the right domain.
 
+5.4.  OAuth2 client requirements
+
+   The client can decide whether to
+
+   *  use the <issuer> to fetch the OAuth2 server metadata using RFC
+      8414 (e.g. https://<issuer>/.well-known/oauth-authorization-
+      server) or OpenID Connect (e.g. https://<issuer>/.well-known/
+      openid-configuration) and get the authorization_endpoint and
+      token_endpoint values and other parameters from that JSON
+      document, and compare the issuer value as specified by RFC 8414,
+      or
+
+   *  use the <authURL> and <tokenURL> from this AutoConfig document, or
+
+   *  combine both methods and verify that the URLs match.
+
+   Not all OAuth2 servers publish the metadata according to RFC 8414 or
+   OpenID Connect.
+
+   Particular care must be taken when authURL and tokenURL are on
+   different hostnames, because it means that a user might be logging in
+   at the correct login page, the app gets the auth code from the real
+   auth server, and then sends the working auth code to the tokenURL
+   server run by an attacker.  The client application must handle this
+   case with particular caution, e.g. by warning the user or aborting.
+   Currently, one large mail provider uses such a split configuration,
+   which could be worked around by hardcoding a whitelist or other
+   methods.
+
+   Either way, the client MUST check whether both the authURL and the
+   tokenURL match either the email address domain or the server domain,
+   and if not, MUST show that OAuth2 domain to the end user while the
+   end user approves the servers (Section 5.1), or alternatively abort
+   the process.
+
 6.  Configuration publishing by mail providers
 
    Mail service providers who want to support this specification and
@@ -1367,41 +1440,6 @@ Table of Contents
    all services defined in the configuration file, including for all
    URL-based protocols like CalDAV and all TCP-based protocols like
    IMAP.
-
-6.5.  OAuth2 client requirements
-
-   The client can decide whether to
-
-   *  use the <issuer> to fetch the OAuth2 server metadata using RFC
-      8414 (e.g. https://<issuer>/.well-known/oauth-authorization-
-      server) or OpenID Connect (e.g. https://<issuer>/.well-known/
-      openid-configuration) and get the authorization_endpoint and
-      token_endpoint values and other parameters from that JSON
-      document, and compare the issuer value as specified by RFC 8414,
-      or
-
-   *  use the <authURL> and <tokenURL> from this AutoConfig document, or
-
-   *  combine both methods and verify that the URLs match.
-
-   Not all OAuth2 servers publish the metadata according to RFC 8414 or
-   OpenID Connect.
-
-   Particular care must be taken when authURL and tokenURL are on
-   different hostnames, because it means that a user might be logging in
-   at the correct login page, the app gets the auth code from the real
-   auth server, and then sends the working auth code to the tokenURL
-   server run by an attacker.  The client application must handle this
-   case with particular caution, e.g. by warning the user or aborting.
-   Currently, one large mail provider uses such a split configuration,
-   which could be worked around by hardcoding a whitelist or other
-   methods.
-
-   Either way, the client MUST check whether both the authURL and the
-   tokenURL match either the email address domain or the server domain,
-   and if not, MUST show that OAuth2 domain to the end user while the
-   end user approves the servers (Section 5.1), or alternatively abort
-   the process.
 
 7.  Security Considerations
 
