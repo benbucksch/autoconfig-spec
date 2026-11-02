@@ -86,44 +86,9 @@ It describes running code and deployments that in some cases are no longer in li
 
 # Introduction
 
-Configuring email, calendar and contacts client applications for a given user account
-at a specific service provider is often a tedious, error-prone and unnerving process.
-Even technical users struggle to find the right combination of hostname, port number,
-security protocols, authentication methods and forms of username. Less technical users
-often abort entirely. This difficulty is one of the primary factors why many users use
-provider-specific applications which use proprietary internal protocols instead of
-generic provider-independent client applications that use open protocols specified
-by the IETF. This in turn leads to significantly less choice for end users in their
-everyday user experience for communication, already today. Long-term, this leads to an errosion of
-standards support and the ability for end users to use the software of their choice.
+Configuring email, calendar and contacts client applications for a given user account at a specific service provider is often a tedious, error-prone and unnerving process. This document describes an automatic configuration protocol, originally defined in 2008 and in wide use since. As of 2026, about 80% of email accounts can be automatically configured using this protocol.
 
-This protocol allows users to set up their existing email account in a email client application,
-by entering only their name, email address, and password.
-The application, by means of the Autoconfig protocol specified here, will determine all the other
-parameters that are required, including IMAP or POP3 hostname, TLS configuration,
-form of username, authentication method, and other settings, and likewise for SMTP.
-Calendar, contact and file sync, video conference accounts and other
-accounts that are connected to the same user account can be set up at the same time.
-
-The protocol works by first determining the domain from the email address, and
-then querying well-known URLs at the email provider, which return the
-configuration parameters in computer-readable form. Failing that, various
-fallback sources can be applied, like a common database of configurations for
-large email providers who do not directly support this protocol, or other
-mechanisms to determine the configuration.
-
-While this Autoconfig protocol was originally conceived for configuring mail clients,
-it can also be used for accounts of other types, like contacts and calendar
-sync, chat, video conference, or online publishing. The primary concept and
-limitation here is that these accounts are hosted by the same provider
-as the email address.
-
-This protocol is in active production use since 15 years by major email clients,
-and the configuration database contains configurations for over 80% of
-all email accounts.
-
-This specification documents the protocol used by many email applications
-and email providers and servers deployed today, as listed in the next section.
+The protocol works by first determining the domain from the email address, and then querying well-known URLs, which return the configuration parameters in computer-readable form. Failing that, various fallback sources can be applied, including a database of configurations for some major domains. While this protocol was originally conceived for configuring mail clients, it is also used for other kinds of services accessible to the user at the same provider, like calendar, contact and file sync, chat and video conference accounts. This document describes the autoconfig protocol as it is used in the wild. Some of it, such as falling back to an HTTP URL, is not advisable from a security viewpoint. This document describes the protocol as compatible with running code, and another document will describe a potentionally not backwards compatible process following today's best security practices.
 
 # Conventions and Definitions
 
