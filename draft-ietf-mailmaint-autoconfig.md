@@ -42,7 +42,7 @@ normative:
     title: OAuth Profile for Open Public Clients
     author:
       -
-        ins: N. Jenkis
+        ins: N. Jenkins
         name: Neil Jenkins
         org: Fastmail
       -
@@ -100,7 +100,7 @@ The running code and deployments documented here are in some cases no longer in 
 
 Configuring email, calendar and contacts client applications for a given user account at a specific service provider is often a tedious, error-prone and unnerving process. This document describes an automatic configuration protocol, originally defined in 2008 and in wide use since. As of 2026, about 80% of email accounts can be automatically configured using this protocol.
 
-The protocol works by first determining the domain from the email address, and then querying well-known URLs, which return the configuration parameters in computer-readable form. Failing that, various fallback sources can be applied, including a database of configurations for some major domains. While this protocol was originally conceived for configuring mail clients, it is also used for other kinds of services accessible to the user at the same provider, like calendar, contact and file sync, chat and video conference accounts. This document describes the AutoConfig protocol as it is used in the wild. Some of it, such as falling back to an HTTP URL, is not advisable from a security viewpoint. This document describes the protocol as compatible with running code, and another document will describe a potentionally not backwards compatible process following today's best security practices.
+The protocol works by first determining the domain from the email address, and then querying well-known URLs, which return the configuration parameters in computer-readable form. Failing that, various fallback sources can be applied, including a database of configurations for some major domains. While this protocol was originally conceived for configuring mail clients, it is also used for other kinds of services accessible to the user at the same provider, like calendar, contact and file sync, chat and video conference accounts. This document describes the AutoConfig protocol as it is used in the wild. Some of it, such as falling back to an HTTP URL, is not advisable from a security viewpoint. This document describes the protocol as compatible with running code, and another document will describe a potentially not backwards compatible process following today's best security practices.
 
 # Conventions and Definitions
 
@@ -113,7 +113,7 @@ resulting document MUST have the following data format and qualities.
 
 The format is in {{?XML=RFC3470}}. The MIME type is `text/xml`.
 
-The seconds below define the XML and its meaning. Most sections start
+The sections below define the XML and its meaning. Most sections start
 with a concrete example of the elements that they define.
 
 ## XML configuration file example
@@ -139,7 +139,7 @@ The following example shows the syntax of the XML configuration file.
 
         <!-- There can be multiple incoming servers,
           and even multiple IMAP server configs.
-          The first configuration is the preferred one, but the user or or client
+          The first configuration is the preferred one, but the user or client
           can choose the alternative configs based on their own preferences. -->
         <incomingServer type="imap">
           <hostname>imap.example.com</hostname>
@@ -152,7 +152,7 @@ The following example shows the syntax of the XML configuration file.
             <!-- Common authentication methods for TCP-based protocols:
             "password-cleartext": SASL PLAIN, LOGIN or protocol-native login.
             "password-encrypted": SASL CRAM-MD5, DIGEST-MD5 etc. Not TLS.
-            "OAuth2": Provider MUST adhere to section "OAuth2 requirements".
+            "OAuth2": Provider MUST adhere to section "OAuth2 server requirements".
 
             Multiple <authentication> elements per server
             configuration are valid. Clients will pick the first
@@ -171,7 +171,7 @@ The following example shows the syntax of the XML configuration file.
 
         <!-- Only for IMAP and POP3 -->
         <outgoingServer type="smtp">
-          <hostname>smtp.googlemail.com</hostname>
+          <hostname>smtp.example.com</hostname>
           <port>587</port>
           <socketType>STARTTLS</socketType>
           <authentication>password-cleartext</authentication>
@@ -296,7 +296,7 @@ email address `fred@example.com`.
 
 Multiple `<domain>` elements may be included, which means that the configuration is
 valid for all of these domains. Their order has no meaning - they may be sorted
-by number of users, importance to the provider, or alphabethically.
+by number of users, importance to the provider, or alphabetically.
 
 `<domain purpose="mx">` specifies the domain name of the MX server
 of this provider. It is used during the configuration file lookup using MX
@@ -330,11 +330,11 @@ and during everyday use of the app to represent the account, so it
 should be short, distinctive and represent the provider in the way
 end users refer and think of it.
 
-The mail client might concatinate either values with the email address,
+The mail client might concatinate either value with the email address,
 so these values should not be the email address.
 
 
-## documentation
+### documentation
 
 Example:
 
@@ -368,7 +368,7 @@ code, like the HTML `lang` attribute.
 
 ## Server sections
 
-`<incomingServer type="jmap">`, `<calendar type="carddav">` etc.
+`<incomingServer type="jmap">`, `<calendar type="caldav">` etc.
 
 RELAX NG:
 
@@ -396,14 +396,14 @@ RELAX NG:
   This is currently used only for SMTP in combination with IMAP and POP3.
 * `<incomingServer>` and `<outgoingServer>` are within element
   `<emailProvider>`, whereas `<calendar>`, `<addressbook>`, `<fileShare>`,
-  `<chatServer>` and `<videoConference>` are within the
+  `<chatServer>`, `<videoConference>` and  `<setupServer>` are within the
   root element `<clientConfig>`, i.e. one level higher.
   Other than that, they work the same.
 * In some protocols, the `<incomingServer>` server additionally provides
   calendars, addressbooks, and other data. For such protocols, the same server
   is not repeated in other specific server sections like `<calendar>`.
   Calendar-only clients supporting such multi-purpose protocols MUST read the
-  `<incomingServer>` (nonewithstanding that it's within legacy element
+  `<incomingServer>` (notwithstanding that it's within legacy element
   `<emailProvider>`)
   and test and use the parts of the protocol needed for their
   functionality.
@@ -418,7 +418,7 @@ The client should pick the first configuration that matches the client's require
 The client may choose a different order or ignore some configurations, because
 
 * the client doesn't support a higher-priority protocol, e.g. a JMAP
-  configuraion is listed first and is the most preferred, but the
+  configuration is listed first and is the most preferred, but the
   client does not support JMAP yet, or
 * the client doesn't support a configuration setting, e.g. it
   doesn't support STARTTLS, or the configuration specifies only an OAuth2
@@ -445,16 +445,16 @@ wire protocol that this server uses.
 | incomingServer | `jmap`        | URL  | JMAP         | {{!JMAP-Core=RFC8620}}, {{!JMAP-Mail=RFC8621}}, {{!JMAP-WebSocket=RFC8887}}, {{!JMAP-Contacts=RFC9610}} et al
 | incomingServer | `imap`        | TCP  | IMAP         | {{!IMAP4rev2=RFC9051}} or {{!IMAP4rev1=RFC3501}}, et al
 | incomingServer | `pop3`        | TCP  | POP3         | {{!POP3=RFC1939}}, {{!POP3-SASL=RFC5034}}
-| outgoingServer | `smtp`        | TCP  | SMTP         | {{!SMTP=RFC5321}}, {{!EMail=RFC2822}}
+| outgoingServer | `smtp`        | TCP  | SMTP         | {{!SMTP=RFC5321}}, {{!EMail=RFC5322}}
 | calendar       | `caldav`      | URL  | CalDAV       | {{!CalDAV=RFC4791}}
-| addressbook    | `carddav`     | URL  | CardDav      | {{!CardDav=RFC6352}}
+| addressbook    | `carddav`     | URL  | CardDAV      | {{!CardDav=RFC6352}}
 | fileShare      | `webdav`      | URL  | WebDAV       | {{!WebDAV=RFC4918}}
 | chatServer     | `xmpp`        | URL  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}, {{!XMPP-WebSocket=RFC7395}}
 | chatServer     | `xmpp-tcp`     | TCP  | XMPP         | {{!XMPP=RFC6120}}, {{!XMPP-IM=RFC6121}}
 | chatServer     | `matrix`      | URL  | Matrix       | [Matrix]
 | setupServer    | `managesieve` | TCP  | ManageSieve  | {{!ManageSieve=RFC5804}}, {{!Sieve=RFC5228}}
 | incomingServer | `ews`         | URL  | Exchange Web Services |
-| incomingServer | `activeSync`  | URL  | ActiveSync            |
+| incomingServer | `activesync`  | URL  | ActiveSync            |
 | incomingServer | `graph`       | URL  | Microsoft Graph       |
 
 Other protocol names can be added using an IANA registry. See the
@@ -647,10 +647,10 @@ protocol, or a SASL scheme, or a successor to SASL.
   TLS by itself does not qualify as `password-encrypted`.
 * `NTLM`: Legacy Windows login mechanisms NTLM or NTLMv2.
 * `GSSAPI`: {{?Kerberos=RFC4120}} or {{?GSSAPI=RFC2743}},
-   a single-signon mechanism based on TCP.
+   a single sign-on mechanism based on TCP.
 * `TLS-client-cert`: On the SSL/TLS layer, after server request, the client
   sends a TLS client certificate for the user, possibly after letting the user
-  select confirm it. Uses SASL `EXTERNAL` scheme {{!SASL=RFC4422}}, Appendix A.
+  select or confirm it. Uses SASL `EXTERNAL` scheme {{!SASL=RFC4422}}, Appendix A.
 * `OAuth2`: SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
   `XOAUTH2` (deprecated) or successors.
   The provider MUST adhere to the requirements defined in {{<<oauth2-server}}.
@@ -699,7 +699,7 @@ The client should test the configuration during setup, with an actual
 authentication attempt.
 
 If the authentication fails, the client decides based on the
-authentication error code how to proceed. For example, if the authentiocation
+authentication error code how to proceed. For example, if the authentication
 method itself failed, or the error code indicates a systemic failure,
 the client should use a lower-priority authentication method from the
 list.
@@ -726,7 +726,7 @@ higher-value assets, which is highly dangerous.
 If the authentication succeeded, the client MUST remember the
 working configuration and use that for all subsequent connections,
 until an explicit reconfiguration occurs. During normal everyday operation,
-the client SHOULD NOT fallback nor attempt multiple different authentication
+the client SHOULD NOT fall back nor attempt multiple different authentication
 methods. See {{<<configuration-updates}} for the reasons.
 
 ### username {#username-for-tcp}
@@ -790,7 +790,7 @@ address, will perform several steps to retrieve the configuration from various
 sources.
 
 The steps are ordered by priority. They may all be requested at the same time,
-but a higher priorty result that is available should be preferred over a lower
+but a higher priority result that is available should be preferred over a lower
 priority one, even if the lower priority one is available earlier. Exceptions
 apply when a higher priority result is either invalid or outdated,
 e.g. it doesn't work anymore, or the fetch method is less secure,
@@ -808,7 +808,7 @@ with the email domain extracted from the email address. For example, for
 For full support of this specification in clients, all "Required" and "Recommended"
 mechanisms MUST be implemented and working. For partial support of this
 specification in clients, all "Required" mechanisms MUST be implemented and working, and
-in this case, the implementor SHALL make explicit when advertizing or referring
+in this case, the implementor SHALL make explicit when advertising or referring
 to AutoConfig that there is only partial support of this specification.
 
 In servers, at least URL 1.1. MUST be implemented and working.
@@ -859,7 +859,7 @@ the client sends the email address as query parameter in URL 1.1.
 For example, a global company might want to locate the mailbox geographically
 close to the user, in the same country or even in the same office building.
 
-However, while the protocol allows for such heterogenous configurations, mail
+However, while the protocol allows for such heterogeneous configurations, mail
 providers are discouraged from doing so, and are instead encouraged to provide
 one single configuration for all their users. For example, DNS resolution
 based on location, mail proxy servers, or other techniques as necessary, can
@@ -868,7 +868,7 @@ be used to route the traffic and host the mail efficiently.
 This mechanism also allows the AutoConfig server to map the email address to
 a username that cannot be expressed using the Placeholders (see {{placeholders}}).
 However, this method is discouraged. Instead, the email server login should
-accept email addresses as username, and doing the mapping to internal
+accept email addresses as username, and do the mapping to internal
 usernames at login time, which avoids the need for the client to know a
 different username.
 
@@ -923,7 +923,7 @@ that MX hostname, two values are extracted:
 
 * Extract only the second-level domain from the MX hostname, and use that as
   value for `%MXBASEDOMAIN%`. To determine the second-level domain, use the
-  [Public Suffic List](https://publicsuffix.org) or a similarly suited method,
+  [Public Suffix List](https://publicsuffix.org) or a similarly suited method,
   to correctly handle domains like `.co.uk` and `.com.au`.
 * Remove the first component from the MX hostname, i.e. everything up to and
   including the first `.`, and use that as value for `%MXFULLDOMAIN%`. Use it
@@ -1116,7 +1116,7 @@ including refresh token validity times.
 
 The provider MUST allow any client application that acts on behalf of the end
 user who the mailbox is for.
-Failure to do so implies a cartell or monopolistic behavior to lock out
+Failure to do so implies a cartel or monopolistic behavior to lock out
 competing email applications from fulfilling their purpose on behalf of
 end users, which may be contrary to laws in multiple countries.
 
@@ -1129,7 +1129,7 @@ The OAuth2 server MUST
 without client secret. It MAY support multiple of those methods.
 
 The server MUST NOT employ any methods at any point to block or hinder
-clients applications that are acting on behalf of end users.
+client applications that are acting on behalf of end users.
 
 The specifications above contain requirements for expiry times and
 the login page, which are needed for mail client applications to work,
@@ -1159,8 +1159,8 @@ OpenID Connect.
 
 Particular care must be taken when `authURL` and `tokenURL` are on different hostnames,
 because it means that a user might be logging in at the correct login page, the app
-gets the auth token from the real auth server, and then sends the working auth token
-to the `tokenURL` server by an attacker.
+gets the auth code from the real auth server, and then sends the working auth code
+to the `tokenURL` server run by an attacker.
 The client application must handle this case with particular caution,
 e.g. by warning the user or aborting.
 Currently, one large mail provider uses such a split configuration,
@@ -1187,7 +1187,7 @@ contain sensitive information and can be used to issue orders within the
 organization that have wide-ranging impact, but given single-sign-on
 solutions, the same username and password may give access to other resources
 at the organization, including other computers or, in the case of admin users,
-even adminstrative access to the core of the entire organization.
+even administrative access to the core of the entire organization.
 
 Multi-factor authentication might not defend against such attacks, because the
 user may believe to be logging into his email and therefore comply with any
@@ -1220,7 +1220,7 @@ If such configs from HTTP are used, the end user MUST explicitly confirm the
 configuration, particularly the resulting second-level domains.
 See {{<<user-approval}}.
 
-As mentioned [above](<<dns), {{<<dnssrv}} suffers from similar weaknesses.
+As mentioned [above](#dns), {{<<dnssrv}} suffers from similar weaknesses.
 
 ## Configuration updates {#configuration-updates}
 
@@ -1251,11 +1251,11 @@ security. The server software should be updated regularly and hosted on a
 dedicated secure server with all unnecessary services and server features
 turned off.
 
-## ISBDB {#ispdb-security}
+## ISPDB {#ispdb-security}
 
 For the {{<<ispdb}}, additions and modifications to the configurations are
 applicable to all respective users and must be made with care. The
-authenticity of the configuration MUST be verified from authorative sources.
+authenticity of the configuration MUST be verified from authoritative sources.
 Server hostnames MUST be compared with the email domain names they are
 serving, and if they differ, the ownership of the server hostnames MUST be
 validated.
@@ -1264,10 +1264,10 @@ The risk is mitigated to some degree by {{<<user-approval}}.
 
 ## User testing with emailAddress {#user-testing}
 
-If the provider returns different configurations based on the `emailAddress`
+If the provider returns different configurations based on the `emailaddress`
 parameter of the URL, then attackers can find out whether a given email address is valid.
 See {{email-address-parameter}} for mitigations.
-It is recommended to return the same configurating for all users, which avoids this problem.
+It is recommended to return the same configuration for all users, which avoids this problem.
 
 ## Rate-limits {#rate-limits}
 
@@ -1312,16 +1312,16 @@ The registrations need to define:
 | incomingServer | `jmap`        | URL  | JMAP         | RFC 8620, RFC 8621, RFC 8887, RFC 9610 et al |
 | incomingServer | `imap`        | TCP  | IMAP         | RFC 9051 or RFC 3501, et al |
 | incomingServer | `pop3`        | TCP  | POP3         | RFC 1939, RFC 5034 |
-| outgoingServer | `smtp`        | TCP  | SMTP         | RFC 5321, RFC 2822 |
+| outgoingServer | `smtp`        | TCP  | SMTP         | RFC 5321, RFC 5322 |
 | calendar       | `caldav`      | URL  | CalDAV       | RFC 4791 |
-| addressbook    | `carddav`     | URL  | CardDav      | RFC 6352 |
+| addressbook    | `carddav`     | URL  | CardDAV      | RFC 6352 |
 | fileShare      | `webdav`      | URL  | WebDAV       | RFC 4918 |
 | chatServer     | `xmpp`        | URL  | XMPP         | RFC 6120, RFC 6121, RFC 7395 |
 | chatServer     | `xmpp-tcp`     | TCP  | XMPP         | RFC 6120, RFC 6121 |
 | chatServer     | `matrix`      | URL  | Matrix       | <https://spec.matrix.org> |
 | setupServer    | `managesieve` | TCP  | ManageSieve  | RFC 5804, RFC 5228 |
 | incomingServer | `ews`         | URL  | Exchange Web Services | |
-| incomingServer | `activeSync`  | URL  | ActiveSync            | |
+| incomingServer | `activesync`  | URL  | ActiveSync            | |
 | incomingServer | `graph`       | URL  | Microsoft Graph       | |
 
 The Additional Elements field is empty in all of the initial values.
@@ -1371,13 +1371,13 @@ an alternative to DNS SRV.
 ## CAPABILITIES {#inline-protocol}
 
 Deployments in the wild from actual ISPs show that protocol-specific commands
-to find available authentication methods, e.g. IMAP `CAPABILITIES` or POP3
-`CAPA`, are not reliable. Many email servers advertize authentication methods
+to find available authentication methods, e.g. IMAP `CAPABILITY` or POP3
+`CAPA`, are not reliable. Many email servers advertise authentication methods
 that do not work.
 
 Some IMAP servers are default configured to list all SASL authentication
 methods that have corresponding libraries installed on the system, independent
-on whether they are actually configured to work. The client receives a long
+of whether they are actually configured to work. The client receives a long
 list of authentication methods, and many of them do not work. Additionally,
 the server response may be only "authentication failed" and may not indicate
 whether the method failed due to lack of configuration, or because the
@@ -1388,7 +1388,7 @@ countless login attempts. Locking the account must be avoided. So, simply
 attempting all methods and seeing which one works is not an option for the
 email client.
 
-Additionally, some email servers advertize {{?Kerberos=RFC4120}} /
+Additionally, some email servers advertise {{?Kerberos=RFC4120}} /
 {{?GSSAPI=RFC2743}}, but when trying
 to use it, the method fails, and also runs into a long 2 minute timeout in
 some cases. End users consider that to be a broken app.
@@ -1396,7 +1396,7 @@ some cases. End users consider that to be a broken app.
 Additionally, such commands are protocol specific and have to be implemented
 in multiple different ways.
 
-Finally, some non-mail protocols may not support capabilties commands that
+Finally, some non-mail protocols may not support capabilities commands that
 include authentication methods.
 
 
@@ -1404,17 +1404,17 @@ include authentication methods.
 
 ## Clients
 
-Currently, this protocol or parts of it has been implemented by:
+Currently, this protocol or parts of it have been implemented by:
 
 * [Thunderbird](https://thunderbird.net)
 * [Parula](https://parula.beonex.com)
 * [Evolution](https://projects.gnome.org/evolution/)
 * [KMail](https://userbase.kde.org/KMail)
 * [Kontact](https://www.kontact.org)
-* [K9 Mail](https://k9mail.app) and
+* [K-9 Mail](https://k9mail.app) and
   [Thunderbird Mobile](https://www.thunderbird.net/mobile/)
 * [FairEmail](https://email.faircode.eu)
-* [NextCloud email](https://apps.nextcloud.com/apps/mail)
+* [Nextcloud email](https://apps.nextcloud.com/apps/mail)
 * [Delta Chat](https://delta.chat/)
 
 and likely other mail clients.
