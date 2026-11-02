@@ -455,7 +455,7 @@ Table of Contents
    Example:
 
    <oAuth2>
-     <issuer>login.example.com</issuer>
+     <issuer>https://login.example.com</issuer>
      <authURL>https://login.example.com/auth</authURL>
      <tokenURL>https://login.example.com/token</tokenURL>
      <scope>IMAP POP3 SMTP CalDAV CardDAV WebDAV offline_access</scope>
@@ -464,22 +464,23 @@ Table of Contents
 
    RELAX NG:
 
-oAuth2 = element oAuth2 {
+  oAuth2 = element oAuth2 {
     ( authURL | tokenURL | issuer | scope | clientID | clientSecret )* }
 
-authURL      = element authURL      { text }
-tokenURL     = element tokenURL     { text }
-issuer       = element issuer       { text }
-scope        = element scope        { text }
-clientID     = element clientID     { text }
-clientSecret = element clientSecret { text }
+  authURL      = element authURL      { text }
+  tokenURL     = element tokenURL     { text }
+  issuer       = element issuer       { text }
+  scope        = element scope        { text }
+  clientID     = element clientID     { text }
+  clientSecret = element clientSecret { text }
 
    Element <oAuth2> is within the root element.
 
    It contains all necessary information to find and contact the OAuth2
    authentication server to get an auth token, which can be used to log
    in directly to the servers marked with
-   <authentication>OAuth2</authentication>.
+
+   <authentication>OAuth2</authentication>
 
    See OAuth2 server requirements and OAuth2 client requirements.
 
@@ -929,19 +930,19 @@ clientSecret = element clientSecret { text }
    The following special substrings in the value MUST be replaced by the
    client, before the value is actually used.
 
-   +==================+============================+==================+
-   | Placeholder      | Replace with               | Example          |
-   +==================+============================+==================+
-   | %EMAILADDRESS%   | E-Mail-Address of the user | fred@example.com |
-   +------------------+----------------------------+------------------+
-   | %EMAILLOCALPART% | Part before @ in the E-    | fred             |
-   |                  | Mail-Address               |                  |
-   +------------------+----------------------------+------------------+
-   | %EMAILDOMAIN%    | Part after @ in the E-     | example.com      |
-   |                  | Mail-Address               |                  |
-   +------------------+----------------------------+------------------+
+    +==================+===========================+==================+
+    | Placeholder      | Replace with              | Example          |
+    +==================+===========================+==================+
+    | %EMAILADDRESS%   | Email address of the user | fred@example.com |
+    +------------------+---------------------------+------------------+
+    | %EMAILLOCALPART% | Part before @ in the      | fred             |
+    |                  | email address             |                  |
+    +------------------+---------------------------+------------------+
+    | %EMAILDOMAIN%    | Part after @ in the email | example.com      |
+    |                  | address                   |                  |
+    +------------------+---------------------------+------------------+
 
-                                 Table 2
+                                  Table 2
 
    Some clients MAY also support the same placeholders for the fields
    <hostname>, <url>, <authURL>, <tokenURL>, <issuer>, <displayName> and
@@ -1045,12 +1046,12 @@ clientSecret = element clientSecret { text }
 
 4.1.1.  Explanations for the URLs
 
-   URL 1.1. follows RFC 8615 for well-known URLs.  Servers adhering to
+   URL 1.1. follows [RFC8615] for well-known URLs.  Servers adhering to
    this version of the specification MUST support URL 1.1 and MUST have
    a valid TLS certificate for that hostname.
 
    URLs 1.2., 1.3. and 1.4. were used in the original protocol from
-   around 2008, before RFC 8615 and predecessors existed.
+   around 2008, before [RFC8615] and predecessors existed.
 
    URL 1.4. is used by many current deployments, particularly email
    hosting companies that use DNS CNAME to redirect the customer email
@@ -1088,8 +1089,8 @@ clientSecret = element clientSecret { text }
    need for the client to know a different username.
 
    AutoConfig servers that customize the returned configuration file to
-   the email address should avoid that email addresses can be tested for
-   validity by hostile parties like spammers or attackers.
+   the email address should prevent email addresses from being tested
+   for validity by hostile parties like spammers or attackers.
 
    Returning an error or a fake configuration for non-existing email
    addresses would allow the attacker to differentiate valid email
@@ -1276,8 +1277,8 @@ clientSecret = element clientSecret { text }
    login, and then back to the hoster.  This allows for setups where the
    hoster is not allowed to see the plaintext passwords.
 
-   Showing the URL or hostname allows the end user to verify to be
-   logging in at the expected page, e.g. the login server of their
+   Showing the URL or hostname allows the end user to verify to be at
+   the expected page while logging in, e.g. the login server of their
    company, instead of the email hoster's page.  It is important that
    the user verifies to enter the password on the right domain.
 
@@ -1285,19 +1286,20 @@ clientSecret = element clientSecret { text }
 
    The client can decide whether to
 
-   *  use the <issuer> to fetch the OAuth2 server metadata using RFC
-      8414 (e.g. <issuer>/.well-known/oauth-authorization-server) or
-      OpenID Connect (e.g. <issuer>/.well-known/openid-configuration)
+   *  use the <issuer> to fetch the OAuth2 server metadata using
+      [RFC8414] (e.g. <issuer>/.well-known/oauth-authorization-server,
+      see spec for issuer with path) or OpenID Connect Discovery
+      [OpenIDConnect] (e.g. <issuer>/.well-known/openid-configuration)
       and get the authorization_endpoint and token_endpoint values and
       other parameters from that JSON document, and compare the issuer
-      value as specified by RFC 8414, or
+      value as specified by [RFC8414], or
 
    *  use the <authURL> and <tokenURL> from this AutoConfig document, or
 
    *  combine both methods and verify that the URLs match.
 
-   Not all OAuth2 servers publish the metadata according to RFC 8414 or
-   OpenID Connect.
+   Not all OAuth2 servers publish the metadata according to [RFC8414] or
+   OpenID Connect Discovery [OpenIDConnect].
 
    Particular care must be taken when authURL and tokenURL are on
    different hostnames, because it means that a user might be logging in
@@ -1464,7 +1466,7 @@ clientSecret = element clientSecret { text }
 
    Any protocol that relies on DNS without further validation, e.g. HTTP
    or DNS SRV, should be considered insecure.  This also applies to the
-   MX lookup and the HTTPS calls that base on its results.
+   MX lookup and the HTTPS calls that are based on its results.
 
    One possible mitigation is to use multiple different DNS servers and
    verify that the results match, e.g. to use the native DNS resolver of
@@ -1563,7 +1565,7 @@ clientSecret = element clientSecret { text }
    Registry Name: "AutoConfig Protocol Type Names"
 
    Registration Procedure: Specification Required, per [RFC8126],
-   Section 4
+   Section 4.6
 
    Designated Expert: The author of this document.
 
@@ -1647,9 +1649,9 @@ clientSecret = element clientSecret { text }
               DOI 10.17487/RFC6352, August 2011,
               <https://www.rfc-editor.org/rfc/rfc6352>.
 
-   [CMID]     Parecki, A. and E. Smith, "OAuth Client ID Metadata",
-              2026, <https://datatracker.ietf.org/doc/draft-ietf-oauth-
-              client-id-metadata-document/>.
+   [CMID]     Parecki, A. and E. Smith, "OAuth Client ID Metadata
+              Document", 2026, <https://datatracker.ietf.org/doc/draft-
+              ietf-oauth-client-id-metadata-document/>.
 
    [CRAM-MD5] Klensin, J., Catoe, R., and P. Krumviede, "IMAP/POP
               AUTHorize Extension for Simple Challenge/Response",
@@ -1731,6 +1733,12 @@ clientSecret = element clientSecret { text }
               Clients", 2026, <https://datatracker.ietf.org/doc/draft-
               ietf-mailmaint-oauth-public/>.
 
+   [OpenIDConnect]
+              Sakimura, N., Bradley, J., Jones, M., and E. Jay, "OpenID
+              Connect Discovery", 15 December 2023,
+              <https://openid.net/specs/openid-connect-discovery-
+              1_0.html>.
+
    [POP3]     Myers, J. and M. Rose, "Post Office Protocol - Version 3",
               STD 53, RFC 1939, DOI 10.17487/RFC1939, May 1996,
               <https://www.rfc-editor.org/rfc/rfc1939>.
@@ -1754,6 +1762,11 @@ clientSecret = element clientSecret { text }
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, "OAuth 2.0
+              Authorization Server Metadata", RFC 8414,
+              DOI 10.17487/RFC8414, June 2018,
+              <https://www.rfc-editor.org/rfc/rfc8414>.
 
    [SASL]     Melnikov, A., Ed. and K. Zeilenga, Ed., "Simple
               Authentication and Security Layer (SASL)", RFC 4422,
@@ -1857,6 +1870,10 @@ clientSecret = element clientSecret { text }
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/rfc/rfc8126>.
+
+   [RFC8615]  Nottingham, M., "Well-Known Uniform Resource Identifiers
+              (URIs)", RFC 8615, DOI 10.17487/RFC8615, May 2019,
+              <https://www.rfc-editor.org/rfc/rfc8615>.
 
    [XML]      Hollenbeck, S., Rose, M., and L. Masinter, "Guidelines for
               the Use of Extensible Markup Language (XML) within IETF
