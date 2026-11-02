@@ -76,13 +76,11 @@ informative:
 
 --- abstract
 
-A protocol that allows email applications to set up mail accounts and related accounts with only the email address and password.
+A protocol that allows client applications to set up mail accounts and related services like calendar, contact and file sync, chat and video conference accounts, using only the email address and password.
 
-It defines how service providers can publish the account configuration, so that email applications can automatically find a working configuration. It reduces setup friction for their users, and calls to the support for the service provider.
+This document describes an existing protocol that lets service providers publish the account configuration, so that client applications can find a working configuration automatically. The configuration is based on an email address, but is not limited to configuring email service.
 
-Although the discovery process starts with an email address, the protocol is not limited setting up email accounts, but can also set up calendar, contact and file sync, video conference accounts and other accounts that are connected to the same user account.
-
-This protocol uses a well-known address and DNS lookups, based on the email address domain, to find the XML configuration file for the service provider.
+It describes running code and deployments that in some cases are no longer in line with security best-practices. Implementers are urged to study the security considerations attentively.
 
 --- middle
 
