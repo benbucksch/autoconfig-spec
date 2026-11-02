@@ -653,7 +653,7 @@ protocol, or a SASL scheme, or a successor to SASL.
 * `OAuth2`: SASL `OAUTHBEARER` {{!SASL-OAuth2=RFC7628}} (current) or
   `XOAUTH2` (deprecated) or successors.
   The provider MUST adhere to the requirements defined in {{<<oauth2-server}}.
-* `client-IP-address`: Server can be used without any explicit authentication,
+* `client-IP-address`: The server can be used without any explicit authentication,
   and the client is admitted based on its IP address.
   This may be the case for some SMTP servers on local networks.
   Not supported on the Internet. Deprecated, because it breaks mobile devices.
@@ -778,7 +778,7 @@ retrieval mechanisms might produce a different document with a valid configurati
 
 This allows future extensions of the format without breaking existing clients.
 
-The RELAX NG schema in {{<<relaxng-schema}} is written to
+The {{<<relaxng-schema}} is written to
 follow these rules: it accepts unknown elements, attributes,
 attribute values and element values, so that a validator does not reject a
 document merely because it uses extensions not defined here.
@@ -1249,15 +1249,16 @@ validated.
 
 The risk is mitigated to some degree by {{<<user-approval}}.
 
-## User testing with emailAddress parameter
+## User testing with emailAddress
 
 If the provider returns different configurations based on the `emailAddress`
 parameter of the URL, then attackers can find out whether a given email address is valid.
 See {{email-address-parameter}} for mitigations.
+It is recommended to return the same configurating for all users, which avoids this problem.
 
 ## Rate-limits
 
-If rate-limiting is used, the limits should be high enough
+If rate-limits are used, the limits should be high enough
 for at least 100 requests per minute from the same client,
 given that normal clients routinely make 10 or more requests at once, and
 might repeat that process multiple times after user mistakes or configuration errors.
