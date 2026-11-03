@@ -4,8 +4,8 @@
 
 mailmaint                                                     B. Bucksch
 Internet-Draft                                                    Beonex
-Intended status: Informational                           2 November 2026
-Expires: 6 May 2027
+Intended status: Informational                           3 November 2026
+Expires: 7 May 2027
 
 
                             Mail AutoConfig
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 May 2027.
+   This Internet-Draft will expire on 7 May 2027.
 
 Copyright Notice
 
@@ -382,10 +382,10 @@ Table of Contents
 
    <domain purpose="mx"> specifies the domain name of the MX server of
    this provider.  It is used during the configuration file lookup using
-   MX server names, as specified in MX _MX_. If the email address that
-   is to be configured has an MX server that is within the domain given
-   by <domain purpose="mx">, then this configuration is applicable for
-   that email address.  Adding the purpose attribute is RECOMMENDED.
+   MX server names, as specified in MX.  If the email address that is to
+   be configured has an MX server that is within the domain given by
+   <domain purpose="mx">, then this configuration is applicable for that
+   email address.  Adding the purpose attribute is RECOMMENDED.
 
 3.2.4.  displayName and displayShortName
 
@@ -1247,7 +1247,7 @@ Table of Contents
    Independent of the mechanisms used to find the configuration, before
    using that configuration, the mail client SHOULD display that
    configuration to the end user and let him confirm it.  This is an
-   important security precaution (Section 7), a client not asking for
+   important security precaution (Section 7), so a client not asking for
    user approval needs to consider all security properties.
 
    When displaying the configuration for approval:
@@ -1256,7 +1256,7 @@ Table of Contents
       MUST be shown clearly and with high prominence.
 
    *  To avoid spoofing, the client MUST NOT cut off parts of long
-      second-level domains.  At least 63 characters MUST be displayed.
+      second-level domains.  At least 67 characters MUST be displayed.
 
    *  Care should be taken with international characters that look like
       ASCII characters, but have a different code.
@@ -1314,11 +1314,11 @@ Table of Contents
    which could be worked around by hardcoding a whitelist or other
    methods.
 
-   Either way, the client MUST check whether both the authURL and the
-   tokenURL match either the email address domain or the server domain,
-   and if not, MUST show that OAuth2 domain to the end user while the
-   end user approves the servers (Section 5.1), or alternatively abort
-   the process.
+   Either way, unless the hostnames are built-in the app, the client
+   MUST check whether both the authURL and the tokenURL match either the
+   email address domain or the server domain, and if not, MUST show that
+   OAuth2 domain to the end user while the end user approves the servers
+   (Section 5.1), or alternatively abort the process.
 
 6.  Configuration publishing by mail providers
 
@@ -1424,7 +1424,8 @@ Table of Contents
       way as defined by [OAuth2Client] and accept the resulting Client
       ID,
 
-   without client secret.  It MAY support multiple of those methods.
+   without client secret or other kinds of client blocks.  It MAY
+   support multiple of those methods.
 
    The server MUST NOT employ any methods at any point to block or
    hinder client applications that are acting on behalf of end users.
@@ -1437,9 +1438,9 @@ Table of Contents
    The OAuth2 scope MUST include all services defined in this
    configuration file, so that a single user login is sufficient for all
    services.  The resulting refresh and access tokens MUST be valid for
-   all services defined in the configuration file, including for all
-   URL-based protocols like CalDAV and all TCP-based protocols like
-   IMAP.
+   all services defined in the configuration file marked with
+   <authentication>OAuth2</authentication>, including all URL-based
+   protocols like CalDAV and all TCP-based protocols like IMAP.
 
 7.  Security Considerations
 
