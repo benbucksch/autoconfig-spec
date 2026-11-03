@@ -321,7 +321,7 @@ by number of users, importance to the provider, or alphabetically.
 
 `<domain purpose="mx">` specifies the domain name of the MX server
 of this provider. It is used during the configuration file lookup using MX
-server names, as specified in {{<<mx}} _MX_. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this configuration is applicable for that email address.
+server names, as specified in {{<<mx}}. If the email address that is to be configured has an MX server that is within the domain given by `<domain purpose="mx">`, then this configuration is applicable for that email address.
 Adding the `purpose` attribute is RECOMMENDED.
 
 ### displayName and displayShortName
@@ -1059,14 +1059,14 @@ account.
 Independent of the mechanisms used to find the configuration, before using
 that configuration, the mail client SHOULD display that configuration to the end user and
 let him confirm it. This is an important [security precaution](#security),
-a client not asking for user approval needs to consider all security properties.
+so a client not asking for user approval needs to consider all security properties.
 
 When displaying the configuration for approval:
 
 * At least the second-level domain name(s) of the hostnames involved MUST be
   shown clearly and with high prominence.
 * To avoid spoofing, the client MUST NOT cut off parts of long
-  second-level domains. At least 63 characters MUST be displayed.
+  second-level domains. At least 67 characters MUST be displayed.
 * Care should be taken with international characters that look like ASCII
   characters, but have a different code.
 
@@ -1118,7 +1118,7 @@ e.g. by warning the user or aborting.
 Currently, one large mail provider uses such a split configuration,
 which could be worked around by hardcoding a whitelist or other methods.
 
-Either way, the client MUST check whether both the `authURL` and the `tokenURL`
+Either way, unless the hostnames are built-in the app, the client MUST check whether both the `authURL` and the `tokenURL`
 match either the email address domain or the server domain,
 and if not, MUST show that OAuth2 domain to the end user while the end user
 [approves the servers](#user-approval), or alternatively abort the process.
@@ -1211,7 +1211,7 @@ The OAuth2 server MUST
 * implement Dynamic Client Registration {{!RFC7591}} or [CMID] in the way
   as defined by [OAuth2Client] and accept the resulting Client ID,
 
-without client secret. It MAY support multiple of those methods.
+without client secret or other kinds of client blocks. It MAY support multiple of those methods.
 
 The server MUST NOT employ any methods at any point to block or hinder
 client applications that are acting on behalf of end users.
@@ -1224,7 +1224,7 @@ end users, which may be contrary to laws in multiple countries.
 The OAuth2 scope MUST include all services defined in this configuration file,
 so that a single user login is sufficient for all services.
 The resulting refresh and access tokens MUST be valid for all services defined
-in the configuration file, including for all URL-based protocols like CalDAV
+in the configuration file marked with `<authentication>OAuth2</authentication>`, including all URL-based protocols like CalDAV
 and all TCP-based protocols like IMAP.
 
 # Security Considerations {#security}
